@@ -502,8 +502,8 @@ section {
 
 /*Navigation Solid*/
 
-#header.nav-solid [class*='col-'] {
-    padding: 0 20px;
+/* #header.nav-solid [class*='col-'] {
+    padding: 0 0px;
 }
 
 #header.nav-solid {
@@ -524,7 +524,7 @@ section {
 
 #header.nav-solid nav a:hover {
     opacity: 1;
-}
+} */
 
 /* Social Elements when Solid*/
 
