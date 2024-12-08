@@ -83,7 +83,7 @@ O site foi desenvolvido seguindo as melhores práticas para garantir:
 
 ## 📞 Contato
 
-- **Telefone**: (48) 99999-9999
+- **Telefone**: (48) 99901-3968
 - **E-mail**: contato@southsea.com.br
 - **Endereço**: Florianópolis, SC
 
