@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- Mantendo o head e demais seções iguais, atualizando apenas a seção do carrossel -->
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -22,7 +23,7 @@
             <div class="logo">South Sea</div>
             <ul class="nav-menu">
                 <li><a href="#servicos">Serviços</a></li>
-                <li><a href="#portfolio">Portfólio</a></li>
+                <li><a href="#empresas">Empresas</a></li>
                 <li><a href="#sobre">Sobre</a></li>
                 <li><a href="#contato">Contato</a></li>
             </ul>
@@ -39,8 +40,8 @@
                         <i class="fab fa-whatsapp" aria-hidden="true"></i>
                         Iniciar Projeto
                     </a>
-                    <a href="#portfolio" class="explore-button">
-                        Explorar Projetos
+                    <a href="#empresas" class="explore-button">
+                        Nossos Clientes
                     </a>
                 </div>
             </div>
@@ -76,25 +77,46 @@
             </div>
         </section>
 
-        <section id="portfolio" class="portfolio">
+        <section id="empresas" class="companies">
             <div class="container">
-                <h2 class="section-title">Portfólio</h2>
-                <p class="section-subtitle">Conheça alguns dos nossos projetos de sucesso</p>
+                <h2 class="section-title">Empresas que Confiam em Nós</h2>
+                <p class="section-subtitle">Parceiros que transformaram sua presença digital conosco</p>
 
-                <div class="portfolio-grid">
-                    <div class="portfolio-item">
-                        <img src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&q=80&w=600&h=400" alt="Escritório moderno com computadores" loading="lazy" width="600" height="400">
-                        <div class="portfolio-overlay">
-                        </div>
-                    </div>
-                    <div class="portfolio-item">
-                        <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&q=80&w=600&h=400" alt="Reunião de negócios profissional" loading="lazy" width="600" height="400">
-                        <div class="portfolio-overlay">
-                        </div>
-                    </div>
-                    <div class="portfolio-item">
-                        <img src="https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&q=80&w=600&h=400" alt="Ambiente de trabalho criativo" loading="lazy" width="600" height="400">
-                        <div class="portfolio-overlay">
+                <div class="companies-carousel">
+                    <div class="carousel-wrapper">
+                        <div class="carousel-track">
+                            <!-- Primeira sequência de logos -->
+                            <div class="company-logo">
+                                <img src="imgs/Frame 148.png" alt="Logo Empresa Parceira" loading="lazy">
+                            </div>
+                            <div class="company-logo">
+                                <img src="imgs/Frame 149.png" alt="Logo Empresa Parceira" loading="lazy">
+                            </div>
+                            <div class="company-logo">
+                                <img src="imgs/Frame 152.png" alt="Logo Empresa Parceira" loading="lazy">
+                            </div>
+                            <div class="company-logo">
+                                <img src="imgs/Frame 153.png" alt="Logo Empresa Parceira" loading="lazy">
+                            </div>
+                            <div class="company-logo">
+                                <img src="imgs/Frame 158.png" alt="Logo Empresa Parceira" loading="lazy">
+                            </div>
+                            <!-- Duplicação dos logos para efeito infinito -->
+                            <div class="company-logo">
+                                <img src="imgs/Frame 148.png" alt="Logo Empresa Parceira" loading="lazy">
+                            </div>
+                            <div class="company-logo">
+                                <img src="imgs/Frame 149.png" alt="Logo Empresa Parceira" loading="lazy">
+                            </div>
+                            <div class="company-logo">
+                                <img src="imgs/Frame 152.png" alt="Logo Empresa Parceira" loading="lazy">
+                            </div>
+                            <div class="company-logo">
+                                <img src="imgs/Frame 153.png" alt="Logo Empresa Parceira" loading="lazy">
+                            </div>
+                            <div class="company-logo">
+                                <img src="imgs/Frame 158.png" alt="Logo Empresa Parceira" loading="lazy">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -196,5 +218,42 @@
     <a href="https://wa.me/5548999013968" class="whatsapp-float" target="_blank" rel="noopener" aria-label="WhatsApp">
         <i class="fab fa-whatsapp" aria-hidden="true"></i>
     </a>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const track = document.querySelector('.carousel-track');
+            const logos = track.querySelectorAll('.company-logo');
+            const logoWidth = 180; // Largura fixa do logo
+            const gap = 40; // Espaçamento entre logos
+            let position = 0;
+            
+            // Calcula a largura total necessária para um conjunto de logos
+            const totalWidth = logos.length * (logoWidth + gap) / 2;
+            
+            function moveCarousel() {
+                position -= 0.5; // Velocidade reduzida
+                
+                // Reseta a posição quando atingir metade dos logos
+                if (Math.abs(position) >= totalWidth) {
+                    position = 0;
+                }
+                
+                track.style.transform = `translateX(${position}px)`;
+                requestAnimationFrame(moveCarousel);
+            }
+
+            // Pausa a animação quando o mouse está sobre o carrossel
+            const carousel = document.querySelector('.companies-carousel');
+            carousel.addEventListener('mouseenter', () => {
+                track.style.animationPlayState = 'paused';
+            });
+            
+            carousel.addEventListener('mouseleave', () => {
+                track.style.animationPlayState = 'running';
+            });
+
+            moveCarousel();
+        });
+    </script>
 </body>
 </html>
