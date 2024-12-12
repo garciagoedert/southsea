@@ -74,4 +74,36 @@
     background: linear-gradient(to left, var(--white), transparent);
 }
 
-.about{padding:var(--section-spacing) 0;background-color:#F8FAFC}.about-content{display:flex;align-items:center;gap:4rem}.about-text{max-width:600px;margin:0 auto}.about-text p{color:var(--text-light);margin-bottom:1.5rem}.about-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;margin-top:3rem}.stat{text-align:center}.stat h3{font-size:2.5rem;color:var(--primary-color);margin-bottom:.5rem}.stat p{color:var(--text-light);font-size:.9375rem;margin-bottom:0}.contact{padding:var(--section-spacing) 0}.contact-content{display:grid;grid-template-columns:1fr 1fr;gap:4rem;margin-top:3rem}.contact-info{display:flex;flex-direction:column;gap:2rem}.contact-item{display:flex;align-items:center;gap:1.5rem}.contact-item i{font-size:1.5rem;color:var(--primary-color)}.contact-item h3{font-size:1.125rem;color:var(--primary-color);margin-bottom:.25rem}.contact-item p{color:var(--text-light)}.contact-form{display:flex;flex-direction:column;gap:1.5rem}.form-group input,.form-group textarea{width:100%;padding:1rem;border:1px solid #E2E8F0;border-radius:.5rem;font-family:inherit;font-size:.9375rem}.form-group textarea{height:150px;resize:vertical}.submit-button{background:var(--primary-color);color:var(--white);padding:1rem 2rem;border:none;border-radius:.5rem;font-weight:500;font-size:.9375rem;cursor:pointer;transition:opacity .2s ease}.submit-button:hover{opacity:.9}.footer{background:var(--primary-color);color:var(--white);padding:4rem 0 2rem}.footer-content{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:3rem}.footer-logo{max-width:300px}.footer-logo .logo{color:var(--white);margin-bottom:1rem}.footer-logo .logo-img{height:24px;width:auto;filter:brightness(0) invert(1)}.footer-logo p{color:#94A3B8;font-size:.9375rem}.footer-social{display:flex;gap:1.5rem}.footer-social a{color:var(--white);font-size:1.5rem;transition:opacity .2s ease}.footer-social a:hover{opacity:.8}.footer-bottom{text-align:center;padding-top:2rem;border-top:1px solid rgba(255,255,255,.1)}.footer-bottom p{color:#94A3B8;font-size:.875rem}.whatsapp-float{position:fixed;bottom:2rem;right:2rem;background:#25D366;color:var(--white);width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:2rem;box-shadow:0 4px 12px rgba(37,211,102,.3);z-index:1000;transition:transform .2s ease,box-shadow .2s ease}.whatsapp-float:hover{transform:translateY(-3px);box-shadow:0 6px 16px rgba(37,211,102,.4)}@media (max-width:768px){.nav-menu{display:none}.hero-content{padding-top:4rem;text-align:center}.hero-content h1{font-size:3.5rem}.hero-subtitle{font-size:1.125rem;margin-left:auto;margin-right:auto}.hero-buttons{justify-content:center}.contact-content{grid-template-columns:1fr}.footer-content{flex-direction:column;align-items:center;text-align:center;gap:2rem}}@media (max-width:480px){.hero-content h1{font-size:2.75rem}.hero-buttons{flex-direction:column}.section-title{font-size:2rem}.about-stats{grid-template-columns:1fr}}
+.about{padding:var(--section-spacing) 0;background-color:#F8FAFC}.about-content{display:flex;align-items:center;gap:4rem}.about-text{max-width:600px;margin:0 auto}.about-text p{color:var(--text-light);margin-bottom:1.5rem}.about-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;margin-top:3rem}.stat{text-align:center}.stat h3{font-size:2.5rem;color:var(--primary-color);margin-bottom:.5rem}.stat p{color:var(--text-light);font-size:.9375rem;margin-bottom:0}.contact{padding:var(--section-spacing) 0}.contact-content{display:grid;grid-template-columns:1fr 1fr;gap:4rem;margin-top:3rem}.contact-info{display:flex;flex-direction:column;gap:2rem}.contact-item{display:flex;align-items:center;gap:1.5rem}.contact-item i{font-size:1.5rem;color:var(--primary-color)}.contact-item h3{font-size:1.125rem;color:var(--primary-color);margin-bottom:.25rem}.contact-item p{color:var(--text-light)}
+
+/* Estilos atualizados para a seção de contato com WhatsApp */
+.contact-whatsapp {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem;
+    background: #F8FAFC;
+    border-radius: 1rem;
+}
+
+.contact-whatsapp p {
+    color: var(--text-light);
+    margin-bottom: 1.5rem;
+    font-size: 1.125rem;
+}
+
+.contact-whatsapp-button {
+    font-size: 1.125rem;
+    padding: 1.25rem 2rem;
+    background: #25D366;
+}
+
+.contact-whatsapp-button:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+    transition: transform 0.2s ease;
+}
+
+.footer{background:var(--primary-color);color:var(--white);padding:4rem 0 2rem}.footer-content{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:3rem}.footer-logo{max-width:300px}.footer-logo .logo{color:var(--white);margin-bottom:1rem}.footer-logo .logo-img{height:24px;width:auto;filter:brightness(0) invert(1)}.footer-logo p{color:#94A3B8;font-size:.9375rem}.footer-social{display:flex;gap:1.5rem}.footer-social a{color:var(--white);font-size:1.5rem;transition:opacity .2s ease}.footer-social a:hover{opacity:.8}.footer-bottom{text-align:center;padding-top:2rem;border-top:1px solid rgba(255,255,255,.1)}.footer-bottom p{color:#94A3B8;font-size:.875rem}.whatsapp-float{position:fixed;bottom:2rem;right:2rem;background:#25D366;color:var(--white);width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:2rem;box-shadow:0 4px 12px rgba(37,211,102,.3);z-index:1000;transition:transform .2s ease,box-shadow .2s ease}.whatsapp-float:hover{transform:translateY(-3px);box-shadow:0 6px 16px rgba(37,211,102,.4)}@media (max-width:768px){.nav-menu{display:none}.hero-content{padding-top:4rem;text-align:center}.hero-content h1{font-size:3.5rem}.hero-subtitle{font-size:1.125rem;margin-left:auto;margin-right:auto}.hero-buttons{justify-content:center}.contact-content{grid-template-columns:1fr}.footer-content{flex-direction:column;align-items:center;text-align:center;gap:2rem}}@media (max-width:480px){.hero-content h1{font-size:2.75rem}.hero-buttons{flex-direction:column}.section-title{font-size:2rem}.about-stats{grid-template-columns:1fr}}
