@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfólio | South Sea</title>
+    <meta name="description" content="Conheça nossos projetos e cases de sucesso em marketing digital, design e desenvolvimento web.">
+    <link rel="icon" type="image/svg+xml" href="imgs/favicon.svg">
+    
+    <!-- Preload fonts -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" as="style">
+    <link rel="preload" href="https://fonts.gstatic.com/s/inter/v12/UcC73FwrK3iLTeHuS_fvQtMwCp50KnMa1ZL7.woff2" as="font" type="font/woff2" crossorigin>
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="header">
+        <nav class="nav-container">
+            <a href="index.html" class="logo">
+                <img src="imgs/logo.svg" alt="South Sea" class="logo-img">
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html#servicos">Serviços</a></li>
+                <li><a href="portfolio.html">Portfólio</a></li>
+                <li><a href="index.html#empresas">Empresas</a></li>
+                <li><a href="index.html#sobre">Sobre</a></li>
+                <li><a href="index.html#contato">Contato</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="portfolio-hero">
+            <div class="container">
+                <h1 class="portfolio-title">Nosso Portfólio</h1>
+                <p class="portfolio-subtitle">Conheça alguns dos nossos projetos e histórias de sucesso</p>
+                
+                <div class="portfolio-filters">
+                    <button class="filter-btn active" data-filter="all">Todos</button>
+                    <button class="filter-btn" data-filter="web">Web</button>
+                    <button class="filter-btn" data-filter="design">Design</button>
+                    <button class="filter-btn" data-filter="marketing">Marketing</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="portfolio-grid">
+            <div class="container">
+                <div class="projects-grid">
+                    <!-- Projeto 1 -->
+                    <article class="project-card" data-category="web">
+                        <div class="project-image">
+                            <img src="imgs/Frame 148.png" alt="Nome do Projeto">
+                            <div class="project-overlay">
+                                <a href="#" class="project-link">
+                                    <i class="fas fa-external-link-alt"></i>
+                                    Ver Projeto
+                                </a>
+                            </div>
+                        </div>
+                        <div class="project-info">
+                            <h3>Nome do Projeto</h3>
+                            <p>Desenvolvimento Web</p>
+                            <div class="project-tags">
+                                <span>Website</span>
+                                <span>E-commerce</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Projeto 2 -->
+                    <article class="project-card" data-category="design">
+                        <div class="project-image">
+                            <img src="imgs/Frame 149.png" alt="Nome do Projeto">
+                            <div class="project-overlay">
+                                <a href="#" class="project-link">
+                                    <i class="fas fa-external-link-alt"></i>
+                                    Ver Projeto
+                                </a>
+                            </div>
+                        </div>
+                        <div class="project-info">
+                            <h3>Nome do Projeto</h3>
+                            <p>Design Gráfico</p>
+                            <div class="project-tags">
+                                <span>Branding</span>
+                                <span>Logo</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Projeto 3 -->
+                    <article class="project-card" data-category="marketing">
+                        <div class="project-image">
+                            <img src="imgs/Frame 152.png" alt="Nome do Projeto">
+                            <div class="project-overlay">
+                                <a href="#" class="project-link">
+                                    <i class="fas fa-external-link-alt"></i>
+                                    Ver Projeto
+                                </a>
+                            </div>
+                        </div>
+                        <div class="project-info">
+                            <h3>Nome do Projeto</h3>
+                            <p>Marketing Digital</p>
+                            <div class="project-tags">
+                                <span>Social Media</span>
+                                <span>Ads</span>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <div class="container">
+                <h2>Pronto para Transformar seu Negócio?</h2>
+                <p>Vamos criar algo incrível juntos</p>
+                <a href="https://wa.me/5548999013968" class="whatsapp-button" target="_blank" rel="noopener">
+                    <i class="fab fa-whatsapp"></i>
+                    Iniciar Projeto
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <div class="logo">
+                        <img src="imgs/logo.svg" alt="South Sea" class="logo-img">
+                    </div>
+                    <p>Transformando negócios através do marketing digital.</p>
+                </div>
+                <div class="footer-social">
+                    <a href="https://www.instagram.com/co.southsea/" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.facebook.com/profile.php?id=100092012490630" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="https://www.linkedin.com/company/96053515" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 South Sea. Todos os direitos reservados.</p>
+                <p>CNPJ: 50.170.386/0001-58</p>
+            </div>
+        </div>
+    </footer>
+
+    <a href="https://wa.me/5548999013968" class="whatsapp-float" target="_blank" rel="noopener" aria-label="WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const projects = document.querySelectorAll('.project-card');
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    // Add active class to clicked button
+                    button.classList.add('active');
+
+                    const filter = button.getAttribute('data-filter');
+
+                    projects.forEach(project => {
+                        if (filter === 'all' || project.getAttribute('data-category') === filter) {
+                            project.style.display = 'block';
+                        } else {
+                            project.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

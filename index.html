@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!-- Mantendo o head e demais seções iguais, atualizando apenas a seção do carrossel -->
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -25,6 +24,7 @@
             </div>
             <ul class="nav-menu">
                 <li><a href="#servicos">Serviços</a></li>
+                <li><a href="portfolio.html">Portfólio</a></li>
                 <li><a href="#empresas">Empresas</a></li>
                 <li><a href="#sobre">Sobre</a></li>
                 <li><a href="#contato">Contato</a></li>
@@ -74,6 +74,20 @@
                         <i class="fas fa-bullhorn" aria-hidden="true"></i>
                         <h3>Gestão de Redes Sociais</h3>
                         <p>Gerenciamento estratégico das suas redes sociais.</p>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Nova seção CTA para o Portfólio -->
+        <section class="portfolio-cta">
+            <div class="container">
+                <h2 class="section-title">Conheça Nossos Projetos</h2>
+                <p class="section-subtitle">Explore nossa galeria de cases de sucesso e descubra como podemos transformar seu negócio</p>
+                <div class="portfolio-cta-buttons">
+                    <a href="portfolio.html" class="portfolio-button">
+                        <i class="fas fa-images"></i>
+                        Ver Portfólio
                     </a>
                 </div>
             </div>
@@ -223,17 +237,15 @@
         document.addEventListener('DOMContentLoaded', function() {
             const track = document.querySelector('.carousel-track');
             const logos = track.querySelectorAll('.company-logo');
-            const logoWidth = 180; // Largura fixa do logo
-            const gap = 40; // Espaçamento entre logos
+            const logoWidth = 180;
+            const gap = 40;
             let position = 0;
             
-            // Calcula a largura total necessária para um conjunto de logos
             const totalWidth = logos.length * (logoWidth + gap) / 2;
             
             function moveCarousel() {
-                position -= 0.5; // Velocidade reduzida
+                position -= 0.5;
                 
-                // Reseta a posição quando atingir metade dos logos
                 if (Math.abs(position) >= totalWidth) {
                     position = 0;
                 }
@@ -242,7 +254,6 @@
                 requestAnimationFrame(moveCarousel);
             }
 
-            // Pausa a animação quando o mouse está sobre o carrossel
             const carousel = document.querySelector('.companies-carousel');
             carousel.addEventListener('mouseenter', () => {
                 track.style.animationPlayState = 'paused';
