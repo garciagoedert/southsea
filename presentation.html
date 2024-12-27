@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>South Sea | Apresentação</title>
+    <link rel="icon" type="image/svg+xml" href="imgs/favicon.svg">
+    
+    <!-- Preload fonts -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" as="style">
+    <link rel="preload" href="https://fonts.gstatic.com/s/inter/v12/UcC73FwrK3iLTeHuS_fvQtMwCp50KnMa1ZL7.woff2" as="font" type="font/woff2" crossorigin>
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .presentation-hero {
+            background: linear-gradient(135deg, #1E293B 0%, var(--primary-color) 100%);
+            color: var(--white);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .presentation-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 150%, rgba(255, 255, 255, 0.08) 0%, transparent 50%);
+        }
+
+        .presentation-hero .hero-content {
+            position: relative;
+            z-index: 1;
+            padding-top: 0;
+        }
+
+        .presentation-hero h1 {
+            color: var(--white);
+            font-size: 6rem;
+            margin-bottom: 2rem;
+        }
+
+        .presentation-hero .hero-subtitle {
+            color: #94A3B8;
+            font-size: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .results-section {
+            padding: var(--section-spacing) 0;
+            background: var(--white);
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .result-card {
+            text-align: center;
+            padding: 2rem;
+            background: #F8FAFC;
+            border-radius: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .result-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .result-number {
+            font-size: 4rem;
+            font-weight: 900;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            line-height: 1;
+        }
+
+        .result-label {
+            font-size: 1.25rem;
+            color: var(--text-light);
+            line-height: 1.4;
+        }
+
+        .differentials {
+            padding: var(--section-spacing) 0;
+            background: #F8FAFC;
+        }
+
+        .differentials-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .differential-card {
+            display: flex;
+            gap: 2rem;
+            padding: 2rem;
+            background: var(--white);
+            border-radius: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .differential-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .differential-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+        }
+
+        .differential-content h3 {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .differential-content p {
+            color: var(--text-light);
+            font-size: 1.125rem;
+            line-height: 1.6;
+        }
+
+        .next-steps {
+            padding: var(--section-spacing) 0;
+            background: linear-gradient(135deg, #1E293B 0%, var(--primary-color) 100%);
+            color: var(--white);
+            text-align: center;
+        }
+
+        .next-steps .section-title {
+            color: #FFFFFF;
+            font-size: 3rem;
+            font-weight: 800;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1rem;
+        }
+
+        .next-steps .section-subtitle {
+            color: #E2E8F0;
+            font-size: 1.25rem;
+            margin-bottom: 3rem;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .step-card {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: var(--white);
+            color: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 auto 1.5rem;
+        }
+
+        .step-card h3 {
+            color: var(--white);
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .step-card p {
+            color: #E2E8F0;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .presentation-cta {
+            margin-top: 4rem;
+            text-align: center;
+        }
+
+        .start-project-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.25rem 3rem;
+            background: var(--white);
+            color: var(--primary-color);
+            text-decoration: none;
+            border-radius: 0.5rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .start-project-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .presentation-hero h1 {
+                font-size: 4rem;
+            }
+            
+            .results-grid,
+            .differentials-grid,
+            .steps-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav-container">
+            <div class="logo">
+                <img src="imgs/logowhite.svg" alt="South Sea" class="logo-img">
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="presentation-hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h1>Transforme seu<br>Negócio Digital</h1>
+                    <p class="hero-subtitle">Somos especialistas em criar experiências digitais memoráveis e gerar resultados reais para nossos clientes.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="results-section">
+            <div class="container">
+                <h2 class="section-title">Resultados que Entregamos</h2>
+                <p class="section-subtitle">Números que comprovam nossa excelência</p>
+                
+                <div class="results-grid">
+                    <div class="result-card">
+                        <div class="result-number">300%</div>
+                        <p class="result-label">Aumento médio em<br>vendas online</p>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-number">150k+</div>
+                        <p class="result-label">Leads gerados<br>para clientes</p>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-number">98%</div>
+                        <p class="result-label">Taxa de satisfação<br>dos clientes</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="services">
+            <div class="container">
+                <h2 class="section-title">Soluções Completas</h2>
+                <p class="section-subtitle">Tudo que você precisa para crescer no digital</p>
+                
+                <div class="services-grid">
+                    <div class="service-card">
+                        <i class="fas fa-bullseye" aria-hidden="true"></i>
+                        <h3>Marketing Estratégico</h3>
+                        <p>Planejamento personalizado para atingir seus objetivos de negócio.</p>
+                    </div>
+                    <div class="service-card">
+                        <i class="fas fa-paint-brush" aria-hidden="true"></i>
+                        <h3>Design & Branding</h3>
+                        <p>Identidade visual que conecta sua marca com seu público.</p>
+                    </div>
+                    <div class="service-card">
+                        <i class="fas fa-code" aria-hidden="true"></i>
+                        <h3>Desenvolvimento Web</h3>
+                        <p>Sites e plataformas otimizados para conversão.</p>
+                    </div>
+                    <div class="service-card">
+                        <i class="fas fa-chart-line" aria-hidden="true"></i>
+                        <h3>Growth Marketing</h3>
+                        <p>Estratégias data-driven para crescimento acelerado.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="differentials">
+            <div class="container">
+                <h2 class="section-title">Por que Escolher a South Sea?</h2>
+                <p class="section-subtitle">Nossos diferenciais competitivos</p>
+
+                <div class="differentials-grid">
+                    <div class="differential-card">
+                        <div class="differential-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="differential-content">
+                            <h3>Equipe Especializada</h3>
+                            <p>Profissionais altamente qualificados e dedicados ao seu projeto.</p>
+                        </div>
+                    </div>
+                    <div class="differential-card">
+                        <div class="differential-icon">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <div class="differential-content">
+                            <h3>Resultados Rápidos</h3>
+                            <p>Metodologia ágil para entregar valor desde o primeiro mês.</p>
+                        </div>
+                    </div>
+                    <div class="differential-card">
+                        <div class="differential-icon">
+                            <i class="fas fa-chart-pie"></i>
+                        </div>
+                        <div class="differential-content">
+                            <h3>Análise de Dados</h3>
+                            <p>Decisões baseadas em dados para maximizar resultados.</p>
+                        </div>
+                    </div>
+                    <div class="differential-card">
+                        <div class="differential-icon">
+                            <i class="fas fa-handshake"></i>
+                        </div>
+                        <div class="differential-content">
+                            <h3>Parceria Estratégica</h3>
+                            <p>Comprometimento total com o sucesso do seu negócio.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="next-steps">
+            <div class="container">
+                <h2 class="section-title">Próximos Passos</h2>
+                <p class="section-subtitle">Como iniciar sua transformação digital</p>
+
+                <div class="steps-grid">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <h3>Diagnóstico</h3>
+                        <p>Análise completa do seu negócio e objetivos</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <h3>Estratégia</h3>
+                        <p>Planejamento personalizado de ações</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <h3>Implementação</h3>
+                        <p>Execução e otimização contínua</p>
+                    </div>
+                </div>
+
+                <div class="presentation-cta">
+                    <a href="https://wa.me/5548999013968" class="start-project-button">
+                        <i class="fas fa-rocket"></i>
+                        Iniciar Projeto
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Adiciona classe ao header quando rolar a página
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('.header');
+            if (window.scrollY > 50) {
+                header.style.background = '#0F172A';
+            } else {
+                header.style.background = 'transparent';
+            }
+        });
+
+        // Inicializa com header transparente
+        document.querySelector('.header').style.background = 'transparent';
+    </script>
+</body>
+</html>
