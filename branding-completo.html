@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Branding Completo | South Sea</title>
+    <link rel="icon" type="image/svg+xml" href="imgs/favicon.svg">
+    
+    <!-- Preload fonts -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" as="style">
+    <link rel="preload" href="https://fonts.gstatic.com/s/inter/v12/UcC73FwrK3iLTeHuS_fvQtMwCp50KnMa1ZL7.woff2" as="font" type="font/woff2" crossorigin>
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Estilos base da apresentação */
+        .presentation-hero {
+            background: linear-gradient(135deg, #1E293B 0%, var(--primary-color) 100%);
+            color: var(--white);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .presentation-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 150%, rgba(255, 255, 255, 0.08) 0%, transparent 50%);
+        }
+
+        .presentation-hero .hero-content {
+            position: relative;
+            z-index: 1;
+            padding-top: 0;
+        }
+
+        .presentation-hero h1 {
+            color: var(--white);
+            font-size: 6rem;
+            margin-bottom: 2rem;
+        }
+
+        .presentation-hero .hero-subtitle {
+            color: #94A3B8;
+            font-size: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        /* Seção de Benefícios */
+        .benefits-section {
+            padding: var(--section-spacing) 0;
+            background: var(--white);
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .benefit-card {
+            text-align: center;
+            padding: 2rem;
+            background: #F8FAFC;
+            border-radius: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .benefit-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .benefit-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .benefit-description {
+            color: var(--text-light);
+            font-size: 1.125rem;
+            line-height: 1.6;
+        }
+
+        /* Seção de Serviços Inclusos */
+        .services-included {
+            padding: var(--section-spacing) 0;
+            background: #F8FAFC;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .service-item {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 1rem;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .service-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .service-item i {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .service-item h3 {
+            font-size: 1.25rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .service-item p {
+            color: var(--text-light);
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        /* Seção CTA */
+        .next-steps {
+            padding: var(--section-spacing) 0;
+            background: linear-gradient(135deg, #1E293B 0%, var(--primary-color) 100%);
+            color: var(--white);
+            text-align: center;
+        }
+
+        .next-steps .section-title {
+            color: #FFFFFF;
+            font-size: 3rem;
+            font-weight: 800;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1rem;
+        }
+
+        .next-steps .section-subtitle {
+            color: #E2E8F0;
+            font-size: 1.25rem;
+            margin-bottom: 3rem;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .step-card {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: var(--white);
+            color: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 auto 1.5rem;
+        }
+
+        .step-card h3 {
+            color: var(--white);
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .step-card p {
+            color: #E2E8F0;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .presentation-cta {
+            margin-top: 4rem;
+            text-align: center;
+        }
+
+        .start-project-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.25rem 3rem;
+            background: var(--white);
+            color: var(--primary-color);
+            text-decoration: none;
+            border-radius: 0.5rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .start-project-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .presentation-hero h1 {
+                font-size: 4rem;
+            }
+            
+            .benefits-grid,
+            .services-grid,
+            .steps-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav-container">
+            <div class="logo">
+                <img src="imgs/logowhite.svg" alt="South Sea" class="logo-img">
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="presentation-hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h1>Branding<br>Completo</h1>
+                    <p class="hero-subtitle">Transforme sua marca em uma experiência única e memorável com nossa solução completa de branding.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="benefits-section">
+            <div class="container">
+                <h2 class="section-title">Benefícios do Branding Completo</h2>
+                <p class="section-subtitle">Diferenciais que transformam sua marca</p>
+                
+                <div class="benefits-grid">
+                    <div class="benefit-card">
+                        <i class="fas fa-fingerprint benefit-icon"></i>
+                        <h3 class="benefit-title">Identidade Única</h3>
+                        <p class="benefit-description">Desenvolvimento de uma marca autêntica e memorável que se destaca no mercado.</p>
+                    </div>
+                    <div class="benefit-card">
+                        <i class="fas fa-heart benefit-icon"></i>
+                        <h3 class="benefit-title">Conexão Emocional</h3>
+                        <p class="benefit-description">Criação de vínculos duradouros com seu público através de uma marca que transmite seus valores.</p>
+                    </div>
+                    <div class="benefit-card">
+                        <i class="fas fa-shield-alt benefit-icon"></i>
+                        <h3 class="benefit-title">Credibilidade</h3>
+                        <p class="benefit-description">Estabelecimento de autoridade no mercado com uma marca profissional e consistente.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="services-included">
+            <div class="container">
+                <h2 class="section-title">O Que Está Incluído</h2>
+                <p class="section-subtitle">Serviços completos para sua marca</p>
+
+                <div class="services-grid">
+                    <div class="service-item">
+                        <i class="fas fa-search"></i>
+                        <h3>Diagnóstico e Análise</h3>
+                        <p>Análise profunda do mercado e posicionamento da sua marca</p>
+                    </div>
+                    <div class="service-item">
+                        <i class="fas fa-palette"></i>
+                        <h3>Identidade Visual</h3>
+                        <p>Desenvolvimento completo da identidade visual da marca</p>
+                    </div>
+                    <div class="service-item">
+                        <i class="fas fa-book"></i>
+                        <h3>Manual de Marca</h3>
+                        <p>Guia completo de aplicação e uso da marca</p>
+                    </div>
+                    <div class="service-item">
+                        <i class="fas fa-bullhorn"></i>
+                        <h3>Tom de Voz</h3>
+                        <p>Definição da personalidade e comunicação da marca</p>
+                    </div>
+                    <div class="service-item">
+                        <i class="fas fa-box"></i>
+                        <h3>Design de Embalagens</h3>
+                        <p>Criação de embalagens alinhadas com a identidade</p>
+                    </div>
+                    <div class="service-item">
+                        <i class="fas fa-share-alt"></i>
+                        <h3>Gestão de Redes</h3>
+                        <p>Planejamento e gestão de redes sociais</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="next-steps">
+            <div class="container">
+                <h2 class="section-title">Como Começar</h2>
+                <p class="section-subtitle">Processo simplificado em 3 etapas</p>
+
+                <div class="steps-grid">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <h3>Diagnóstico</h3>
+                        <p>Análise completa da sua marca e objetivos</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <h3>Desenvolvimento</h3>
+                        <p>Criação e refinamento dos elementos</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <h3>Implementação</h3>
+                        <p>Aplicação e acompanhamento</p>
+                    </div>
+                </div>
+
+                <div class="presentation-cta">
+                    <a href="#" class="start-project-button">
+                        <i class="fas fa-rocket"></i>
+                        Iniciar Projeto
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Adiciona classe ao header quando rolar a página
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('.header');
+            if (window.scrollY > 50) {
+                header.style.background = '#0F172A';
+            } else {
+                header.style.background = 'transparent';
+            }
+        });
+
+        // Inicializa com header transparente
+        document.querySelector('.header').style.background = 'transparent';
+    </script>
+</body>
+</html>
