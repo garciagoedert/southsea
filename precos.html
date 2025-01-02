@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabela de Valores | South Sea</title>
+    <meta name="description" content="Conheça os valores dos nossos serviços especializados de marketing digital na South Sea.">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    
+    <!-- Preload fonts -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" as="style">
+    <link rel="preload" href="https://fonts.gstatic.com/s/inter/v12/UcC73FwrK3iLTeHuS_fvQtMwCp50KnMa1ZL7.woff2" as="font" type="font/woff2" crossorigin>
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .intro-section {
+            padding: 8rem 0 4rem;
+            background-color: var(--white);
+            text-align: center;
+        }
+
+        .main-title {
+            font-size: 3.5rem;
+            color: var(--primary-color);
+            font-weight: 900;
+            margin-bottom: 1rem;
+            letter-spacing: -.04em;
+        }
+
+        .main-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto 3rem;
+        }
+
+        /* Estilos da Seção de Implementação */
+        .implementation-section {
+            padding: 4rem 0;
+            background: linear-gradient(135deg, #1E293B 0%, var(--primary-color) 100%);
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .implementation-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 150%, rgba(255, 255, 255, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .implementation-content {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            position: relative;
+        }
+
+        .implementation-info {
+            position: relative;
+        }
+
+        .implementation-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            color: var(--white);
+        }
+
+        .implementation-description {
+            font-size: 1.125rem;
+            color: #94A3B8;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .implementation-features {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .implementation-features li {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem 0;
+            color: #E2E8F0;
+            font-size: 1.125rem;
+        }
+
+        .implementation-features li i {
+            color: #38BDF8;
+            font-size: 1.25rem;
+        }
+
+        .implementation-price-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            padding: 2.5rem;
+            text-align: center;
+            -webkit-backdrop-filter: blur(8px);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .price-content {
+            margin-bottom: 2rem;
+        }
+
+        .price-label {
+            display: block;
+            font-size: 1.25rem;
+            color: #94A3B8;
+            margin-bottom: 1rem;
+        }
+
+        .price-value {
+            font-size: 4rem;
+            font-weight: 800;
+            color: var(--white);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .price-period {
+            display: block;
+            color: #94A3B8;
+            font-size: 1rem;
+        }
+
+        .implementation-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            background: #38BDF8;
+            color: var(--primary-color);
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+
+        .implementation-button:hover {
+            background: #0EA5E9;
+            transform: translateY(-2px);
+        }
+
+        .implementation-button i {
+            font-size: 1.25rem;
+        }
+
+        /* Estilos das Seções de Serviços */
+        .service-section {
+            padding: 4rem 0;
+            background-color: var(--white);
+        }
+
+        .service-section:nth-child(even) {
+            background-color: #F8FAFC;
+        }
+
+        .service-section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .service-section-title {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .service-section-subtitle {
+            font-size: 1.125rem;
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 2rem 0;
+        }
+
+        .marketing-section {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 0;
+        }
+
+        .marketing-container {
+            position: relative;
+            padding-bottom: 2rem;
+        }
+
+        .pricing-card {
+            background: var(--white);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .pricing-header {
+            margin-bottom: 2rem;
+        }
+
+        .pricing-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .pricing-subtitle {
+            color: var(--text-light);
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .pricing-price {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .pricing-price small {
+            font-size: 1rem;
+            color: var(--text-light);
+            font-weight: 400;
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            text-align: left;
+            flex-grow: 1;
+        }
+
+        .pricing-features li {
+            padding: 0.75rem 0;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-bottom: 1px solid #F1F5F9;
+        }
+
+        .pricing-features li i {
+            color: var(--primary-color);
+            font-size: 1rem;
+        }
+
+        .pricing-button {
+            margin-top: 2rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            background: var(--primary-color);
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: opacity 0.2s ease;
+        }
+
+        .pricing-button:hover {
+            opacity: 0.9;
+        }
+
+        .pricing-button i {
+            font-size: 1.25rem;
+        }
+
+        .extra-plan {
+            position: relative;
+            margin-top: -1rem;
+            border: 1px solid #E2E8F0;
+            background: #F8FAFC;
+            border-radius: 1rem;
+            padding: 1.5rem;
+        }
+
+        .extra-plan::before {
+            content: 'Extra';
+            position: absolute;
+            top: -0.75rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 0.25rem 1rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .extra-plan .pricing-card {
+            box-shadow: none;
+            background: transparent;
+            padding: 0;
+        }
+
+        .extra-plan .pricing-title {
+            font-size: 1.25rem;
+        }
+
+        .extra-plan .pricing-price {
+            font-size: 2rem;
+        }
+
+        .extra-plan .pricing-button {
+            background: transparent;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+        }
+
+        .extra-plan .pricing-button:hover {
+            background: var(--primary-color);
+            color: var(--white);
+            opacity: 1;
+        }
+
+        .cta-section {
+            padding: var(--section-spacing) 0;
+            background: linear-gradient(135deg, #1E293B 0%, var(--primary-color) 100%);
+            text-align: center;
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 150%, rgba(255, 255, 255, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .cta-section h2 {
+            font-size: 2.5rem;
+            color: var(--white);
+            margin-bottom: 1rem;
+            font-weight: 800;
+            position: relative;
+        }
+
+        .cta-section .cta-subtitle {
+            font-size: 1.125rem;
+            color: #94A3B8;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .cta-buttons {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 2.5rem;
+            }
+
+            .implementation-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .implementation-title {
+                font-size: 2rem;
+            }
+
+            .implementation-features li {
+                font-size: 1rem;
+            }
+
+            .price-value {
+                font-size: 3rem;
+            }
+
+            .service-section-title {
+                font-size: 2rem;
+            }
+
+            .pricing-grid {
+                grid-template-columns: 1fr;
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav-container">
+            <a href="index.html" class="logo">
+                <img src="imgs/logo.svg" alt="South Sea" class="logo-img">
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html#servicos">Serviços</a></li>
+                <li><a href="index.html#portfolio">Portfólio</a></li>
+                <li><a href="index.html#sobre">Sobre</a></li>
+                <li><a href="index.html#contato">Contato</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="intro-section">
+            <div class="container">
+                <h1 class="main-title">Tabela de Valores</h1>
+                <p class="main-subtitle">Invista no crescimento do seu negócio com nossos serviços especializados</p>
+            </div>
+        </section>
+
+        <!-- Seção de Implementação -->
+        <section class="implementation-section">
+            <div class="container">
+                <div class="implementation-content">
+                    <div class="implementation-info">
+                        <h2 class="implementation-title">Implementação</h2>
+                        <p class="implementation-description">
+                            Nossa implementação é a fase inicial do projeto, onde realizamos um diagnóstico completo do seu negócio e definimos as estratégias que serão aplicadas. Nesta etapa:
+                        </p>
+                        <ul class="implementation-features">
+                            <li><i class="fas fa-check"></i> Análise detalhada do seu negócio e mercado</li>
+                            <li><i class="fas fa-check"></i> Definição de objetivos e metas</li>
+                            <li><i class="fas fa-check"></i> Planejamento estratégico personalizado</li>
+                            <li><i class="fas fa-check"></i> Cronograma de ações</li>
+                            <li><i class="fas fa-check"></i> Configuração inicial das ferramentas</li>
+                        </ul>
+                    </div>
+                    <div class="implementation-price-card">
+                        <div class="price-content">
+                            <span class="price-label">Valor da Implementação</span>
+                            <div class="price-value">R$ 1.997</div>
+                            <span class="price-period">Pagamento único</span>
+                        </div>
+                        <!-- <a href="https://wa.me/5548999013968" class="implementation-button" target="_blank" rel="noopener">
+                            <i class="fab fa-whatsapp"></i>
+                            Contratar Implementação
+                        </a> -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Serviços de Design -->
+        <section class="service-section">
+            <div class="container">
+                <div class="service-section-header">
+                    <h2 class="service-section-title">Serviços de Design</h2>
+                    <p class="service-section-subtitle">Soluções completas para a identidade visual da sua marca</p>
+                </div>
+                <div class="pricing-grid">
+                    <!-- Branding Completo -->
+                    <div class="pricing-card">
+                        <div class="pricing-header">
+                            <h3 class="pricing-title">Branding Completo</h3>
+                            <p class="pricing-subtitle">Criação completa da sua identidade de marca</p>
+                            <div class="pricing-price">
+                                R$ 4.997<small>/projeto</small>
+                            </div>
+                        </div>
+                        <ul class="pricing-features">
+                            <li><i class="fas fa-check"></i> Relatório de Diagnóstico</li>
+                            <li><i class="fas fa-check"></i> Identidade Visual Completa</li>
+                            <li><i class="fas fa-check"></i> Manual de Marca</li>
+                            <li><i class="fas fa-check"></i> Proposta de Valor</li>
+                            <li><i class="fas fa-check"></i> Tom de Voz e Comunicação</li>
+                            <li><i class="fas fa-check"></i> Design de Embalagens</li>
+                            <li><i class="fas fa-check"></i> Material Promocional</li>
+                        </ul>
+                        <!-- <a href="https://wa.me/5548999013968" class="pricing-button" target="_blank" rel="noopener">
+                            <i class="fab fa-whatsapp"></i>
+                            Contratar Agora
+                        </a> -->
+                    </div>
+
+                    <!-- Rebranding Estratégico -->
+                    <div class="pricing-card">
+                        <div class="pricing-header">
+                            <h3 class="pricing-title">Rebranding Estratégico</h3>
+                            <p class="pricing-subtitle">Renovação estratégica da sua marca atual</p>
+                            <div class="pricing-price">
+                                R$ 3.997<small>/projeto</small>
+                            </div>
+                        </div>
+                        <ul class="pricing-features">
+                            <li><i class="fas fa-check"></i> Análise da Marca Atual</li>
+                            <li><i class="fas fa-check"></i> Identidade Visual Renovada</li>
+                            <li><i class="fas fa-check"></i> Manual de Marca Atualizado</li>
+                            <li><i class="fas fa-check"></i> Reposicionamento</li>
+                            <li><i class="fas fa-check"></i> Material Promocional</li>
+                            <li><i class="fas fa-check"></i> Análise de Mercado</li>
+                            <li><i class="fas fa-check"></i> Estratégia de Transição</li>
+                        </ul>
+                        <!-- <a href="https://wa.me/5548999013968" class="pricing-button" target="_blank" rel="noopener">
+                            <i class="fab fa-whatsapp"></i>
+                            Contratar Agora
+                        </a> -->
+                    </div>
+
+                    <!-- Identidade Visual -->
+                    <div class="pricing-card">
+                        <div class="pricing-header">
+                            <h3 class="pricing-title">Identidade Visual</h3>
+                            <p class="pricing-subtitle">Criação da parte visual da sua marca</p>
+                            <div class="pricing-price">
+                                R$ 2.997<small>/projeto</small>
+                            </div>
+                        </div>
+                        <ul class="pricing-features">
+                            <li><i class="fas fa-check"></i> Logo e Símbolo</li>
+                            <li><i class="fas fa-check"></i> Paleta de Cores</li>
+                            <li><i class="fas fa-check"></i> Tipografia</li>
+                            <li><i class="fas fa-check"></i> Manual de Marca</li>
+                            <li><i class="fas fa-check"></i> Material Básico</li>
+                            <li><i class="fas fa-check"></i> Mockups</li>
+                            <li><i class="fas fa-check"></i> Arquivos Editáveis</li>
+                        </ul>
+                        <!-- <a href="https://wa.me/5548999013968" class="pricing-button" target="_blank" rel="noopener">
+                            <i class="fab fa-whatsapp"></i>
+                            Contratar Agora
+                        </a> -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Serviços de Marketing -->
+        <section class="service-section">
+            <div class="container">
+                <div class="service-section-header">
+                    <h2 class="service-section-title">Serviços de Marketing</h2>
+                    <p class="service-section-subtitle">Estratégias completas para o crescimento digital do seu negócio</p>
+                </div>
+                <div class="marketing-section">
+                    <div class="marketing-container">
+                        <!-- Marketing Digital -->
+                        <div class="pricing-card">
+                            <div class="pricing-header">
+                                <h3 class="pricing-title">Marketing Digital</h3>
+                                <p class="pricing-subtitle">Gestão completa do marketing digital</p>
+                                <div class="pricing-price">
+                                    R$ 1.997<small>/mês</small>
+                                </div>
+                            </div>
+                            <ul class="pricing-features">
+                                <li><i class="fas fa-check"></i> Gestão de Redes Sociais</li>
+                                <li><i class="fas fa-check"></i> Criação de Conteúdo</li>
+                                <li><i class="fas fa-check"></i> Estratégia Digital</li>
+                                <li><i class="fas fa-check"></i> Tráfego Pago</li>
+                                <li><i class="fas fa-check"></i> Relatórios Mensais</li>
+                                <li><i class="fas fa-check"></i> Email Marketing</li>
+                                <li><i class="fas fa-check"></i> Otimização SEO</li>
+                            </ul>
+                            <!-- <a href="https://wa.me/5548999013968" class="pricing-button" target="_blank" rel="noopener">
+                                <i class="fab fa-whatsapp"></i>
+                                Contratar Agora
+                            </a> -->
+                        </div>
+
+                        <!-- Redes Sociais (Plano Extra) -->
+                        <div class="extra-plan">
+                            <div class="pricing-card">
+                                <div class="pricing-header">
+                                    <h3 class="pricing-title">Redes Sociais</h3>
+                                    <p class="pricing-subtitle">Gestão profissional das suas redes</p>
+                                    <div class="pricing-price">
+                                        R$ 997<small>/mês</small>
+                                    </div>
+                                </div>
+                                <ul class="pricing-features">
+                                    <li><i class="fas fa-check"></i> 15 Posts Mensais</li>
+                                    <li><i class="fas fa-check"></i> Stories Diários</li>
+                                    <li><i class="fas fa-check"></i> Design Personalizado</li>
+                                    <li><i class="fas fa-check"></i> Copywriting</li>
+                                    <li><i class="fas fa-check"></i> Calendário Editorial</li>
+                                    <li><i class="fas fa-check"></i> Relatório Mensal</li>
+                                    <li><i class="fas fa-check"></i> Suporte WhatsApp</li>
+                                </ul>
+                                <!-- <a href="https://wa.me/5548999013968" class="pricing-button" target="_blank" rel="noopener">
+                                    <i class="fab fa-whatsapp"></i>
+                                    Contratar Agora
+                                </a> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Serviços de Desenvolvimento -->
+        <section class="service-section">
+            <div class="container">
+                <div class="service-section-header">
+                    <h2 class="service-section-title">Serviços de Desenvolvimento</h2>
+                    <p class="service-section-subtitle">Soluções web profissionais para sua presença digital</p>
+                </div>
+                <div class="pricing-grid">
+                    <!-- Desenvolvimento Web -->
+                    <div class="pricing-card">
+                        <div class="pricing-header">
+                            <h3 class="pricing-title">Desenvolvimento Web</h3>
+                            <p class="pricing-subtitle">Criação do seu site profissional</p>
+                            <div class="pricing-price">
+                                R$ 3.497<small>/projeto</small>
+                            </div>
+                        </div>
+                        <ul class="pricing-features">
+                            <li><i class="fas fa-check"></i> Design Responsivo</li>
+                            <li><i class="fas fa-check"></i> Otimização SEO</li>
+                            <li><i class="fas fa-check"></i> Integração Analytics</li>
+                            <li><i class="fas fa-check"></i> Formulários</li>
+                            <li><i class="fas fa-check"></i> Hospedagem 1 Ano</li>
+                            <li><i class="fas fa-check"></i> Domínio 1 Ano</li>
+                            <li><i class="fas fa-check"></i> Suporte 30 Dias</li>
+                        </ul>
+                        <!-- <a href="https://wa.me/5548999013968" class="pricing-button" target="_blank" rel="noopener">
+                            <i class="fab fa-whatsapp"></i>
+                            Contratar Agora
+                        </a> -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção CTA -->
+        <section class="cta-section">
+            <div class="container">
+                <h2>Pronto para investir no seu negócio?</h2>
+                <p class="cta-subtitle">Escolha o plano ideal e comece sua transformação digital hoje</p>
+                <div class="cta-buttons">
+                    <a href="https://wa.me/5548999013968" class="whatsapp-button" target="_blank" rel="noopener">
+                        <i class="fab fa-whatsapp"></i>
+                        Fale com Nossos Especialistas
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <div class="logo">
+                        <img src="imgs/logowhite.svg" alt="South Sea" class="logo-img">
+                    </div>
+                    <p>Transformando negócios através do marketing digital.</p>
+                </div>
+                <div class="footer-social">
+                    <a href="https://www.instagram.com/co.southsea/" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.facebook.com/profile.php?id=100092012490630" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="https://www.linkedin.com/company/96053515" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 South Sea. Todos os direitos reservados.</p>
+                <p>CNPJ: 50.170.386/0001-58</p>
+            </div>
+        </div>
+    </footer>
+
+    <a href="https://wa.me/5548999013968" class="whatsapp-float" target="_blank" rel="noopener" aria-label="WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+</body>
+</html>
