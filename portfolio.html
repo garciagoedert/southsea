@@ -55,7 +55,7 @@
                         <div class="project-image">
                             <img src="imgs//portfolio/forma.svg" alt="Nome do Projeto">
                             <div class="project-overlay">
-                                <a href="#" class="project-link">
+                                <a href="https://www.formafitness.net.br/" class="project-link">
                                     <i class="fas fa-external-link-alt"></i>
                                     Ver Projeto
                                 </a>
@@ -66,7 +66,6 @@
                             <p>Desenvolvimento Web</p>
                             <div class="project-tags">
                                 <span>Website</span>
-                                
                             </div>
                         </div>
                     </article>
@@ -76,7 +75,7 @@
                         <div class="project-image">
                             <img src="imgs/portfolio/lari.svg" alt="Nome do Projeto">
                             <div class="project-overlay">
-                                <a href="#" class="project-link">
+                                <a href="https://www.behance.net/gallery/188332051/Lari-Cosmticos-Naturais" class="project-link">
                                     <i class="fas fa-external-link-alt"></i>
                                     Ver Projeto
                                 </a>
@@ -89,17 +88,16 @@
                                 <span>Branding</span>
                                 <span>Logo</span>
                                 <span>Desenvolvimento</span>
-
                             </div>
                         </div>
                     </article>
 
                     <!-- Projeto 3 -->
-                    <article class="project-card" data-category="marketing">
+                    <article class="project-card" data-category="marketing web">
                         <div class="project-image">
                             <img src="imgs/portfolio/shapes.svg" alt="Nome do Projeto">
                             <div class="project-overlay">
-                                <a href="#" class="project-link">
+                                <a href="https://www.behance.net/gallery/188332521/Shapes-School" class="project-link">
                                     <i class="fas fa-external-link-alt"></i>
                                     Ver Projeto
                                 </a>
@@ -115,6 +113,7 @@
                             </div>
                         </div>
                     </article>
+                    
                 </div>
             </div>
         </section>
@@ -172,7 +171,10 @@
                     const filter = button.getAttribute('data-filter');
 
                     projects.forEach(project => {
-                        if (filter === 'all' || project.getAttribute('data-category') === filter) {
+                        // Get all categories for this project
+                        const categories = project.getAttribute('data-category').split(' ');
+                        
+                        if (filter === 'all' || categories.includes(filter)) {
                             project.style.display = 'block';
                         } else {
                             project.style.display = 'none';
