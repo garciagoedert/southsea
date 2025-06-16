@@ -5,129 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>South Sea - Links</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary-color: #0F172A;
-            --text-light: #64748B;
-            --white: #FFF;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            line-height: 1.5;
-            background: linear-gradient(135deg, #1E293B 0%, var(--primary-color) 100%);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 2rem 1rem;
-        }
-
-        .profile {
-            text-align: center;
-            margin-bottom: 3rem;
-            background: rgba(255, 255, 255, 0.1);
-            -webkit-backdrop-filter: blur(10px);
-            backdrop-filter: blur(10px);
-            @supports not (backdrop-filter: blur(10px)) {
-                background: rgba(255, 255, 255, 0.2);
-            }
-            padding: 2rem;
-            border-radius: 1rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            max-width: 500px;
-            width: 100%;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .profile img {
-            width: 150px;
-            height: auto;
-            margin-bottom: 1.5rem;
-            filter: brightness(0) invert(1);
-        }
-
-        .profile p {
-            color: var(--white);
-            font-size: 1.125rem;
-            font-weight: 500;
-            opacity: 0.9;
-        }
-
-        .links-container {
-            width: 100%;
-            max-width: 500px;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .link {
-            background: rgba(255, 255, 255, 0.1);
-            -webkit-backdrop-filter: blur(10px);
-            backdrop-filter: blur(10px);
-            @supports not (backdrop-filter: blur(10px)) {
-                background: rgba(255, 255, 255, 0.2);
-            }
-            padding: 1.25rem;
-            border-radius: 0.5rem;
-            text-decoration: none;
-            color: var(--white);
-            font-weight: 500;
-            text-align: center;
-            transition: all 0.2s ease;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            font-size: 1.1rem;
-        }
-
-        .link:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-            background: rgba(255, 255, 255, 0.15);
-            border-color: rgba(255, 255, 255, 0.2);
-        }
-
-        .whatsapp {
-            background: #25D366;
-            color: var(--white);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            border: none;
-        }
-
-        .whatsapp:hover {
-            background: #22c35e;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(37, 211, 102, 0.3);
-        }
-
-        @media (max-width: 480px) {
-            body {
-                padding: 1.5rem 1rem;
-            }
-
-            .profile img {
-                width: 100px;
-            }
-
-            .profile h1 {
-                font-size: 1.25rem;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="linktree.css">
 </head>
 <body>
     <div class="profile">
-        <img src="imgs/logo.svg" alt="South Sea">
+        <div class="logo">
+            <img src="imgs/logo.svg" alt="South Sea" class="logo-img">
+        </div>
         <p>Agência de Marketing Digital</p>
     </div>
 
@@ -139,9 +26,7 @@
         <a href="redes-sociais.html" class="link">Redes Sociais</a>
         <a href="portfolio.html" class="link">Portfólio</a>
         <a href="https://wa.me/5548999013968" class="link whatsapp">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2C6.48 2 2 6.48 2 12C2 13.7 2.37 15.3 3.07 16.8L2 22L7.3 20.93C8.8 21.63 10.4 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C10.6 20 9.2 19.6 8 18.9L4.5 19.5L5.1 16C4.4 14.8 4 13.4 4 12C4 7.58 7.58 4 12 4C16.42 4 20 7.58 20 12C20 16.42 16.42 20 12 20Z" fill="currentColor"/>
-            </svg>
+            <i class="fab fa-whatsapp" aria-hidden="true"></i>
             Fale Conosco no WhatsApp
         </a>
     </div>
