@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>South Sea | Navegamos Marcas ao seu Legado</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Montserrat & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌊</text></svg>">
+
+    <style>
+        /* Paleta de Cores e Tipografia da South Sea */
+        :root {
+            --bg-brand-navy: #0A192F;
+            --bg-brand-light-navy: #112240;
+            --text-brand-lightest: #E6F1FF;
+            --text-brand-light: #CCD6F6;
+            --text-brand-slate: #8892B0;
+            --brand-accent: #64FFDA; /* Menta Vibrante */
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-brand-navy);
+            color: var(--text-brand-slate);
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-brand-lightest);
+        }
+
+        .section {
+            padding: 6rem 1.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .section {
+                padding: 8rem 2rem;
+            }
+        }
+
+        /* Animação de entrada */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Efeito Glassmorphism para cards */
+        .glass-card {
+            background: rgba(17, 34, 64, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(100, 255, 218, 0.1);
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover {
+            transform: translateY(-5px);
+            border: 1px solid rgba(100, 255, 218, 0.3);
+        }
+
+        /* Botão de Ação Principal (CTA) */
+        .cta-button {
+            background-color: var(--brand-accent);
+            color: var(--bg-brand-navy);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(100, 255, 218, 0.2);
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+
+    <!-- =================================================================
+    SEÇÃO 1: HERÓI - A PRIMEIRA ONDA DE IMPACTO
+    ================================================================== -->
+    <header class="relative min-h-screen flex items-center justify-center text-center p-6 overflow-hidden">
+        <!-- Vídeo de Fundo (Substituir pela URL do seu vídeo) -->
+        <video autoplay loop muted playsinline class="absolute z-0 w-auto min-w-full min-h-full max-w-none">
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-calm-sea-seen-from-a-boat-4579-large.mp4" type="video/mp4">
+            A imagem do seu navegador não suporta o vídeo.
+        </video>
+        
+        <!-- Sobreposição escura para legibilidade -->
+        <div class="absolute inset-0 bg-brand-navy/80"></div>
+        
+        <!-- Conteúdo do Herói -->
+        <div class="relative z-10 max-w-4xl reveal">
+            <img src="https://placehold.co/200x80/0A192F/64FFDA?text=South+Sea" alt="Logo South Sea" class="mx-auto h-16 w-auto mb-10">
+            <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight mb-4">
+                Transforme a Sua Visão Numa Marca de Legado.
+            </h1>
+            <p class="text-xl md:text-2xl text-brand-slate max-w-3xl mx-auto mb-10">
+                Num oceano digital complexo, a sua marca precisa mais do que beleza; precisa de um navegador experiente. A South Sea traça a rota, navega as complexidades e garante que a sua viagem termine em sucesso.
+            </p>
+            <a href="#contact" class="cta-button text-lg py-4 px-10 rounded-md inline-block">
+                Agendar Consulta Estratégica
+            </a>
+        </div>
+    </header>
+
+    <main class="bg-brand-navy">
+        <!-- =================================================================
+        SEÇÃO 2: ÂNCORA DE CREDIBILIDADE
+        ================================================================== -->
+        <section class="py-12 bg-brand-light-navy">
+            <div class="container mx-auto text-center reveal">
+                <h4 class="text-brand-slate font-semibold mb-6">A confiança de mais de 50+ clientes em mais de 100 viagens de sucesso.</h4>
+                <!-- Logos de clientes (placeholders) -->
+                <div class="flex justify-center items-center space-x-8 md:space-x-12 opacity-60">
+                    <p class="font-bold text-2xl text-brand-slate">CLIENTE A</p>
+                    <p class="font-bold text-2xl text-brand-slate">CLIENTE B</p>
+                    <p class="font-bold text-2xl text-brand-slate hidden sm:block">CLIENTE C</p>
+                    <p class="font-bold text-2xl text-brand-slate hidden md:block">CLIENTE D</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- =================================================================
+        SEÇÃO 3: AGITAÇÃO - MAPEANDO AS ÁGUAS TURBULENTAS
+        ================================================================== -->
+        <section id="problema" class="section">
+            <div class="container mx-auto max-w-5xl text-center reveal">
+                <h2 class="text-3xl md:text-4xl font-bold mb-6">
+                    <span class="text-brand-accent font-mono">01.</span> A sua marca está a navegar à deriva?
+                </h2>
+                <p class="text-lg text-brand-slate max-w-3xl mx-auto mb-16">Muitas empresas com produtos excelentes falham por não terem uma marca que comunique o seu verdadeiro valor. Isto soa-lhe familiar?</p>
+                
+                <div class="grid md:grid-cols-2 gap-8 text-center">
+                    <div class="glass-card p-8 rounded-lg">
+                        <h3 class="font-bold text-xl mb-3 text-brand-lightest">Sente-se Invisível</h3>
+                        <p>A sua marca perde-se no ruído do mercado, independentemente da qualidade superior da sua oferta.</p>
+                    </div>
+                    <div class="glass-card p-8 rounded-lg">
+                        <h3 class="font-bold text-xl mb-3 text-brand-lightest">Compete por Preço</h3>
+                        <p>Vê-se forçado a competir no preço porque o valor da sua marca não é percebido pelo cliente.</p>
+                    </div>
+                    <div class="glass-card p-8 rounded-lg">
+                        <h3 class="font-bold text-xl mb-3 text-brand-lightest">Comunicação Inconsistente</h3>
+                        <p>A sua identidade visual varia entre plataformas, o que gera confusão e mina a confiança do consumidor.</p>
+                    </div>
+                    <div class="glass-card p-8 rounded-lg">
+                        <h3 class="font-bold text-xl mb-3 text-brand-lightest">Atrai o Público Errado</h3>
+                        <p>A sua marca atrai curiosos e não os clientes ideais que se tornam verdadeiros embaixadores.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =================================================================
+        SEÇÃO 4: SOLUÇÃO - A BÚSSOLA DA SOUTH SEA
+        ================================================================== -->
+        <section id="solucao" class="section bg-brand-light-navy">
+            <div class="container mx-auto max-w-6xl text-center reveal">
+                <h2 class="text-3xl md:text-4xl font-bold mb-16">
+                    <span class="text-brand-accent font-mono">02.</span> Três Viagens, Um Destino: O Seu Sucesso.
+                </h2>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <!-- Card de Serviço 1 -->
+                    <div class="glass-card p-8 rounded-lg flex flex-col">
+                        <h3 class="text-2xl font-bold mb-2">Branding: A Viagem Inaugural</h3>
+                        <p class="flex-grow mb-4">Para quem parte do zero. Definimos o seu destino (estratégia), construímos o seu navio (identidade) e traçamos a sua rota para o mercado.</p>
+                        <span class="text-brand-accent font-semibold mt-auto">Ideal para novas empresas e produtos.</span>
+                    </div>
+                    <!-- Card de Serviço 2 -->
+                    <div class="glass-card p-8 rounded-lg flex flex-col border-2 border-brand-accent shadow-2xl shadow-brand-accent/10">
+                        <h3 class="text-2xl font-bold mb-2">Rebranding: A Correção de Rumo</h3>
+                        <p class="flex-grow mb-4">Para navios estabelecidos que procuram novas terras. Avaliamos a sua posição, modernizamos a sua embarcação e navegamos em direção a uma nova relevância e crescimento.</p>
+                        <span class="text-brand-accent font-semibold mt-auto">Perfeito para empresas em evolução.</span>
+                    </div>
+                    <!-- Card de Serviço 3 -->
+                    <div class="glass-card p-8 rounded-lg flex flex-col">
+                        <h3 class="text-2xl font-bold mb-2">Identidade Visual: Hastear a Bandeira</h3>
+                        <p class="flex-grow mb-4">Para navios com um rumo definido, mas sem cores. Desenhamos uma bandeira inconfundível. Um sistema visual coeso que garante que seja reconhecido e lembrado.</p>
+                        <span class="text-brand-accent font-semibold mt-auto">Para marcas que precisam de impacto visual.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =================================================================
+        SEÇÃO 5: O PROCESSO - O MAPA DA VIAGEM
+        ================================================================== -->
+        <section id="processo" class="section">
+            <div class="container mx-auto max-w-3xl text-center reveal">
+                <h2 class="text-3xl md:text-4xl font-bold mb-16">
+                    <span class="text-brand-accent font-mono">03.</span> A Nossa Rota para o Seu Legado
+                </h2>
+                <div class="space-y-8">
+                    <!-- Etapa 1 -->
+                    <div class="glass-card p-6 rounded-lg text-left flex items-center space-x-6">
+                        <span class="text-4xl font-bold text-brand-accent">1</span>
+                        <div>
+                            <h3 class="text-xl font-bold">Definir o Destino</h3>
+                            <p class="text-brand-slate">Começamos com uma imersão profunda no seu negócio para entender os seus objetivos e desafios.</p>
+                        </div>
+                    </div>
+                    <!-- Etapa 2 -->
+                    <div class="glass-card p-6 rounded-lg text-left flex items-center space-x-6">
+                        <span class="text-4xl font-bold text-brand-accent">2</span>
+                        <div>
+                            <h3 class="text-xl font-bold">Mapear as Águas</h3>
+                            <p class="text-brand-slate">Analisamos o mercado e a concorrência para encontrar o seu oceano azul de oportunidades.</p>
+                        </div>
+                    </div>
+                    <!-- Etapa 3 -->
+                    <div class="glass-card p-6 rounded-lg text-left flex items-center space-x-6">
+                        <span class="text-4xl font-bold text-brand-accent">3</span>
+                        <div>
+                            <h3 class="text-xl font-bold">Desenhar a Embarcação</h3>
+                            <p class="text-brand-slate">Criamos a sua identidade visual e a sua narrativa de marca, desde o logo até ao tom de voz.</p>
+                        </div>
+                    </div>
+                    <!-- Etapa 4 -->
+                    <div class="glass-card p-6 rounded-lg text-left flex items-center space-x-6">
+                        <span class="text-4xl font-bold text-brand-accent">4</span>
+                        <div>
+                            <h3 class="text-xl font-bold">Testes de Mar</h3>
+                            <p class="text-brand-slate">Refinamos cada detalhe com base no seu feedback para garantir que o resultado final seja perfeito.</p>
+                        </div>
+                    </div>
+                    <!-- Etapa 5 -->
+                    <div class="glass-card p-6 rounded-lg text-left flex items-center space-x-6">
+                        <span class="text-4xl font-bold text-brand-accent">5</span>
+                        <div>
+                            <h3 class="text-xl font-bold">Lançar a Viagem</h3>
+                            <p class="text-brand-slate">Entregamos todos os ativos e o manual da marca, deixando-o pronto para conquistar o mercado.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =================================================================
+        SEÇÃO 6: PROVA SOCIAL - HISTÓRIAS DE VIAGENS BEM-SUCEDIDAS
+        ================================================================== -->
+        <section id="prova" class="section bg-brand-light-navy">
+            <div class="container mx-auto max-w-5xl text-center reveal">
+                <h2 class="text-3xl md:text-4xl font-bold mb-16">
+                    <span class="text-brand-accent font-mono">04.</span> Diário de Bordo dos Nossos Clientes
+                </h2>
+                
+                <!-- Estudo de Caso -->
+                <div class="bg-brand-navy rounded-lg md:flex items-center overflow-hidden text-left shadow-2xl">
+                    <div class="md:w-1/2">
+                        <img src="https://placehold.co/800x600/112240/64FFDA?text=Projeto+Fintech" alt="Estudo de Caso Fintech" class="w-full h-full object-cover min-h-[300px] md:min-h-[450px]">
+                    </div>
+                    <div class="md:w-1/2 p-8 lg:p-12">
+                        <p class="text-brand-accent font-semibold mb-2">Rebranding Estratégico</p>
+                        <h3 class="text-3xl font-bold mb-4">Fintech Inovadora</h3>
+                        <p class="mb-4"><strong>A Tempestade:</strong> Lutava para se diferenciar num mercado saturado e a sua imagem não comunicava a sua tecnologia de ponta.</p>
+                        <p class="mb-6"><strong>A Nossa Navegação:</strong> Realizámos um rebranding completo, focando na clareza, segurança e inovação, com uma nova identidade visual e uma narrativa poderosa.</p>
+                        <div class="border-t border-brand-accent/20 pt-6">
+                            <p class="text-lg font-bold text-brand-lightest mb-2">O Destino: +40% em Leads Qualificados</p>
+                            <blockquote class="italic text-brand-light">"A South Sea não nos deu apenas um novo logo, deu-nos um novo futuro. O processo foi estratégico, transparente e o ROI foi visível em poucos meses."</blockquote>
+                            <p class="font-bold text-right mt-2">- CEO, Fintech Inovadora</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =================================================================
+        SEÇÃO 7: CTA FINAL - O CONVITE PARA EMBARCAR
+        ================================================================== -->
+        <section id="contact" class="section">
+            <div class="container mx-auto max-w-4xl reveal">
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <!-- Lado Esquerdo: Texto de Apoio -->
+                    <div class="text-center md:text-left">
+                        <h2 class="text-3xl md:text-4xl font-bold mb-4">
+                            <span class="text-brand-accent font-mono">05.</span> Pronto para Traçar a Sua Rota?
+                        </h2>
+                        <p class="text-lg text-brand-slate mb-6">A sua jornada para uma marca de legado começa com uma conversa. Sem compromisso, sem jargão. Apenas uma análise honesta do seu potencial e de como podemos ajudar a alcançá-lo.</p>
+                        <p class="text-brand-light">Preencha o formulário e um dos nossos estrategas entrará em contacto em menos de 24 horas para agendar a sua consulta gratuita.</p>
+                    </div>
+                    <!-- Lado Direito: Formulário -->
+                    <div class="bg-brand-light-navy p-8 rounded-lg shadow-2xl">
+                        <form id="contact-form">
+                            <div class="mb-5">
+                                <label for="name" class="block text-brand-slate mb-2">Nome</label>
+                                <input type="text" id="name" required class="w-full p-3 bg-brand-navy border border-brand-slate/30 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-accent text-brand-lightest">
+                            </div>
+                            <div class="mb-5">
+                                <label for="email" class="block text-brand-slate mb-2">Email Empresarial</label>
+                                <input type="email" id="email" required class="w-full p-3 bg-brand-navy border border-brand-slate/30 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-accent text-brand-lightest">
+                            </div>
+                            <div class="mb-6">
+                                <label for="service" class="block text-brand-slate mb-2">Qual a viagem que está a considerar?</label>
+                                <select id="service" class="w-full p-3 bg-brand-navy border border-brand-slate/30 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-accent text-brand-lightest">
+                                    <option>Branding (Viagem Inaugural)</option>
+                                    <option>Rebranding (Correção de Rumo)</option>
+                                    <option>Identidade Visual (Hastear a Bandeira)</option>
+                                    <option>Ainda não sei, preciso de um guia</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="cta-button text-lg py-3 px-8 rounded-md w-full">Solicitar a Minha Consulta Estratégica</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- =================================================================
+    FOOTER
+    ================================================================== -->
+    <footer class="bg-brand-light-navy text-center p-8">
+        <div class="container mx-auto text-brand-slate">
+            <img src="https://placehold.co/150x60/112240/64FFDA?text=South+Sea" alt="Logo South Sea" class="mx-auto h-12 w-auto mb-4 opacity-70">
+            <p>&copy; 2025 South Sea. Todos os direitos reservados.</p>
+            <p class="text-sm mt-1">Criado com 💙 em Florianópolis.</p>
+        </div>
+    </footer>
+
+    <!-- =================================================================
+    SCRIPTS
+    ================================================================== -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- ANIMAÇÃO DE REVELAÇÃO AO ROLAR ---
+            const revealElements = document.querySelectorAll('.reveal');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { 
+                threshold: 0.1 
+            });
+            revealElements.forEach(el => observer.observe(el));
+
+            // --- LÓGICA DO FORMULÁRIO ---
+            const contactForm = document.getElementById('contact-form');
+            if(contactForm) {
+                contactForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const button = this.querySelector('button[type="submit"]');
+                    button.innerText = 'A traçar a rota...';
+                    button.disabled = true;
+                    // Simulação de envio
+                    setTimeout(() => {
+                        button.innerText = 'Consulta Agendada!';
+                        setTimeout(() => {
+                            button.innerText = 'Solicitar a Minha Consulta Estratégica';
+                            button.disabled = false;
+                            contactForm.reset();
+                        }, 2500);
+                    }, 1500);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
