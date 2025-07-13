@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Nova Bandeira | Como Comunicar seu Rebranding</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Playfair Display (Serif) & Inter (Sans-serif) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Estilos customizados e configuração do Tailwind */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0A192F;
+            color: #E6F1FF;
+        }
+        .font-serif {
+            font-family: 'Playfair Display', serif;
+        }
+        .glassmorphism {
+            background: rgba(16, 39, 69, 0.5); /* Azul marinho mais claro com transparência */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(100, 255, 218, 0.2);
+        }
+        .cta-button {
+            background-color: #64FFDA;
+            color: #0A192F;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(100, 255, 218, 0.4);
+        }
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 25px rgba(100, 255, 218, 0.7);
+        }
+        .aurora-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        .aurora-bg::before, .aurora-bg::after {
+            content: '';
+            position: absolute;
+            width: 800px;
+            height: 800px;
+            border-radius: 50%;
+            opacity: 0.2;
+            filter: blur(100px);
+            z-index: -2;
+        }
+        .aurora-bg::before {
+            background: radial-gradient(circle, #64FFDA, transparent 60%);
+            top: -20%;
+            left: -20%;
+            animation: moveAurora1 20s infinite alternate;
+        }
+        .aurora-bg::after {
+            background: radial-gradient(circle, #4956E3, transparent 60%);
+            bottom: -20%;
+            right: -20%;
+            animation: moveAurora2 25s infinite alternate;
+        }
+        @keyframes moveAurora1 {
+            from { transform: translate(-20%, -20%) rotate(0deg); }
+            to { transform: translate(20%, 20%) rotate(360deg); }
+        }
+        @keyframes moveAurora2 {
+            from { transform: translate(20%, 20%) rotate(0deg); }
+            to { transform: translate(-20%, -20%) rotate(-360deg); }
+        }
+        .modal-overlay {
+            transition: opacity 0.3s ease;
+        }
+    </style>
+</head>
+<body class="antialiased relative">
+    <div class="aurora-bg"></div>
+
+    <!-- Modal de Checkout -->
+    <div id="checkout-modal" class="modal-overlay fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 opacity-0 pointer-events-none">
+        <div class="glassmorphism rounded-lg p-8 w-11/12 md:w-1/2 lg:w-1/3 max-w-lg transform scale-95 transition-transform duration-300">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="font-serif text-2xl text-white">Complete sua Compra</h3>
+                <button onclick="toggleModal()" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+            </div>
+            <form>
+                <div class="mb-4">
+                    <label for="name" class="block text-sm font-medium text-gray-300 mb-1">Nome Completo</label>
+                    <input type="text" id="name" class="w-full bg-gray-900/50 border border-gray-600 rounded-md p-2 text-white focus:ring-2 focus:ring-[#64FFDA] focus:outline-none">
+                </div>
+                <div class="mb-4">
+                    <label for="email" class="block text-sm font-medium text-gray-300 mb-1">Email</label>
+                    <input type="email" id="email" class="w-full bg-gray-900/50 border border-gray-600 rounded-md p-2 text-white focus:ring-2 focus:ring-[#64FFDA] focus:outline-none">
+                </div>
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-300 mb-1">Informações de Pagamento</label>
+                    <!-- Placeholder para um widget de pagamento como Stripe Elements -->
+                    <div class="w-full bg-gray-900/50 border border-gray-600 rounded-md p-3 text-gray-400">
+                        [Área segura para cartão de crédito]
+                    </div>
+                </div>
+                <div class="flex items-center justify-between mb-4">
+                    <span class="text-gray-400">Total:</span>
+                    <span class="text-white font-bold text-2xl">R$ 97,00</span>
+                </div>
+                <button type="submit" class="cta-button w-full font-bold py-3 px-6 rounded-lg text-lg">
+                    Finalizar Compra Segura
+                </button>
+                <div class="text-center mt-4 flex items-center justify-center text-gray-400 text-sm">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                    Compra 100% segura com criptografia SSL.
+                </div>
+            </form>
+        </div>
+    </div>
+    
+
+    <main class="container mx-auto px-6 py-12 md:py-24 relative z-10">
+
+        <!-- PARTE 1: A NARRATIVA CENTRAL -->
+
+        <!-- Seção do Herói -->
+        <header class="text-center max-w-4xl mx-auto mb-24 md:mb-32">
+            <h1 class="font-serif text-4xl md:text-6xl lg:text-7xl font-extrabold text-white leading-tight mb-4">
+                Para os que Erguem Bandeiras, Não Apenas Marcas.
+            </h1>
+            <p class="text-lg md:text-2xl text-gray-300 max-w-3xl mx-auto mb-8">
+                Se você acredita que uma marca é um organismo vivo, este não é um livro. É o início de uma transformação.
+            </p>
+            <div class="flex justify-center mb-10">
+                <img src="https://placehold.co/400x500/0A192F/E6F1FF?text=A+Nova+Bandeira" alt="Mockup 3D do ebook 'A Nova Bandeira'" class="rounded-lg shadow-2xl w-2/3 sm:w-1/2 md:w-1/3 transform hover:scale-105 transition-transform duration-300">
+            </div>
+            <a href="https://southsea.gumroad.com/"><button class="cta-button font-bold text-xl py-4 px-10 rounded-lg">
+                QUERO ERGUER MINHA BANDEIRA
+            </button></a>
+            <p class="mt-4 text-sm text-gray-400">Compra segura. Acesso imediato.</p>
+        </header>
+
+        <!-- Manifesto / Problema-Agitação-Solução -->
+        <section class="max-w-3xl mx-auto text-center mb-24 md:mb-32">
+            <h2 class="font-serif text-3xl md:text-4xl font-bold text-white mb-8">A Filosofia da Transformação</h2>
+            <div class="space-y-8 text-lg text-gray-300">
+                <p><strong class="text-[#64FFDA]">Problema:</strong> O mercado está saturado de marcas sem alma, presas em fórmulas do passado. Relevância é uma batalha diária.</p>
+                <p><strong class="text-[#64FFDA]">Agitação:</strong> Ignorar essa verdade não é uma opção. É um caminho para a irrelevância, para se tornar apenas mais um ruído no feed.</p>
+                <p><strong class="text-[#64FFDA]">Solução:</strong> Este ebook é a sua tela em branco. Ele oferece as ferramentas, a mentalidade e a coragem para demolir o "sempre foi assim" e construir uma marca que respira, evolui e lidera.</p>
+            </div>
+        </section>
+
+        <!-- Prova (Estudos de Caso) -->
+        <section class="mb-24 md:mb-32">
+            <h2 class="font-serif text-3xl md:text-4xl font-bold text-white text-center mb-12">A Transformação é Real: Lições do Campo de Batalha</h2>
+            <div class="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+                <!-- Card Itaú -->
+                <div class="glassmorphism rounded-lg p-8">
+                    <h3 class="font-serif text-2xl text-white mb-4">Itaú - "Feito de Futuro"</h3>
+                    <p class="text-gray-300">Analisamos como uma instituição centenária evoluiu sua identidade de "pedra preta" para algo orgânico e fluido. O rebranding preservou o legado ao mesmo tempo que projetou a marca para o futuro, um reflexo direto do conceito de "organismo vivo" defendido no ebook.</p>
+                </div>
+                <!-- Card Lu do Magalu -->
+                <div class="glassmorphism rounded-lg p-8">
+                    <h3 class="font-serif text-2xl text-white mb-4">Lu do Magalu - O Renascimento por IA</h3>
+                    <p class="text-gray-300">Demonstramos o princípio de "evoluir para continuar relevante". A atualização da Lu com IA mostra como uma marca pode renovar seu ativo mais valioso para potencializar negócios e aumentar a escala de sua presença, aplicando na prática os ensinamentos do livro.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Autor -->
+        <section class="glassmorphism rounded-lg p-8 md:p-12 flex flex-col md:flex-row items-center gap-8 max-w-4xl mx-auto mb-24 md:mb-32">
+            <img src="https://placehold.co/200x200/64FFDA/0A192F?text=Alefy+Goedert" alt="Foto profissional de Alefy Goedert" class="w-32 h-32 md:w-48 md:h-48 rounded-full object-cover border-4 border-[#64FFDA]">
+            <div>
+                <h2 class="font-serif text-3xl text-white mb-2">Alefy Goedert, o Guia Visionário</h2>
+                <p class="text-gray-300 mb-4">Alefy Goedert não é apenas um estrategista; é um construtor de legados. Com uma obsessão por marcas que pulsam com autenticidade, ele dedicou sua carreira a decifrar o código da relevância duradoura. Este ebook é o seu manifesto.</p>
+                <p class="text-[#64FFDA] font-semibold">Fundador da <a href="#" class="underline hover:text-white">South Sea</a>, uma agência dedicada a transformar a presença digital de marcas corajosas.</p>
+            </div>
+        </section>
+
+        <!-- Cristalização do Valor (Tabela) -->
+        <section class="max-w-4xl mx-auto mb-24 md:mb-32">
+            <h2 class="font-serif text-3xl md:text-4xl font-bold text-white text-center mb-12">Da Dor à Transformação</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left glassmorphism rounded-lg">
+                    <thead>
+                        <tr>
+                            <th class="p-4 md:p-6 font-serif text-xl text-white">A Dor do Construtor</th>
+                            <th class="p-4 md:p-6 font-serif text-xl text-white">A Bandeira da Transformação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-t border-gray-700">
+                            <td class="p-4 md:p-6 text-gray-300">"Estou preso no 'sempre foi assim'."</td>
+                            <td class="p-4 md:p-6 text-white font-medium">Aprenda o método para transformar tradição em trampolim, não em âncora.</td>
+                        </tr>
+                        <tr class="border-t border-gray-700">
+                            <td class="p-4 md:p-6 text-gray-300">"Minha marca perdeu a autenticidade."</td>
+                            <td class="p-4 md:p-6 text-white font-medium">Descubra o framework para realinhar sua marca com sua essência mais verdadeira e poderosa.</td>
+                        </tr>
+                        <tr class="border-t border-gray-700">
+                            <td class="p-4 md:p-6 text-gray-300">"Tenho medo de me tornar irrelevante."</td>
+                            <td class="p-4 md:p-6 text-white font-medium">Domine os princípios da evolução contínua para manter sua marca não apenas relevante, mas referencial.</td>
+                        </tr>
+                        <tr class="border-t border-gray-700">
+                            <td class="p-4 md:p-6 text-gray-300">"Liderar a mudança é solitário e arriscado."</td>
+                            <td class="p-4 md:p-6 text-white font-medium">Junte-se a uma comunidade de líderes corajosos e arme-se com a confiança para erguer uma nova bandeira.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- PARTE 2: O PROJETO ARQUITETÔNICO -->
+
+        <!-- Prova Social (Depoimentos) -->
+        <section class="mb-24 md:mb-32">
+            <h2 class="font-serif text-3xl md:text-4xl font-bold text-white text-center mb-12">Ecos da Tribo</h2>
+            <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <!-- Depoimento 1 -->
+                <div class="glassmorphism rounded-lg p-6 text-center">
+                    <img src="https://placehold.co/80x80/E6F1FF/0A192F?text=Leitor+1" alt="Foto de um leitor" class="w-20 h-20 rounded-full mx-auto mb-4 border-2 border-[#64FFDA]">
+                    <p class="text-gray-300 mb-4">"Este livro mudou completamente minha perspectiva sobre o que significa construir uma marca hoje."</p>
+                    <p class="text-white font-bold">Joana Silva</p>
+                    <p class="text-sm text-gray-400">CEO, InovaTech</p>
+                </div>
+                <!-- Depoimento 2 -->
+                <div class="glassmorphism rounded-lg p-6 text-center">
+                    <img src="https://placehold.co/80x80/E6F1FF/0A192F?text=Leitor+2" alt="Foto de um leitor" class="w-20 h-20 rounded-full mx-auto mb-4 border-2 border-[#64FFDA]">
+                    <p class="text-gray-300 mb-4">"Uma leitura obrigatória para qualquer líder que se sinta estagnado. É um verdadeiro mapa."</p>
+                    <p class="text-white font-bold">Marcos Lins</p>
+                    <p class="text-sm text-gray-400">Diretor de Marketing, Futuro S.A.</p>
+                </div>
+                <!-- Depoimento 3 -->
+                <div class="glassmorphism rounded-lg p-6 text-center">
+                    <img src="https://placehold.co/80x80/E6F1FF/0A192F?text=Leitor+3" alt="Foto de um leitor" class="w-20 h-20 rounded-full mx-auto mb-4 border-2 border-[#64FFDA]">
+                    <p class="text-gray-300 mb-4">"Finalmente um conteúdo que fala a nossa língua. Prático, inspirador e transformador."</p>
+                    <p class="text-white font-bold">Carla Mendes</p>
+                    <p class="text-sm text-gray-400">Fundadora, Estúdio Criativo</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Conteúdo do Ebook (Mapa da Transformação) -->
+        <section class="max-w-3xl mx-auto mb-24 md:mb-32">
+            <h2 class="font-serif text-3xl md:text-4xl font-bold text-white text-center mb-12">O Mapa da Transformação</h2>
+            <div class="space-y-6">
+                <div class="glassmorphism p-6 rounded-lg">
+                    <h3 class="font-serif text-xl text-[#64FFDA] mb-2">Módulo 1: Decifrando o DNA da sua Marca</h3>
+                    <p class="text-gray-300">Você vai descobrir a essência fundamental que torna sua marca única e inesquecível, criando uma base sólida para toda a sua estratégia.</p>
+                </div>
+                <div class="glassmorphism p-6 rounded-lg">
+                    <h3 class="font-serif text-xl text-[#64FFDA] mb-2">Módulo 2: A Arquitetura da Autenticidade</h3>
+                    <p class="text-gray-300">Aprenda a construir uma narrativa coesa que ressoa com seu público em um nível profundo, transformando clientes em defensores.</p>
+                </div>
+                <div class="glassmorphism p-6 rounded-lg">
+                    <h3 class="font-serif text-xl text-[#64FFDA] mb-2">Módulo 5: Amplificando sua Voz Autêntica</h3>
+                    <p class="text-gray-300">Aprenda a transformar canais de mídia social em plataformas para sua ideologia, construindo uma comunidade engajada, não apenas uma base de seguidores.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Oferta Final -->
+        <section class="glassmorphism rounded-lg p-8 md:p-12 max-w-4xl mx-auto text-center">
+            <h2 class="font-serif text-3xl md:text-4xl font-bold text-white mb-8">Sua Jornada Começa Agora</h2>
+            <div class="text-left max-w-2xl mx-auto mb-8 space-y-3 text-lg">
+                <p class="flex items-start"><span class="text-[#64FFDA] mr-3 mt-1">✔</span> <strong>O Ebook "A Nova Bandeira:</strong> Como Comunicar seu Rebranding para o Mercado, Clientes e Equipe sem Perder a Essência"</p>
+                <p class="flex items-center"><span class="text-[#64FFDA] mr-3">✔</span> <strong class="text-white mr-1">BÔNUS 1:</strong> Checklist "Diagnóstico de Autenticidade"</p>
+                <p class="flex items-center"><span class="text-[#64FFDA] mr-3">✔</span> <strong class="text-white mr-1">BÔNUS 2:</strong> Acesso à comunidade exclusiva</p>
+            </div>
+            <div class="mb-8">
+                <p class="text-xl text-gray-400 line-through">De R$ 197</p>
+                <p class="text-5xl md:text-6xl font-extrabold text-white">por apenas R$ 97</p>
+            </div>
+            <div class="mb-8">
+               <a href="https://southsea.gumroad.com/"><button class="cta-button font-bold text-xl py-4 px-10 rounded-lg">
+                QUERO ERGUER MINHA BANDEIRA
+            </button></a>
+            </div>
+            <div class="border-2 border-dashed border-gray-600 rounded-lg p-6 max-w-2xl mx-auto">
+                <h4 class="font-serif text-xl text-white mb-2">Garantia Incondicional de 30 Dias</h4>
+                <p class="text-gray-300">Sua satisfação ou seu dinheiro de volta. Você tem 30 dias para aplicar os conceitos. Se não sentir o impacto, nós reembolsamos 100% do seu investimento. Sem perguntas.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="text-center p-8 text-gray-500">
+        <p>&copy; 2025 South Sea. Todos os direitos reservados.</p>
+    </footer>
+
+    <script>
+        // Lógica para o Modal de Checkout
+        const modal = document.getElementById('checkout-modal');
+
+        function toggleModal() {
+            if (modal.classList.contains('opacity-0')) {
+                // Abrir modal
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                modal.querySelector('div > div').classList.remove('scale-95');
+            } else {
+                // Fechar modal
+                modal.classList.add('opacity-0');
+                modal.querySelector('div > div').classList.add('scale-95');
+                setTimeout(() => {
+                    modal.classList.add('pointer-events-none');
+                }, 300); // Espera a transição de opacidade terminar
+            }
+        }
+
+        // Fechar modal ao clicar fora dele
+        modal.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                toggleModal();
+            }
+        });
+
+        // Fechar modal com a tecla 'Escape'
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && !modal.classList.contains('opacity-0')) {
+                toggleModal();
+            }
+        });
+    </script>
+
+</body>
+</html>
