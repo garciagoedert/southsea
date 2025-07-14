@@ -457,27 +457,66 @@
                     return 1;
                 }
 
+              
                 function updateCarousel() {
+                    itemsPerView = getItemsPerView();
                     const itemWidth = slider.querySelector('div').clientWidth;
                     const offset = -currentIndex * itemWidth;
                     slider.style.transform = `translateX(${offset}px)`;
-                    prevBtn.disabled = currentIndex === 0;
-                    nextBtn.disabled = currentIndex >= totalItems - itemsPerView;
+                    // A lógica para desabilitar os botões foi removida,
+                    // pois em um carrossel em loop, eles devem estar sempre ativos.
+                }
+                
+                function advanceCarousel() {
+                    itemsPerView = getItemsPerView();
+                    const lastPossibleIndex = Math.max(0, totalItems - itemsPerView);
+                    
+                    // Lógica para o carrossel voltar ao início (loop).
+                    if (currentIndex >= lastPossibleIndex) {
+                        currentIndex = 0; 
+                    } else {
+                        currentIndex++;
+                    }
+                    updateCarousel();
                 }
 
+                function startAutoScroll() {
+                    clearInterval(autoScrollInterval);
+                    autoScrollInterval = setInterval(advanceCarousel, 5000);
+                }
+
+                function stopAutoScroll() {
+                    clearInterval(autoScrollInterval);
+                }
+
+                // Event listeners para os controles manuais
                 nextBtn.addEventListener('click', () => {
-                    if (currentIndex < totalItems - itemsPerView) {
-                        currentIndex++;
-                        updateCarousel();
-                    }
+                    advanceCarousel();
+                    // Reinicia o timer da rolagem automática para uma experiência mais fluida.
+                    startAutoScroll(); 
                 });
 
                 prevBtn.addEventListener('click', () => {
-                    if (currentIndex > 0) {
+                    itemsPerView = getItemsPerView();
+                    const lastPossibleIndex = Math.max(0, totalItems - itemsPerView);
+
+                    // Lógica para o carrossel ir para o final ao clicar em "anterior" no primeiro item.
+                    if (currentIndex === 0) {
+                        currentIndex = lastPossibleIndex; 
+                    } else {
                         currentIndex--;
-                        updateCarousel();
                     }
+                    updateCarousel();
+                    // Reinicia o timer da rolagem automática.
+                    startAutoScroll();
                 });
+
+                // =================================================================
+                // FIM DAS ALTERAÇÕES PARA O CARROSSEL EM LOOP
+                // =================================================================
+
+                carouselContainer.addEventListener('mouseenter', stopAutoScroll);
+                carouselContainer.addEventListener('mouseleave', startAutoScroll);
 
                 window.addEventListener('resize', () => {
                     itemsPerView = getItemsPerView();
