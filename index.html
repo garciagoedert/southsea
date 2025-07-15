@@ -428,6 +428,8 @@
             ];
 
             const slider = document.getElementById('ebook-carousel-slider');
+            // ALTERAÇÃO: Obter o elemento wrapper principal do componente.
+            const carouselComponentWrapper = document.getElementById('ebook-component-wrapper');
             if (slider) {
                 ebooks.forEach(ebook => {
                     const card = `
@@ -481,10 +483,11 @@
                 }
 
                 function startAutoScroll() {
-                    clearInterval(autoScrollInterval);
+                    stopAutoScroll(); // Garante que não haja múltiplos intervalos a correr
                     autoScrollInterval = setInterval(advanceCarousel, 5000);
                 }
 
+                // ALTERAÇÃO: Função para parar a rolagem automática
                 function stopAutoScroll() {
                     clearInterval(autoScrollInterval);
                 }
@@ -515,19 +518,21 @@
                 // FIM DAS ALTERAÇÕES PARA O CARROSSEL EM LOOP
                 // =================================================================
 
-                carouselContainer.addEventListener('mouseenter', stopAutoScroll);
-                carouselContainer.addEventListener('mouseleave', startAutoScroll);
+                 carouselComponentWrapper.addEventListener('mouseenter', stopAutoScroll);
+                carouselComponentWrapper.addEventListener('mouseleave', startAutoScroll);
 
+                // ALTERAÇÃO: Corrigido o listener de redimensionamento para reiniciar a rolagem automática.
                 window.addEventListener('resize', () => {
-                    itemsPerView = getItemsPerView();
-                    if (currentIndex > totalItems - itemsPerView) {
-                        currentIndex = Math.max(0, totalItems - itemsPerView);
+                    const itemsPerView = getItemsPerView();
+                    const lastPossibleIndex = Math.max(0, ebooks.length - itemsPerView);
+                    if (currentIndex > lastPossibleIndex) {
+                        currentIndex = lastPossibleIndex;
                     }
-                    setTimeout(updateCarousel, 100);
+                    updateCarousel();
+                    startAutoScroll();
                 });
-
-                itemsPerView = getItemsPerView();
                 updateCarousel();
+                startAutoScroll();
             }
 
             // --- LÓGICA DO BANNER DE COOKIES (NOVA VERSÃO) ---

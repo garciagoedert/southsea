@@ -218,6 +218,37 @@
                         </div>
                     </div>
                 </div>
+                 <div class="mt-16 text-center">
+                    <h3 class="text-2xl md:text-3xl font-bold mb-8 text-brand-lightest">Conheça outros projetos de sucesso</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                        <!-- Project 1 -->
+                        <a href="javascript:void(0);" onclick="openGalleryModal()" class="group relative block rounded-lg overflow-hidden glass-card !p-0 aspect-square">
+                            <img src="https://placehold.co/400x400/112240/CCD6F6?text=E-commerce" alt="Projeto E-commerce" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                <span class="text-white font-bold text-lg text-center p-2">Ver Galeria</span>
+                            </div>
+                        </a>
+                        <!-- Project 2 -->
+                        <a href="javascript:void(0);" onclick="openGalleryModal()" class="group relative block rounded-lg overflow-hidden glass-card !p-0 aspect-square">
+                            <img src="https://placehold.co/400x400/112240/CCD6F6?text=Startup" alt="Projeto Startup" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                <span class="text-white font-bold text-lg text-center p-2">Ver Galeria</span>
+                            </div>
+                        </a>
+                        <!-- Project 3 -->
+                        <a href="javascript:void(0);" onclick="openGalleryModal()" class="group relative block rounded-lg overflow-hidden glass-card !p-0 aspect-square">
+                            <img src="https://placehold.co/400x400/112240/CCD6F6?text=Clínica" alt="Projeto Clínica" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                <span class="text-white font-bold text-lg text-center p-2">Ver Galeria</span>
+                            </div>
+                        </a>
+                        <!-- See More -->
+                        <a href="javascript:void(0);" onclick="openGalleryModal()" class="group flex flex-col items-center justify-center rounded-lg glass-card p-4 text-center aspect-square">
+                            <p class="text-5xl font-bold text-brand-accent">10+</p>
+                            <p class="mt-2 font-semibold text-brand-lightest">Conheça Mais Projetos</p>
+                        </a>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -242,6 +273,38 @@
                 </div>
             </div>
         </section>
+          <section id="outros-servicos" class="section">
+            <div class="container mx-auto max-w-5xl text-center reveal">
+                <h2 class="text-3xl md:text-4xl font-bold mb-6">
+                    <span class="text-brand-accent font-mono">06.</span> Além de Websites: Uma Solução 360° para sua Marca
+                </h2>
+                <p class="text-lg text-brand-slate max-w-3xl mx-auto mb-16">Um website poderoso é apenas o começo. Para um impacto real, sua marca precisa de uma base sólida e uma identidade visual coesa. Oferecemos uma jornada completa.</p>
+                
+                <div class="grid md:grid-cols-3 gap-8 text-left">
+                    <!-- Card 1 com link -->
+                    <a href="/branding.html" class="block" target="_blank" rel="noopener noreferrer">
+                        <div class="glass-card p-8 rounded-lg h-full">
+                            <h3 class="font-bold text-xl mb-3 text-brand-lightest">Branding Estratégico</h3>
+                            <p>A estratégia e a alma da sua marca. Criamos a base para uma conexão emocional e duradoura com seu público, definindo seu propósito e posicionamento.</p>
+                        </div>
+                    </a>
+                    <!-- Card 2 com link -->
+                    <a href="/branding.html" class="block" target="_blank" rel="noopener noreferrer">
+                        <div class="glass-card p-8 rounded-lg h-full">
+                            <h3 class="font-bold text-xl mb-3 text-brand-lightest">Identidade Visual</h3>
+                            <p>O rosto da sua marca. Desenvolvemos um sistema visual completo que traduz sua essência em cada ponto de contato, do logo às redes sociais.</p>
+                        </div>
+                    </a>
+                    <!-- Card 3 com link -->
+                    <a href="/branding.html" class="block" target="_blank" rel="noopener noreferrer">
+                        <div class="glass-card p-8 rounded-lg h-full">
+                            <h3 class="font-bold text-xl mb-3 text-brand-lightest">Rebranding</h3>
+                            <p>Evolução com propósito. Reposicionamos e modernizamos sua marca para o futuro, mantendo sua autenticidade e reconectando com o mercado.</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
     </main>
 
     <footer class="bg-brand-light-navy text-center p-8">
@@ -250,6 +313,64 @@
            <p class="text-sm">&copy; 2025 South Sea.Todos os direitos reservados. <br> Made with 💙 by <a href="https://www.southsea.com.br/">South Sea</a></p>
         </div>
     </footer>
+
+      <!-- START: Fullscreen Gallery Modal -->
+    <div id="gallery-modal" class="hidden fixed inset-0 bg-bg-brand-navy z-50 overflow-y-auto transition-opacity duration-300">
+        <!-- Sticky Header -->
+        <div class="sticky top-0 z-20 bg-bg-brand-navy/90 backdrop-blur-sm border-b border-brand-accent/10">
+            <div class="container mx-auto max-w-7xl px-6">
+                <div class="flex justify-between items-center py-5">
+                    <h2 class="text-2xl md:text-3xl font-bold text-brand-lightest">
+                        <span class="text-brand-accent font-mono">#</span> Nossos Projetos
+                    </h2>
+                    <button onclick="closeGalleryModal()" class="text-brand-accent text-4xl md:text-5xl font-light hover:text-white transition-colors leading-none">&times;</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scrollable Content -->
+        <div class="relative z-10">
+            <div class="container mx-auto max-w-7xl p-6 pt-8">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Gallery Item 1 -->
+                <a href="https://liferrary.vercel.app/" target="_blank" rel="noopener noreferrer" class="group block rounded-lg overflow-hidden glass-card !p-4">
+                    <div class="overflow-hidden rounded-md mb-4"><img src="https://placehold.co/600x400/112240/CCD6F6?text=Projeto+Liana" alt="Consultora de aromaterapia" class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"></div>
+                    <h3 class="text-xl font-bold text-brand-lightest mb-2">Consultora de Aromaterapia</h3>
+                    <p class="text-sm text-brand-slate">Site institucional estratégico para especialista do setor de estética.</p>
+                </a>
+                <!-- Gallery Item 2 -->
+                <a href="#" target="_blank" rel="noopener noreferrer" class="group block rounded-lg overflow-hidden glass-card !p-4">
+                    <div class="overflow-hidden rounded-md mb-4"><img src="https://placehold.co/600x400/0A192F/CCD6F6?text=E-commerce+Moda" alt="E-commerce de Moda" class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"></div>
+                    <h3 class="text-xl font-bold text-brand-lightest mb-2">E-commerce de Moda</h3>
+                    <p class="text-sm text-brand-slate">Plataforma de vendas online com foco em experiência do usuário e conversão.</p>
+                </a>
+                <!-- Gallery Item 3 -->
+                <a href="#" target="_blank" rel="noopener noreferrer" class="group block rounded-lg overflow-hidden glass-card !p-4">
+                    <div class="overflow-hidden rounded-md mb-4"><img src="https://placehold.co/600x400/0A192F/CCD6F6?text=Startup+Tech" alt="Startup de Tecnologia" class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"></div>
+                    <h3 class="text-xl font-bold text-brand-lightest mb-2">Startup de Tecnologia</h3>
+                    <p class="text-sm text-brand-slate">Landing page de alto impacto para lançamento de produto SaaS.</p>
+                </a>
+                <!-- Gallery Item 4 -->
+                <a href="#" target="_blank" rel="noopener noreferrer" class="group block rounded-lg overflow-hidden glass-card !p-4">
+                    <div class="overflow-hidden rounded-md mb-4"><img src="https://placehold.co/600x400/0A192F/CCD6F6?text=Clínica+Médica" alt="Clínica Médica" class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"></div>
+                    <h3 class="text-xl font-bold text-brand-lightest mb-2">Clínica Médica</h3>
+                    <p class="text-sm text-brand-slate">Site institucional para clínica, com agendamento online e área de pacientes.</p>
+                </a>
+                <!-- Gallery Item 5 -->
+                <a href="#" target="_blank" rel="noopener noreferrer" class="group block rounded-lg overflow-hidden glass-card !p-4">
+                    <div class="overflow-hidden rounded-md mb-4"><img src="https://placehold.co/600x400/0A192F/CCD6F6?text=Restaurante" alt="Restaurante" class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"></div>
+                    <h3 class="text-xl font-bold text-brand-lightest mb-2">Restaurante Gourmet</h3>
+                    <p class="text-sm text-brand-slate">Website com cardápio digital, sistema de reservas e galeria de fotos.</p>
+                </a>
+                <!-- Gallery Item 6 -->
+                <a href="#" target="_blank" rel="noopener noreferrer" class="group block rounded-lg overflow-hidden glass-card !p-4">
+                    <div class="overflow-hidden rounded-md mb-4"><img src="https://placehold.co/600x400/0A192F/CCD6F6?text=Advocacia" alt="Escritório de Advocacia" class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"></div>
+                    <h3 class="text-xl font-bold text-brand-lightest mb-2">Escritório de Advocacia</h3>
+                    <p class="text-sm text-brand-slate">Site corporativo para transmitir credibilidade e apresentar áreas de atuação.</p>
+                </a>
+            </div>
+        </div>
+    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -299,6 +420,30 @@
                     }, 1500);
                 });
             }
+        // --- Gallery Modal Logic ---
+            const galleryModal = document.getElementById('gallery-modal');
+            const body = document.querySelector('body');
+
+            window.openGalleryModal = function() {
+                if(galleryModal) {
+                    galleryModal.classList.remove('hidden');
+                    body.style.overflow = 'hidden'; // Prevent background scrolling
+                }
+            }
+
+            window.closeGalleryModal = function() {
+                if(galleryModal) {
+                    galleryModal.classList.add('hidden');
+                    body.style.overflow = ''; // Restore scrolling
+                }
+            }
+
+            // Close modal with Escape key
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape' && galleryModal && !galleryModal.classList.contains('hidden')) {
+                    closeGalleryModal();
+                }
+            });
         });
     </script>
      <!-- BOTÃO FLUTUANTE DO WHATSAPP -->
