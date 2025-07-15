@@ -86,6 +86,78 @@
             transform: translateY(-3px);
             box-shadow: 0 10px 20px rgba(100, 255, 218, 0.2);
         }
+        /* Estilo para o botão flutuante do WhatsApp */
+        .whatsapp-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #25D366;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 40;
+            transition: transform 0.3s ease;
+        }
+        .whatsapp-button:hover {
+            transform: scale(1.1);
+        }
+
+        /* --- START: Logo Carousel Styles --- */
+        .logo-slider {
+            overflow: hidden;
+            position: relative;
+            width: 100%;
+        }
+
+        .logo-slider::before,
+        .logo-slider::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            width: 150px; /* Largura do efeito de fade */
+            height: 100%;
+            z-index: 2;
+        }
+
+        .logo-slider::before {
+            left: 0;
+            background: linear-gradient(to left, rgba(17, 34, 64, 0), var(--bg-brand-light-navy));
+        }
+
+        .logo-slider::after {
+            right: 0;
+            background: linear-gradient(to right, rgba(17, 34, 64, 0), var(--bg-brand-light-navy));
+        }
+
+        .logo-slider .logo-track {
+            display: flex;
+            animation: scroll-infinite 40s linear infinite;
+            width: fit-content; 
+        }
+        
+        .logo-slider:hover .logo-track {
+            animation-play-state: paused;
+        }
+
+        .logo-slider .logo-item {
+            flex-shrink: 0;
+            width: 200px; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        @keyframes scroll-infinite {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
     </style>
 </head>
 <body class="overflow-x-hidden">
@@ -108,15 +180,29 @@
         </div>
     </header>
 
-    <main class="bg-brand-navy">
+      <main id="main-content" class="bg-brand-navy">
         <section class="py-12 bg-brand-light-navy">
             <div class="container mx-auto text-center reveal">
-                <h4 class="text-brand-slate font-semibold mb-6">A confiança de mais de 80+ clientes em mais de 100 projetos de sucesso.</h4>
-                <div class="flex justify-center items-center space-x-8 md:space-x-12 opacity-60">
-                    <p class="font-bold text-2xl text-brand-slate"><img src="/newimag/CELEREQ.svg"></p>
-                    <p class="font-bold text-2xl text-brand-slate"><img src="/newimag/FORMA1.svg"></p>
-                    <p class="font-bold text-2xl text-brand-slate hidden sm:block"><img src="/newimag/SHAPESQ.svg"></p>
-                    <p class="font-bold text-2xl text-brand-slate hidden md:block"><img src="/newimag/KIHAP1.svg"></p>
+                <h4 class="text-brand-slate font-semibold mb-8">A confiança de mais de 80+ clientes em mais de 100 projetos de sucesso.</h4>
+                <div class="logo-slider">
+                    <div class="logo-track">
+                        <!-- Original Logos -->
+                        <div class="logo-item"><img src="/newimag/CELEREQ.svg" alt="Logo Cliente 1" class="h-8 md:h-10 opacity-60"></div>
+                        <div class="logo-item"><img src="/newimag/FORMA1.svg" alt="Logo Cliente 2" class="h-8 md:h-10 opacity-60"></div>
+                        <div class="logo-item"><img src="/newimag/SHAPESQ.svg" alt="Logo Cliente 3" class="h-8 md:h-10 opacity-60"></div>
+                        <div class="logo-item"><img src="/newimag/KIHAP1.svg" alt="Logo Cliente 4" class="h-8 md:h-10 opacity-60"></div>
+                        <div class="logo-item"><img src="https://placehold.co/120x50/112240/8892B0?text=TECHCORP" alt="Logo Cliente 5" class="h-8 md:h-10 opacity-60"></div>
+                        <div class="logo-item"><img src="https://placehold.co/120x50/112240/8892B0?text=INNOVA" alt="Logo Cliente 6" class="h-8 md:h-10 opacity-60"></div>
+                        <div class="logo-item"><img src="https://placehold.co/120x50/112240/8892B0?text=NEXUS" alt="Logo Cliente 7" class="h-8 md:h-10 opacity-60"></div>
+                        <!-- Duplicated Logos for seamless loop -->
+                        <div class="logo-item"><img src="/newimag/CELEREQ.svg" alt="Logo Cliente 1" class="h-8 md:h-10 opacity-60"></div>
+                        <div class="logo-item"><img src="/newimag/FORMA1.svg" alt="Logo Cliente 2" class="h-8 md:h-10 opacity-60"></div>
+                        <div class="logo-item"><img src="/newimag/SHAPESQ.svg" alt="Logo Cliente 3" class="h-8 md:h-10 opacity-60"></div>
+                        <div class="logo-item"><img src="/newimag/KIHAP1.svg" alt="Logo Cliente 4" class="h-8 md:h-10 opacity-60"></div>
+                        <div class="logo-item"><img src="https://placehold.co/120x50/112240/8892B0?text=TECHCORP" alt="Logo Cliente 5" class="h-8 md:h-10 opacity-60"></div>
+                        <div class="logo-item"><img src="https://placehold.co/120x50/112240/8892B0?text=INNOVA" alt="Logo Cliente 6" class="h-8 md:h-10 opacity-60"></div>
+                        <div class="logo-item"><img src="https://placehold.co/120x50/112240/8892B0?text=NEXUS" alt="Logo Cliente 7" class="h-8 md:h-10 opacity-60"></div>
+                    </div>
                 </div>
             </div>
         </section>
