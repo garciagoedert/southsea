@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>South Sea | Arquitetura de Conversão para Lançamentos</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+        <!-- Favicon -->
+    <link rel="icon" href="/newimag/Ellipse 9.svg">
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Custom Styles -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0A101E; /* Fundo azul escuro */
+            color: #E0E0E0; /* Cor de texto principal clara */
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #38BDF8, #A78BFA);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .cta-button {
+            background: linear-gradient(90deg, #38BDF8, #A78BFA);
+            transition: all 0.3s ease;
+        }
+        .cta-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.5);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header -->
+    <header class="py-4 px-6 md:px-12 fixed top-0 left-0 right-0 z-50 bg-gray-900/50 backdrop-blur-sm">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-white">South Sea</h1>
+            <a href="#contato" class="cta-button text-white font-semibold py-2 px-6 rounded-lg shadow-lg hidden md:inline-block">
+                Agendar Diagnóstico
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <!-- Seção Hero (Dobra Inicial) -->
+        <section class="pt-32 pb-20 text-center relative overflow-hidden">
+             <div class="absolute inset-0 bg-grid-white/5 [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"></div>
+            <div class="container mx-auto px-6 relative">
+                <h2 class="text-4xl md:text-6xl font-extrabold text-white leading-tight">
+                    Sua Expertise Merece um <span class="gradient-text">Lançamento Lendário</span>
+                </h2>
+                <p class="mt-6 text-lg md:text-xl max-w-3xl mx-auto text-gray-300">
+                    Nós construímos a página de vendas que transforma seus seguidores em alunos. Deixe a complexidade técnica conosco e foque no que faz de melhor.
+                </p>
+                <div class="mt-10">
+                    <a href="#contato" class="cta-button text-white font-bold py-4 px-10 rounded-lg shadow-xl text-lg">
+                        Agendar Diagnóstico Gratuito
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção 2: Conexão e Agitação da Dor -->
+        <section id="desafios" class="py-20 bg-gray-900/30">
+            <div class="container mx-auto px-6 text-center">
+                <h3 class="text-3xl md:text-4xl font-bold text-white">O ciclo de um lançamento é familiar?</h3>
+                <p class="mt-4 max-w-2xl mx-auto text-gray-400">Você cria um produto incrível, mas a tecnologia parece sempre ser o obstáculo entre você e o sucesso.</p>
+                <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Card Dor 1 -->
+                    <div class="glass-card p-8 rounded-xl">
+                        <i data-lucide="bar-chart-big" class="mx-auto h-12 w-12 text-sky-400"></i>
+                        <h4 class="mt-4 text-xl font-semibold text-white">O Medo do "Flop"</h4>
+                        <p class="mt-2 text-gray-400">Meses de trabalho e investimento culminam na ansiedade de um carrinho que não vende como o esperado.</p>
+                    </div>
+                    <!-- Card Dor 2 -->
+                    <div class="glass-card p-8 rounded-xl">
+                        <i data-lucide="filter-x" class="mx-auto h-12 w-12 text-sky-400"></i>
+                        <h4 class="mt-4 text-xl font-semibold text-white">A Síndrome do "Balde Furado"</h4>
+                        <p class="mt-2 text-gray-400">Investir em tráfego para uma página que não converte. Cada clique perdido é dinheiro e potencial desperdiçados.</p>
+                    </div>
+                    <!-- Card Dor 3 -->
+                    <div class="glass-card p-8 rounded-xl">
+                        <i data-lucide="cpu" class="mx-auto h-12 w-12 text-sky-400"></i>
+                        <h4 class="mt-4 text-xl font-semibold text-white">Sobrecarga Técnica</h4>
+                        <p class="mt-2 text-gray-400">A complexidade de plataformas, integrações e otimizações que paralisam e adiam o seu lançamento.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção 3: Apresentação da Solução -->
+        <section id="solucao" class="py-20">
+            <div class="container mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+                <div class="text-center md:text-left">
+                    <span class="text-sm font-semibold text-sky-400 uppercase">A Solução Definitiva</span>
+                    <h3 class="mt-2 text-3xl md:text-4xl font-bold text-white">Nós somos os arquitetos da sua máquina de conversão.</h3>
+                    <p class="mt-6 text-lg text-gray-300">Para um lançamento de sucesso, cada detalhe conta. A velocidade, a clareza da oferta, a persuasão da copy, a confiança do design. Somos obcecados por esses detalhes para que você não precise ser.</p>
+                    <p class="mt-4 text-lg text-gray-300">Nós não criamos "sites". Nós construímos ativos de conversão que protegem sua marca, amplificam sua autoridade e geram resultados previsíveis.</p>
+                </div>
+                <div>
+                    <img src="https://placehold.co/600x400/0A101E/38BDF8?text=M%C3%A1quina+de+Convers%C3%A3o" alt="Gráfico de uma máquina de conversão" class="rounded-xl shadow-2xl">
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção 4: Como Funciona -->
+        <section id="processo" class="py-20 bg-gray-900/30">
+            <div class="container mx-auto px-6 text-center">
+                <h3 class="text-3xl md:text-4xl font-bold text-white">Um processo simplificado para a sua paz de espírito.</h3>
+                <p class="mt-4 max-w-2xl mx-auto text-gray-400">Guiamos você por um caminho claro e eficiente, assumindo toda a complexidade da execução.</p>
+                <div class="mt-16 max-w-4xl mx-auto relative">
+                    <!-- Linha de conexão -->
+                    <div class="hidden md:block absolute top-8 left-0 w-full h-0.5 bg-gray-700"></div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-10 relative">
+                        <!-- Passo 1 -->
+                        <div class="flex flex-col items-center text-center">
+                            <div class="flex items-center justify-center w-16 h-16 rounded-full bg-sky-500 border-4 border-gray-900 text-white font-bold text-2xl z-10">1</div>
+                            <h4 class="mt-4 text-xl font-semibold text-white">Diagnóstico e Estratégia</h4>
+                            <p class="mt-2 text-gray-400">Mergulhamos no seu projeto para desenhar o blueprint da sua página, alinhado com suas metas e seu público.</p>
+                        </div>
+                        <!-- Passo 2 -->
+                        <div class="flex flex-col items-center text-center">
+                            <div class="flex items-center justify-center w-16 h-16 rounded-full bg-sky-500 border-4 border-gray-900 text-white font-bold text-2xl z-10">2</div>
+                            <h4 class="mt-4 text-xl font-semibold text-white">Arquitetura e Persuasão</h4>
+                            <p class="mt-2 text-gray-400">Nossa equipe de designers e copywriters constrói cada seção com foco obsessivo em clareza e conversão.</p>
+                        </div>
+                        <!-- Passo 3 -->
+                        <div class="flex flex-col items-center text-center">
+                            <div class="flex items-center justify-center w-16 h-16 rounded-full bg-sky-500 border-4 border-gray-900 text-white font-bold text-2xl z-10">3</div>
+                            <h4 class="mt-4 text-xl font-semibold text-white">Integração e Lançamento</h4>
+                            <p class="mt-2 text-gray-400">Garantimos a engenharia perfeita com suas ferramentas, entregando uma página 100% pronta para vender.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Seção 5: A Anatomia da Máquina de Conversão -->
+        <section id="anatomia" class="py-20 px-6">
+            <div class="container mx-auto max-w-6xl">
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl md:text-4xl font-bold text-white mb-4">A Anatomia da Máquina de Conversão</h3>
+                    <p class="text-slate-400 max-w-3xl mx-auto">Traduzimos funcionalidades técnicas em resultados de negócio tangíveis para você.</p>
+                </div>
+                
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+                    <div class="bg-slate-800 p-6 rounded-lg">
+                        <i data-lucide="feather" class="w-8 h-8 text-sky-400 mb-3"></i>
+                        <h4 class="text-xl font-bold text-white mb-2">Copywriting Persuasivo</h4>
+                        <p class="text-slate-400">Narrativas que criam conexão, destroem objeções e guiam sua audiência até o botão de compra.</p>
+                    </div>
+                    <div class="bg-slate-800 p-6 rounded-lg">
+                        <i data-lucide="layout-template" class="w-8 h-8 text-sky-400 mb-3"></i>
+                        <h4 class="text-xl font-bold text-white mb-2">Design Focado em Conversão</h4>
+                        <p class="text-slate-400">Um layout que elimina distrações e canaliza 100% da atenção do visitante para a conversão.</p>
+                    </div>
+                    <div class="bg-slate-800 p-6 rounded-lg">
+                        <i data-lucide="rocket" class="w-8 h-8 text-sky-400 mb-3"></i>
+                        <h4 class="text-xl font-bold text-white mb-2">Velocidade Extrema</h4>
+                        <p class="text-slate-400">Otimização brutal para que você não perca uma única venda por lentidão. Cada milissegundo conta.</p>
+                    </div>
+                     <div class="bg-slate-800 p-6 rounded-lg">
+                        <i data-lucide="plug-zap" class="w-8 h-8 text-sky-400 mb-3"></i>
+                        <h4 class="text-xl font-bold text-white mb-2">Integrações sem Falhas</h4>
+                        <p class="text-slate-400">Conexão perfeita com as principais plataformas de pagamento e automação de marketing do mercado.</p>
+                    </div>
+                     <div class="bg-slate-800 p-6 rounded-lg">
+                        <i data-lucide="smartphone" class="w-8 h-8 text-sky-400 mb-3"></i>
+                        <h4 class="text-xl font-bold text-white mb-2">Totalmente Responsivo (Mobile-First)</h4>
+                        <p class="text-slate-400">Uma experiência de compra impecável no telemóvel, onde a maioria dos seus alunos decide a compra.</p>
+                    </div>
+                     <div class="bg-slate-800 p-6 rounded-lg">
+                        <i data-lucide="trending-up" class="w-8 h-8 text-sky-400 mb-3"></i>
+                        <h4 class="text-xl font-bold text-white mb-2">ROI e Previsibilidade</h4>
+                        <p class="text-slate-400">Transformamos seu lançamento de uma aposta incerta em um investimento com retorno previsível.</p>
+                    </div>
+                </div>
+
+                <!-- Tabela Estratégica -->
+                 <div class="bg-slate-800 rounded-lg p-6 md:p-8 border border-slate-700">
+                    <h4 class="text-2xl font-bold text-white text-center mb-6">Da Funcionalidade ao Seu Legado</h4>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead>
+                                <tr class="border-b border-slate-600">
+                                    <th class="p-4 text-white font-semibold">Funcionalidade Técnica</th>
+                                    <th class="p-4 text-white font-semibold">Benefício Imediato (ROI)</th>
+                                    <th class="p-4 text-white font-semibold">Impacto no seu Negócio</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b border-slate-700">
+                                    <td class="p-4 font-medium text-white">Código Limpo e Otimização Core Web Vitals</td>
+                                    <td class="p-4 text-slate-300">Redução da taxa de abandono e aumento direto das conversões. Maximiza o ROI em tráfego pago.</td>
+                                    <td class="p-4 text-slate-300">Proteção da reputação da marca e percepção de profissionalismo.</td>
+                                </tr>
+                                <tr class="border-b border-slate-700">
+                                    <td class="p-4 font-medium text-white">Copywriting Baseado em Psicologia</td>
+                                    <td class="p-4 text-slate-300">Aumento da taxa de conversão e do valor percebido da oferta, permitindo preços premium.</td>
+                                    <td class="p-4 text-slate-300">Criação de um ativo de vendas que pode ser adaptado para futuros produtos.</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-4 font-medium text-white">Integração Nativa com Hotmart/Eduzz</td>
+                                    <td class="p-4 text-slate-300">Checkout 100% fiável e sem erros técnicos, eliminando a perda de vendas no momento mais crítico.</td>
+                                    <td class="p-4 text-slate-300">Garante paz de espírito e permite focar na estratégia, não em apagar incêndios técnicos.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção 6: Prova Social -->
+        <section id="prova-social" class="py-20 bg-gray-900/30">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                     <h3 class="text-3xl md:text-4xl font-bold text-white">Autoridade Incontestável</h3>
+                     <p class="mt-4 max-w-2xl mx-auto text-gray-400">Não acredite apenas na nossa palavra. Veja o que especialistas como você dizem sobre nosso trabalho.</p>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                    <!-- Depoimento em Vídeo -->
+                    <div class="relative rounded-xl overflow-hidden shadow-2xl cursor-pointer group">
+                        <img src="https://placehold.co/560x315/1E293B/FFFFFF?text=Depoimento+em+V%C3%ADdeo" alt="Depoimento em vídeo de um cliente" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
+                             <div class="w-20 h-20 rounded-full bg-white/30 backdrop-blur-sm flex items-center justify-center group-hover:bg-white/50 transition-all">
+                                 <i data-lucide="play" class="h-10 w-10 text-white fill-white"></i>
+                             </div>
+                        </div>
+                        <div class="absolute bottom-0 left-0 p-6">
+                             <p class="text-white font-bold text-xl">"Finalmente senti que tinha um parceiro que entendia o meu negócio."</p>
+                             <p class="text-gray-300 mt-1">- Joana Silva, Especialista em Marketing Digital</p>
+                        </div>
+                    </div>
+                    <!-- Depoimentos em Texto -->
+                    <div class="space-y-6">
+                        <div class="glass-card p-6 rounded-lg">
+                            <p class="text-gray-300">"Eles tiraram um peso enorme das minhas costas. A página ficou incrível, super rápida, e a conversão do lançamento dobrou. Essencial para quem leva o negócio a sério."</p>
+                            <div class="flex items-center mt-4">
+                                <img src="https://placehold.co/40x40/A78BFA/FFFFFF?text=M" alt="Foto de Marcos L." class="w-10 h-10 rounded-full">
+                                <div class="ml-4">
+                                    <p class="font-semibold text-white">Marcos L.</p>
+                                    <p class="text-sm text-gray-400">Mentor de Produtividade</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="glass-card p-6 rounded-lg">
+                            <p class="text-gray-300">"O processo foi transparente e o resultado superou todas as expectativas. A atenção aos detalhes técnicos que impactam as vendas é o grande diferencial da South Sea."</p>
+                            <div class="flex items-center mt-4">
+                                <img src="https://placehold.co/40x40/38BDF8/FFFFFF?text=C" alt="Foto de Carla R." class="w-10 h-10 rounded-full">
+                                <div class="ml-4">
+                                    <p class="font-semibold text-white">Carla R.</p>
+                                    <p class="text-sm text-gray-400">Educadora Financeira</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 <!-- Logos -->
+                <div class="mt-16 text-center">
+                    <p class="text-gray-400 uppercase tracking-widest">Integração perfeita com as ferramentas que você já usa</p>
+                    <div class="flex justify-center items-center gap-8 md:gap-12 mt-6 grayscale opacity-60">
+                        <img src="https://placehold.co/120x40/FFFFFF/000000?text=Hotmart" alt="Logo Hotmart" class="h-8">
+                        <img src="https://placehold.co/120x40/FFFFFF/000000?text=Eduzz" alt="Logo Eduzz" class="h-8">
+                        <img src="https://placehold.co/120x40/FFFFFF/000000?text=Kiwify" alt="Logo Kiwify" class="h-8">
+                        <img src="https://placehold.co/120x40/FFFFFF/000000?text=ActiveCampaign" alt="Logo ActiveCampaign" class="h-8">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção 7: CTA Final e Contato -->
+        <section id="contato" class="py-20 md:py-32 px-6">
+            <div class="container mx-auto max-w-3xl text-center">
+                <i data-lucide="swords" class="w-16 h-16 text-sky-400 mx-auto mb-6"></i>
+                <h3 class="text-3xl md:text-5xl font-extrabold text-white mb-6">Pronto para construir a máquina de conversão do seu próximo lançamento?</h3>
+                <p class="text-lg text-slate-400 mb-8">A verdadeira escolha é entre continuar a apostar no sucesso ou investir na certeza. Vamos transformar seu conhecimento em um legado duradouro.</p>
+                
+                <div class="bg-slate-800 border border-slate-700 rounded-lg p-8 max-w-lg mx-auto">
+                    <form>
+                        <div class="mb-4">
+                            <label for="name" class="block text-left text-white font-semibold mb-2">Nome</label>
+                            <input type="text" id="name" name="name" class="w-full bg-slate-700 border border-slate-600 rounded-lg p-3 text-white focus:outline-none focus:ring-2 focus:ring-sky-500" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="email" class="block text-left text-white font-semibold mb-2">Melhor Email</label>
+                            <input type="email" id="email" name="email" class="w-full bg-slate-700 border border-slate-600 rounded-lg p-3 text-white focus:outline-none focus:ring-2 focus:ring-sky-500" required>
+                        </div>
+                        <div class="mb-6">
+                            <label for="link" class="block text-left text-white font-semibold mb-2">Link (Site atual ou perfil social)</label>
+                            <input type="url" id="link" name="link" class="w-full bg-slate-700 border border-slate-600 rounded-lg p-3 text-white focus:outline-none focus:ring-2 focus:ring-sky-500" required>
+                        </div>
+                        <button type="submit" class="cta-button w-full text-white font-bold py-4 px-8 rounded-lg text-lg">
+                            Quero Agendar Meu Diagnóstico Gratuito
+                        </button>
+                    </form>
+                    <div class="mt-6 text-center">
+                        <p class="text-sm font-bold text-yellow-400 bg-yellow-500/10 py-2 px-4 rounded-md">
+                            <i data-lucide="sparkles" class="inline w-4 h-4 mr-1"></i>
+                            Para garantir resultados excecionais, aceitamos apenas 5 novos projetos por mês.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-8 border-t border-gray-800">
+        <div class="container mx-auto px-6 text-center text-gray-500">
+            <p>&copy; 2025 South Sea. Todos os direitos reservados.</p>
+            <p class="text-sm mt-2">Construindo a ponte entre a sua expertise e o seu legado.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Inicializa Lucide Icons
+        lucide.createIcons();
+
+        // Smooth scroll para links de âncora
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

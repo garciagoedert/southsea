@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>South Sea - Arquitetura Digital para Criativos de Elite</title>
+    <meta name="description" content="Parceiros de profissionais criativos de elite — arquitetos, designers e fotógrafos — para construir portfólios digitais sob medida que conquistam clientes de alto valor.">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+     <!-- Favicon -->
+    <link rel="icon" href="/newimag/Ellipse 9.svg">
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Alpine.js Core and Intersect Plugin for animations -->
+    <script src="https://cdn.jsdelivr.net/npm/@alpinejs/intersect@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0a0a;
+            color: #e2e2e2;
+        }
+        .hero-gradient-text {
+            background: linear-gradient(to right, #ffffff, #a0a0a0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .cta-button {
+            background-color: #ffffff;
+            color: #0a0a0a;
+            transition: all 0.3s ease;
+        }
+        .cta-button:hover {
+            background-color: #c7c7c7;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(255, 255, 255, 0.1), 0 4px 6px -2px rgba(255, 255, 255, 0.05);
+        }
+        .section-title {
+            color: #ffffff;
+        }
+        .case-study-card {
+            background-color: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .case-study-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+        }
+        .testimonial-card {
+            background-color: #1a1a1a;
+            border: 1px solid #2a2a2a;
+        }
+        .form-input {
+            background-color: #1a1a1a;
+            border: 1px solid #3a3a3a;
+            color: #e2e2e2;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: #ffffff;
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
+        }
+        [x-cloak] { display: none !important; }
+    </style>
+</head>
+<body x-data="{}" class="antialiased">
+
+    <!-- Header -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-black/50 backdrop-blur-lg border-b border-gray-800">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-white">South Sea</h1>
+            <a href="#contact" class="cta-button font-semibold py-2 px-6 rounded-lg text-sm">
+                Agendar Consulta
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <!-- Section 1: The "Above the Fold" Hook -->
+        <section id="hero" class="relative min-h-screen flex items-center justify-center text-center overflow-hidden pt-20">
+            <div class="absolute inset-0 bg-black/60 z-10"></div>
+            <!-- Background Visual: Replace with a high-quality video or image -->
+            <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" 
+                 onerror="this.onerror=null;this.src='https://placehold.co/1920x1080/000000/FFFFFF?text=Visual+de+Alto+Impacto';"
+                 alt="Visual de fundo de um espaço de trabalho criativo e sofisticado" 
+                 class="absolute inset-0 w-full h-full object-cover opacity-30">
+            
+            <div class="relative z-20 container mx-auto px-6 transition-all duration-1000 ease-out" 
+                 x-data="{ show: false }" x-init="setTimeout(() => show = true, 100)"
+                 :class="show ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'">
+                <h2 class="text-4xl md:text-6xl lg:text-7xl font-extrabold hero-gradient-text leading-tight">
+                    Pare de Exibir Trabalhos. Comece a Conquistar Clientes.
+                </h2>
+                <p class="mt-6 max-w-3xl mx-auto text-lg md:text-xl text-gray-300">
+                    Somos uma agência boutique parceira de profissionais criativos de elite — arquitetos, designers e fotógrafos — para construir portfólios digitais sob medida que conquistam clientes de alto valor.
+                </p>
+                <a href="#contact" class="cta-button inline-block mt-10 font-bold py-4 px-10 rounded-lg text-lg">
+                    Iniciar Meu Projeto
+                </a>
+            </div>
+        </section>
+
+        <!-- Section 2: The Proof Section -->
+        <section id="proof" class="py-20 sm:py-32">
+            <div class="container mx-auto px-6">
+                <div class="text-center max-w-3xl mx-auto">
+                    <h3 class="text-base font-semibold text-gray-400 tracking-wider uppercase">Prova de Maestria</h3>
+                    <p class="mt-2 text-4xl md:text-5xl font-bold section-title">
+                        Onde Estratégia e Estética se Encontram.
+                    </p>
+                    <p class="mt-4 text-lg text-gray-400">
+                        Não criamos apenas sites. Criamos narrativas que demonstram valor estratégico e geram resultados tangíveis.
+                    </p>
+                </div>
+
+                <div class="mt-16 grid gap-12 md:grid-cols-1 lg:grid-cols-2">
+                    <!-- Case Study 1: Architect -->
+                    <div class="case-study-card rounded-2xl overflow-hidden transition-all duration-700 ease-out"
+                         x-data="{ show: false }" x-intersect.once="show = true"
+                         :class="show ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'">
+                        <div class="p-8">
+                            <img src="https://placehold.co/800x600/111111/555555?text=Projeto+de+Arquitetura" 
+                                 onerror="this.onerror=null;this.src='https://placehold.co/800x600/111111/555555?text=Erro';"
+                                 alt="Website de um escritório de arquitetura em um mockup de desktop" class="rounded-lg shadow-2xl">
+                        </div>
+                        <div class="p-8 pt-0">
+                            <p class="font-bold text-white text-xl">Firma de Arquitetura Visionária</p>
+                            <p class="text-sm text-gray-400 mt-1">Design Sustentável Residencial</p>
+                            <div class="mt-4 space-y-2 text-gray-300">
+                                <p><strong class="text-white">Desafio:</strong> Precisavam de uma presença digital que articulasse a sofisticação de seus projetos físicos para atrair uma clientela internacional mais exigente.</p>
+                                <p><strong class="text-white">Solução:</strong> Desenvolvemos um site minimalista, focado em tipografia, com galerias imersivas para contar a história por trás de cada construção.</p>
+                                <p class="text-green-400"><strong class="text-white">Resultado:</strong> Aumento de 40% em consultas internacionais qualificadas nos primeiros seis meses.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Case Study 2: Photographer -->
+                    <div class="case-study-card rounded-2xl overflow-hidden transition-all duration-700 ease-out delay-200"
+                         x-data="{ show: false }" x-intersect.once="show = true"
+                         :class="show ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'">
+                        <div class="p-8">
+                            <img src="https://placehold.co/800x600/1f1f1f/666666?text=Portfólio+de+Fotógrafo" 
+                                 onerror="this.onerror=null;this.src='https://placehold.co/800x600/1f1f1f/666666?text=Erro';"
+                                 alt="Website de um fotógrafo de moda em um mockup de desktop" class="rounded-lg shadow-2xl">
+                        </div>
+                        <div class="p-8 pt-0">
+                            <p class="font-bold text-white text-xl">Fotógrafo de Moda de Destaque</p>
+                            <p class="text-sm text-gray-400 mt-1">Fotografia Editorial e Comercial</p>
+                            <div class="mt-4 space-y-2 text-gray-300">
+                                <p><strong class="text-white">Desafio:</strong> O portfólio existente não refletia a qualidade premium de seu trabalho, resultando em propostas de baixo orçamento.</p>
+                                <p><strong class="text-white">Solução:</strong> Criamos uma experiência digital imersiva com streaming de vídeo 4K otimizado e galerias de prova para clientes, elevando a percepção da marca.</p>
+                                <p class="text-green-400"><strong class="text-white">Resultado:</strong> Conquistou seus dois maiores contratos até hoje, com marcas de luxo internacionais.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: The "How It Works" Narrative -->
+        <section id="process" class="py-20 sm:py-32 bg-[#111111]">
+            <div class="container mx-auto px-6">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <h3 class="text-4xl md:text-5xl font-bold section-title mb-4">Nosso Processo Colaborativo</h3>
+                    <p class="text-lg text-gray-400">Desmistificamos o design sob medida. Nosso processo é transparente, estratégico e construído para garantir que sua visão seja realizada com perfeição.</p>
+                </div>
+                <div class="relative">
+                    <!-- Connecting line for desktop -->
+                    <div class="hidden md:block absolute top-8 left-0 w-full h-0.5 bg-gray-700" aria-hidden="true"></div>
+                    <div class="grid md:grid-cols-4 gap-12 relative">
+                        <!-- Step 1 -->
+                        <div class="text-center transition-all duration-500 ease-out"
+                             x-data="{ show: false }" x-intersect.once="show = true"
+                             :class="show ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'">
+                            <div class="relative inline-block bg-[#111111] px-2 z-10">
+                                <div class="w-16 h-16 bg-white/5 border-2 border-gray-700 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-sm">1</div>
+                            </div>
+                            <h4 class="text-xl font-bold text-white mt-4 mb-2">Descoberta & Estratégia</h4>
+                            <p class="text-gray-400">Começa com sua visão. Em uma imersão profunda, entendemos sua marca, seus objetivos e seu cliente ideal para construir uma base estratégica sólida.</p>
+                        </div>
+                        <!-- Step 2 -->
+                        <div class="text-center transition-all duration-500 ease-out delay-150"
+                             x-data="{ show: false }" x-intersect.once="show = true"
+                             :class="show ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'">
+                            <div class="relative inline-block bg-[#111111] px-2 z-10">
+                                <div class="w-16 h-16 bg-white/5 border-2 border-gray-700 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-sm">2</div>
+                            </div>
+                            <h4 class="text-xl font-bold text-white mt-4 mb-2">Design Sob Medida</h4>
+                            <p class="text-gray-400">Criado para você, com você. Desenhamos um conceito visual único a partir do zero e colaboramos para refinar cada pixel até a perfeição.</p>
+                        </div>
+                        <!-- Step 3 -->
+                        <div class="text-center transition-all duration-500 ease-out delay-300"
+                             x-data="{ show: false }" x-intersect.once="show = true"
+                             :class="show ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'">
+                            <div class="relative inline-block bg-[#111111] px-2 z-10">
+                                <div class="w-16 h-16 bg-white/5 border-2 border-gray-700 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-sm">3</div>
+                            </div>
+                            <h4 class="text-xl font-bold text-white mt-4 mb-2">Desenvolvimento de Precisão</h4>
+                            <p class="text-gray-400">Onde a visão encontra a performance. Nossos desenvolvedores dão vida ao design com código limpo e de alto desempenho para uma experiência impecável.</p>
+                        </div>
+                        <!-- Step 4 -->
+                        <div class="text-center transition-all duration-500 ease-out delay-[450ms]"
+                             x-data="{ show: false }" x-intersect.once="show = true"
+                             :class="show ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'">
+                            <div class="relative inline-block bg-[#111111] px-2 z-10">
+                                <div class="w-16 h-16 bg-white/5 border-2 border-gray-700 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-sm">4</div>
+                            </div>
+                            <h4 class="text-xl font-bold text-white mt-4 mb-2">Lançamento & Parceria</h4>
+                            <p class="text-gray-400">Cuidamos de cada detalhe técnico para uma estreia digital perfeita. E nossa parceria continua, garantindo que seu site continue a performar.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: The Empathy Section -->
+        <section id="empathy" class="py-20 sm:py-32">
+            <div class="container mx-auto px-6">
+                <div class="text-center max-w-3xl mx-auto">
+                    <h3 class="text-base font-semibold text-gray-400 tracking-wider uppercase">Nós Entendemos</h3>
+                    <p class="mt-2 text-4xl md:text-5xl font-bold section-title">
+                        Liberte-se da Frustração do "Faça Você Mesmo".
+                    </p>
+                    <p class="mt-4 text-lg text-gray-400">
+                        Seu talento merece mais do que um template genérico. Sua energia é preciosa demais para ser gasta com problemas técnicos.
+                    </p>
+                </div>
+
+                <div class="mt-16 max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+                    <!-- The DIY Struggle -->
+                    <div class="bg-[#1a1a1a] border border-red-500/30 p-8 rounded-2xl">
+                        <h4 class="text-2xl font-bold text-red-400">A Luta do DIY</h4>
+                        <ul class="mt-6 space-y-4 text-gray-300">
+                            <li class="flex items-start">
+                                <svg class="h-6 w-6 text-red-400 flex-shrink-0 mr-3 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <span><strong class="text-white">Visão Criativa Comprometida</strong> por templates rígidos e genéricos.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="h-6 w-6 text-red-400 flex-shrink-0 mr-3 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <span><strong class="text-white">Horas Intermináveis Perdidas</strong> em falhas técnicas em vez de trabalho criativo e faturável.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <!-- Icon Fixed: Removed incorrect rotation -->
+                                <svg class="h-6 w-6 text-red-400 flex-shrink-0 mr-3 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                                <span><strong class="text-white">Páginas Lentas e com Bugs</strong> que afastam visitantes e prejudicam sua imagem profissional.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="h-6 w-6 text-red-400 flex-shrink-0 mr-3 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <span><strong class="text-white">Incerteza e Decepção</strong> com um resultado final que não gera orgulho.</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- The South Sea Partnership -->
+                    <div class="bg-[#1a1a1a] border border-green-500/30 p-8 rounded-2xl">
+                        <h4 class="text-2xl font-bold text-green-400">A Parceria South Sea</h4>
+                        <ul class="mt-6 space-y-4 text-gray-300">
+                            <li class="flex items-start">
+                                <svg class="h-6 w-6 text-green-400 flex-shrink-0 mr-3 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <span><strong class="text-white">Design 100% Sob Medida</strong> que é uma extensão autêntica da sua identidade única.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="h-6 w-6 text-green-400 flex-shrink-0 mr-3 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                <span><strong class="text-white">Seu Tempo de Volta</strong> para focar em seus clientes e em sua arte.</span>
+                            </li>
+                             <li class="flex items-start">
+                                <svg class="h-6 w-6 text-green-400 flex-shrink-0 mr-3 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                                <span><strong class="text-white">Performance de Foguete</strong> para uma impressão profissional e uma experiência impecável.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="h-6 w-6 text-green-400 flex-shrink-0 mr-3 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <span><strong class="text-white">Confiança e Orgulho</strong> em uma presença digital que realmente o representa.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: The Trust Arsenal -->
+        <section id="trust" class="py-20 sm:py-32 bg-[#111111]">
+            <div class="container mx-auto px-6">
+                <div class="testimonial-card max-w-4xl mx-auto p-8 md:p-12 rounded-2xl text-center">
+                    <img src="https://placehold.co/100x100/ffffff/000000?text=A" 
+                         onerror="this.onerror=null;this.src='https://placehold.co/100x100/ffffff/000000?text=Erro';"
+                         alt="Foto do cliente" class="w-24 h-24 rounded-full mx-auto shadow-lg">
+                    <blockquote class="mt-8 text-xl md:text-2xl font-medium text-white leading-relaxed">
+                        "A South Sea não apenas construiu um site para mim; eles arquitetaram uma plataforma de aquisição de clientes. O processo foi uma verdadeira colaboração, e eles traduziram minha estética em uma experiência digital autêntica. Conquistei minhas duas maiores encomendas até hoje nos três meses seguintes ao lançamento."
+                    </blockquote>
+                    <footer class="mt-8">
+                        <p class="text-lg font-bold text-white">[Nome do Cliente]</p>
+                        <p class="text-gray-400">Arquiteto Principal, [Nome da Firma]</p>
+                    </footer>
+                </div>
+
+                <div class="mt-20 text-center">
+                    <h4 class="text-lg font-semibold text-gray-400">Confiado pelos melhores e reconhecido em</h4>
+                    <div class="mt-8 flex justify-center items-center space-x-8 md:space-x-12 grayscale opacity-60">
+                        <!-- Replace with actual client or publication logos -->
+                        <p class="text-2xl font-bold">LOGO 1</p>
+                        <p class="text-2xl font-bold">LOGO 2</p>
+                        <p class="text-2xl font-bold">LOGO 3</p>
+                        <p class="text-2xl font-bold">LOGO 4</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 6: The Final Ask -->
+        <section id="contact" class="py-20 sm:py-32">
+            <div class="container mx-auto px-6">
+                <div class="max-w-3xl mx-auto text-center">
+                    <h2 class="text-4xl md:text-5xl font-bold section-title">
+                        Pronto para um portfólio que faz mais do que apenas mostrar?
+                    </h2>
+                    <p class="mt-4 text-lg text-gray-400">
+                        Vamos construir um que vence. Dê o primeiro passo para transformar sua presença digital em seu mais poderoso ativo de negócios.
+                    </p>
+                </div>
+
+                <!-- Contact Form with Alpine.js -->
+                <div class="mt-12 max-w-xl mx-auto" x-data="contactForm()">
+                    <div x-show="!submitted" x-transition>
+                        <form @submit.prevent="submitForm" class="space-y-6">
+                            <div>
+                                <label for="name" class="sr-only">Nome</label>
+                                <input type="text" name="name" id="name" x-model="formData.name" autocomplete="name" placeholder="Seu Nome" required class="form-input w-full p-4 rounded-lg">
+                            </div>
+                            <div>
+                                <label for="email" class="sr-only">Email</label>
+                                <input type="email" name="email" id="email" x-model="formData.email" autocomplete="email" placeholder="Seu Email" required class="form-input w-full p-4 rounded-lg">
+                            </div>
+                            <div>
+                                <label for="website" class="sr-only">Website Atual (Opcional)</label>
+                                <input type="url" name="website" id="website" x-model="formData.website" autocomplete="url" placeholder="Website Atual (Opcional)" class="form-input w-full p-4 rounded-lg">
+                            </div>
+                            <div>
+                                <label for="message" class="sr-only">Mensagem</label>
+                                <textarea name="message" id="message" rows="4" x-model="formData.message" placeholder="Conte-nos um pouco sobre seu projeto e o que você espera alcançar..." required class="form-input w-full p-4 rounded-lg"></textarea>
+                            </div>
+                            <div>
+                                <button type="submit" class="cta-button w-full font-bold py-4 px-8 rounded-lg text-lg" :disabled="loading" :class="{ 'opacity-50 cursor-not-allowed': loading }">
+                                    <span x-show="!loading">Solicitar Minha Consulta Gratuita</span>
+                                    <span x-show="loading">Enviando...</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- Success Message -->
+                    <div x-show="submitted" x-transition.opacity.duration.500ms
+                         class="bg-green-500/10 border border-green-500/30 text-green-300 p-6 rounded-lg text-center"
+                         x-cloak>
+                        <h3 class="text-2xl font-bold text-white">Obrigado!</h3>
+                        <p class="mt-2">Sua mensagem foi enviada com sucesso. Nosso consultor principal entrará em contato em breve para agendar sua chamada.</p>
+                        <button @click="submitted = false" class="mt-6 text-sm text-white underline opacity-80 hover:opacity-100">Enviar outra mensagem</button>
+                    </div>
+
+                    <p class="mt-6 text-center text-sm text-gray-500">
+                        Após o envio, nosso consultor principal entrará em contato para agendar sua chamada de descoberta de 30 minutos. <strong class="text-gray-400">Sem pressão, sem venda agressiva, apenas uma conversa estratégica.</strong>
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#111111] border-t border-gray-800">
+        <div class="container mx-auto px-6 py-8 text-center text-gray-500" x-data="{ currentYear: new Date().getFullYear() }">
+            <p>&copy; <span x-text="currentYear"></span> South Sea. Todos os direitos reservados.</p>
+            <p class="text-sm mt-2">Arquitetura Digital para Criativos de Elite.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Alpine.js data function for the contact form
+        function contactForm() {
+            return {
+                formData: {
+                    name: '',
+                    email: '',
+                    website: '',
+                    message: ''
+                },
+                loading: false,
+                submitted: false,
+                submitForm() {
+                    this.loading = true;
+                    // Simulate a network request
+                    setTimeout(() => {
+                        this.loading = false;
+                        this.submitted = true;
+                        console.log('Form Data Submitted:', this.formData);
+                        // Reset form fields
+                        this.formData = { name: '', email: '', website: '', message: '' };
+                        // Hide the success message after 10 seconds
+                        setTimeout(() => {
+                           if (this.submitted) {
+                               this.submitted = false;
+                           }
+                        }, 10000);
+                    }, 1500);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
