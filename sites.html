@@ -13,8 +13,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     
     
+     <!-- Favicon -->
     <link rel="icon" href="/newimag/Ellipse 9.svg">
-    <link rel="stylesheet" href="/styles.css">
 
     <style>
         /* Paleta de Cores e Tipografia da South Sea */
@@ -72,6 +72,7 @@
        .glass-card:hover {
             transform: translateY(-5px);
             border: 1px solid rgba(100, 255, 218, 0.3);
+            box-shadow: 0 10px 30px -15px rgba(100, 255, 218, 0.1);
         }
 
         /* Botão de Ação Principal (CTA) */
@@ -81,12 +82,22 @@
             font-family: 'Montserrat', sans-serif;
             font-weight: 700;
             transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(100, 255, 218, 0.3);
+            animation: pulse-cta 2s infinite;
         }
        .cta-button:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(100, 255, 218, 0.2);
-        }
-        /* Estilo para o botão flutuante do WhatsApp */
+            box-shadow: 0 10px 20px rgba(100, 255, 218, 0.4);
+            animation-play-state: paused;
+       }
+
+       @keyframes pulse-cta {
+            0% { box-shadow: 0 0 20px rgba(100, 255, 218, 0.3); }
+            50% { box-shadow: 0 0 30px rgba(100, 255, 218, 0.5); }
+            100% { box-shadow: 0 0 20px rgba(100, 255, 218, 0.3); }
+       }
+
+         /* Estilo para o botão flutuante do WhatsApp */
         .whatsapp-button {
             position: fixed;
             bottom: 20px;
@@ -127,12 +138,12 @@
 
         .logo-slider::before {
             left: 0;
-            background: linear-gradient(to left, rgba(17, 34, 64, 0), var(--bg-brand-light-navy));
+            background: linear-gradient(to left, rgba(10, 25, 47, 0), var(--bg-brand-navy));
         }
 
         .logo-slider::after {
             right: 0;
-            background: linear-gradient(to right, rgba(17, 34, 64, 0), var(--bg-brand-light-navy));
+            background: linear-gradient(to right, rgba(10, 25, 47, 0), var(--bg-brand-navy));
         }
 
         .logo-slider .logo-track {
@@ -158,16 +169,44 @@
             from { transform: translateX(0); }
             to { transform: translateX(-50%); }
         }
+
+        
+        .content-blur {
+            filter: blur(5px) brightness(50%);
+            pointer-events: none;
+            transition: filter 0.3s ease-out;
+        }
+
+        /* --- START: Niche Modal Styles --- */
+        .niche-modal {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .niche-modal.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        .niche-modal-content {
+            transform: translateY(-20px) scale(0.98);
+            opacity: 0;
+            transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.4s ease;
+        }
+        .niche-modal.visible .niche-modal-content {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+        
     </style>
 </head>
 <body class="overflow-x-hidden">
 
     <header class="relative min-h-screen flex items-center justify-center text-center p-6 overflow-hidden">
-        
+        <div id="particles-js" class="absolute top-0 left-0 w-full h-full z-0"></div>
         <div class="absolute inset-0 bg-brand-navy/80"></div>
         
         <div class="relative z-10 max-w-4xl reveal">
-            <img src="/newimag/Vector.svg" alt="Logo South Sea" class="mx-auto h-16 w-auto mb-10">
+            <img src="https://placehold.co/128x64/0A192F/64FFDA?text=South+Sea" alt="Logo South Sea" class="mx-auto h-16 w-auto mb-10">
             <h1 class="text-4xl sm:text-5xl md:text-5xl font-extrabold leading-tight mb-4">
                 Tenha um Website que Transforma Visitantes em Clientes.
             </h1>
@@ -175,33 +214,45 @@
                 A sua presença digital é a sua principal vitrine. Combinamos design de alta performance e tecnologia de ponta para criar websites que não são apenas bonitos, mas que geram resultados reais para o seu negócio.
             </p>
             <a href="https://api.whatsapp.com/send/?phone=48988780389&text=Ol%C3%A1%21+Tenho+interesse+em+uma+proposta+personalizada+de+site+&type=phone_number&app_absent=0" class="cta-button text-lg py-4 px-10 rounded-md inline-block">
-                Receber Proposta Personalizada
+                Quero Minha Proposta Agora
             </a>
         </div>
     </header>
 
-      <main id="main-content" class="bg-brand-navy">
-        <section class="py-12 bg-brand-light-navy">
+      <main id="main-content">
+        <section class="py-12 bg-bg-brand-navy">
             <div class="container mx-auto text-center reveal">
-                <h4 class="text-brand-slate font-semibold mb-8">A confiança de mais de 80+ clientes em mais de 100 projetos de sucesso.</h4>
-                <div class="logo-slider">
-                    <div class="logo-track">
-                        <!-- Original Logos -->
-                        <div class="logo-item"><img src="/newimag/CELEREQ.svg" alt="Logo Cliente 1" class="h-8 md:h-10 opacity-60"></div>
-                        <div class="logo-item"><img src="/newimag/FORMA1.svg" alt="Logo Cliente 2" class="h-8 md:h-10 opacity-60"></div>
-                        <div class="logo-item"><img src="/newimag/SHAPESQ.svg" alt="Logo Cliente 3" class="h-8 md:h-10 opacity-60"></div>
-                        <div class="logo-item"><img src="/newimag/KIHAP1.svg" alt="Logo Cliente 4" class="h-8 md:h-10 opacity-60"></div>
-                        <div class="logo-item"><img src="https://placehold.co/120x50/112240/8892B0?text=TECHCORP" alt="Logo Cliente 5" class="h-8 md:h-10 opacity-60"></div>
-                        <div class="logo-item"><img src="https://placehold.co/120x50/112240/8892B0?text=INNOVA" alt="Logo Cliente 6" class="h-8 md:h-10 opacity-60"></div>
-                        <div class="logo-item"><img src="https://placehold.co/120x50/112240/8892B0?text=NEXUS" alt="Logo Cliente 7" class="h-8 md:h-10 opacity-60"></div>
-                        <!-- Duplicated Logos for seamless loop -->
-                        <div class="logo-item"><img src="/newimag/CELEREQ.svg" alt="Logo Cliente 1" class="h-8 md:h-10 opacity-60"></div>
-                        <div class="logo-item"><img src="/newimag/FORMA1.svg" alt="Logo Cliente 2" class="h-8 md:h-10 opacity-60"></div>
-                        <div class="logo-item"><img src="/newimag/SHAPESQ.svg" alt="Logo Cliente 3" class="h-8 md:h-10 opacity-60"></div>
-                        <div class="logo-item"><img src="/newimag/KIHAP1.svg" alt="Logo Cliente 4" class="h-8 md:h-10 opacity-60"></div>
-                        <div class="logo-item"><img src="https://placehold.co/120x50/112240/8892B0?text=TECHCORP" alt="Logo Cliente 5" class="h-8 md:h-10 opacity-60"></div>
-                        <div class="logo-item"><img src="https://placehold.co/120x50/112240/8892B0?text=INNOVA" alt="Logo Cliente 6" class="h-8 md:h-10 opacity-60"></div>
-                        <div class="logo-item"><img src="https://placehold.co/120x50/112240/8892B0?text=NEXUS" alt="Logo Cliente 7" class="h-8 md:h-10 opacity-60"></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto">
+                    <div class="text-4xl font-extrabold text-brand-lightest">
+                        +<span data-count="80">0</span> Clientes
+                        <p class="text-lg font-normal text-brand-slate mt-1">Confiam em nosso trabalho</p>
+                    </div>
+                     <div class="text-4xl font-extrabold text-brand-lightest">
+                        +<span data-count="100">0</span> Projetos
+                        <p class="text-lg font-normal text-brand-slate mt-1">Entregues com sucesso</p>
+                    </div>
+                </div>
+                <div class="mt-16">
+                    <h4 class="text-brand-slate font-semibold mb-8">Empresas que aceleraram seus resultados com a South Sea</h4>
+                    <div class="logo-slider">
+                        <div class="logo-track">
+                            <!-- Original Logos -->
+                            <div class="logo-item"><img src="https://placehold.co/120x50/0A192F/8892B0?text=CELEREQ" alt="Logo Cliente 1" class="h-8 md:h-10 opacity-60"></div>
+                            <div class="logo-item"><img src="https://placehold.co/120x50/0A192F/8892B0?text=FORMA1" alt="Logo Cliente 2" class="h-8 md:h-10 opacity-60"></div>
+                            <div class="logo-item"><img src="https://placehold.co/120x50/0A192F/8892B0?text=SHAPESQ" alt="Logo Cliente 3" class="h-8 md:h-10 opacity-60"></div>
+                            <div class="logo-item"><img src="https://placehold.co/120x50/0A192F/8892B0?text=KIHAP1" alt="Logo Cliente 4" class="h-8 md:h-10 opacity-60"></div>
+                            <div class="logo-item"><img src="https://placehold.co/120x50/0A192F/8892B0?text=TECHCORP" alt="Logo Cliente 5" class="h-8 md:h-10 opacity-60"></div>
+                            <div class="logo-item"><img src="https://placehold.co/120x50/0A192F/8892B0?text=INNOVA" alt="Logo Cliente 6" class="h-8 md:h-10 opacity-60"></div>
+                            <div class="logo-item"><img src="https://placehold.co/120x50/0A192F/8892B0?text=NEXUS" alt="Logo Cliente 7" class="h-8 md:h-10 opacity-60"></div>
+                            <!-- Duplicated Logos for seamless loop -->
+                            <div class="logo-item"><img src="https://placehold.co/120x50/0A192F/8892B0?text=CELEREQ" alt="Logo Cliente 1" class="h-8 md:h-10 opacity-60"></div>
+                            <div class="logo-item"><img src="https://placehold.co/120x50/0A192F/8892B0?text=FORMA1" alt="Logo Cliente 2" class="h-8 md:h-10 opacity-60"></div>
+                            <div class="logo-item"><img src="https://placehold.co/120x50/0A192F/8892B0?text=SHAPESQ" alt="Logo Cliente 3" class="h-8 md:h-10 opacity-60"></div>
+                            <div class="logo-item"><img src="https://placehold.co/120x50/0A192F/8892B0?text=KIHAP1" alt="Logo Cliente 4" class="h-8 md:h-10 opacity-60"></div>
+                            <div class="logo-item"><img src="https://placehold.co/120x50/0A192F/8892B0?text=TECHCORP" alt="Logo Cliente 5" class="h-8 md:h-10 opacity-60"></div>
+                            <div class="logo-item"><img src="https://placehold.co/120x50/0A192F/8892B0?text=INNOVA" alt="Logo Cliente 6" class="h-8 md:h-10 opacity-60"></div>
+                            <div class="logo-item"><img src="https://placehold.co/120x50/0A192F/8892B0?text=NEXUS" alt="Logo Cliente 7" class="h-8 md:h-10 opacity-60"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -236,7 +287,7 @@
                 <h2 class="text-3xl md:text-4xl font-bold mb-16">
                     <span class="text-brand-accent font-mono">02.</span> A Rota Certa para Cada Negócio
                 </h2>
-                      <div class="grid md:grid-cols-2 gap-8 items-stretch">
+                        <div class="grid md:grid-cols-2 gap-8 items-stretch">
                     <div class="glass-card p-8 rounded-lg flex flex-col text-left">
                         <h3 class="text-2xl font-bold mb-2">Presença Essencial (Landing Page)</h3>
                         <p class="text-brand-slate mb-6">Ideal para profissionais liberais, lançamento de produtos ou campanhas de marketing focadas em máxima conversão.</p>
@@ -272,7 +323,7 @@
             </div>
         </section>
 
-         <section id="nichos" class="section">
+          <section id="nichos" class="section">
             <div class="container mx-auto max-w-7xl text-center reveal">
                 <h2 class="text-3xl md:text-4xl font-bold mb-6">
                     <span class="text-brand-accent font-mono">03.</span> Construído para o Seu Mercado. Desenhado para o Seu Cliente.
@@ -280,54 +331,60 @@
                 <p class="text-lg text-brand-slate max-w-3xl mx-auto mb-16">Entendemos que cada setor tem desafios e públicos únicos. Por isso, não criamos apenas websites; criamos soluções digitais sob medida que falam a língua do seu nicho e geram os resultados que você precisa.</p>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+                    
                     <!-- Niche 1: Saúde & Bem-Estar -->
-                    <a href="/lp-saude-bem-estar.html" class="block glass-card p-8 rounded-lg flex flex-col text-left h-full group lg:col-span-2">
+                    <div class="glass-card p-8 rounded-lg flex flex-col text-left h-full group lg:col-span-2 cursor-pointer" onclick="openNicheModal('saude')">
                         <div class="text-brand-accent text-5xl mb-6"><i class="fas fa-heartbeat"></i></div>
                         <h3 class="text-xl font-bold mb-3">Saúde & Bem-Estar</h3>
-                        <p class="mb-6">Para <strong>médicos, psicólogos, nutricionistas e terapeutas</strong>, sua presença online deve ser uma extensão do seu consultório: profissional, acolhedora e que transmite total confiança. Nós criamos o site que transforma sua autoridade em pacientes agendados.</p>
+                        <p class="mb-6">Para <strong>médicos, psicólogos, nutricionistas e terapeutas</strong>, a sua presença online deve ser uma extensão do seu consultório: profissional, acolhedora e que transmite total confiança.</p>
                         <div class="mt-auto pt-4 font-semibold text-brand-accent group-hover:text-white transition-colors duration-300">
-                            Ver Solução para Saúde <span class="group-hover:ml-2 transition-all duration-300">→</span>
+                            Saber Mais <span class="group-hover:ml-2 transition-all duration-300">→</span>
                         </div>
-                    </a>
+                    </div>
+
                     <!-- Niche 2: Criativos & Visuais -->
-                    <a href="/lp-criativos-visuais.html" class="block glass-card p-8 rounded-lg flex flex-col text-left h-full group lg:col-span-3">
+                    <div class="glass-card p-8 rounded-lg flex flex-col text-left h-full group lg:col-span-3 cursor-pointer" onclick="openNicheModal('criativos')">
                         <div class="text-brand-accent text-5xl mb-6"><i class="fas fa-drafting-compass"></i></div>
                         <h3 class="text-xl font-bold mb-3">Criativos & Visuais</h3>
-                        <p class="mb-6">O talento de <strong>arquitetos, designers, fotógrafos e artistas</strong> é único, e seu site também precisa ser. Nós transformamos seu portfólio em uma experiência digital imersiva que não apenas exibe seus projetos, mas conquista seus próximos grandes clientes.</p>
+                        <p class="mb-6">O talento de <strong>arquitetos, designers, fotógrafos e artistas</strong> é único, e o seu site também precisa de ser. Nós transformamos o seu portfólio numa experiência digital imersiva que conquista clientes.</p>
                         <div class="mt-auto pt-4 font-semibold text-brand-accent group-hover:text-white transition-colors duration-300">
-                            Ver Solução para Criativos <span class="group-hover:ml-2 transition-all duration-300">→</span>
+                            Saber Mais <span class="group-hover:ml-2 transition-all duration-300">→</span>
                         </div>
-                    </a>
+                    </div>
+
                     <!-- Niche 3: Lançamentos & Infoprodutos -->
-                    <a href="/lp-lancamentos-infoprodutos.html" class="block glass-card p-8 rounded-lg flex flex-col text-left h-full group lg:col-span-3">
-                         <div class="text-brand-accent text-5xl mb-6"><i class="fas fa-rocket"></i></div>
+                    <div class="glass-card p-8 rounded-lg flex flex-col text-left h-full group lg:col-span-3 cursor-pointer" onclick="openNicheModal('lancamentos')">
+                        <div class="text-brand-accent text-5xl mb-6"><i class="fas fa-rocket"></i></div>
                         <h3 class="text-xl font-bold mb-3">Lançamentos & Infoprodutos</h3>
-                        <p class="mb-6">Para <strong>experts, mentores e educadores</strong> que vendem conhecimento, cada detalhe da sua página de vendas conta. Nós construímos a máquina de conversão que vai transformar seus seguidores em alunos.</p>
+                        <p class="mb-6">Para <strong>experts, mentores e educadores</strong> que vendem conhecimento, cada detalhe da sua página de vendas conta. Nós construímos a máquina de conversão que vai transformar os seus seguidores em alunos.</p>
                         <div class="mt-auto pt-4 font-semibold text-brand-accent group-hover:text-white transition-colors duration-300">
-                            Ver Solução para Lançamentos <span class="group-hover:ml-2 transition-all duration-300">→</span>
+                            Saber Mais <span class="group-hover:ml-2 transition-all duration-300">→</span>
                         </div>
-                    </a>
+                    </div>
+
                     <!-- Niche 4: Corporativo & Consultivo -->
-                    <a href="/lp-corporativo-consultivo.html" class="block glass-card p-8 rounded-lg flex flex-col text-left h-full group lg:col-span-2">
+                    <div class="glass-card p-8 rounded-lg flex flex-col text-left h-full group lg:col-span-2 cursor-pointer" onclick="openNicheModal('corporativo')">
                         <div class="text-brand-accent text-5xl mb-6"><i class="fas fa-briefcase"></i></div>
                         <h3 class="text-xl font-bold mb-3">Corporativo & Consultivo</h3>
-                        <p class="mb-6">No mercado de <strong>advogados, contadores e consultores</strong>, confiança não se negocia. Criamos um site que projeta a autoridade e a seriedade que seu escritório já possui, transformando sua presença digital em um poderoso canal de prospecção.</p>
+                        <p class="mb-6">No mercado de <strong>advogados, contadores e consultores</strong>, confiança não se negocia. Criamos um site que projeta a autoridade e a seriedade que o seu escritório já possui.</p>
                         <div class="mt-auto pt-4 font-semibold text-brand-accent group-hover:text-white transition-colors duration-300">
-                            Ver Solução Corporativa <span class="group-hover:ml-2 transition-all duration-300">→</span>
+                            Saber Mais <span class="group-hover:ml-2 transition-all duration-300">→</span>
                         </div>
-                    </a>
-                     <!-- Niche 5: Serviços Locais de Alto Valor -->
-                    <a href="/lp-servicos-locais.html" class="block glass-card p-8 rounded-lg flex flex-col text-left h-full group lg:col-span-5">
+                    </div>
+                    
+                    <!-- Niche 5: Indústria & Construção -->
+                    <div class="glass-card p-8 rounded-lg flex flex-col text-left h-full group lg:col-span-5 cursor-pointer" onclick="openNicheModal('industria')">
                         <div class="text-brand-accent text-5xl mb-6"><i class="fas fa-solar-panel"></i></div>
                         <h3 class="text-xl font-bold mb-3">Indústria & Construção</h3>
-                        <p class="mb-6">Para <strong>construtoras, marcenarias e empresas de energia solar</strong>, seu cliente não compra o serviço sem antes confiar na sua qualidade. Criamos um site que funciona como seu melhor vendedor: exibe seus melhores projetos, qualifica o contato e entrega orçamentos de clientes prontos para investir.</p>
+                        <p class="mb-6">Para <strong>construtoras, marcenarias e empresas de energia solar</strong>, o seu cliente não compra o serviço sem antes confiar na sua qualidade. Criamos um site que funciona como o seu melhor vendedor.</p>
                         <div class="mt-auto pt-4 font-semibold text-brand-accent group-hover:text-white transition-colors duration-300">
-                            Ver Solução para Serviços <span class="group-hover:ml-2 transition-all duration-300">→</span>
+                            Saber Mais <span class="group-hover:ml-2 transition-all duration-300">→</span>
                         </div>
-                    </a>
+                    </div>
                 </div>
             </div>
         </section>
+
 
           <section id="beneficios-codigo" class="section">
             <div class="container mx-auto max-w-5xl text-center reveal">
@@ -399,19 +456,21 @@
                     <span class="text-brand-accent font-mono">06.</span> Projetos que Geram Resultados
                 </h2>
                 <div class="bg-brand-navy rounded-lg md:flex items-center overflow-hidden text-left shadow-2xl">
-                    <div class="md:w-1/2">
-                        <a href="https://liferrary.vercel.app/" ><img src="/newimag/projeto1.png" alt="Estudo de Caso Consultoria" class="w-full h-full object-cover min-h-[300px] md:min-h-[450px]"></a>
-                    </div>
-                    <div class="md:w-1/2 p-8 lg:p-12">
+                    <div class="md:w-1/2 p-8 lg:p-12 order-2 md:order-1">
                         <p class="text-brand-accent font-semibold mb-2">Site Institucional Estratégico</p>
                         <h3 class="text-3xl font-bold mb-4">Consultora de aromaterapia</h3>
                         <p class="mb-4"><strong>O Desafio:</strong>Uma presença online que não refletia seu profissionalismo, com um site ultrapassado que falhava em atrair novos clientes.</p>
                         <p class="mb-6"><strong>A Solução:</strong> Criamos uma plataforma com design elegante e arquitetura estratégica, projetada para comunicar seu valor profissional e converter visitantes em clientes.</p>
                         <div class="border-t border-brand-accent/20 pt-6">
                             <p class="text-lg font-bold text-brand-lightest mb-2">Resultado: Transformação completa da presença online e aumento expressivo no interesse de novas clínicas.</p>
-                            <blockquote class="italic text-brand-light">"Eu não tenho palavras para agradecer à South Sea. Olhar para o meu site antigo era frustrante, ele simplesmente não me representava. Agora, tenho uma plataforma maravilhosa, que transborda profissionalismo e com a qual me identifico 100%. Sinto um orgulho imenso de divulgar meu trabalho e uma gratidão gigante por terem transformado minha presença online de forma tão incrível!" Sou imensamente grata por esse projeto que já está me trazendo contatos qualificados!"</blockquote>
-                            <p class="font-bold text-right mt-2">- Liana Ferrary, Especialista em Aromaterapia para o Setor de Estética</p>
+                            <blockquote class="italic text-brand-light">"Eu não tenho palavras para agradecer à South Sea. Olhar para o meu site antigo era frustrante... Agora, tenho uma plataforma maravilhosa, que transborda profissionalismo e com a qual me identifico 100%."</blockquote>
+                            <p class="font-bold text-right mt-2">- Liana Ferrary, Especialista em Aromaterapia</p>
                         </div>
+                    </div>
+                    <div class="md:w-1/2 order-1 md:order-2 p-8 flex items-center justify-center">
+                         <a href="https://liferrary.vercel.app/" target="_blank" class="block w-full">
+                            <img src="https://placehold.co/800x600/112240/CCD6F6?text=Projeto+Liana" alt="Estudo de Caso Consultoria" class="w-full h-auto rounded-lg shadow-2xl">
+                        </a>
                     </div>
                 </div>
                  <div class="mt-16 text-center">
@@ -463,7 +522,7 @@
                             <div class="mb-5"><label for="name" class="block text-brand-slate mb-2">Nome</label><input type="text" id="name" required class="w-full p-3 bg-brand-navy border border-brand-slate/30 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-accent text-brand-lightest"></div>
                             <div class="mb-5"><label for="email" class="block text-brand-slate mb-2">Email Empresarial</label><input type="email" id="email" required class="w-full p-3 bg-brand-navy border border-brand-slate/30 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-accent text-brand-lightest"></div>
                             <div class="mb-6"><label for="service" class="block text-brand-slate mb-2">Qual a sua necessidade?</label><select id="service" class="w-full p-3 bg-brand-navy border border-brand-slate/30 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-accent text-brand-lightest"><option>Presença Essencial (Landing Page)</option><option>Negócio Digital (Site Institucional)</option><option>Ainda não tenho a certeza</option></select></div>
-                            <button type="submit" class="cta-button text-lg py-3 px-8 rounded-md w-full">Receber Proposta Personalizada</button>
+                            <button type="submit" class="cta-button text-lg py-3 px-8 rounded-md w-full !animation-name-none">Receber Proposta Personalizada</button>
                         </form>
                     </div>
                 </div>
@@ -503,14 +562,41 @@
         </section>
     </main>
 
+    <!-- BOTÃO FLUTUANTE DO WHATSAPP -->
+<a href="https://api.whatsapp.com/send/?phone=48988780389&text=Ol%C3%A1%21+Tenho+interesse+em+saber+mais+sobre+sites+&type=phone_number&app_absent=0" class="whatsapp-button" target="_blank" aria-label="Fale conosco pelo WhatsApp">
+    <i class="fab fa-whatsapp" aria-hidden="true"></i>
+</a>
+
     <footer class="bg-brand-light-navy text-center p-8">
         <div class="container mx-auto text-brand-slate">
-          <a href="https://www.southsea.com.br/"><img src="/newimag/Vector.svg" alt="Logo South Sea" class="mx-auto h-12 w-auto mb-4 opacity-70"></a>
+         <a href="https://www.southsea.com.br/"><img src="https://placehold.co/128x64/0A192F/64FFDA?text=South+Sea" alt="Logo South Sea" class="mx-auto h-12 w-auto mb-4 opacity-70"></a>
            <p class="text-sm">&copy; 2025 South Sea.Todos os direitos reservados. <br> Made with 💙 by <a href="https://www.southsea.com.br/">South Sea</a></p>
         </div>
     </footer>
 
-      <!-- START: Fullscreen Gallery Modal -->
+    <!-- START: Niche Details Modal -->
+    <div id="niche-modal" class="niche-modal fixed inset-0 bg-bg-brand-navy/80 flex items-start justify-center p-4 z-50 overflow-y-auto">
+        <div id="niche-modal-content" class="niche-modal-content glass-card !bg-brand-light-navy w-full max-w-4xl my-8 rounded-lg shadow-2xl flex flex-col">
+            <!-- Modal Header -->
+            <div class="flex justify-between items-start p-6 border-b border-brand-accent/10">
+                <div id="niche-modal-header" class="flex items-center">
+                    <!-- O conteúdo do header (ícone e título) será inserido aqui pelo JS -->
+                </div>
+                <button id="niche-modal-close-x" class="text-brand-accent text-4xl font-light hover:text-white transition-colors leading-none">&times;</button>
+            </div>
+            <!-- Modal Body -->
+            <div id="niche-modal-body" class="p-8">
+                <!-- O conteúdo do corpo será inserido aqui pelo JS -->
+            </div>
+            <!-- Modal Footer -->
+            <div id="niche-modal-footer" class="p-6 mt-auto border-t border-brand-accent/10 text-right flex justify-end items-center gap-4">
+                 <!-- O conteúdo do footer (botões) será inserido aqui pelo JS -->
+            </div>
+        </div>
+    </div>
+    <!-- END: Niche Details Modal -->
+
+     <!-- START: Fullscreen Gallery Modal -->
     <div id="gallery-modal" class="hidden fixed inset-0 bg-bg-brand-navy z-50 overflow-y-auto transition-opacity duration-300">
         <!-- Sticky Header -->
         <div class="sticky top-0 z-20 bg-bg-brand-navy/90 backdrop-blur-sm border-b border-brand-accent/10">
@@ -568,43 +654,310 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
+        // --- START: Particle Animation ---
         document.addEventListener('DOMContentLoaded', () => {
-            const revealElements = document.querySelectorAll('.reveal');
-            const observer = new IntersectionObserver((entries) => {
+            if(document.getElementById('particles-js')){
+                particlesJS("particles-js", {
+                    "particles": {
+                        "number": {
+                            "value": 80,
+                            "density": {
+                                "enable": true,
+                                "value_area": 800
+                            }
+                        },
+                        "color": {
+                            "value": "#64ffda"
+                        },
+                        "shape": {
+                            "type": "circle",
+                        },
+                        "opacity": {
+                            "value": 0.5,
+                            "random": false,
+                            "anim": {
+                                "enable": false,
+                            }
+                        },
+                        "size": {
+                            "value": 3,
+                            "random": true,
+                            "anim": {
+                                "enable": false,
+                            }
+                        },
+                        "line_linked": {
+                            "enable": true,
+                            "distance": 150,
+                            "color": "#8892b0",
+                            "opacity": 0.4,
+                            "width": 1
+                        },
+                        "move": {
+                            "enable": true,
+                            "speed": 1, // Speed reduced to 1
+                            "direction": "none",
+                            "random": false,
+                            "straight": false,
+                            "out_mode": "out",
+                            "bounce": false,
+                        }
+                    },
+                    "interactivity": {
+                        "detect_on": "canvas",
+                        "events": {
+                            "onhover": {
+                                "enable": true,
+                                "mode": "repulse"
+                            },
+                            "onclick": {
+                                "enable": true,
+                                "mode": "push"
+                            },
+                            "resize": true
+                        },
+                        "modes": {
+                            "repulse": {
+                                "distance": 100,
+                                "duration": 0.4
+                            },
+                            "push": {
+                                "particles_nb": 4
+                            },
+                        }
+                    },
+                    "retina_detect": true
+                });
+            }
+        });
+        // --- END: Particle Animation ---
+
+
+        // --- START: Data for Niche Modals ---
+        const nicheData = {
+            saude: {
+                title: "Saúde & Bem-Estar",
+                icon: "fas fa-heartbeat",
+                argument: "Sua presença online deve ser uma extensão do seu consultório: profissional, acolhedora e que transmite total confiança. Nós criamos o site que transforma sua autoridade médica em pacientes agendados.",
+                idealFor: ["Médicos e Clínicas", "Psicólogos e Terapeutas", "Nutricionistas", "Clínicas de Estética", "Fisioterapeutas"],
+                solutions: ["Site Institucional Profissional", "Agendamento Online Integrado", "Blog de Autoridade", "Landing Pages de Conversão"],
+                differential: {
+                    title: "Design que Inspira Confiança",
+                    description: "Layouts limpos, profissionais e que seguem as diretrizes de ética do seu conselho, fortalecendo a credibilidade."
+                }
+            },
+            criativos: {
+                title: "Criativos & Visuais",
+                icon: "fas fa-drafting-compass",
+                argument: "Seu talento é único, e seu site também precisa ser. Nós transformamos seu portfólio em uma experiência digital imersiva que não apenas exibe seus projetos, mas conquista seus próximos grandes clientes.",
+                idealFor: ["Arquitetos", "Designers de Interiores", "Fotógrafos", "Artistas Visuais", "Videomakers"],
+                solutions: ["Site-Portfólio de Alto Impacto", "Galerias de Projetos Imersivas", "Estudos de Caso Detalhados", "Páginas de Orçamento"],
+                differential: {
+                    title: "Estética que Conquista",
+                    description: "Um design que não apenas mostra seu trabalho, mas reflete sua identidade criativa, criando uma conexão instantânea."
+                }
+            },
+            lancamentos: {
+                title: "Lançamentos & Infoprodutos",
+                icon: "fas fa-rocket",
+                argument: "Para um lançamento de sucesso, cada detalhe da sua página de vendas conta. Nós construímos a máquina de conversão que vai transformar seus seguidores em alunos.",
+                idealFor: ["Experts e Especialistas", "Mentores e Coaches", "Educadores Digitais", "Vendedores de Cursos Online"],
+                solutions: ["Páginas de Vendas (Sales Pages)", "Páginas de Captura de Leads", "Área de Membros Exclusiva", "Integração com Plataformas"],
+                differential: {
+                    title: "Foco Absoluto em Conversão",
+                    description: "Cada elemento, do título ao botão, é estrategicamente pensado para guiar o visitante à compra."
+                }
+            },
+            corporativo: {
+                title: "Corporativo & Consultivo",
+                icon: "fas fa-briefcase",
+                argument: "No seu mercado, confiança não se negocia. Nós criamos um site que projeta a autoridade e a seriedade que seu escritório já possui, transformando sua presença digital em um poderoso canal de prospecção.",
+                idealFor: ["Advogados", "Contadores", "Consultores de Negócios", "Engenheiros e Empresas B2B"],
+                solutions: ["Site Institucional Robusto", "Apresentação de Serviços", "Blog com Artigos Técnicos", "Área de Atuação Detalhada"],
+                differential: {
+                    title: "Credibilidade em Cada Detalhe",
+                    description: "Um design sóbrio e profissional que comunica competência e transforma seu site na principal ferramenta de validação."
+                }
+            },
+            industria: {
+                title: "Indústria & Construção",
+                icon: "fas fa-solar-panel",
+                argument: "Seu cliente não compra seu serviço sem antes confiar na sua qualidade. Nós criamos um site que funciona como seu melhor vendedor: exibe seus melhores projetos, qualifica o contato e entrega pedidos de orçamento.",
+                idealFor: ["Empresas de Energia Solar", "Construtoras e Empreiteiras", "Marcenarias de Alto Padrão", "Clínicas Automotivas"],
+                solutions: ["Site Focado em Orçamentos", "Portfólio de Obras e Projetos", "Estudos de Caso de Sucesso", "CTAs para Falar com Especialista"],
+                differential: {
+                    title: "O Vendedor que Não Dorme",
+                    description: "Um site que trabalha 24/7 para gerar orçamentos qualificados de clientes prontos para investir no seu serviço."
+                }
+            }
+        };
+        // --- END: Data for Niche Modals ---
+
+        // --- START: Modal Logic ---
+        const pageBody = document.querySelector('body');
+        const nicheModal = document.getElementById('niche-modal');
+        const nicheModalHeader = document.getElementById('niche-modal-header');
+        const nicheModalBody = document.getElementById('niche-modal-body');
+        const nicheModalFooter = document.getElementById('niche-modal-footer');
+        const mainContent = document.getElementById('main-content');
+        const header = document.querySelector('header');
+        const footer = document.querySelector('footer');
+        const whatsappButton = document.querySelector('.whatsapp-button');
+
+        const elementsToBlur = [mainContent, header, footer, whatsappButton];
+
+        function openNicheModal(nicheKey) {
+            if (nicheData[nicheKey] && nicheModal) {
+                const data = nicheData[nicheKey];
+                
+                // Build Modal Header
+                nicheModalHeader.innerHTML = `
+                    <div class="text-brand-accent text-4xl mr-5"><i class="${data.icon}"></i></div>
+                    <h2 class="text-2xl md:text-3xl font-bold text-brand-lightest">${data.title}</h2>
+                `;
+
+                // Build Modal Body
+                nicheModalBody.innerHTML = `
+                    <blockquote class="text-brand-light text-lg lg:text-xl italic border-l-4 border-brand-accent pl-6 mb-8">
+                        ${data.argument}
+                    </blockquote>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <h4 class="font-bold text-brand-lightest mb-3 text-lg">Para Quem é Ideal:</h4>
+                            <ul class="space-y-2">
+                                ${data.idealFor.map(item => `<li class="flex items-start"><span class="text-brand-accent mr-2 mt-1">▪</span><span>${item}</span></li>`).join('')}
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-brand-lightest mb-3 text-lg">O Que Construímos para Você:</h4>
+                            <ul class="space-y-2">
+                                ${data.solutions.map(item => `<li class="flex items-start"><span class="text-brand-accent mr-2 mt-1">▪</span><span>${item}</span></li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="mt-8 pt-6 border-t border-brand-accent/10">
+                         <h4 class="font-bold text-brand-lightest mb-2 text-lg">Nosso Diferencial:</h4>
+                         <div class="glass-card !border-brand-accent/20 p-4 rounded-md">
+                            <p class="font-semibold text-brand-lightest">${data.differential.title}</p>
+                            <p class="text-sm text-brand-slate">${data.differential.description}</p>
+                         </div>
+                    </div>
+                `;
+
+                // Build Modal Footer
+                const whatsappMessage = `Olá! Tenho interesse em um projeto na área de ${data.title}. Podemos conversar?`;
+                const whatsappURL = `https://api.whatsapp.com/send/?phone=48988780389&text=${encodeURIComponent(whatsappMessage)}`;
+
+                nicheModalFooter.innerHTML = `
+                    <a href="${whatsappURL}" target="_blank" class="cta-button py-3 px-8 rounded-md text-base">
+                        Pedir Proposta para ${data.title}
+                    </a>
+                `;
+                
+                pageBody.style.overflow = 'hidden';
+                elementsToBlur.forEach(el => el && el.classList.add('content-blur'));
+                nicheModal.classList.add('visible');
+            }
+        }
+
+        function closeNicheModal() {
+            if (nicheModal) {
+                nicheModal.classList.remove('visible');
+                elementsToBlur.forEach(el => el && el.classList.remove('content-blur'));
+                pageBody.style.overflow = '';
+            }
+        }
+        // --- END: Modal Logic ---
+
+        // 4. Função para ABRIR a galeria de projetos.
+        function openGalleryModal() {
+            const galleryModal = document.getElementById('gallery-modal');
+            if (galleryModal) {
+                galleryModal.classList.remove('hidden');
+                pageBody.style.overflow = 'hidden';
+                elementsToBlur.forEach(el => el && el.classList.add('content-blur'));
+            }
+        }
+
+        // 5. Função para FECHAR a galeria de projetos.
+        function closeGalleryModal() {
+            const galleryModal = document.getElementById('gallery-modal');
+            if (galleryModal) {
+                galleryModal.classList.add('hidden');
+                pageBody.style.overflow = '';
+                elementsToBlur.forEach(el => el && el.classList.remove('content-blur'));
+            }
+        }
+
+
+        // Espera que todo o documento HTML seja carregado para adicionar os eventos.
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- Animated Number Counter ---
+            const counters = document.querySelectorAll('[data-count]');
+            const observerOptions = { root: null, threshold: 0.5 };
+
+            const observer = new IntersectionObserver((entries, observer) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
+                        const counter = entry.target;
+                        const target = +counter.getAttribute('data-count');
+                        let speed = 200; // Lower is faster
+                        
+                        const updateCount = () => {
+                            const count = +counter.innerText;
+                            const inc = target / (speed / (1000/60) ); // Increment per frame
+                            
+                            if (count < target) {
+                                counter.innerText = Math.ceil(count + inc);
+                                requestAnimationFrame(updateCount);
+                            } else {
+                                counter.innerText = target;
+                            }
+                        };
+                        
+                        updateCount();
+                        observer.unobserve(counter); // Stop observing after animation
                     }
                 });
-            }, { 
-                threshold: 0.1 
-            });
-            revealElements.forEach(el => observer.observe(el));
+            }, observerOptions);
 
+            counters.forEach(counter => {
+                observer.observe(counter);
+            });
+
+
+            // Animação de entrada dos elementos
+            const revealElements = document.querySelectorAll('.reveal');
+            if (typeof IntersectionObserver !== 'undefined') {
+                const revealObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                        }
+                    });
+                }, { threshold: 0.1 });
+                revealElements.forEach(el => revealObserver.observe(el));
+            }
+
+            // Lógica do formulário de contacto
             const contactForm = document.getElementById('contact-form');
             if(contactForm) {
                 contactForm.addEventListener('submit', function(e) {
                     e.preventDefault();
                     const button = this.querySelector('button[type="submit"]');
-                     // 1. Captura dos dados do formulário
                     const name = document.getElementById('name').value;
                     const email = document.getElementById('email').value;
                     const service = document.getElementById('service').value;
-
-                    // 2. Definição do número de WhatsApp e da mensagem
-                    // IMPORTANTE: Substitua o número abaixo pelo seu número de WhatsApp com código do país e DDD.
-                    // Exemplo: 5511999998888 (55 para Brasil, 11 para São Paulo)
                     const phoneNumber = "48988780389"; 
-                    
                     const message = `Olá! Tenho interesse nos serviços da South Sea.\n\n*Nome:* ${name}\n*Email:* ${email}\n*Necessidade:* ${service}`;
-
-                    // 3. Criação do link para o WhatsApp e redirecionamento
                     const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
                     
-                    // Abre o WhatsApp em uma nova aba
                     window.open(whatsappURL, '_blank');
-                    button.innerText = 'Enviando proposta...';
+                    
+                    button.innerText = 'A enviar...';
                     button.disabled = true;
                     setTimeout(() => {
                         button.innerText = 'Proposta a Caminho!';
@@ -616,35 +969,37 @@
                     }, 1500);
                 });
             }
-        // --- Gallery Modal Logic ---
+            
+            // --- Adiciona os eventos para FECHAR os popups ---
+            if (nicheModal) {
+                document.getElementById('niche-modal-close-x').addEventListener('click', closeNicheModal);
+                nicheModal.addEventListener('click', (e) => {
+                    // Se o clique for no fundo do modal (o próprio elemento), fecha
+                    if (e.target === nicheModal) {
+                        closeNicheModal();
+                    }
+                });
+            }
+
             const galleryModal = document.getElementById('gallery-modal');
-            const body = document.querySelector('body');
-
-            window.openGalleryModal = function() {
-                if(galleryModal) {
-                    galleryModal.classList.remove('hidden');
-                    body.style.overflow = 'hidden'; // Prevent background scrolling
-                }
+            if (galleryModal) {
+                 document.querySelector('#gallery-modal button').addEventListener('click', closeGalleryModal);
             }
 
-            window.closeGalleryModal = function() {
-                if(galleryModal) {
-                    galleryModal.classList.add('hidden');
-                    body.style.overflow = ''; // Restore scrolling
-                }
-            }
-
-            // Close modal with Escape key
-            document.addEventListener('keydown', function (e) {
-                if (e.key === 'Escape' && galleryModal && !galleryModal.classList.contains('hidden')) {
-                    closeGalleryModal();
+            // Evento de fecho com a tecla 'Esc' para ambos os popups
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    if (nicheModal && nicheModal.classList.contains('visible')) {
+                        closeNicheModal();
+                    }
+                    if (galleryModal && !galleryModal.classList.contains('hidden')) {
+                        closeGalleryModal();
+                    }
                 }
             });
         });
+
     </script>
-     <!-- BOTÃO FLUTUANTE DO WHATSAPP -->
-<a href="https://api.whatsapp.com/send/?phone=48988780389&text=Ol%C3%A1%21+Tenho+interesse+em+saber+mais+sobre+sites+&type=phone_number&app_absent=0" class="whatsapp-button" target="_blank" aria-label="Fale conosco pelo WhatsApp">
-    <i class="fa fa-whatsapp" aria-hidden="true"></i>
-</a>
+ 
 </body>
 </html>
