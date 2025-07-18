@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>South Sea | Plataformas Digitais para o Setor Corporativo & Consultivo</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .section-title {
+            font-size: 2.25rem; /* 36px */
+            font-weight: 700;
+            line-height: 1.2;
+            color: #1e293b; /* slate-800 */
+        }
+        .section-subtitle {
+            font-size: 1.125rem; /* 18px */
+            color: #475569; /* slate-600 */
+            max-width: 800px;
+            margin: 1rem auto 0;
+        }
+        .cta-button {
+            transition: all 0.3s ease;
+        }
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.2), 0 4px 6px -2px rgba(37, 99, 235, 0.1);
+        }
+        .sticky-header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background-color: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+        }
+        .faq-item[open] .faq-icon {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body class="bg-white text-slate-700">
+
+    <!-- ===== Header ===== -->
+    <header id="header" class="py-4 px-6 md:px-12 shadow-sm sticky-header">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold text-slate-800">South Sea</a>
+            <nav class="hidden md:flex items-center space-x-6">
+                <a href="#solucao" class="hover:text-blue-600 transition-colors">A Solução</a>
+                <a href="#portfolio" class="hover:text-blue-600 transition-colors">Projetos</a>
+                <a href="#depoimentos" class="hover:text-blue-600 transition-colors">Depoimentos</a>
+                <a href="#faq" class="hover:text-blue-600 transition-colors">FAQ</a>
+                <a href="#contato" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 cta-button">Agendar Análise</a>
+            </nav>
+            <button id="mobile-menu-button" class="md:hidden text-slate-800">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            </button>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden mt-4 bg-white rounded-lg shadow-lg">
+            <a href="#solucao" class="block py-2 px-4 text-sm hover:bg-slate-100">A Solução</a>
+            <a href="#portfolio" class="block py-2 px-4 text-sm hover:bg-slate-100">Projetos</a>
+            <a href="#depoimentos" class="block py-2 px-4 text-sm hover:bg-slate-100">Depoimentos</a>
+            <a href="#faq" class="block py-2 px-4 text-sm hover:bg-slate-100">FAQ</a>
+            <a href="#contato" class="block m-2 text-center bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700">Agendar Análise</a>
+        </div>
+    </header>
+
+    <main>
+        <!-- ===== Seção 1: Above the Fold (Hero) ===== -->
+        <section class="bg-slate-50 py-20 md:py-32 px-6">
+            <div class="container mx-auto text-center">
+                <h1 class="text-4xl md:text-6xl font-extrabold text-slate-800 leading-tight">
+                    Sua Reputação Corporativa,<br>Projetada com <span class="text-blue-600">Excelência Digital</span>.
+                </h1>
+                <p class="mt-4 text-lg md:text-xl text-slate-600 max-w-3xl mx-auto">
+                    Desenvolvemos sites institucionais e landing pages para escritórios de advocacia e consultorias que transformam credibilidade em clientes de alto valor.
+                </p>
+                <a href="#contato" class="mt-8 inline-block bg-blue-600 text-white font-bold text-lg px-8 py-4 rounded-lg shadow-xl hover:bg-blue-700 cta-button">
+                    Agendar Diagnóstico Estratégico
+                </a>
+                <div class="mt-12">
+                    <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=2084&auto=format&fit=crop" alt="Equipe corporativa em reunião estratégica" class="rounded-lg shadow-2xl mx-auto w-full max-w-5xl">
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== Seção 2: Diagnóstico e Solução ===== -->
+        <section class="py-20 px-6 bg-white">
+            <div class="container mx-auto text-center">
+                <h2 class="section-title">Sua presença online reflete a excelência do seu serviço?</h2>
+                <p class="section-subtitle">Muitos profissionais de ponta são prejudicados por uma presença digital que não comunica seu verdadeiro valor. Identificamos e resolvemos as frustrações que impedem seu crescimento.</p>
+                <div class="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+                    <div class="bg-slate-50 p-6 rounded-lg shadow-sm text-left">
+                        <svg class="w-8 h-8 text-blue-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        <h3 class="font-bold text-slate-800">Site Desatualizado</h3>
+                        <p class="mt-1 text-slate-600">Gera desconfiança e afasta oportunidades valiosas.</p>
+                    </div>
+                    <div class="bg-slate-50 p-6 rounded-lg shadow-sm text-left">
+                        <svg class="w-8 h-8 text-blue-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
+                        <h3 class="font-bold text-slate-800">Zero Leads Qualificados</h3>
+                        <p class="mt-1 text-slate-600">Sua plataforma é um cartão de visita, não um motor de negócios.</p>
+                    </div>
+                    <div class="bg-slate-50 p-6 rounded-lg shadow-sm text-left">
+                        <svg class="w-8 h-8 text-blue-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                        <h3 class="font-bold text-slate-800">Experiência Móvel Ruim</h3>
+                        <p class="mt-1 text-slate-600">Frustra clientes e parceiros, minando sua credibilidade.</p>
+                    </div>
+                    <div class="bg-slate-50 p-6 rounded-lg shadow-sm text-left">
+                        <svg class="w-8 h-8 text-blue-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path></svg>
+                        <h3 class="font-bold text-slate-800">Mensagem Confusa</h3>
+                        <p class="mt-1 text-slate-600">Não comunica sua expertise e seus diferenciais de forma clara.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== Seção 3: A Solução (Processo) ===== -->
+        <section id="solucao" class="py-20 px-6 bg-slate-50">
+            <div class="container mx-auto text-center">
+                <h2 class="section-title">Nosso Processo: Da Estratégia à Autoridade Digital</h2>
+                <p class="section-subtitle">Uma jornada estruturada, transparente e livre de estresse para construir sua plataforma de credibilidade.</p>
+                <div class="mt-16 max-w-5xl mx-auto relative">
+                    <div class="hidden md:block absolute top-1/2 left-0 w-full h-0.5 bg-slate-300" style="transform: translateY(-50%);"></div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
+                        <div class="text-center">
+                            <div class="relative inline-block">
+                                <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center text-blue-600 text-2xl font-bold shadow-lg border-2 border-blue-500">1</div>
+                            </div>
+                            <h3 class="mt-6 text-xl font-bold text-slate-800">Diagnóstico Estratégico</h3>
+                            <p class="mt-2 text-slate-600">Iniciamos com uma imersão nos seus objetivos de negócio, público-alvo e diferenciais competitivos para desenhar uma estratégia digital única.</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="relative inline-block">
+                                <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center text-blue-600 text-2xl font-bold shadow-lg border-2 border-blue-500">2</div>
+                            </div>
+                            <h3 class="mt-6 text-xl font-bold text-slate-800">Arquitetura da Confiança</h3>
+                            <p class="mt-2 text-slate-600">Projetamos um site que funciona como uma extensão da sua reputação: profissional, sofisticado e focado em construir a confiança do seu cliente.</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="relative inline-block">
+                                <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center text-blue-600 text-2xl font-bold shadow-lg border-2 border-blue-500">3</div>
+                            </div>
+                            <h3 class="mt-6 text-xl font-bold text-slate-800">Implementação e Lançamento</h3>
+                            <p class="mt-2 text-slate-600">Cuidamos de toda a complexidade técnica, do SEO ao mobile. Entregamos sua nova presença digital pronta para gerar resultados.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== Seção 4: Pilar da Credibilidade (Depoimentos) ===== -->
+        <section id="depoimentos" class="py-20 px-6 bg-white">
+            <div class="container mx-auto">
+                <div class="text-center">
+                    <h2 class="section-title">Credibilidade Comprovada por Líderes de Mercado</h2>
+                    <p class="section-subtitle">Veja como ajudamos firmas como a sua a construir uma presença digital de autoridade.</p>
+                </div>
+                <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                    <div class="bg-slate-50 p-8 rounded-lg shadow-md">
+                        <img src="https://placehold.co/100x100/e0e7ff/3730a3?text=JS" alt="João da Silva" class="w-20 h-20 rounded-full mx-auto mb-4">
+                        <p class="text-slate-600 italic">"A South Sea compreendeu a necessidade de sobriedade e excelência da nossa firma. O resultado foi um site que nos posicionou como líderes de mercado e, mais importante, aumentou em 40% as consultas qualificadas."</p>
+                        <p class="mt-4 font-bold text-slate-800 text-center">João da Silva</p>
+                        <p class="text-sm text-slate-500 text-center">Sócio-Diretor, Consultoria Estratégica XYZ</p>
+                    </div>
+                    <div class="bg-slate-50 p-8 rounded-lg shadow-md">
+                        <img src="https://placehold.co/100x100/e0e7ff/3730a3?text=MA" alt="Maria Andrade" class="w-20 h-20 rounded-full mx-auto mb-4">
+                        <p class="text-slate-600 italic">"O processo foi transparente e o resultado superou nossas expectativas. O site reflete a autoridade que construímos em décadas de atuação. É a nossa reputação offline, perfeitamente traduzida para o digital."</p>
+                        <p class="mt-4 font-bold text-slate-800 text-center">Maria Andrade</p>
+                        <p class="text-sm text-slate-500 text-center">Sócia Fundadora, Andrade & Advogados</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- ===== Seção 5: Vitrine de Projetos ===== -->
+        <section id="portfolio" class="py-20 px-6 bg-slate-50">
+            <div class="container mx-auto">
+                <div class="text-center">
+                    <h2 class="section-title">Veja a Confiança em Ação</h2>
+                    <p class="section-subtitle">Explore projetos desenvolvidos para o setor corporativo e veja a qualidade do nosso trabalho.</p>
+                </div>
+                <div class="mt-8 flex justify-center space-x-2 md:space-x-4" id="project-filters">
+                    <button class="filter-btn bg-blue-600 text-white px-4 py-2 rounded-full" data-filter="all">Todos</button>
+                    <button class="filter-btn bg-white text-slate-600 px-4 py-2 rounded-full" data-filter="advocacia">Advocacia</button>
+                    <button class="filter-btn bg-white text-slate-600 px-4 py-2 rounded-full" data-filter="consultoria">Consultoria</button>
+                    <button class="filter-btn bg-white text-slate-600 px-4 py-2 rounded-full" data-filter="financeiro">Financeiro</button>
+                </div>
+                <div class="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8" id="project-gallery">
+                    <div class="project-item" data-category="advocacia">
+                        <div class="bg-white rounded-lg shadow-lg overflow-hidden group">
+                            <img src="https://placehold.co/600x400/dbeafe/1e3a8a?text=Advocacia+M&A" alt="Projeto para advocacia M&A" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
+                            <div class="p-6">
+                                <h3 class="font-bold text-lg text-slate-800">Firma de Advocacia M&A</h3>
+                                <p class="text-sm text-slate-500 mt-1">Site institucional focado em autoridade e transações complexas.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-item" data-category="consultoria">
+                        <div class="bg-white rounded-lg shadow-lg overflow-hidden group">
+                            <img src="https://placehold.co/600x400/e0f2fe/0891b2?text=Consultoria+Estratégica" alt="Projeto para consultoria estratégica" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
+                            <div class="p-6">
+                                <h3 class="font-bold text-lg text-slate-800">Consultoria de Gestão</h3>
+                                <p class="text-sm text-slate-500 mt-1">Presença digital que transmite expertise e confiança.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-item" data-category="financeiro">
+                        <div class="bg-white rounded-lg shadow-lg overflow-hidden group">
+                            <img src="https://placehold.co/600x400/fce7f3/86198f?text=Asset+Management" alt="Projeto para asset management" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
+                            <div class="p-6">
+                                <h3 class="font-bold text-lg text-slate-800">Gestora de Ativos</h3>
+                                <p class="text-sm text-slate-500 mt-1">Design sofisticado para atrair e converter investidores de alto padrão.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== Seção 6: FAQ ===== -->
+        <section id="faq" class="py-20 px-6 bg-white">
+            <div class="container mx-auto max-w-4xl">
+                <div class="text-center">
+                    <h2 class="section-title">Perguntas Frequentes</h2>
+                    <p class="section-subtitle">Respostas para as dúvidas mais comuns sobre a construção da sua presença digital corporativa.</p>
+                </div>
+                <div class="mt-12 space-y-4">
+                    <details class="faq-item bg-slate-50 p-6 rounded-lg shadow-sm group">
+                        <summary class="flex justify-between items-center font-semibold text-slate-800 cursor-pointer">
+                            Qual é o prazo para a entrega de um projeto corporativo?
+                            <svg class="faq-icon w-5 h-5 text-slate-500 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </summary>
+                        <p class="mt-4 text-slate-600">O prazo varia conforme a complexidade. Após a reunião de diagnóstico, apresentamos um cronograma detalhado. A maioria dos projetos institucionais é entregue entre 6 e 10 semanas.</p>
+                    </details>
+                    <details class="faq-item bg-slate-50 p-6 rounded-lg shadow-sm group">
+                        <summary class="flex justify-between items-center font-semibold text-slate-800 cursor-pointer">
+                            Como a South Sea garante a confidencialidade das informações?
+                            <svg class="faq-icon w-5 h-5 text-slate-500 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </summary>
+                        <p class="mt-4 text-slate-600">A confidencialidade é nossa prioridade. Todos os projetos são regidos por um Acordo de Confidencialidade (NDA) e seguimos as melhores práticas de segurança da informação para proteger os dados estratégicos dos nossos clientes.</p>
+                    </details>
+                    <details class="faq-item bg-slate-50 p-6 rounded-lg shadow-sm group">
+                        <summary class="flex justify-between items-center font-semibold text-slate-800 cursor-pointer">
+                            Vocês criam o conteúdo (textos e imagens) para o site?
+                            <svg class="faq-icon w-5 h-5 text-slate-500 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </summary>
+                        <p class="mt-4 text-slate-600">Sim. Nossa equipe inclui especialistas em copywriting para o setor corporativo que criam ou refinam todos os textos. Também oferecemos direção de arte e indicamos parceiros para a produção de fotos e vídeos institucionais.</p>
+                    </details>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== Seção 7: CTA Final ===== -->
+        <section id="contato" class="py-20 px-6 bg-slate-800 text-white">
+            <div class="container mx-auto max-w-3xl text-center">
+                <h2 class="text-4xl font-bold">Pronto para transformar sua presença digital em seu maior ativo de negócios?</h2>
+                <div class="mt-8 bg-white text-slate-800 p-8 rounded-lg shadow-2xl">
+                    <form>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="name" class="block text-sm font-semibold text-left mb-1">Nome Completo</label>
+                                <input type="text" id="name" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                            </div>
+                            <div>
+                                <label for="email" class="block text-sm font-semibold text-left mb-1">E-mail Corporativo</label>
+                                <input type="email" id="email" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                            </div>
+                            <div class="md:col-span-2">
+                                <label for="company" class="block text-sm font-semibold text-left mb-1">Empresa / Escritório</label>
+                                <input type="text" id="company" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="mt-8 w-full bg-blue-600 text-white font-bold text-lg px-8 py-4 rounded-lg shadow-xl hover:bg-blue-700 cta-button">
+                            Quero minha Análise Estratégica
+                        </button>
+                    </form>
+                    <p class="mt-4 text-sm text-slate-500">Sem compromisso. Apenas uma conversa sobre o futuro digital da sua empresa.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ===== Footer ===== -->
+    <footer class="bg-slate-900 text-slate-400 py-12 px-6">
+        <div class="container mx-auto text-center">
+            <p class="text-xl font-bold text-white">South Sea</p>
+            <p class="text-sm mt-2">Projetando a Excelência Digital para o Setor Corporativo.</p>
+            <p class="mt-6 text-sm">&copy; 2025 South Sea. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Project filter logic
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const projectItems = document.querySelectorAll('.project-item');
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                filterButtons.forEach(btn => {
+                    btn.classList.remove('bg-blue-600', 'text-white');
+                    btn.classList.add('bg-white', 'text-slate-600');
+                });
+                button.classList.add('bg-blue-600', 'text-white');
+                button.classList.remove('bg-white', 'text-slate-600');
+                const filter = button.getAttribute('data-filter');
+                projectItems.forEach(item => {
+                    if (filter === 'all' || item.getAttribute('data-category') === filter) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+        
+        // Smooth scroll for anchor links & close mobile menu
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if(targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'smooth' });
+                }
+                if (!mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.add('hidden');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
