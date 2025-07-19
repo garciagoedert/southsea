@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apresentação Comercial - South Sea | Corporativo & Consultivo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Paleta de Cores Otimizada para o Setor Corporativo */
+        :root {
+            --color-primary: #1e3a8a;  /* Azul Corporativo (Blue-800) */
+            --color-primary-light: #3b82f6; /* Azul para Destaques (Blue-500) */
+            --color-text-primary: #111827;  /* Cinza Muito Escuro (Gray-900) para Texto Principal */
+            --color-text-secondary: #4b5563; /* Cinza Médio (Gray-600) para Texto de Apoio */
+            --color-light-bg: #f9fafb;  /* Fundo Claro (Gray-50) */
+            --color-white: #ffffff;
+            --color-shadow: rgba(30, 58, 138, 0.1);
+            --color-border: #e5e7eb; /* Gray-200 */
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-light-bg);
+            color: var(--color-text-primary);
+            overflow-x: hidden; /* Prevenir scroll horizontal */
+        }
+        .slide {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 5rem 2rem;
+            position: relative;
+            width: 100%;
+        }
+        /* Animação de Fade-in */
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .slide-content {
+            max-width: 1200px;
+            width: 100%;
+        }
+        h1, h2, h3, h4, p {
+            font-family: 'Inter', sans-serif;
+        }
+        h2 { font-weight: 800; }
+        h3 { font-weight: 700; }
+
+        .navigation {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+        .nav-btn {
+            background-color: rgba(30, 58, 138, 0.15);
+            color: var(--color-primary);
+            border: 1px solid rgba(30, 58, 138, 0.2);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .nav-btn:hover {
+            background-color: var(--color-primary);
+            color: white;
+        }
+        .fullscreen-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 100;
+        }
+        .bg-hero-corporate {
+            background-image: url('https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1920&auto=format&fit=crop');
+            background-position: center center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        .bg-light {
+            background-color: var(--color-light-bg);
+        }
+        .bg-white {
+            background-color: var(--color-white);
+        }
+        .bg-card {
+            background-color: var(--color-white);
+            box-shadow: 0 4px 6px -1px var(--color-shadow), 0 2px 4px -1px var(--color-shadow);
+            border: 1px solid var(--color-border);
+        }
+        .icon-check {
+            color: var(--color-primary-light);
+            margin-right: 0.5rem;
+            flex-shrink: 0;
+        }
+        .text-primary { color: var(--color-primary); }
+        .bg-primary { background-color: var(--color-primary); }
+        .text-primary-light { color: var(--color-primary-light); }
+        .text-main { color: var(--color-text-primary); }
+        .text-secondary { color: var(--color-text-secondary); }
+
+    </style>
+</head>
+<body>
+
+    <div class="scroll-container">
+
+        <!-- Slide 1: Capa -->
+        <section id="slide1" class="slide bg-hero-corporate text-white text-center">
+            <div class="absolute inset-0 bg-black opacity-60"></div>
+            <div class="z-10 slide-content fade-in-section">
+                <div class="w-48 h-20 mx-auto mb-6 border-2 border-dashed border-gray-400 flex items-center justify-center">
+                    <span class="text-gray-400 text-sm">[Sua Logo Aqui]</span>
+                </div>
+                <h1 class="text-4xl md:text-6xl font-extrabold leading-tight">Sua Reputação Corporativa,<br>Projetada com <span class="text-blue-300">Excelência Digital</span>.</h1>
+                <p class="mt-4 text-lg md:text-xl text-slate-300 max-w-3xl mx-auto">
+                    No seu mercado, confiança não se negocia. Nós criamos o site que projeta a autoridade e a seriedade que seu escritório já possui.
+                </p>
+            </div>
+        </section>
+
+        <!-- Slide 2: Quem Somos -->
+        <section id="slide2" class="slide bg-white">
+            <div class="slide-content grid md:grid-cols-2 gap-12 md:gap-16 items-center fade-in-section">
+                <div class="text-center md:text-left">
+                    <h2 class="text-4xl md:text-5xl mb-6 text-main">Arquitetos da Credibilidade Digital.</h2>
+                    <p class="text-lg leading-relaxed text-secondary">A South Sea é especialista em traduzir a seriedade e a competência do seu escritório para o ambiente digital. Entendemos os desafios únicos do setor corporativo e consultivo, criando a presença online que reflete sua autoridade, atrai os clientes certos e fortalece sua marca.</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
+                    <div class="text-center p-4 md:p-6 bg-light rounded-lg">
+                        <svg class="w-12 h-12 md:w-16 md:h-16 mx-auto mb-4 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.286zm0 13.036h.008v.008h-.008v-.008z" /></svg>
+                        <h3 class="text-lg md:text-xl text-main">Seriedade</h3>
+                    </div>
+                     <div class="text-center p-4 md:p-6 bg-light rounded-lg">
+                        <svg class="w-12 h-12 md:w-16 md:h-16 mx-auto mb-4 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" /></svg>
+                        <h3 class="text-lg md:text-xl text-main">Estratégia</h3>
+                    </div>
+                     <div class="text-center p-4 md:p-6 bg-light rounded-lg">
+                        <svg class="w-12 h-12 md:w-16 md:h-16 mx-auto mb-4 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" /></svg>
+                        <h3 class="text-lg md:text-xl text-main">Resultados</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 3: O Problema -->
+        <section id="slide3" class="slide bg-light">
+            <div class="slide-content text-center fade-in-section">
+                <h2 class="text-4xl md:text-5xl mb-6 text-main">Sua presença online reflete a excelência do seu serviço?</h2>
+                <p class="text-lg max-w-4xl mx-auto mb-12 md:mb-16 text-secondary">Muitos profissionais de ponta são prejudicados por uma presença digital que não comunica seu verdadeiro valor, gerando desconfiança e afastando oportunidades valiosas.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+                    <!-- Item 1 -->
+                    <div class="bg-white p-6 rounded-lg shadow-sm text-left flex flex-col items-center text-center">
+                        <svg class="w-10 h-10 text-primary mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        <p class="font-semibold">Site Desatualizado</p>
+                        <p class="text-sm text-secondary mt-1">Gera desconfiança e afasta clientes de alto valor.</p>
+                    </div>
+                    <!-- Item 2 -->
+                    <div class="bg-white p-6 rounded-lg shadow-sm text-left flex flex-col items-center text-center">
+                        <svg class="w-10 h-10 text-primary mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
+                        <p class="font-semibold">Zero Leads Qualificados</p>
+                        <p class="text-sm text-secondary mt-1">Sua plataforma é um cartão de visitas, não um motor de negócios.</p>
+                    </div>
+                    <!-- Item 3 -->
+                    <div class="bg-white p-6 rounded-lg shadow-sm text-left flex flex-col items-center text-center">
+                         <svg class="w-10 h-10 text-primary mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path></svg>
+                        <p class="font-semibold">Mensagem Confusa</p>
+                        <p class="text-sm text-secondary mt-1">Não comunica sua expertise e seus diferenciais de forma clara.</p>
+                    </div>
+                    <!-- Item 4 -->
+                    <div class="bg-white p-6 rounded-lg shadow-sm text-left flex flex-col items-center text-center">
+                        <svg class="w-10 h-10 text-primary mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                        <p class="font-semibold">Experiência Móvel Ruim</p>
+                        <p class="text-sm text-secondary mt-1">Frustra clientes e parceiros, minando sua credibilidade.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Slide 4: A Solução -->
+        <section id="slide4" class="slide bg-white">
+            <div class="slide-content text-center fade-in-section">
+                <h2 class="text-4xl md:text-5xl mb-6 text-main">A Plataforma Digital como Pilar da sua Credibilidade</h2>
+                <p class="text-lg md:text-xl leading-relaxed max-w-4xl mx-auto mb-12 text-secondary">Seu site é a extensão do seu escritório no mundo digital. É o seu canal de comunicação 24/7 e a ferramenta que transforma sua autoridade em um poderoso canal de prospecção.</p>
+                <div class="w-full max-w-5xl mx-auto">
+                    <div class="bg-card rounded-lg p-8 grid md:grid-cols-2 gap-8 items-center">
+                        <div class="text-left">
+                            <h3 class="text-2xl mb-4 text-primary">Benefícios de uma Presença Digital Estratégica:</h3>
+                            <ul class="space-y-4">
+                                <li class="flex items-start text-secondary"><svg class="w-6 h-6 icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong>Credibilidade e Confiança</strong> imediatas para clientes e parceiros.</span></li>
+                                <li class="flex items-start text-secondary"><svg class="w-6 h-6 icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong>Prospecção Qualificada</strong> de clientes que valorizam sua expertise.</span></li>
+                                <li class="flex items-start text-secondary"><svg class="w-6 h-6 icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong>Posicionamento de Autoridade</strong> na sua área de atuação.</span></li>
+                                <li class="flex items-start text-secondary"><svg class="w-6 h-6 icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong>Comunicação Clara</strong> dos seus serviços, equipe e diferenciais.</span></li>
+                            </ul>
+                        </div>
+                        <div class="flex justify-center">
+                           <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=1932&auto=format&fit=crop" alt="Profissionais analisando um projeto digital" class="rounded-lg shadow-lg object-cover w-full h-full max-h-80">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Slide 5: Nossas Soluções -->
+        <section id="slide5" class="slide bg-light">
+            <div class="slide-content fade-in-section">
+                <h2 class="text-4xl md:text-5xl mb-12 text-center text-main">Nossas Soluções em Detalhe</h2>
+                <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                    <!-- Posicionamento Digital -->
+                    <div class="bg-card p-6 rounded-lg flex flex-col transform hover:-translate-y-2 transition-transform duration-300 h-full">
+                        <h3 class="text-2xl mb-4 text-center text-main">Posicionamento Digital (Landing Page)</h3>
+                        <div class="mb-6 space-y-2 text-center text-sm text-secondary flex-grow"><p>Ideal para prospecção focada, lançamento de novos serviços ou campanhas de captação de clientes.</p></div>
+                        <div class="border-t pt-4 mt-auto">
+                            <h4 class="font-bold mb-3 text-center text-primary">Principais Entregas:</h4>
+                            <ul class="text-sm space-y-1 text-secondary">
+                                <li class="flex"><span class="icon-check">✓</span><span>Página única com design profissional e responsivo</span></li>
+                                <li class="flex"><span class="icon-check">✓</span><span>Até 4 seções estratégicas (ex: Sobre, Serviços, Contato)</span></li>
+                                <li class="flex"><span class="icon-check">✓</span><span>Formulário de contato e botão de WhatsApp</span></li>
+                                <li class="flex"><span class="icon-check">✓</span><span>Otimização SEO para ser encontrado no Google</span></li>
+                                <li class="flex"><span class="icon-check">✓</span><span>Instalação de Pixel (Meta) e Google Analytics</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Plataforma de Autoridade -->
+                    <div class="bg-card p-6 rounded-lg flex flex-col transform hover:-translate-y-2 transition-transform duration-300 border-2 border-primary h-full">
+                        <h3 class="text-2xl mb-4 text-center text-main">Plataforma de Autoridade (Site Completo)</h3>
+                        <div class="mb-6 space-y-2 text-center text-sm text-secondary flex-grow"><p>Perfeito para escritórios e consultorias que desejam construir autoridade, educar o público e se estabelecer como referência.</p></div>
+                        <div class="border-t pt-4 mt-auto">
+                            <h4 class="font-bold mb-3 text-center text-primary">Principais Entregas:</h4>
+                            <ul class="text-sm space-y-1 text-secondary">
+                                <li class="flex"><span class="icon-check">✓</span><span>Site com até 5 páginas (ex: Home, Sobre, Equipe, Serviços, Contato)</span></li>
+                                <li class="flex"><span class="icon-check">✓</span><span>Design personalizado à identidade visual do seu escritório</span></li>
+                                <li class="flex"><span class="icon-check">✓</span><span>Área para Publicações (Artigos, Notícias) para demonstrar expertise</span></li>
+                                <li class="flex"><span class="icon-check">✓</span><span>Otimização SEO avançada para maior visibilidade</span></li>
+                                <li class="flex"><span class="icon-check">✓</span><span>Segurança (SSL) e Conformidade com a LGPD</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 6: Processo -->
+        <section id="slide6" class="slide bg-white">
+            <div class="slide-content text-center fade-in-section">
+                <h2 class="text-4xl md:text-5xl mb-12 text-main">Nossa Jornada: Da Estratégia à Autoridade Digital</h2>
+                <div class="relative max-w-4xl mx-auto">
+                    <div class="hidden md:block border-l-4 border-dashed border-primary-light absolute h-full top-0 left-1/2 -translate-x-1/2"></div>
+                    <div class="space-y-12 md:space-y-0">
+                        <!-- Step 1 -->
+                        <div class="md:flex items-center md:justify-end md:w-1/2 md:pr-12">
+                            <div class="bg-card p-6 rounded-lg text-left md:text-right w-full max-w-md"><h3 class="text-xl mb-2 text-primary">1. Diagnóstico Estratégico</h3><p class="text-secondary">Imersão no seu negócio, público e objetivos para desenhar uma estratégia digital única e eficaz.</p></div>
+                        </div>
+                        <!-- Step 2 -->
+                        <div class="md:flex items-center md:justify-start md:w-1/2 md:pl-12 md:ml-auto">
+                            <div class="bg-card p-6 rounded-lg text-left w-full max-w-md"><h3 class="text-xl mb-2 text-primary">2. Arquitetura da Confiança</h3><p class="text-secondary">Design de um site ético, profissional e focado em construir a confiança do seu cliente ideal.</p></div>
+                        </div>
+                        <!-- Step 3 -->
+                        <div class="md:flex items-center md:justify-end md:w-1/2 md:pr-12">
+                            <div class="bg-card p-6 rounded-lg text-left md:text-right w-full max-w-md"><h3 class="text-xl mb-2 text-primary">3. Implementação e Lançamento</h3><p class="text-secondary">Cuidamos de toda a complexidade técnica. Sua nova presença digital no ar, pronta para gerar resultados.</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 7: Investimento -->
+        <section id="slide7" class="slide bg-light">
+            <div class="slide-content text-center fade-in-section">
+                <h2 class="text-4xl md:text-5xl mb-12 text-main">Um Investimento na sua Carreira</h2>
+                <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto items-stretch">
+                    <!-- Opção 1: Posicionamento Digital -->
+                    <div class="bg-card rounded-lg p-8 flex flex-col">
+                        <h3 class="text-3xl mb-4 text-main">Posicionamento Digital</h3>
+                        <p class="text-secondary mb-6 flex-grow">Uma Landing Page de alto impacto para prospecção e campanhas direcionadas.</p>
+                        <p class="text-4xl font-bold text-primary">R$ 2.585,00</p>
+                        <p class="text-sm text-gray-500 mt-2">(Consulte condições de parcelamento)</p>
+                    </div>
+                    <!-- Opção 2: Plataforma de Autoridade -->
+                    <div class="relative bg-primary text-white rounded-lg p-8 flex flex-col shadow-lg">
+                        <div class="absolute top-0 right-4 -mt-4 bg-white text-primary px-3 py-1 rounded-full text-sm font-bold shadow-md">Mais Popular</div>
+                        <h3 class="text-3xl mb-4">Plataforma de Autoridade</h3>
+                        <p class="text-slate-200 mb-6 flex-grow">O Site Institucional completo para construir autoridade e escalar sua prática profissional.</p>
+                        <p class="text-4xl font-bold">R$ 5.858,00</p>
+                         <p class="text-sm text-slate-300 mt-2">(Consulte condições de parcelamento)</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 8: E-books Exclusivos -->
+        <section id="slide8" class="slide bg-white">
+            <div class="slide-content fade-in-section">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl md:text-5xl mb-4 text-main">Conteúdo Exclusivo para Nossos Parceiros</h2>
+                    <p class="text-lg max-w-3xl mx-auto text-secondary">Ao fechar negócio, você ganha acesso à nossa biblioteca de materiais estratégicos para aprofundar seu conhecimento em branding e posicionamento.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                    <!-- Ebook 1 -->
+                    <div class="bg-light p-6 rounded-lg flex flex-col sm:flex-row items-center gap-6 transform hover:scale-105 transition-transform duration-300">
+                        <img src="https://placehold.co/150x200/1e3a8a/ffffff?text=Capa+Ebook" alt="Capa do Ebook Oceano Azul" class="w-24 h-32 sm:w-28 sm:h-40 object-cover rounded-md shadow-lg flex-shrink-0">
+                        <div>
+                            <h3 class="text-xl font-bold text-main mb-2">Encontrando seu Oceano Azul</h3>
+                            <p class="text-secondary text-sm">Como Posicionar sua Marca de Forma Única em um Mercado Competitivo.</p>
+                        </div>
+                    </div>
+                    <!-- Ebook 2 -->
+                    <div class="bg-light p-6 rounded-lg flex flex-col sm:flex-row items-center gap-6 transform hover:scale-105 transition-transform duration-300">
+                        <img src="https://placehold.co/150x200/1e3a8a/ffffff?text=Capa+Ebook" alt="Capa do Ebook Psicologia das Cores" class="w-24 h-32 sm:w-28 sm:h-40 object-cover rounded-md shadow-lg flex-shrink-0">
+                        <div>
+                            <h3 class="text-xl font-bold text-main mb-2">Cor por Cor</h3>
+                            <p class="text-secondary text-sm">A Psicologia das Cores e Como Usá-las para Influenciar Emoções e Decisões.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 9: Contato -->
+        <section id="slide9" class="slide bg-hero-corporate text-white text-center">
+             <div class="absolute inset-0 bg-black opacity-75"></div>
+            <div class="z-10 slide-content fade-in-section">
+                <h2 class="text-4xl md:text-6xl mb-8 font-bold">Pronto para transformar sua presença digital em seu maior ativo de negócios?</h2>
+                <div class="text-xl md:text-2xl mb-12 max-w-3xl mx-auto">
+                    <p class="mb-4">1. Com sua aprovação, iniciamos o processo.</p>
+                    <p class="mb-4">2. Enviaremos o link seguro com Contrato, Questionário Estratégico e Pagamento.</p>
+                    <p>3. Após as formalizações, sua autoridade digital começa a ser construída.</p>
+                </div>
+                <hr class="my-10 border-gray-400 max-w-md mx-auto"/>
+                <div class="w-48 h-20 mx-auto mb-4 border-2 border-dashed border-gray-400 flex items-center justify-center">
+                    <span class="text-gray-400 text-sm">[Sua Logo Aqui]</span>
+                </div>
+                <div class="mt-4 text-lg">
+                    <p>contato@southsea.com.br | (48) 99901-3968</p>
+                    <p>www.southsea.com.br</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Navegação e Fullscreen -->
+    <div class="navigation">
+        <button id="prevBtn" class="nav-btn">▲</button>
+        <button id="nextBtn" class="nav-btn">▼</button>
+    </div>
+    <button id="fullscreenBtn" class="nav-btn fullscreen-btn">⛶</button>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const slides = document.querySelectorAll('.slide');
+            const fadeSections = document.querySelectorAll('.fade-in-section');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const fullscreenBtn = document.getElementById('fullscreenBtn');
+            let currentSlide = 0;
+            let scrollTimeout;
+            let isScrolling = false;
+
+            // Animação de Fade-in com IntersectionObserver
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    }
+                });
+            }, { threshold: 0.15 });
+
+            fadeSections.forEach(section => {
+                observer.observe(section);
+            });
+
+            // Função para navegar para um slide específico
+            function showSlide(index) {
+                if (index >= 0 && index < slides.length && !isScrolling) {
+                    isScrolling = true;
+                    slides[index].scrollIntoView({ behavior: 'smooth' });
+                    currentSlide = index;
+                    // Prevenir scrolls múltiplos
+                    setTimeout(() => {
+                        isScrolling = false;
+                    }, 1000); // Duração do scroll suave
+                }
+            }
+            
+            // Atualiza o slide atual com base no scroll
+            function updateCurrentSlideOnScroll() {
+                let maxVisible = 0;
+                let newCurrentSlide = 0;
+                
+                slides.forEach((slide, index) => {
+                    const rect = slide.getBoundingClientRect();
+                    const visibleHeight = Math.max(0, Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0));
+                    
+                    if(visibleHeight > maxVisible) {
+                        maxVisible = visibleHeight;
+                        newCurrentSlide = index;
+                    }
+                });
+                currentSlide = newCurrentSlide;
+            }
+
+            // Event Listeners para botões de navegação
+            nextBtn.addEventListener('click', () => { showSlide(currentSlide + 1); });
+            prevBtn.addEventListener('click', () => { showSlide(currentSlide - 1); });
+
+            // Event Listener para teclas do teclado
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === 'ArrowRight' || e.key === ' ') { 
+                    e.preventDefault(); 
+                    showSlide(currentSlide + 1); 
+                } else if (e.key === 'ArrowUp' || e.key === 'PageUp' || e.key === 'ArrowLeft') { 
+                    e.preventDefault(); 
+                    showSlide(currentSlide - 1); 
+                }
+            });
+
+            // Otimização do evento de scroll
+            window.addEventListener('scroll', () => {
+                if (scrollTimeout) {
+                    clearTimeout(scrollTimeout);
+                }
+                scrollTimeout = setTimeout(updateCurrentSlideOnScroll, 100);
+            }, { passive: true });
+
+            // Funcionalidade de Tela Cheia
+            fullscreenBtn.addEventListener('click', () => {
+                try {
+                    const elem = document.documentElement;
+                    if (!document.fullscreenElement) {
+                        if (elem.requestFullscreen) { elem.requestFullscreen(); } 
+                        else if (elem.webkitRequestFullscreen) { elem.webkitRequestFullscreen(); } // Safari
+                    } else {
+                        if (document.exitFullscreen) { document.exitFullscreen(); }
+                        else if (document.webkitExitFullscreen) { document.webkitExitFullscreen(); } // Safari
+                    }
+                } catch (e) {
+                    console.error("Fullscreen API não é suportada ou está bloqueada.", e);
+                    // Fallback: Informar o usuário que o modo de tela cheia não é suportado.
+                    const fsButton = document.getElementById('fullscreenBtn');
+                    fsButton.style.display = 'none'; // Esconder o botão se não funcionar
+                }
+            });
+        });
+    </script>
+</body>
+</html>

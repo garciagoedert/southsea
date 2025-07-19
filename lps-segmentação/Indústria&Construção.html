@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>South Sea | Criamos o Vendedor Digital da sua Empresa</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Custom Styles -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .hero-bg {
+            background-image: linear-gradient(rgba(0, 21, 41, 0.85), rgba(0, 21, 41, 0.85)), url('https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+        }
+        .cta-button {
+            transition: all 0.3s ease;
+        }
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .tab-active {
+            border-color: #0ea5e9; /* sky-500 */
+            color: #0ea5e9;
+            font-weight: 600;
+        }
+        .modal {
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal-content {
+            transition: transform 0.3s ease;
+        }
+        .testimonial-card {
+            background: #f8fafc; /* slate-50 */
+        }
+    </style>
+</head>
+<body class="bg-white text-slate-800">
+
+    <!-- Header -->
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-40 border-b border-slate-200">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold text-slate-900">South Sea</a>
+            <a href="#cta" class="cta-button bg-sky-600 text-white font-semibold px-6 py-3 rounded-lg shadow-md hover:bg-sky-700 hidden sm:inline-block">
+                Solicite um Orçamento
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <!-- Section 1: Hero -->
+        <section class="hero-bg text-white py-24 sm:py-32">
+            <div class="container mx-auto px-6 text-center">
+                <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-4">
+                    Transforme a Qualidade do seu Trabalho em Orçamentos Qualificados.
+                </h1>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto text-sky-200 mb-8">
+                    Criamos sites para a Indústria e Construção que funcionam como seu melhor vendedor, atraindo clientes prontos para investir.
+                </p>
+                <a href="#cta" class="cta-button bg-sky-500 text-white font-bold px-10 py-4 rounded-lg text-lg shadow-xl hover:bg-sky-600">
+                    Solicite um Orçamento
+                </a>
+            </div>
+        </section>
+
+        <!-- Section 2: Problem & Agitation -->
+        <section class="py-20 bg-slate-50">
+            <div class="container mx-auto px-6">
+                <div class="text-center max-w-3xl mx-auto">
+                    <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Seu Site Atual Está Custando Clientes?</h2>
+                    <p class="text-slate-600 text-lg">Muitas empresas de excelência perdem projetos por não comunicarem sua real qualidade online.</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8 mt-12 text-center">
+                    <div class="bg-white p-8 rounded-xl shadow-sm border border-slate-200">
+                        <i data-lucide="dollar-sign" class="mx-auto h-12 w-12 text-red-500 mb-4"></i>
+                        <h3 class="text-xl font-semibold mb-2">Contatos Desqualificados</h3>
+                        <p class="text-slate-600">Recebe contatos que só buscam o menor preço, sem valorizar sua expertise?</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-xl shadow-sm border border-slate-200">
+                        <i data-lucide="folder-closed" class="mx-auto h-12 w-12 text-amber-500 mb-4"></i>
+                        <h3 class="text-xl font-semibold mb-2">Portfólio Invisível</h3>
+                        <p class="text-slate-600">Seu portfólio de projetos incríveis está escondido em uma pasta no computador?</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-xl shadow-sm border border-slate-200">
+                        <i data-lucide="users" class="mx-auto h-12 w-12 text-sky-500 mb-4"></i>
+                        <h3 class="text-xl font-semibold mb-2">Dependência de Indicações</h3>
+                        <p class="text-slate-600">Depende quase exclusivamente de indicações para fechar novos contratos?</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Solution & Value Proposition -->
+        <section class="py-20">
+            <div class="container mx-auto px-6">
+                <div class="text-center max-w-3xl mx-auto mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Um Site South Sea é Mais que um Cartão de Visitas. É um Ativo de Vendas.</h2>
+                    <p class="text-slate-600 text-lg">Nós criamos o seu vendedor digital que trabalha 24/7 para construir confiança e gerar negócios.</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="text-center p-6">
+                        <i data-lucide="gem" class="mx-auto h-12 w-12 text-sky-600 mb-4"></i>
+                        <h3 class="text-xl font-bold mb-2">Exibe seus melhores projetos</h3>
+                        <p class="text-slate-600">Criamos portfólios e galerias de alta resolução que servem como prova inegável da sua qualidade.</p>
+                    </div>
+                    <div class="text-center p-6">
+                        <i data-lucide="filter" class="mx-auto h-12 w-12 text-sky-600 mb-4"></i>
+                        <h3 class="text-xl font-bold mb-2">Qualifica o contato</h3>
+                        <p class="text-slate-600">Nosso design estratégico e texto direcionado filtram curiosos e atraem compradores sérios que valorizam a expertise.</p>
+                    </div>
+                    <div class="text-center p-6">
+                        <i data-lucide="send" class="mx-auto h-12 w-12 text-sky-600 mb-4"></i>
+                        <h3 class="text-xl font-bold mb-2">Entrega pedidos de orçamento</h3>
+                        <p class="text-slate-600">Projetamos caminhos claros para a conversão, facilitando o contato dos seus clientes ideais.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Niche Specialization -->
+        <section id="niche" class="py-20 bg-slate-900 text-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center max-w-3xl mx-auto mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4">Feito para o seu Setor</h2>
+                    <p class="text-slate-300 text-lg">Falamos a língua do seu negócio. Entendemos os desafios e as oportunidades da sua indústria.</p>
+                </div>
+
+                <!-- Tabs -->
+                <div class="flex justify-center border-b border-slate-700 mb-8 flex-wrap">
+                    <button class="tab-button tab-active py-4 px-6 border-b-2" data-target="niche-1">Energia Solar</button>
+                    <button class="tab-button py-4 px-6 border-b-2 border-transparent text-slate-400 hover:text-white" data-target="niche-2">Construtoras</button>
+                    <button class="tab-button py-4 px-6 border-b-2 border-transparent text-slate-400 hover:text-white" data-target="niche-3">Marcenarias de Alto Padrão</button>
+                    <button class="tab-button py-4 px-6 border-b-2 border-transparent text-slate-400 hover:text-white" data-target="niche-4">Automação Residencial</button>
+                </div>
+
+                <!-- Tab Content -->
+                <div id="niche-content" class="max-w-4xl mx-auto">
+                    <div id="niche-1" class="tab-pane active">
+                        <div class="md:grid md:grid-cols-2 gap-8 items-center">
+                            <div>
+                                <h3 class="text-2xl font-bold text-sky-400 mb-3">Energia Solar: Transformando Custo em Investimento</h3>
+                                <p class="text-slate-300 mb-4">O desafio é justificar o alto custo inicial. Nós criamos ferramentas digitais que demonstram o retorno financeiro a longo prazo, com projeções claras de economia e dados de performance.</p>
+                                <ul class="space-y-2">
+                                    <li class="flex items-start"><i data-lucide="check-circle" class="h-5 w-5 text-green-400 mr-2 mt-1 shrink-0"></i> <span>Calculadoras de ROI interativas.</span></li>
+                                    <li class="flex items-start"><i data-lucide="check-circle" class="h-5 w-5 text-green-400 mr-2 mt-1 shrink-0"></i> <span>Depoimentos focados na redução da conta de energia.</span></li>
+                                    <li class="flex items-start"><i data-lucide="check-circle" class="h-5 w-5 text-green-400 mr-2 mt-1 shrink-0"></i> <span>Cases de estudo com dados de performance real.</span></li>
+                                </ul>
+                            </div>
+                            <img src="https://images.unsplash.com/photo-1624397843128-46b72b885952?q=80&w=1974&auto=format&fit=crop" alt="Instalação de painéis solares em um telhado" class="rounded-lg mt-6 md:mt-0 shadow-2xl" onerror="this.onerror=null;this.src='https://placehold.co/600x400/0284c7/FFFFFF?text=Energia+Solar';">
+                        </div>
+                    </div>
+                    <div id="niche-2" class="tab-pane hidden">
+                        <div class="md:grid md:grid-cols-2 gap-8 items-center">
+                            <div>
+                                <h3 class="text-2xl font-bold text-sky-400 mb-3">Construtoras: Digitalizando a Confiança</h3>
+                                <p class="text-slate-300 mb-4">Em projetos complexos, confiança é tudo. Seu site precisa demonstrar confiabilidade, capacidade de gerenciamento e cumprimento de prazos. Nós construímos essa percepção online.</p>
+                                <ul class="space-y-2">
+                                    <li class="flex items-start"><i data-lucide="check-circle" class="h-5 w-5 text-green-400 mr-2 mt-1 shrink-0"></i> <span>Portfólios detalhados de obras concluídas.</span></li>
+                                    <li class="flex items-start"><i data-lucide="check-circle" class="h-5 w-5 text-green-400 mr-2 mt-1 shrink-0"></i> <span>Cases de estudo do desafio à solução.</span></li>
+                                    <li class="flex items-start"><i data-lucide="check-circle" class="h-5 w-5 text-green-400 mr-2 mt-1 shrink-0"></i> <span>Galerias de projetos filtráveis por tipo (residencial, comercial).</span></li>
+                                </ul>
+                            </div>
+                            <img src="https://images.unsplash.com/photo-1519639292329-6d641a5c6432?q=80&w=1974&auto=format&fit=crop" alt="Estrutura de um prédio em construção com guindaste" class="rounded-lg mt-6 md:mt-0 shadow-2xl" onerror="this.onerror=null;this.src='https://placehold.co/600x400/0284c7/FFFFFF?text=Construtoras';">
+                        </div>
+                    </div>
+                    <div id="niche-3" class="tab-pane hidden">
+                        <div class="md:grid md:grid-cols-2 gap-8 items-center">
+                            <div>
+                                <h3 class="text-2xl font-bold text-sky-400 mb-3">Marcenaria de Alto Padrão: O Detalhe que Vende</h3>
+                                <p class="text-slate-300 mb-4">O valor do seu trabalho está no detalhe, no acabamento, na exclusividade. Seu site precisa ser uma experiência visual imersiva que comunique o valor artesanal e a qualidade superior.</p>
+                                <ul class="space-y-2">
+                                    <li class="flex items-start"><i data-lucide="check-circle" class="h-5 w-5 text-green-400 mr-2 mt-1 shrink-0"></i> <span>Galerias com imagens em altíssima resolução e zoom.</span></li>
+                                    <li class="flex items-start"><i data-lucide="check-circle" class="h-5 w-5 text-green-400 mr-2 mt-1 shrink-0"></i> <span>Vídeos que mostram o processo de criação e o "toque do mestre".</span></li>
+                                    <li class="flex items-start"><i data-lucide="check-circle" class="h-5 w-5 text-green-400 mr-2 mt-1 shrink-0"></i> <span>Portfólios com foco em close-ups de texturas e acabamentos.</span></li>
+                                </ul>
+                            </div>
+                            <img src="https://images.unsplash.com/photo-1616046229478-9901c5536a45?q=80&w=2080&auto=format&fit=crop" alt="Sala de estar moderna com móveis de madeira de alto padrão" class="rounded-lg mt-6 md:mt-0 shadow-2xl" onerror="this.onerror=null;this.src='https://placehold.co/600x400/0284c7/FFFFFF?text=Marcenaria';">
+                        </div>
+                    </div>
+                    <div id="niche-4" class="tab-pane hidden">
+                        <div class="md:grid md:grid-cols-2 gap-8 items-center">
+                            <div>
+                                <h3 class="text-2xl font-bold text-sky-400 mb-3">Automação Residencial: Simplificando o Futuro</h3>
+                                <p class="text-slate-300 mb-4">A tecnologia pode parecer complexa. Nosso trabalho é desmistificá-la, mostrando os benefícios práticos em conforto, segurança e eficiência através de demonstrações claras e intuitivas.</p>
+                                <ul class="space-y-2">
+                                    <li class="flex items-start"><i data-lucide="check-circle" class="h-5 w-5 text-green-400 mr-2 mt-1 shrink-0"></i> <span>Tours virtuais de casas automatizadas.</span></li>
+                                    <li class="flex items-start"><i data-lucide="check-circle" class="h-5 w-5 text-green-400 mr-2 mt-1 shrink-0"></i> <span>Vídeos demonstrativos de sistemas em funcionamento.</span></li>
+                                    <li class="flex items-start"><i data-lucide="check-circle" class="h-5 w-5 text-green-400 mr-2 mt-1 shrink-0"></i> <span>Infográficos simples explicando a integração dos sistemas.</span></li>
+                                </ul>
+                            </div>
+                            <img src="https://images.unsplash.com/photo-1615529328341-793b98c3556d?q=80&w=1964&auto=format&fit=crop" alt="Mão de uma pessoa usando um tablet para controlar uma casa inteligente" class="rounded-lg mt-6 md:mt-0 shadow-2xl" onerror="this.onerror=null;this.src='https://placehold.co/600x400/0284c7/FFFFFF?text=Automação';">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section 5: How It Works -->
+        <section class="py-20">
+            <div class="container mx-auto px-6">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Nosso Processo é Transparente e Focado em Resultados</h2>
+                    <p class="text-slate-600 text-lg">Da estratégia ao lançamento, você tem clareza de cada etapa.</p>
+                </div>
+                <div class="relative">
+                    <!-- Connecting line for desktop -->
+                    <div class="hidden md:block absolute top-8 left-0 w-full h-0.5 bg-slate-200 -z-10"></div>
+                    <div class="grid md:grid-cols-3 gap-y-12 md:gap-y-0 md:gap-x-8 relative">
+                        <div class="text-center">
+                            <div class="relative inline-block bg-white">
+                                <div class="w-16 h-16 rounded-full bg-sky-100 text-sky-600 flex items-center justify-center text-2xl font-bold mb-4 mx-auto border-4 border-white shadow">1</div>
+                            </div>
+                            <h3 class="text-xl font-bold mb-2">Briefing & Estratégia</h3>
+                            <p class="text-slate-600">Uma imersão profunda no seu negócio, seus clientes e seus objetivos para definir o plano de ação.</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="relative inline-block bg-white">
+                                <div class="w-16 h-16 rounded-full bg-sky-100 text-sky-600 flex items-center justify-center text-2xl font-bold mb-4 mx-auto border-4 border-white shadow">2</div>
+                            </div>
+                            <h3 class="text-xl font-bold mb-2">Design & Desenvolvimento</h3>
+                            <p class="text-slate-600">A criação de um design exclusivo e uma estrutura focada em converter seu cliente ideal.</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="relative inline-block bg-white">
+                                <div class="w-16 h-16 rounded-full bg-sky-100 text-sky-600 flex items-center justify-center text-2xl font-bold mb-4 mx-auto border-4 border-white shadow">3</div>
+                            </div>
+                            <h3 class="text-xl font-bold mb-2">Lançamento & Otimização</h3>
+                            <p class="text-slate-600">O lançamento do seu novo "vendedor digital", com monitoramento para garantir a máxima performance.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 6: Trust Engine - Portfolio & Testimonials -->
+        <section class="py-20 bg-slate-50">
+            <div class="container mx-auto px-6">
+                <div class="text-center max-w-3xl mx-auto mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Construindo Confiança com Resultados Reais</h2>
+                    <p class="text-slate-600 text-lg">Não apenas falamos. Nós demonstramos. Veja o que fizemos por empresas como a sua.</p>
+                </div>
+
+                <!-- Portfolio -->
+                <div class="grid md:grid-cols-2 gap-8 mb-16">
+                    <div class="bg-white rounded-lg shadow-lg overflow-hidden group">
+                        <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=2158&auto=format&fit=crop" alt="Poltrona elegante em um ambiente bem decorado" class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null;this.src='https://placehold.co/600x400/f1f5f9/FFFFFF?text=Projeto+Marcenaria';">
+                        <div class="p-6">
+                            <p class="text-sm font-semibold text-sky-600">Marcenaria de Alto Padrão</p>
+                            <h3 class="text-xl font-bold mb-2">Mobiliário Fino & Cia</h3>
+                            <p class="text-slate-600 mb-4"><span class="font-semibold">Desafio:</span> Comunicar o valor artesanal online. <br><span class="font-semibold">Solução:</span> Um site imersivo com galeria de alta resolução que resultou em um <span class="text-green-600 font-bold">aumento de 40% nos pedidos de orçamento qualificados.</span></p>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-lg overflow-hidden group">
+                        <img src="https://images.unsplash.com/photo-1487958449943-2429e8be8625?q=80&w=2070&auto=format&fit=crop" alt="Fachada de uma casa moderna em construção" class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null;this.src='https://placehold.co/600x400/f1f5f9/FFFFFF?text=Projeto+Construtora';">
+                        <div class="p-6">
+                            <p class="text-sm font-semibold text-sky-600">Construtora</p>
+                            <h3 class="text-xl font-bold mb-2">Edifica Engenharia</h3>
+                            <p class="text-slate-600 mb-4"><span class="font-semibold">Desafio:</span> Demonstrar capacidade para projetos de grande porte. <br><span class="font-semibold">Solução:</span> Um portfólio digital com cases de estudo detalhados, que ajudou a fechar <span class="text-green-600 font-bold">dois novos contratos comerciais em 6 meses.</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonials -->
+                <div class="grid lg:grid-cols-2 gap-8">
+                    <div class="testimonial-card p-8 rounded-lg shadow-sm">
+                        <p class="text-slate-700 text-lg italic mb-6">"O novo site transformou a forma como os clientes nos veem. Agora, eles chegam na primeira reunião já convencidos da nossa qualidade. O time da South Sea entendeu perfeitamente nosso negócio."</p>
+                        <div class="flex items-center">
+                            <img src="https://i.pravatar.cc/150?img=59" alt="Retrato de João Carlos Pereira" class="w-14 h-14 rounded-full mr-4 border-2 border-white shadow-md" onerror="this.onerror=null;this.src='https://placehold.co/150x150/f1f5f9/a0a0a0?text=JCP';">
+                            <div>
+                                <p class="font-bold text-slate-900">João Carlos Pereira</p>
+                                <p class="text-slate-600">Diretor, Edifica Engenharia</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card p-8 rounded-lg shadow-sm">
+                        <p class="text-slate-700 text-lg italic mb-6">"Estávamos céticos sobre o investimento, mas o retorno foi impressionante. O número de orçamentos de clientes realmente interessados dobrou. Recomendo fortemente."</p>
+                        <div class="flex items-center">
+                            <img src="https://i.pravatar.cc/150?img=8" alt="Retrato de Mariana Costa" class="w-14 h-14 rounded-full mr-4 border-2 border-white shadow-md" onerror="this.onerror=null;this.src='https://placehold.co/150x150/f1f5f9/a0a0a0?text=MC';">
+                            <div>
+                                <p class="font-bold text-slate-900">Mariana Costa</p>
+                                <p class="text-slate-600">Sócia, Mobiliário Fino & Cia</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Client Logos -->
+                <div class="mt-16">
+                    <p class="text-center text-slate-500 font-semibold mb-6">EMPRESAS QUE CONFIAM NO NOSSO TRABALHO</p>
+                    <div class="flex justify-center items-center gap-x-8 gap-y-4 flex-wrap grayscale opacity-75">
+                        <img src="https://placehold.co/120x60/f0f0f0/a0a0a0?text=Empresa+A" alt="Logo da Empresa A" class="h-8" onerror="this.onerror=null;this.src='https://placehold.co/120x40?text=Logo';">
+                        <img src="https://placehold.co/120x60/f0f0f0/a0a0a0?text=Construtora+X" alt="Logo da Construtora X" class="h-8" onerror="this.onerror=null;this.src='https://placehold.co/120x40?text=Logo';">
+                        <img src="https://placehold.co/120x60/f0f0f0/a0a0a0?text=Solar+Energy" alt="Logo da Solar Energy" class="h-8" onerror="this.onerror=null;this.src='https://placehold.co/120x40?text=Logo';">
+                        <img src="https://placehold.co/120x60/f0f0f0/a0a0a0?text=Marcenaria+Z" alt="Logo da Marcenaria Z" class="h-8" onerror="this.onerror=null;this.src='https://placehold.co/120x40?text=Logo';">
+                        <img src="https://placehold.co/120x60/f0f0f0/a0a0a0?text=AutoHome" alt="Logo da AutoHome" class="h-8" onerror="this.onerror=null;this.src='https://placehold.co/120x40?text=Logo';">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 7: Final CTA -->
+        <section id="cta" class="py-24 bg-sky-800 text-white">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Pronto para Construir seu Motor de Geração de Clientes?</h2>
+                <p class="text-sky-200 text-lg max-w-2xl mx-auto mb-8">Vamos transformar a reputação da sua empresa em um fluxo constante de oportunidades de negócio.</p>
+                <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+                    <button id="openQuoteModal" class="cta-button w-full sm:w-auto bg-white text-sky-700 font-bold px-8 py-4 rounded-lg text-lg shadow-lg hover:bg-slate-100">
+                        Solicite um Orçamento
+                    </button>
+                    <button id="openExpertModal" class="cta-button w-full sm:w-auto bg-transparent border-2 border-sky-400 text-sky-300 font-semibold px-8 py-4 rounded-lg hover:bg-sky-700 hover:text-white">
+                        Fale com um Especialista
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-12">
+        <div class="container mx-auto px-6 text-center">
+            <p>&copy; 2024 South Sea. Todos os direitos reservados.</p>
+            <p class="text-sm mt-2">Construindo o futuro digital da Indústria e Construção.</p>
+        </div>
+    </footer>
+
+    <!-- Modal for Quote Request -->
+    <div id="quoteModal" class="modal fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50 opacity-0 invisible">
+        <div class="modal-content bg-white w-full max-w-2xl rounded-lg shadow-2xl p-8 relative transform scale-95">
+            <button id="closeQuoteModal" class="absolute top-4 right-4 text-slate-500 hover:text-slate-800" aria-label="Fechar modal de orçamento">
+                <i data-lucide="x" class="h-6 w-6"></i>
+            </button>
+            <h3 class="text-2xl font-bold mb-2 text-slate-900">Solicitar Orçamento</h3>
+            <p class="text-slate-600 mb-6">Preencha os campos abaixo. Nossa equipe entrará em contato em até 24h úteis.</p>
+            <form action="#" method="POST" class="space-y-4">
+                <div class="grid sm:grid-cols-2 gap-4">
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-slate-700">Nome</label>
+                        <input type="text" name="name" id="name" required class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500">
+                    </div>
+                    <div>
+                        <label for="company-email" class="block text-sm font-medium text-slate-700">Email Corporativo</label>
+                        <input type="email" name="company-email" id="company-email" required class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500">
+                    </div>
+                </div>
+                <div class="grid sm:grid-cols-2 gap-4">
+                    <div>
+                        <label for="phone" class="block text-sm font-medium text-slate-700">Telefone</label>
+                        <input type="tel" name="phone" id="phone" required class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500">
+                    </div>
+                    <div>
+                        <label for="company-name" class="block text-sm font-medium text-slate-700">Nome da Empresa</label>
+                        <input type="text" name="company-name" id="company-name" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500">
+                    </div>
+                </div>
+                <div>
+                    <label for="goal" class="block text-sm font-medium text-slate-700">Qual seu principal objetivo?</label>
+                    <select id="goal" name="goal" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500">
+                        <option>Gerar mais leads qualificados</option>
+                        <option>Melhorar a imagem profissional da empresa</option>
+                        <option>Lançar um novo serviço</option>
+                        <option>Outro</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="investment" class="block text-sm font-medium text-slate-700">Estimativa de investimento para este projeto? (Opcional)</label>
+                    <select id="investment" name="investment" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500">
+                        <option>Selecione uma faixa de valor</option>
+                        <option>Até R$5.000</option>
+                        <option>Entre R$5.000 e R$15.000</option>
+                        <option>Acima de R$15.000</option>
+                    </select>
+                </div>
+                <div class="pt-4">
+                    <button type="submit" class="w-full cta-button bg-sky-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:bg-sky-700">
+                        Enviar Solicitação
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Modal for Expert Contact -->
+    <div id="expertModal" class="modal fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50 opacity-0 invisible">
+        <div class="modal-content bg-white w-full max-w-lg rounded-lg shadow-2xl p-8 relative transform scale-95">
+            <button id="closeExpertModal" class="absolute top-4 right-4 text-slate-500 hover:text-slate-800" aria-label="Fechar modal de contato">
+                <i data-lucide="x" class="h-6 w-6"></i>
+            </button>
+            <h3 class="text-2xl font-bold mb-2 text-slate-900">Fale com um Especialista</h3>
+            <p class="text-slate-600 mb-6">Tem alguma dúvida? Deixe sua mensagem e agendaremos uma conversa sem compromisso.</p>
+            <form action="#" method="POST" class="space-y-4">
+                <div>
+                    <label for="expert-name" class="block text-sm font-medium text-slate-700">Nome</label>
+                    <input type="text" name="expert-name" id="expert-name" required class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500">
+                </div>
+                <div>
+                    <label for="expert-email" class="block text-sm font-medium text-slate-700">Email</label>
+                    <input type="email" name="expert-email" id="expert-email" required class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500">
+                </div>
+                <div>
+                    <label for="question" class="block text-sm font-medium text-slate-700">Sua dúvida</label>
+                    <textarea id="question" name="question" rows="4" required class="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500"></textarea>
+                </div>
+                <div class="pt-4">
+                    <button type="submit" class="w-full cta-button bg-sky-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:bg-sky-700">
+                        Enviar Mensagem
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize Lucide icons
+            lucide.createIcons();
+
+            // --- Niche Specialization Tabs ---
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabPanes = document.querySelectorAll('.tab-pane');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Deactivate all buttons
+                    tabButtons.forEach(btn => {
+                        btn.classList.remove('tab-active');
+                        btn.classList.add('text-slate-400', 'hover:text-white', 'border-transparent');
+                    });
+
+                    // Hide all panes
+                    tabPanes.forEach(pane => {
+                        pane.classList.add('hidden');
+                    });
+
+                    // Activate clicked button and corresponding pane
+                    button.classList.add('tab-active');
+                    button.classList.remove('text-slate-400', 'hover:text-white', 'border-transparent');
+                    
+                    const targetPaneId = button.getAttribute('data-target');
+                    const targetPane = document.getElementById(targetPaneId);
+                    if (targetPane) {
+                        targetPane.classList.remove('hidden');
+                    }
+                });
+            });
+
+            // --- Modal Logic ---
+            const quoteModal = document.getElementById('quoteModal');
+            const expertModal = document.getElementById('expertModal');
+            const openQuoteModalBtn = document.getElementById('openQuoteModal');
+            const closeQuoteModalBtn = document.getElementById('closeQuoteModal');
+            const openExpertModalBtn = document.getElementById('openExpertModal');
+            const closeExpertModalBtn = document.getElementById('closeExpertModal');
+            
+            const openModal = (modal) => {
+                if (!modal) return;
+                modal.classList.remove('invisible', 'opacity-0');
+                modal.querySelector('.modal-content').classList.remove('scale-95');
+                document.body.style.overflow = 'hidden';
+            };
+
+            const closeModal = (modal) => {
+                if (!modal) return;
+                modal.classList.add('opacity-0');
+                modal.querySelector('.modal-content').classList.add('scale-95');
+                setTimeout(() => {
+                    modal.classList.add('invisible');
+                    // Only restore scroll if no other modal is open
+                    if (quoteModal.classList.contains('invisible') && expertModal.classList.contains('invisible')) {
+                       document.body.style.overflow = 'auto';
+                    }
+                }, 300);
+            };
+
+            if (openQuoteModalBtn) openQuoteModalBtn.addEventListener('click', () => openModal(quoteModal));
+            if (closeQuoteModalBtn) closeQuoteModalBtn.addEventListener('click', () => closeModal(quoteModal));
+            
+            if (openExpertModalBtn) openExpertModalBtn.addEventListener('click', () => openModal(expertModal));
+            if (closeExpertModalBtn) closeExpertModalBtn.addEventListener('click', () => closeModal(expertModal));
+
+            // Close modal on outside click
+            window.addEventListener('click', (e) => {
+                if (e.target === quoteModal) closeModal(quoteModal);
+                if (e.target === expertModal) closeModal(expertModal);
+            });
+
+            // Close modal on 'Escape' key press
+            window.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    if (!quoteModal.classList.contains('invisible')) closeModal(quoteModal);
+                    if (!expertModal.classList.contains('invisible')) closeModal(expertModal);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
