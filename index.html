@@ -113,13 +113,40 @@ src="https://www.facebook.com/tr?id=459784769803882&ev=PageView&noscript=1"
             transform: translateY(100%);
             pointer-events: none;
         }
+        /* NEW: Starfield Canvas Style */
+        #starfield-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Place it behind all content */
+        }
+        
+        /* NEW: Globe Container Style */
+        #globe-container {
+            width: 100%;
+            max-width: 500px; /* Max size for the globe */
+            height: 500px;
+            cursor: grab;
+        }
+        @media (min-width: 1024px) { /* lg breakpoint */
+             #globe-container {
+                max-width: 600px;
+                height: 600px;
+            }
+        }
     </style>
 </head>
 <body class="bg-brand-navy" x-data="{ mobileMenuOpen: false }">
 
+    <!-- NEW: Starfield Canvas -->
+    <canvas id="starfield-canvas"></canvas>
+
     <!-- =================================================================
     HEADER
     ================================================================== -->
+
     <header x-data="{ scrolled: false }" @scroll.window="scrolled = (window.pageYOffset > 50)" 
             class="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
             :class="{ 'bg-brand-navy/80 backdrop-blur-sm shadow-lg': scrolled, 'py-4': !scrolled, 'py-2': scrolled }">
@@ -177,6 +204,10 @@ src="https://www.facebook.com/tr?id=459784769803882&ev=PageView&noscript=1"
                 <a href="#projects" class="inline-block mt-10 px-8 py-4 border-2 border-brand-accent text-brand-accent font-bold rounded-md hover:bg-brand-accent/10 transition-all duration-300">
                     Veja nossos projetos
                 </a>
+            </div>
+             <!-- NEW: GLOBE CONTAINER -->
+            <div class="w-full lg:w-1/2 flex justify-center lg:justify-end reveal">
+                <div id="globe-container"></div>
             </div>
         </section>
 
@@ -577,6 +608,145 @@ src="https://www.facebook.com/tr?id=459784769803882&ev=PageView&noscript=1"
             const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
             window.open(whatsappUrl, '_blank');
         });
+        
+
+        // --- NEW: STARFIELD ANIMATION ---
+            const starfieldCanvas = document.getElementById('starfield-canvas');
+            if (starfieldCanvas) {
+                const ctx = starfieldCanvas.getContext('2d');
+                let stars = [];
+                let numStars = 200;
+
+                function resizeCanvas() {
+                    starfieldCanvas.width = window.innerWidth;
+                    starfieldCanvas.height = window.innerHeight;
+                    stars = [];
+                    for(let i = 0; i < numStars; i++) {
+                        stars.push({
+                            x: Math.random() * starfieldCanvas.width,
+                            y: Math.random() * starfieldCanvas.height,
+                            radius: Math.random() * 1.5,
+                            vx: (Math.random() - 0.5) / 2,
+                            vy: (Math.random() - 0.5) / 2,
+                            opacity: Math.random() * 0.5 + 0.2
+                        });
+                    }
+                }
+
+                function drawStars() {
+                    ctx.clearRect(0, 0, starfieldCanvas.width, starfieldCanvas.height);
+                    ctx.fillStyle = '#8892B0'; // text-brand-slate
+                    stars.forEach(star => {
+                        ctx.beginPath();
+                        ctx.globalAlpha = star.opacity;
+                        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                        ctx.fill();
+                    });
+                }
+
+                function updateStars() {
+                    stars.forEach(star => {
+                        star.x += star.vx;
+                        star.y += star.vy;
+                        if (star.x < 0 || star.x > starfieldCanvas.width) star.vx = -star.vx;
+                        if (star.y < 0 || star.y > starfieldCanvas.height) star.vy = -star.vy;
+                    });
+                }
+
+                function animateStars() {
+                    drawStars();
+                    updateStars();
+                    requestAnimationFrame(animateStars);
+                }
+
+                resizeCanvas();
+                animateStars();
+                window.addEventListener('resize', resizeCanvas);
+            }
+
+            /// --- NEW: 3D GLOBE ANIMATION ---
+            const globeContainer = document.getElementById('globe-container');
+            if (globeContainer && typeof THREE !== 'undefined') {
+                let scene, camera, renderer, globeGroup;
+                let isMouseDown = false;
+                let previousMousePosition = { x: 0, y: 0 };
+
+                function initGlobe() {
+                    // Scene
+                    scene = new THREE.Scene();
+
+                    // Camera
+                    camera = new THREE.PerspectiveCamera(75, globeContainer.clientWidth / globeContainer.clientHeight, 0.1, 1000);
+                    camera.position.z = 3.5;
+
+                    // Renderer
+                    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+                    renderer.setSize(globeContainer.clientWidth, globeContainer.clientHeight);
+                    renderer.setPixelRatio(window.devicePixelRatio);
+                    globeContainer.appendChild(renderer.domElement);
+
+                    // Globe Group
+                    globeGroup = new THREE.Group();
+                    scene.add(globeGroup);
+
+                    // Globe Wireframe
+                    const geometry = new THREE.SphereGeometry(2, 32, 32);
+                    const wireframe = new THREE.WireframeGeometry(geometry);
+                    const lineMaterial = new THREE.LineBasicMaterial({ color: 0x64FFDA, transparent: true, opacity: 0.2 });
+                    const line = new THREE.LineSegments(wireframe, lineMaterial);
+                    globeGroup.add(line);
+                    
+                    // Globe Points
+                    const pointsMaterial = new THREE.PointsMaterial({ color: 0x8892B0, size: 0.03 });
+                    const points = new THREE.Points(geometry, pointsMaterial);
+                    globeGroup.add(points);
+                }
+
+                function animateGlobe() {
+                    requestAnimationFrame(animateGlobe);
+                    if (!isMouseDown) {
+                        globeGroup.rotation.y += 0.001;
+                    }
+                    renderer.render(scene, camera);
+                }
+
+                function onWindowResize() {
+                    camera.aspect = globeContainer.clientWidth / globeContainer.clientHeight;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(globeContainer.clientWidth, globeContainer.clientHeight);
+                }
+                
+                function onMouseDown(event) {
+                    isMouseDown = true;
+                    previousMousePosition.x = event.clientX || event.touches[0].clientX;
+                    globeContainer.style.cursor = 'grabbing';
+                }
+
+                function onMouseMove(event) {
+                    if (!isMouseDown) return;
+                    const clientX = event.clientX || event.touches[0].clientX;
+                    const deltaX = clientX - previousMousePosition.x;
+                    globeGroup.rotation.y += deltaX * 0.005;
+                    previousMousePosition.x = clientX;
+                }
+                
+                function onMouseUp() {
+                    isMouseDown = false;
+                    globeContainer.style.cursor = 'grab';
+                }
+
+                initGlobe();
+                animateGlobe();
+                
+                window.addEventListener('resize', onWindowResize);
+                globeContainer.addEventListener('mousedown', onMouseDown);
+                globeContainer.addEventListener('mousemove', onMouseMove);
+                window.addEventListener('mouseup', onMouseUp);
+                globeContainer.addEventListener('touchstart', onMouseDown, { passive: true });
+                globeContainer.addEventListener('touchmove', onMouseMove, { passive: true });
+                window.addEventListener('touchend', onMouseUp);
+            }
+    
     </script>
     <!-- BOTÃO FLUTUANTE DO WHATSAPP -->
 <a href="https://api.whatsapp.com/send/?phone=48988780389&text=Ol%C3%A1%21+Tenho+interesse+em+saber+mais+&type=phone_number&app_absent=0" class="whatsapp-button" target="_blank" aria-label="Fale conosco pelo WhatsApp">
