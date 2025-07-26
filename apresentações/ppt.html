@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <!-- Favicon -->
-    <link rel="icon" href="/newimag/Ellipse 9.svg">
+    <link rel="icon" href="/newimag/Ellipse 9.svg" onerror="this.onerror=null;this.src='https://placehold.co/32x32';">
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -40,7 +40,8 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 5rem 2rem;
+            /* Padding responsivo: menor em telas pequenas, maior em telas grandes */
+            padding: 4rem 1.5rem;
             position: relative;
             width: 100%;
         }
@@ -91,10 +92,10 @@
             color: white;
         }
         .fullscreen-btn {
-             position: fixed;
-             bottom: 20px;
-             left: 20px;
-             z-index: 100;
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 100;
         }
         .bg-sea-calm {
             background-image: url('https://images.unsplash.com/photo-1559825481-12a05cc00344?q=80&w=1920&auto=format&fit=crop');
@@ -114,6 +115,8 @@
             color: var(--color-primary);
             margin-right: 0.75rem;
             flex-shrink: 0;
+            width: 1.5rem; /* 24px */
+            height: 1.5rem; /* 24px */
         }
         .text-primary { color: var(--color-primary); }
         .bg-primary { background-color: var(--color-primary); }
@@ -132,8 +135,8 @@
         <section id="slide1" class="slide bg-sea-calm text-white text-center">
             <div class="absolute inset-0 bg-black opacity-60"></div>
             <div class="z-10 slide-content fade-in-section">
-                <img src="/newimag/Vector.svg" alt="Logo South Sea" class="mx-auto mb-8 h-16 md:h-20">
-                <h1 class="text-4xl md:text-5xl lg:text-6xl font-light">Transformando sua Visão em <br><span class="font-semibold text-blue-300">Resultados Digitais</span>.</h1>
+                <img src="/newimag/Vector.svg" alt="Logo South Sea" class="mx-auto mb-8 h-16 md:h-20" onerror="this.onerror=null;this.src='https://placehold.co/200x80/ffffff/000000?text=South+Sea';">
+                <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light">Transformando sua Visão em <br><span class="font-semibold text-blue-300">Resultados Digitais</span>.</h1>
             </div>
         </section>
 
@@ -141,30 +144,30 @@
         <section id="slide2" class="slide bg-light">
             <div class="slide-content grid md:grid-cols-2 gap-12 md:gap-16 items-center fade-in-section">
                 <div class="text-center md:text-left">
-                    <h2 class="text-4xl md:text-5xl mb-6 text-main">Arquitetos da sua Presença Digital.</h2>
+                    <h2 class="text-3xl sm:text-4xl md:text-5xl mb-6 text-main">Arquitetos da sua Presença Digital.</h2>
                     <p class="text-lg leading-relaxed text-secondary">A South Sea é mais que uma agência: somos parceiros estratégicos na construção de ativos digitais que geram valor real. Nossa missão é traduzir seus objetivos de negócio em tecnologia e design que não apenas impressionam, mas convertem.</p>
                 </div>
-                <div class="flex justify-center items-center gap-4 md:gap-8">
+                <div class="grid grid-cols-3 gap-4 md:gap-6">
                     <div class="text-center p-4 md:p-6 bg-card rounded-lg">
                         <svg class="w-12 h-12 md:w-16 md:h-16 mx-auto mb-4 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A11.953 11.953 0 0012 13.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0l-5.829-5.828" /></svg>
-                        <h3 class="text-lg md:text-xl text-main">Estratégia</h3>
+                        <h3 class="text-base md:text-xl text-main">Estratégia</h3>
                     </div>
                      <div class="text-center p-4 md:p-6 bg-card rounded-lg">
                         <svg class="w-12 h-12 md:w-16 md:h-16 mx-auto mb-4 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" /></svg>
-                        <h3 class="text-lg md:text-xl text-main">Design</h3>
+                        <h3 class="text-base md:text-xl text-main">Design</h3>
                     </div>
                      <div class="text-center p-4 md:p-6 bg-card rounded-lg">
                         <svg class="w-12 h-12 md:w-16 md:h-16 mx-auto mb-4 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-3.75-.625m3.75.625V18" /></svg>
-                        <h3 class="text-lg md:text-xl text-main">Resultados</h3>
+                        <h3 class="text-base md:text-xl text-main">Resultados</h3>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Slide 3: O Desafio Digital (NOVO) -->
+        <!-- Slide 3: O Desafio Digital -->
         <section id="slide3" class="slide bg-white">
             <div class="slide-content text-center fade-in-section">
-                <h2 class="text-4xl md:text-5xl mb-6 text-main">No mercado atual, a invisibilidade custa caro.</h2>
+                <h2 class="text-3xl sm:text-4xl md:text-5xl mb-6 text-main">No mercado atual, a invisibilidade custa caro.</h2>
                 <p class="text-lg max-w-4xl mx-auto mb-12 md:mb-16 text-secondary">Muitos negócios excelentes perdem oportunidades todos os dias por não terem uma presença online à altura da sua qualidade. Uma vitrine digital mal construída ou inexistente pode minar a confiança e afastar clientes em potencial.</p>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
                     <div class="bg-light p-6 rounded-lg shadow-sm text-center"><p>Sua marca se perde em meio a <strong>concorrentes online</strong>?</p></div>
@@ -178,17 +181,17 @@
         <!-- Slide 4: A Solução -->
         <section id="slide4" class="slide bg-light">
             <div class="slide-content text-center fade-in-section">
-                <h2 class="text-4xl md:text-5xl mb-6 text-main">Seu Site: O Ativo Digital Mais Importante do Seu Negócio.</h2>
+                <h2 class="text-3xl sm:text-4xl md:text-5xl mb-6 text-main">Seu Site: O Ativo Digital Mais Importante.</h2>
                 <p class="text-lg md:text-xl leading-relaxed max-w-4xl mx-auto mb-12 text-secondary">Um site profissional é a base de toda a sua estratégia online. É a sua vitrine 24/7, seu principal canal de vendas e a ferramenta definitiva para construir autoridade e confiança no seu mercado.</p>
                 <div class="w-full max-w-5xl mx-auto">
-                    <div class="bg-card rounded-lg p-8 grid md:grid-cols-2 gap-8 items-center">
+                    <div class="bg-card rounded-lg p-6 md:p-8 grid md:grid-cols-2 gap-8 items-center">
                         <div class="text-left">
                            <h3 class="text-2xl mb-6 text-primary">Benefícios de uma Presença Digital Estratégica:</h3>
                            <ul class="space-y-4">
-                               <li class="flex items-start text-secondary"><svg class="w-6 h-6 icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong>Constrói Credibilidade</strong> e confiança instantânea.</span></li>
-                               <li class="flex items-start text-secondary"><svg class="w-6 h-6 icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong>Gera Oportunidades</strong> de negócio 24 horas por dia, 7 dias por semana.</span></li>
-                               <li class="flex items-start text-secondary"><svg class="w-6 h-6 icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong>Alcança Visibilidade Estratégica</strong> no Google, onde seus clientes procuram.</span></li>
-                               <li class="flex items-start text-secondary"><svg class="w-6 h-6 icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong>Estabelece Autoridade</strong> e posiciona sua marca como líder no setor.</span></li>
+                                <li class="flex items-start text-secondary"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong>Constrói Credibilidade</strong> e confiança instantânea.</span></li>
+                                <li class="flex items-start text-secondary"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong>Gera Oportunidades</strong> de negócio 24 horas por dia, 7 dias por semana.</span></li>
+                                <li class="flex items-start text-secondary"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong>Alcança Visibilidade Estratégica</strong> no Google, onde seus clientes procuram.</span></li>
+                                <li class="flex items-start text-secondary"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong>Estabelece Autoridade</strong> e posiciona sua marca como líder no setor.</span></li>
                            </ul>
                         </div>
                         <div class="flex justify-center">
@@ -201,25 +204,25 @@
         
         <!-- Slide 5: Nossas Soluções -->
          <section id="slide5" class="slide bg-white">
-              <div class="slide-content text-center fade-in-section">
-                  <h2 class="text-4xl md:text-5xl mb-12 text-main">A Solução Ideal para Cada Momento do Seu Negócio</h2>
-                  <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                      <div class="bg-light p-8 rounded-lg transform hover:scale-105 transition-transform duration-300">
-                          <h3 class="text-2xl md:text-3xl mb-4 text-main">Presença Essencial</h3>
-                          <p class="text-base md:text-lg text-secondary">Uma <strong>Landing Page</strong> de alto impacto, ideal para lançamentos, campanhas e captação de leads com foco em conversão rápida.</p>
-                      </div>
-                      <div class="bg-primary-dark text-white p-8 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300">
-                          <h3 class="text-2xl md:text-3xl mb-4">Negócio Digital</h3>
-                          <p class="text-base md:text-lg">Um <strong>Site Institucional completo</strong>, para empresas que buscam autoridade, um canal robusto de comunicação e uma plataforma para escalar seu negócio.</p>
-                      </div>
-                  </div>
-              </div>
-        </section>
+               <div class="slide-content text-center fade-in-section">
+                     <h2 class="text-3xl sm:text-4xl md:text-5xl mb-12 text-main">A Solução Ideal para Cada Momento</h2>
+                     <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                           <div class="bg-light p-6 md:p-8 rounded-lg transform hover:scale-105 transition-transform duration-300">
+                                 <h3 class="text-2xl md:text-3xl mb-4 text-main">Presença Essencial</h3>
+                                 <p class="text-base md:text-lg text-secondary">Uma <strong>Landing Page</strong> de alto impacto, ideal para lançamentos, campanhas e captação de leads com foco em conversão rápida.</p>
+                           </div>
+                           <div class="bg-primary-dark text-white p-6 md:p-8 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300">
+                                 <h3 class="text-2xl md:text-3xl mb-4">Negócio Digital</h3>
+                                 <p class="text-base md:text-lg">Um <strong>Site Institucional completo</strong>, para empresas que buscam autoridade, um canal robusto de comunicação e uma plataforma para escalar seu negócio.</p>
+                           </div>
+                     </div>
+               </div>
+         </section>
 
         <!-- Slide 6: Entregas Detalhadas -->
         <section id="slide6" class="slide bg-light">
             <div class="slide-content fade-in-section">
-                <h2 class="text-4xl md:text-5xl mb-12 text-center text-main">Nossas Soluções em Detalhe</h2>
+                <h2 class="text-3xl sm:text-4xl md:text-5xl mb-12 text-center text-main">Nossas Soluções em Detalhe</h2>
                 <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
                     <!-- Presença Essencial -->
                     <div class="bg-card p-6 rounded-lg flex flex-col transform hover:-translate-y-2 transition-transform duration-300 h-full">
@@ -228,11 +231,11 @@
                         <div class="border-t pt-4 mt-auto">
                             <h4 class="font-bold mb-3 text-center text-primary">Principais Entregas:</h4>
                             <ul class="text-sm space-y-2 text-secondary">
-                                <li class="flex"><span class="icon-check">✓</span><span>Página única com design moderno e responsivo</span></li>
-                                <li class="flex"><span class="icon-check">✓</span><span>Até 4 seções estratégicas (ex: Sobre, Serviços, Depoimentos)</span></li>
-                                <li class="flex"><span class="icon-check">✓</span><span>Formulário de contato e botão de WhatsApp</span></li>
-                                <li class="flex"><span class="icon-check">✓</span><span>Otimização SEO para ser encontrado no Google</span></li>
-                                <li class="flex"><span class="icon-check">✓</span><span>Instalação de Google Tags e Pixel (Meta)</span></li>
+                                <li class="flex items-center"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Página única com design moderno e responsivo</span></li>
+                                <li class="flex items-center"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Até 4 seções estratégicas (ex: Sobre, Serviços)</span></li>
+                                <li class="flex items-center"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Formulário de contato e botão de WhatsApp</span></li>
+                                <li class="flex items-center"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Otimização SEO para ser encontrado no Google</span></li>
+                                <li class="flex items-center"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Instalação de Google Tags e Pixel (Meta)</span></li>
                             </ul>
                         </div>
                     </div>
@@ -243,13 +246,13 @@
                         <div class="border-t pt-4 mt-auto">
                             <h4 class="font-bold mb-3 text-center text-primary">Principais Entregas:</h4>
                             <ul class="text-sm space-y-2 text-secondary">
-                                <li class="flex"><span class="icon-check">✓</span><span>Site com até 5 páginas (ex: Home, Sobre, Serviços, Blog, Contato)</span></li>
-                                <li class="flex"><span class="icon-check">✓</span><span>Design personalizado à identidade da sua marca</span></li>
-                                <li class="flex"><span class="icon-check">✓</span><span>Blog integrado para marketing de conteúdo</span></li>
-                                <li class="flex"><span class="icon-check">✓</span><span>Otimização SEO avançada para maior visibilidade</span></li>
-                                <li class="flex"><span class="icon-check">✓</span><span>Instalação de Google Tags e Pixel (Meta)</span></li>
-                                <li class="flex"><span class="icon-check">✓</span><span>Mapa de Localização Interativo (Google Maps)</span></li>
-                                <li class="flex"><span class="icon-check">✓</span><span>Conformidade com a LGPD (Lei Geral de Proteção de Dados)</span></li>
+                                <li class="flex items-center"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Site com até 5 páginas (ex: Home, Sobre, Blog)</span></li>
+                                <li class="flex items-center"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Design personalizado à identidade da sua marca</span></li>
+                                <li class="flex items-center"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Blog integrado para marketing de conteúdo</span></li>
+                                <li class="flex items-center"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Otimização SEO avançada para maior visibilidade</span></li>
+                                <li class="flex items-center"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Instalação de Google Tags e Pixel (Meta)</span></li>
+                                <li class="flex items-center"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Mapa de Localização Interativo (Google Maps)</span></li>
+                                <li class="flex items-center"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Conformidade com a LGPD</span></li>
                             </ul>
                         </div>
                     </div>
@@ -288,34 +291,36 @@
         <!-- Slide 8: Processo -->
         <section id="slide8" class="slide bg-light">
             <div class="slide-content text-center fade-in-section">
-                <h2 class="text-4xl md:text-5xl mb-12 text-main">Nossa Jornada: Da Estratégia ao Lançamento</h2>
-                <div class="relative">
+                <h2 class="text-3xl sm:text-4xl md:text-5xl mb-12 text-main">Nossa Jornada: Da Estratégia ao Lançamento</h2>
+                <div class="relative max-w-2xl mx-auto">
+                    <!-- Linha do tempo visível apenas em telas médias e maiores -->
                     <div class="hidden md:block border-l-4 border-dashed border-primary absolute h-full top-0 left-1/2 -translate-x-1/2"></div>
-                    <div class="mb-8 flex justify-center md:justify-end md:w-1/2 md:pr-8"><div class="w-full max-w-sm md:w-8/12 bg-card p-6 rounded-lg"><h3 class="text-xl mb-2 text-primary">1. Diagnóstico e Estratégia</h3><p class="text-secondary">Imersão no seu negócio e objetivos para desenhar uma estratégia digital única.</p></div></div>
-                    <div class="mb-8 flex justify-center md:justify-start md:w-1/2 md:pl-8 md:ml-auto"><div class="w-full max-w-sm md:w-8/12 bg-card p-6 rounded-lg"><h3 class="text-xl mb-2 text-primary">2. Arquitetura e Design</h3><p class="text-secondary">Criação de um design focado na experiência do usuário e na conversão.</p></div></div>
-                    <div class="mb-8 flex justify-center md:justify-end md:w-1/2 md:pr-8"><div class="w-full max-w-sm md:w-8/12 bg-card p-6 rounded-lg"><h3 class="text-xl mb-2 text-primary">3. Desenvolvimento e Otimização</h3><p class="text-secondary">Implementação com as melhores tecnologias, cuidando de cada detalhe técnico e de SEO.</p></div></div>
-                    <div class="mb-8 flex justify-center md:justify-start md:w-1/2 md:pl-8 md:ml-auto"><div class="w-full max-w-sm md:w-8/12 bg-card p-6 rounded-lg"><h3 class="text-xl mb-2 text-primary">4. Revisão e Lançamento</h3><p class="text-secondary">Ajustes finais em conjunto com você para garantir a perfeição antes de ir ao ar.</p></div></div>
+                    <!-- Itens da linha do tempo -->
+                    <div class="md:flex md:justify-end md:pr-8 mb-12 md:mb-8 text-left md:text-right"><div class="w-full md:w-1/2 bg-card p-6 rounded-lg shadow-md"><h3 class="text-xl mb-2 text-primary">1. Diagnóstico e Estratégia</h3><p class="text-secondary">Imersão no seu negócio e objetivos para desenhar uma estratégia digital única.</p></div></div>
+                    <div class="md:flex md:justify-start md:pl-8 mb-12 md:mb-8 text-left"><div class="w-full md:w-1/2 bg-card p-6 rounded-lg shadow-md"><h3 class="text-xl mb-2 text-primary">2. Arquitetura e Design</h3><p class="text-secondary">Criação de um design focado na experiência do usuário e na conversão.</p></div></div>
+                    <div class="md:flex md:justify-end md:pr-8 mb-12 md:mb-8 text-left md:text-right"><div class="w-full md:w-1/2 bg-card p-6 rounded-lg shadow-md"><h3 class="text-xl mb-2 text-primary">3. Desenvolvimento e Otimização</h3><p class="text-secondary">Implementação com as melhores tecnologias, cuidando de cada detalhe técnico e de SEO.</p></div></div>
+                    <div class="md:flex md:justify-start md:pl-8 text-left"><div class="w-full md:w-1/2 bg-card p-6 rounded-lg shadow-md"><h3 class="text-xl mb-2 text-primary">4. Revisão e Lançamento</h3><p class="text-secondary">Ajustes finais em conjunto com você para garantir a perfeição antes de ir ao ar.</p></div></div>
                 </div>
             </div>
         </section>
 
-          <!-- Slide 8: E-books Exclusivos -->
-        <section id="slide8" class="slide bg-dark-theme">
+        <!-- Slide 9: E-books Exclusivos -->
+        <section id="slide9" class="slide bg-white">
             <div class="slide-content fade-in-section">
                 <div class="text-center mb-12">
-                    <h2 class="text-4xl md:text-5xl mb-4">Conteúdo Exclusivo para Nossos Parceiros</h2>
-                    <p class="text-lg max-w-3xl mx-auto text-secondary">Ao fechar negócio, você ganha acesso à nossa biblioteca de materiais estratégicos para aprofundar seu conhecimento em branding e posicionamento.</p>
+                    <h2 class="text-3xl sm:text-4xl md:text-5xl mb-4">Conteúdo Exclusivo para Parceiros</h2>
+                    <p class="text-lg max-w-3xl mx-auto text-secondary">Ao fechar negócio, você ganha acesso à nossa biblioteca de materiais estratégicos para aprofundar seu conhecimento.</p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                    <div class="bg-card p-6 rounded-lg flex flex-col sm:flex-row items-center gap-6 transform hover:scale-105 transition-transform duration-300">
-                        <img src="/newimag/cpc1.png" alt="Capa do Ebook Oceano Azul" class="w-24 h-32 sm:w-28 sm:h-40 object-cover rounded-md shadow-lg flex-shrink-0">
+                    <div class="bg-card p-6 rounded-lg flex flex-col text-center sm:flex-row sm:text-left items-center gap-6 transform hover:scale-105 transition-transform duration-300">
+                        <img src="/newimag/cpc1.png" alt="Capa do Ebook Oceano Azul" class="w-24 h-32 sm:w-28 sm:h-40 object-cover rounded-md shadow-lg flex-shrink-0" onerror="this.onerror=null;this.src='https://placehold.co/112x160/e0e7ff/3730a3?text=Ebook+1';">
                         <div>
                             <h3 class="text-xl font-bold mb-2">Encontrando seu Oceano Azul</h3>
                             <p class="text-secondary text-sm">Como Posicionar sua Marca de Forma Única em um Mercado Competitivo.</p>
                         </div>
                     </div>
-                    <div class="bg-card p-6 rounded-lg flex flex-col sm:flex-row items-center gap-6 transform hover:scale-105 transition-transform duration-300">
-                        <img src="/newimag/cpc.png" alt="Capa do Ebook Psicologia das Cores" class="w-24 h-32 sm:w-28 sm:h-40 object-cover rounded-md shadow-lg flex-shrink-0">
+                    <div class="bg-card p-6 rounded-lg flex flex-col text-center sm:flex-row sm:text-left items-center gap-6 transform hover:scale-105 transition-transform duration-300">
+                        <img src="/newimag/cpc.png" alt="Capa do Ebook Psicologia das Cores" class="w-24 h-32 sm:w-28 sm:h-40 object-cover rounded-md shadow-lg flex-shrink-0" onerror="this.onerror=null;this.src='https://placehold.co/112x160/dbeafe/1e40af?text=Ebook+2';">
                         <div>
                             <h3 class="text-xl font-bold mb-2">Cor por Cor</h3>
                             <p class="text-secondary text-sm">A Psicologia das Cores e Como Usá-las para Influenciar Emoções e Decisões.</p>
@@ -328,15 +333,15 @@
         <!-- Slide 10: Investimento -->
         <section id="slide10" class="slide bg-light">
             <div class="slide-content text-center fade-in-section">
-                <h2 class="text-4xl md:text-5xl mb-12 text-main">Investimento Estratégico no seu Crescimento</h2>
+                <h2 class="text-3xl sm:text-4xl md:text-5xl mb-12 text-main">Investimento Estratégico</h2>
                 <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto items-stretch">
-                    <div class="bg-card rounded-lg p-8 flex flex-col">
+                    <div class="bg-card rounded-lg p-6 md:p-8 flex flex-col">
                         <h3 class="text-3xl mb-4 text-main">Presença Essencial</h3>
                         <p class="text-secondary mb-6 flex-grow">A Landing Page de alta conversão para resultados rápidos e direcionados.</p>
                         <p class="text-4xl font-bold text-primary">R$ 2.585,00</p>
                         <p class="text-sm text-gray-500 mt-2">(Consulte condições de parcelamento)</p>
                     </div>
-                    <div class="relative bg-primary-dark text-white rounded-lg p-8 flex flex-col shadow-lg">
+                    <div class="relative bg-primary-dark text-white rounded-lg p-6 md:p-8 flex flex-col shadow-lg">
                         <div class="absolute top-0 right-4 -mt-4 bg-white text-primary-dark px-3 py-1 rounded-full text-sm font-bold shadow-md">Mais Popular</div>
                         <h3 class="text-3xl mb-4">Negócio Digital</h3>
                         <p class="text-gray-200 mb-6 flex-grow">A solução completa para construir autoridade e escalar seu negócio online.</p>
@@ -346,10 +351,11 @@
                 </div>
             </div>
         </section>
- <!-- Slide 9: Atualização de Portfólio -->
-        <section id="slide9" class="slide bg-light">
+
+        <!-- Slide 11: Atualização de Portfólio -->
+        <section id="slide11" class="slide bg-white">
             <div class="slide-content text-center fade-in-section">
-                <h2 class="text-4xl md:text-5xl mb-6 text-main">Mantenha seu Site Sempre Atual</h2>
+                <h2 class="text-3xl sm:text-4xl md:text-5xl mb-6 text-main">Mantenha seu Site Sempre Atual</h2>
                 <p class="text-lg max-w-3xl mx-auto text-secondary mb-12">Seus melhores projetos merecem ser vistos. Oferecemos um serviço contínuo para garantir que seu portfólio esteja sempre em dia, mostrando seu trabalho mais recente.</p>
                 <div class="bg-card rounded-lg p-8 max-w-lg mx-auto transform hover:scale-105 transition-transform duration-300 w-full">
                     <h3 class="text-3xl mb-4 text-main">Atualização</h3>
@@ -359,18 +365,19 @@
                 </div>
             </div>
         </section>
-        <!-- Slide 11: Contato -->
-        <section id="slide11" class="slide bg-sea-calm text-white text-center">
+
+        <!-- Slide 12: Contato -->
+        <section id="slide12" class="slide bg-sea-calm text-white text-center">
              <div class="absolute inset-0 bg-black opacity-75"></div>
             <div class="z-10 slide-content fade-in-section">
-                <h2 class="text-4xl md:text-6xl mb-8 font-bold">Vamos dar o próximo passo?</h2>
-                <div class="text-xl md:text-2xl mb-12 max-w-3xl mx-auto">
-                    <p class="mb-4">1. Com sua aprovação, iniciamos o processo.</p>
-                    <p class="mb-4">2. Enviaremos o link seguro com Contrato, Questionário Estratégico e Pagamento.</p>
+                <h2 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-8 font-bold">Vamos dar o próximo passo?</h2>
+                <div class="text-xl md:text-2xl mb-12 max-w-3xl mx-auto space-y-4">
+                    <p>1. Com sua aprovação, iniciamos o processo.</p>
+                    <p>2. Enviaremos o link seguro com Contrato, Questionário Estratégico e Pagamento.</p>
                     <p>3. Após as formalizações, sua nova presença digital começa a ser construída.</p>
                 </div>
                 <hr class="my-10 border-gray-400 max-w-md mx-auto"/>
-                <img src="/newimag/Vector.svg" alt="Logo South Sea" class="mx-auto mb-6 h-12">
+                <img src="/newimag/Vector.svg" alt="Logo South Sea" class="mx-auto mb-6 h-12" onerror="this.onerror=null;this.src='https://placehold.co/150x50/ffffff/000000?text=South+Sea';">
                 <div class="mt-4 text-lg">
                     <p>contato@southsea.com.br | (48) 99901-3968</p>
                     <p>www.southsea.com.br</p>

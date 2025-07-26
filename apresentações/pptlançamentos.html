@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <!-- Favicon -->
+  <!-- Favicon -->
     <link rel="icon" href="/newimag/Ellipse 9.svg">
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -19,7 +19,7 @@
             --color-secondary: #A78BFA;    /* Roxo (Violet-400) */
             --color-text-primary: #E0E0E0;   /* Cinza Claro */
             --color-text-secondary: #a0a0a0; /* Cinza Médio */
-            --color-dark-bg: #0A101E;     /* Fundo Azul Escuro */
+            --color-dark-bg: #0A101E;      /* Fundo Azul Escuro */
             --color-card-bg: rgba(255, 255, 255, 0.05); /* Fundo de Card com Transparência */
             --color-border: rgba(255, 255, 255, 0.1); /* Borda com Transparência */
         }
@@ -34,16 +34,26 @@
             color: var(--color-text-primary);
             overflow-x: hidden;
         }
+        
+        /* Estilo base do slide, otimizado para mobile */
         .slide {
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 5rem 2rem;
+            padding: 4rem 1.5rem; /* Padding ajustado para telas menores */
             position: relative;
             width: 100%;
         }
+
+        /* Ajuste de padding para telas maiores (tablets e desktops) */
+        @media (min-width: 768px) {
+            .slide {
+                padding: 5rem 2rem;
+            }
+        }
+
         .fade-in-section {
             opacity: 0;
             transform: translateY(20px);
@@ -71,8 +81,8 @@
         
         .navigation {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
+            bottom: 15px; /* Ajustado para melhor visualização em mobile */
+            right: 15px;  /* Ajustado para melhor visualização em mobile */
             display: flex;
             gap: 10px;
             z-index: 100;
@@ -97,8 +107,8 @@
         }
         .fullscreen-btn {
             position: fixed;
-            bottom: 20px;
-            left: 20px;
+            bottom: 15px; /* Ajustado para melhor visualização em mobile */
+            left: 15px;   /* Ajustado para melhor visualização em mobile */
             z-index: 100;
         }
         .bg-hero-launch {
@@ -135,13 +145,16 @@
         <section id="slide1" class="slide bg-hero-launch text-white text-center">
             <div class="absolute inset-0 bg-black opacity-80"></div>
             <div class="z-10 slide-content fade-in-section">
-                  <div class="w-auto h-auto mx-auto mb-10">
-             <img src="/newimag/Vector.svg" 
-                  alt="Placeholder para logo" 
-                  class="w-full h-full object-cover rounded-lg">
-        </div>
-                <h1 class="text-4xl md:text-6xl font-extrabold leading-tight">Sua Expertise Merece um<br><span class="gradient-text">Lançamento Lendário</span></h1>
-                <p class="mt-6 text-lg md:text-xl max-w-3xl mx-auto text-gray-300">Nós construímos o site de vendas que transforma seus seguidores em alunos. Deixe a complexidade técnica conosco e foque no que faz de melhor.</p>
+                <!-- O caminho original era "/newimag/Vector.svg". Usando um placeholder para visualização. -->
+                <div class="w-48 md:w-60 mx-auto mb-10">
+                    <img src="/newimag/Vector.svg" 
+                         alt="Logo South Sea" 
+                         class="w-full h-full object-cover">
+                </div>
+                <!-- Tamanho da fonte ajustado para melhor responsividade -->
+                <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight">Sua Expertise Merece um<br><span class="gradient-text">Lançamento Lendário</span></h1>
+                <!-- Tamanho da fonte ajustado para melhor responsividade -->
+                <p class="mt-6 text-base md:text-lg max-w-3xl mx-auto text-gray-300">Nós construímos o site de vendas que transforma seus seguidores em alunos. Deixe a complexidade técnica conosco e foque no que faz de melhor.</p>
             </div>
         </section>
 
@@ -149,23 +162,25 @@
         <section id="slide2" class="slide bg-light">
             <div class="slide-content grid md:grid-cols-2 gap-12 md:gap-16 items-center fade-in-section">
                 <div class="text-center md:text-left">
-                    <h2 class="text-4xl md:text-5xl mb-6">Arquitetos da Sua Máquina de Conversão.</h2>
-                    <p class="text-lg leading-relaxed text-secondary">Para um lançamento de sucesso, cada detalhe conta. A velocidade, a clareza da oferta, a persuasão da copy, a confiança do design. Somos obcecados por esses detalhes para que você não precise ser. Nós não criamos "sites", nós construímos ativos de conversão.</p>
+                    <!-- Tamanho da fonte ajustado para melhor responsividade -->
+                    <h2 class="text-3xl sm:text-4xl md:text-5xl mb-6">Arquitetos da Sua Máquina de Conversão.</h2>
+                    <!-- Tamanho da fonte ajustado para melhor responsividade -->
+                    <p class="text-base md:text-lg leading-relaxed text-gray-400">Para um lançamento de sucesso, cada detalhe conta. A velocidade, a clareza da oferta, a persuasão da copy, a confiança do design. Somos obcecados por esses detalhes para que você não precise ser. Nós não criamos "sites", nós construímos ativos de conversão.</p>
                 </div>
                 <div class="flex justify-center items-center gap-4 md:gap-8">
                     <div class="text-center p-4 md:p-6 bg-card rounded-lg">
-                        <svg class="w-12 h-12 md:w-16 md:h-16 mx-auto mb-4 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <svg class="w-12 h-12 md:w-16 md:h-16 mx-auto mb-4" style="color: var(--color-primary);" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                           <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9 9 0 100-18 9 9 0 000 18z" />
                           <path stroke-linecap="round" stroke-linejoin="round" d="M12 15a3 3 0 100-6 3 3 0 000 6z" />
                         </svg>
                         <h3 class="text-lg md:text-xl">Persuasão</h3>
                     </div>
                      <div class="text-center p-4 md:p-6 bg-card rounded-lg">
-                        <svg class="w-12 h-12 md:w-16 md:h-16 mx-auto mb-4 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 7.5l3 2.25-3 2.25m4.5 0h3m-9 8.25h13.5A2.25 2.25 0 0021 18V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v12a2.25 2.25 0 002.25 2.25z" /></svg>
+                        <svg class="w-12 h-12 md:w-16 md:h-16 mx-auto mb-4" style="color: var(--color-primary);" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 7.5l3 2.25-3 2.25m4.5 0h3m-9 8.25h13.5A2.25 2.25 0 0021 18V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v12a2.25 2.25 0 002.25 2.25z" /></svg>
                         <h3 class="text-lg md:text-xl">Tecnologia</h3>
                     </div>
                      <div class="text-center p-4 md:p-6 bg-card rounded-lg">
-                        <svg class="w-12 h-12 md:w-16 md:h-16 mx-auto mb-4 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <svg class="w-12 h-12 md:w-16 md:h-16 mx-auto mb-4" style="color: var(--color-primary);" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                           <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
                         </svg>
                         <h3 class="text-lg md:text-xl">Resultados</h3>
@@ -177,12 +192,12 @@
         <!-- Slide 3: O Problema -->
         <section id="slide3" class="slide bg-dark">
             <div class="slide-content text-center fade-in-section">
-                 <h2 class="text-4xl md:text-5xl mb-6">O ciclo de um lançamento é familiar?</h2>
-                 <p class="text-lg max-w-4xl mx-auto mb-12 md:mb-16 text-secondary">Você cria um produto incrível, mas a tecnologia parece sempre ser o obstáculo entre você e o sucesso.</p>
+                 <h2 class="text-3xl sm:text-4xl md:text-5xl mb-6">O ciclo de um lançamento é familiar?</h2>
+                 <p class="text-base md:text-lg max-w-4xl mx-auto mb-12 md:mb-16 text-gray-400">Você cria um produto incrível, mas a tecnologia parece sempre ser o obstáculo entre você e o sucesso.</p>
                  <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-                    <div class="bg-card p-6 rounded-lg shadow-sm text-center"><svg class="w-10 h-10 text-primary mb-3 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 15.75l-2.489-2.489m0 0a3.375 3.375 0 10-4.773-4.773 3.375 3.375 0 004.774 4.774zM21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg><h3 class="text-xl mb-2">O Medo do "Flop"</h3><p>Meses de trabalho e investimento culminam na ansiedade de um carrinho que não vende como o esperado.</p></div>
-                    <div class="bg-card p-6 rounded-lg shadow-sm text-center"><svg class="w-10 h-10 text-primary mb-3 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg><h3 class="text-xl mb-2">A Síndrome do "Balde Furado"</h3><p>Investir em tráfego para uma página que não converte. Cada clique perdido é dinheiro e potencial desperdiçados.</p></div>
-                    <div class="bg-card p-6 rounded-lg shadow-sm text-center"><svg class="w-10 h-10 text-primary mb-3 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg><h3 class="text-xl mb-2">Sobrecarga Técnica</h3><p>A complexidade de plataformas, integrações e otimizações que paralisam e adiam o seu lançamento.</p></div>
+                     <div class="bg-card p-6 rounded-lg shadow-sm text-center"><svg class="w-10 h-10 text-primary mb-3 mx-auto" style="color: var(--color-primary);" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 15.75l-2.489-2.489m0 0a3.375 3.375 0 10-4.773-4.773 3.375 3.375 0 004.774 4.774zM21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg><h3 class="text-xl mb-2">O Medo do "Flop"</h3><p class="text-gray-400">Meses de trabalho e investimento culminam na ansiedade de um carrinho que não vende como o esperado.</p></div>
+                     <div class="bg-card p-6 rounded-lg shadow-sm text-center"><svg class="w-10 h-10 text-primary mb-3 mx-auto" style="color: var(--color-primary);" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg><h3 class="text-xl mb-2">A Síndrome do "Balde Furado"</h3><p class="text-gray-400">Investir em tráfego para uma página que não converte. Cada clique perdido é dinheiro e potencial desperdiçados.</p></div>
+                     <div class="bg-card p-6 rounded-lg shadow-sm text-center"><svg class="w-10 h-10 text-primary mb-3 mx-auto" style="color: var(--color-primary);" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg><h3 class="text-xl mb-2">Sobrecarga Técnica</h3><p class="text-gray-400">A complexidade de plataformas, integrações e otimizações que paralisam e adiam o seu lançamento.</p></div>
                 </div>
             </div>
         </section>
@@ -190,18 +205,18 @@
         <!-- Slide 4: A Solução -->
         <section id="slide4" class="slide bg-light">
             <div class="slide-content text-center fade-in-section">
-                <h2 class="text-4xl md:text-5xl mb-6">Por que um Site de Vendas de Alta Conversão?</h2>
-                <p class="text-lg md:text-xl leading-relaxed max-w-4xl mx-auto mb-12 text-secondary">É o seu vendedor 24/7, trabalhando incansavelmente para transformar visitantes em alunos e maximizar o retorno sobre cada real investido em tráfego.</p>
+                <h2 class="text-3xl sm:text-4xl md:text-5xl mb-6">Por que um Site de Vendas de Alta Conversão?</h2>
+                <p class="text-base md:text-lg leading-relaxed max-w-4xl mx-auto mb-12 text-gray-400">É o seu vendedor 24/7, trabalhando incansavelmente para transformar visitantes em alunos e maximizar o retorno sobre cada real investido em tráfego.</p>
                 <div class="w-full max-w-4xl mx-auto">
                     <div class="bg-card rounded-lg p-8 grid md:grid-cols-2 gap-8 items-center">
                         <div class="text-left">
-                            <h3 class="text-2xl mb-4 text-primary-dark">Pilares de um Site de Vendas de Sucesso:</h3>
+                            <h3 class="text-2xl mb-4" style="color: var(--color-primary);">Pilares de um Site de Vendas de Sucesso:</h3>
                             <ul class="space-y-3">
-                                <li class="flex items-center text-secondary"><svg class="w-6 h-6 icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong>Clareza Absoluta</strong> na oferta e transformação</span></li>
-                                <li class="flex items-center text-secondary"><svg class="w-6 h-6 icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong>Máxima Persuasão</strong> com copy e design estratégicos</span></li>
-                                <li class="flex items-center text-secondary"><svg class="w-6 h-6 icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong>Velocidade Extrema</strong> para não perder vendas</span></li>
-                                <li class="flex items-center text-secondary"><svg class="w-6 h-6 icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong>Confiança e Autoridade</strong> que quebram objeções</span></li>
-                                <li class="flex items-center text-secondary"><svg class="w-6 h-6 icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong>Experiência Mobile</strong> impecável</span></li>
+                                <li class="flex items-start text-gray-400"><svg class="w-6 h-6 icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong>Clareza Absoluta</strong> na oferta e transformação</span></li>
+                                <li class="flex items-start text-gray-400"><svg class="w-6 h-6 icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong>Máxima Persuasão</strong> com copy e design estratégicos</span></li>
+                                <li class="flex items-start text-gray-400"><svg class="w-6 h-6 icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong>Velocidade Extrema</strong> para não perder vendas</span></li>
+                                <li class="flex items-start text-gray-400"><svg class="w-6 h-6 icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong>Confiança e Autoridade</strong> que quebram objeções</span></li>
+                                <li class="flex items-start text-gray-400"><svg class="w-6 h-6 icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong>Experiência Mobile</strong> impecável</span></li>
                             </ul>
                         </div>
                         <div class="flex justify-center">
@@ -215,11 +230,11 @@
         <!-- Slide 5: Nossas Soluções -->
          <section id="slide5" class="slide bg-dark">
             <div class="slide-content text-center fade-in-section">
-                <h2 class="text-4xl md:text-5xl mb-12">Soluções para Cada Fase do seu Lançamento</h2>
+                <h2 class="text-3xl sm:text-4xl md:text-5xl mb-12">Soluções para Cada Fase do seu Lançamento</h2>
                 <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
                     <div class="bg-light p-8 rounded-lg transform hover:scale-105 transition-transform duration-300">
                         <h3 class="text-2xl md:text-3xl mb-4">Página de Captura</h3>
-                        <p class="text-base md:text-lg text-secondary">A porta de entrada do seu lançamento. Otimizada para transformar visitantes em leads qualificados e construir sua lista.</p>
+                        <p class="text-base md:text-lg text-gray-400">A porta de entrada do seu lançamento. Otimizada para transformar visitantes em leads qualificados e construir sua lista.</p>
                     </div>
                     <div class="bg-gradient-to-r from-sky-500 to-violet-500 text-white p-8 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300">
                         <h3 class="text-2xl md:text-3xl mb-4">Site de Vendas</h3>
@@ -232,13 +247,13 @@
         <!-- Slide 6: Entregas Detalhadas -->
         <section id="slide6" class="slide bg-light">
             <div class="slide-content fade-in-section">
-                <h2 class="text-4xl md:text-5xl mb-12 text-center">Nossas Soluções em Detalhe</h2>
+                <h2 class="text-3xl sm:text-4xl md:text-5xl mb-12 text-center">Nossas Soluções em Detalhe</h2>
                 <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
                     <div class="bg-card p-6 rounded-lg flex flex-col transform hover:-translate-y-2 transition-transform duration-300 h-full">
                         <h3 class="text-2xl mb-4 text-center">Página de Captura</h3>
                         <div class="border-t border-gray-700 pt-4 mt-auto">
-                            <h4 class="font-bold mb-3 text-center text-primary-dark">Principais Entregas:</h4>
-                            <ul class="text-sm space-y-1 text-secondary">
+                            <h4 class="font-bold mb-3 text-center" style="color: var(--color-primary);">Principais Entregas:</h4>
+                            <ul class="text-sm space-y-2 text-gray-400">
                                 <li class="flex"><span class="icon-check">✓</span><span>Design e Copy focados em uma única ação: a captura do lead</span></li>
                                 <li class="flex"><span class="icon-check">✓</span><span>Copywriting com foco em conversão de leads</span></li>
                                 <li class="flex"><span class="icon-check">✓</span><span>Otimização de velocidade e para dispositivos móveis</span></li>
@@ -249,8 +264,8 @@
                     <div class="bg-card p-6 rounded-lg flex flex-col transform hover:-translate-y-2 transition-transform duration-300 border-2 border-sky-500 h-full">
                         <h3 class="text-2xl mb-4 text-center">Site de Vendas</h3>
                         <div class="border-t border-gray-700 pt-4 mt-auto">
-                            <h4 class="font-bold mb-3 text-center text-primary-dark">Principais Entregas:</h4>
-                            <ul class="text-sm space-y-1 text-secondary">
+                            <h4 class="font-bold mb-3 text-center" style="color: var(--color-primary);">Principais Entregas:</h4>
+                            <ul class="text-sm space-y-2 text-gray-400">
                                 <li class="flex"><span class="icon-check">✓</span><span>Estrutura completa de uma Sales Page de alta conversão</span></li>
                                 <li class="flex"><span class="icon-check">✓</span><span>Seção para Vídeo de Vendas (VSL)</span></li>
                                 <li class="flex"><span class="icon-check">✓</span><span>Design e Copywriting persuasivos em todas as seções</span></li>
@@ -267,12 +282,14 @@
         <!-- Slide 7: Processo -->
         <section id="slide7" class="slide bg-dark">
             <div class="slide-content text-center fade-in-section">
-                <h2 class="text-4xl md:text-5xl mb-12">Um Processo Simplificado para sua Paz de Espírito</h2>
+                <h2 class="text-3xl sm:text-4xl md:text-5xl mb-12">Um Processo Simplificado para sua Paz de Espírito</h2>
                 <div class="relative">
+                    <!-- Linha do tempo visível apenas em telas médias ou maiores -->
                     <div class="hidden md:block border-l-4 border-dashed border-gray-700 absolute h-full top-0 left-1/2 -translate-x-1/2"></div>
-                    <div class="mb-8 flex justify-center md:justify-end md:w-1/2 md:pr-8"><div class="w-full max-w-sm md:w-8/12 bg-card p-6 rounded-lg"><h3 class="text-xl mb-2">1. Diagnóstico e Estratégia</h3><p class="text-secondary">Mergulhamos no seu projeto para desenhar o blueprint da sua página, alinhado com suas metas.</p></div></div>
-                    <div class="mb-8 flex justify-center md:justify-start md:w-1/2 md:pl-8 md:ml-auto"><div class="w-full max-w-sm md:w-8/12 bg-card p-6 rounded-lg"><h3 class="text-xl mb-2">2. Arquitetura e Persuasão</h3><p class="text-secondary">Construímos cada seção com foco obsessivo em clareza e conversão.</p></div></div>
-                    <div class="mb-8 flex justify-center md:justify-end md:w-1/2 md:pr-8"><div class="w-full max-w-sm md:w-8/12 bg-card p-6 rounded-lg"><h3 class="text-xl mb-2">3. Integração e Lançamento</h3><p class="text-secondary">Garantimos a engenharia perfeita, entregando uma página 100% pronta para vender.</p></div></div>
+                    <!-- Itens da linha do tempo -->
+                    <div class="mb-8 flex justify-center md:justify-end md:w-1/2 md:pr-8"><div class="w-full max-w-sm md:w-8/12 bg-card p-6 rounded-lg"><h3 class="text-xl mb-2">1. Diagnóstico e Estratégia</h3><p class="text-gray-400">Mergulhamos no seu projeto para desenhar o blueprint da sua página, alinhado com suas metas.</p></div></div>
+                    <div class="mb-8 flex justify-center md:justify-start md:w-1/2 md:pl-8 md:ml-auto"><div class="w-full max-w-sm md:w-8/12 bg-card p-6 rounded-lg"><h3 class="text-xl mb-2">2. Arquitetura e Persuasão</h3><p class="text-gray-400">Construímos cada seção com foco obsessivo em clareza e conversão.</p></div></div>
+                    <div class="mb-8 flex justify-center md:justify-end md:w-1/2 md:pr-8"><div class="w-full max-w-sm md:w-8/12 bg-card p-6 rounded-lg"><h3 class="text-xl mb-2">3. Integração e Lançamento</h3><p class="text-gray-400">Garantimos a engenharia perfeita, entregando uma página 100% pronta para vender.</p></div></div>
                 </div>
             </div>
         </section>
@@ -280,19 +297,19 @@
         <!-- Slide 8: Investimento -->
         <section id="slide8" class="slide bg-light">
             <div class="slide-content text-center fade-in-section">
-                <h2 class="text-4xl md:text-5xl mb-12">Um Investimento no Sucesso do seu Lançamento</h2>
+                <h2 class="text-3xl sm:text-4xl md:text-5xl mb-12">Um Investimento no Sucesso do seu Lançamento</h2>
                 <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto items-stretch">
                     <div class="bg-card rounded-lg p-8 flex flex-col">
                         <h3 class="text-3xl mb-4">Página de Captura</h3>
-                        <p class="text-secondary mb-6 flex-grow">A porta de entrada para um lançamento de sucesso.</p>
-                        <p class="text-4xl font-bold text-primary-dark">R$ 2.585,00</p>
+                        <p class="text-gray-400 mb-6 flex-grow">A porta de entrada para um lançamento de sucesso.</p>
+                        <p class="text-3xl md:text-4xl font-bold" style="color: var(--color-primary);">R$ 2.585,00</p>
                         <p class="text-sm text-gray-500 mt-2">(Consulte condições de parcelamento)</p>
                     </div>
                     <div class="relative bg-gradient-to-r from-sky-500 to-violet-500 text-white p-8 rounded-lg shadow-lg flex flex-col">
                         <div class="absolute top-0 right-4 -mt-4 bg-gray-900 text-white px-3 py-1 rounded-full text-sm font-bold shadow-md">Mais Popular</div>
                         <h3 class="text-3xl mb-4">Site de Vendas</h3>
                         <p class="text-gray-200 mb-6 flex-grow">A máquina de conversão completa para o seu produto.</p>
-                        <p class="text-4xl font-bold">R$ 5.858,00</p>
+                        <p class="text-3xl md:text-4xl font-bold">R$ 5.858,00</p>
                          <p class="text-sm text-gray-300 mt-2">(Consulte condições de parcelamento)</p>
                     </div>
                 </div>
@@ -303,22 +320,24 @@
         <section id="slide9" class="slide bg-dark">
             <div class="slide-content fade-in-section">
                 <div class="text-center mb-12">
-                    <h2 class="text-4xl md:text-5xl mb-4">Conteúdo Exclusivo para Nossos Parceiros</h2>
-                    <p class="text-lg max-w-3xl mx-auto text-secondary">Ao fechar negócio, você ganha acesso à nossa biblioteca de materiais estratégicos para aprofundar seu conhecimento em branding e posicionamento.</p>
+                    <h2 class="text-3xl sm:text-4xl md:text-5xl mb-4">Conteúdo Exclusivo para Nossos Parceiros</h2>
+                    <p class="text-base md:text-lg max-w-3xl mx-auto text-gray-400">Ao fechar negócio, você ganha acesso à nossa biblioteca de materiais estratégicos para aprofundar seu conhecimento em branding e posicionamento.</p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
                     <div class="bg-card p-6 rounded-lg flex flex-col sm:flex-row items-center gap-6 transform hover:scale-105 transition-transform duration-300">
+                        <!-- O caminho original era "/newimag/cpc1.png". Usando um placeholder para visualização. -->
                         <img src="/newimag/cpc1.png" alt="Capa do Ebook Oceano Azul" class="w-24 h-32 sm:w-28 sm:h-40 object-cover rounded-md shadow-lg flex-shrink-0">
                         <div>
                             <h3 class="text-xl font-bold mb-2">Encontrando seu Oceano Azul</h3>
-                            <p class="text-secondary text-sm">Como Posicionar sua Marca de Forma Única em um Mercado Competitivo.</p>
+                            <p class="text-gray-400 text-sm">Como Posicionar sua Marca de Forma Única em um Mercado Competitivo.</p>
                         </div>
                     </div>
-                 <div class="bg-card p-6 rounded-lg flex flex-col sm:flex-row items-center gap-6 transform hover:scale-105 transition-transform duration-300">
+                   <div class="bg-card p-6 rounded-lg flex flex-col sm:flex-row items-center gap-6 transform hover:scale-105 transition-transform duration-300">
+                        <!-- O caminho original era "/newimag/cpc.png". Usando um placeholder para visualização. -->
                         <img src="/newimag/cpc.png" alt="Capa do Ebook Psicologia das Cores" class="w-24 h-32 sm:w-28 sm:h-40 object-cover rounded-md shadow-lg flex-shrink-0">
                         <div>
                             <h3 class="text-xl font-bold mb-2">Cor por Cor</h3>
-                            <p class="text-secondary text-sm">A Psicologia das Cores e Como Usá-las para Influenciar Emoções e Decisões.</p>
+                            <p class="text-gray-400 text-sm">A Psicologia das Cores e Como Usá-las para Influenciar Emoções e Decisões.</p>
                         </div>
                     </div>
                 </div>
@@ -329,19 +348,20 @@
         <section id="slide10" class="slide bg-hero-launch text-white text-center">
              <div class="absolute inset-0 bg-black opacity-80"></div>
             <div class="z-10 slide-content fade-in-section">
-                <h2 class="text-4xl md:text-6xl mb-8 font-bold">Pronto para construir a máquina de conversão do seu próximo lançamento?</h2>
-                <div class="text-xl md:text-2xl mb-12 max-w-3xl mx-auto">
-                    <p class="mb-4">1. Com sua aprovação, iniciamos o processo.</p>
-                    <p class="mb-4">2. Enviaremos o link seguro com Contrato, Questionário Estratégico e Pagamento.</p>
+                <h2 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-8 font-bold">Pronto para construir a máquina de conversão do seu próximo lançamento?</h2>
+                <div class="text-lg md:text-xl mb-12 max-w-3xl mx-auto space-y-4">
+                    <p>1. Com sua aprovação, iniciamos o processo.</p>
+                    <p>2. Enviaremos o link seguro com Contrato, Questionário Estratégico e Pagamento.</p>
                     <p>3. Após as formalizações, sua máquina de vendas começa a ser construída.</p>
                 </div>
                 <hr class="my-10 border-gray-700 max-w-md mx-auto"/>
-                <div class="w-60 h-auto mx-auto mb-10">
-             <img src="/newimag/Vector.svg" 
-                  alt="Placeholder para logo" 
-                  class="w-full h-full object-cover rounded-lg">
-        </div>
-                <div class="mt-4 text-lg">
+                <!-- O caminho original era "/newimag/Vector.svg". Usando um placeholder para visualização. -->
+                <div class="w-40 md:w-52 h-auto mx-auto mb-10">
+                    <img src="/newimag/Vector.svg" 
+                         alt="Logo South Sea" 
+                         class="w-full h-full object-cover">
+                </div>
+                <div class="mt-4 text-base md:text-lg space-y-1">
                     <p>contato@southsea.com.br | (48) 99901-3968</p>
                     <p>www.southsea.com.br</p>
                 </div>
@@ -368,6 +388,7 @@
             let scrollTimeout;
             let isScrolling = false;
 
+            // Animação de fade-in para as seções
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
@@ -380,17 +401,20 @@
                 observer.observe(section);
             });
 
+            // Função para navegar entre os slides
             function showSlide(index) {
                 if (index >= 0 && index < slides.length && !isScrolling) {
                     isScrolling = true;
                     slides[index].scrollIntoView({ behavior: 'smooth' });
                     currentSlide = index;
+                    // Previne múltiplos scrolls rápidos
                     setTimeout(() => {
                         isScrolling = false;
                     }, 1000);
                 }
             }
             
+            // Atualiza o slide atual com base na rolagem do usuário
             function updateCurrentSlideOnScroll() {
                 let maxVisible = 0;
                 let newCurrentSlide = 0;
@@ -407,9 +431,11 @@
                 currentSlide = newCurrentSlide;
             }
 
+            // Event listeners para os botões de navegação
             nextBtn.addEventListener('click', () => { showSlide(currentSlide + 1); });
             prevBtn.addEventListener('click', () => { showSlide(currentSlide - 1); });
 
+            // Event listeners para as teclas do teclado
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === 'ArrowRight' || e.key === ' ') { 
                     e.preventDefault(); 
@@ -420,6 +446,7 @@
                 }
             });
 
+            // Otimiza o evento de scroll para performance
             window.addEventListener('scroll', () => {
                 if (scrollTimeout) {
                     clearTimeout(scrollTimeout);
@@ -427,15 +454,16 @@
                 scrollTimeout = setTimeout(updateCurrentSlideOnScroll, 100);
             }, { passive: true });
 
+            // Funcionalidade do botão de tela cheia
             fullscreenBtn.addEventListener('click', () => {
                 try {
                     const elem = document.documentElement;
                     if (!document.fullscreenElement) {
                         if (elem.requestFullscreen) { elem.requestFullscreen(); } 
-                        else if (elem.webkitRequestFullscreen) { elem.webkitRequestFullscreen(); }
+                        else if (elem.webkitRequestFullscreen) { elem.webkitRequestFullscreen(); } // Safari
                     } else {
                         if (document.exitFullscreen) { document.exitFullscreen(); }
-                        else if (document.webkitExitFullscreen) { document.webkitExitFullscreen(); }
+                        else if (document.webkitExitFullscreen) { document.webkitExitFullscreen(); } // Safari
                     }
                 } catch (e) {
                     console.error("Fullscreen API não é suportada ou está bloqueada.", e);

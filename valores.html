@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabela de Preços - South Sea</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Favicon -->
+    <link rel="icon" href="/newimag/Ellipse 9.svg">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Efeito de gradiente sutil para o fundo */
+        .bg-south-sea-gradient {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+        }
+    </style>
+</head>
+<body class="bg-south-sea-gradient text-gray-800 min-h-screen flex items-center justify-center p-4 sm:p-6 lg:p-8">
+
+    <div class="w-full max-w-7xl mx-auto">
+        <header class="text-center mb-8">
+            <h1 class="text-4xl md:text-5xl font-bold text-sky-800">South Sea</h1>
+            <p class="text-lg text-sky-600 mt-2">Tabela de Preços e Condições de Pagamento</p>
+        </header>
+
+        <main>
+            <!-- Container da tabela com sombra e bordas arredondadas -->
+            <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm sm:text-base text-left text-gray-600">
+                        <thead class="bg-sky-700 text-white uppercase tracking-wider">
+                            <tr>
+                                <th scope="col" class="px-6 py-4">Serviço</th>
+                                <th scope="col" class="px-6 py-4 text-center">Valor Base</th>
+                                <th scope="col" class="px-6 py-4 text-center">Forma de Pagamento</th>
+                                <th scope="col" class="px-6 py-4 text-center">Ajuste Cliente</th>
+                                <th scope="col" class="px-6 py-4 text-right">Valor Final (Cliente)</th>
+                                <th scope="col" class="px-6 py-4 text-right">Valor Recebido (Líquido)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="price-table-body">
+                            <!-- As linhas da tabela serão inseridas aqui pelo JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+
+        
+    </div>
+
+    <script>
+        // --- DADOS ---
+        const services = [
+            { name: 'Landing Page', price: 2585.00 },
+            { name: 'Site Institucional', price: 5858.00 },
+            { name: 'Atualização de Site', price: 578.00 }
+        ];
+
+        // Estrutura de dados atualizada com taxas da empresa e número de parcelas
+        const paymentMethods = [
+            // Descontos para o cliente
+            { name: 'PIX', adjustment: -0.07, label: '-7% (desconto)', companyFee: 0, installments: 1 },
+            { name: 'Débito (1x)', adjustment: -0.05, label: '-5% (desconto)', companyFee: 0.0129, installments: 1 },
+            { name: 'Crédito (1x)', adjustment: -0.05, label: '-5% (desconto)', companyFee: 0.0399, installments: 1 },
+            
+            // Parcelado sem juros para o cliente (mas com taxa para a empresa)
+            { name: '2x no Cartão', adjustment: 0, label: 'Valor Padrão', companyFee: 0.0579, installments: 2 },
+            { name: '3x no Cartão', adjustment: 0, label: 'Valor Padrão', companyFee: 0.0679, installments: 3 },
+            { name: '4x no Cartão', adjustment: 0, label: 'Valor Padrão', companyFee: 0.0779, installments: 4 },
+            { name: '5x no Cartão', adjustment: 0, label: 'Valor Padrão', companyFee: 0.0879, installments: 5 },
+            { name: '6x no Cartão', adjustment: 0, label: 'Valor Padrão', companyFee: 0.0959, installments: 6 },
+
+            // Parcelado com juros para o cliente (e taxa para a empresa)
+            { name: '7x no Cartão', adjustment: 0.0399, label: '+3,99% (taxa)', companyFee: 0.0999, installments: 7 },
+            { name: '8x no Cartão', adjustment: 0.0579, label: '+5,79% (taxa)', companyFee: 0.1069, installments: 8 },
+            { name: '9x no Cartão', adjustment: 0.0679, label: '+6,79% (taxa)', companyFee: 0.1090, installments: 9 },
+            { name: '10x no Cartão', adjustment: 0.0779, label: '+7,79% (taxa)', companyFee: 0.1140, installments: 10 },
+            { name: '11x no Cartão', adjustment: 0.0879, label: '+8,79% (taxa)', companyFee: 0.1200, installments: 11 },
+            { name: '12x no Cartão', adjustment: 0.0959, label: '+9,59% (taxa)', companyFee: 0.1265, installments: 12 }
+        ];
+
+        // --- FUNÇÕES ---
+
+        /**
+         * Formata um número para o padrão de moeda brasileiro (BRL).
+         * @param {number} value - O número a ser formatado.
+         * @returns {string} O valor formatado como moeda.
+         */
+        function formatCurrency(value) {
+            return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        }
+
+        /**
+         * Gera e insere as linhas da tabela de preços no DOM.
+         */
+        function generateTable() {
+            const tableBody = document.getElementById('price-table-body');
+            if (!tableBody) return;
+
+            let htmlContent = '';
+
+            services.forEach((service, serviceIndex) => {
+                paymentMethods.forEach((method, methodIndex) => {
+                    // Calcula o valor que o cliente paga
+                    const finalPrice = service.price * (1 + method.adjustment);
+                    // Calcula o valor que a empresa recebe (baseado no valor pago pelo cliente)
+                    const amountReceived = finalPrice * (1 - method.companyFee);
+                    
+                    // Gera o HTML para o valor da parcela, se aplicável
+                    let monthlyPaymentHtml = '';
+                    if (method.installments > 1) {
+                        const monthlyValue = finalPrice / method.installments;
+                        monthlyPaymentHtml = `<br><span class="text-xs text-gray-500 font-medium">(${method.installments}x de ${formatCurrency(monthlyValue)})</span>`;
+                    }
+
+                    // Define a cor do texto de ajuste com base se é desconto, padrão ou acréscimo
+                    let adjustmentColorClass = 'text-gray-600';
+                    if (method.adjustment < 0) {
+                        adjustmentColorClass = 'text-green-600 font-semibold';
+                    } else if (method.adjustment > 0) {
+                        adjustmentColorClass = 'text-red-600 font-semibold';
+                    }
+
+                    // Adiciona uma borda superior para separar os serviços
+                    const borderClass = methodIndex === 0 && serviceIndex > 0 ? 'border-t-4 border-sky-100' : '';
+
+                    htmlContent += `
+                        <tr class="bg-white hover:bg-sky-50 transition-colors duration-200 ${borderClass}">
+                            <!-- Coluna do Serviço (só aparece na primeira linha de cada grupo) -->
+                            ${methodIndex === 0 ? `<td rowspan="${paymentMethods.length}" class="px-6 py-4 font-bold text-sky-800 align-top pt-6">${service.name}</td>` : ''}
+                            
+                            <!-- Coluna do Valor Base (só aparece na primeira linha de cada grupo) -->
+                            ${methodIndex === 0 ? `<td rowspan="${paymentMethods.length}" class="px-6 py-4 font-medium text-center align-top pt-6">${formatCurrency(service.price)}</td>` : ''}
+                            
+                            <!-- Colunas que se repetem para cada método -->
+                            <td class="px-6 py-4 text-center leading-tight">${method.name}${monthlyPaymentHtml}</td>
+                            <td class="px-6 py-4 text-center ${adjustmentColorClass}">${method.label}</td>
+                            <td class="px-6 py-4 text-right font-semibold text-gray-900">${formatCurrency(finalPrice)}</td>
+                            <td class="px-6 py-4 text-right font-bold text-blue-700">${formatCurrency(amountReceived)}</td>
+                        </tr>
+                    `;
+                });
+            });
+
+            tableBody.innerHTML = htmlContent;
+        }
+
+        // --- EXECUÇÃO ---
+        // Gera a tabela quando o DOM estiver pronto.
+        document.addEventListener('DOMContentLoaded', generateTable);
+    </script>
+</body>
+</html>
