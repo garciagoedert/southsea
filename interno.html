@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>South Sea | Links Internos</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+   <!-- Favicon -->
+    <link rel="icon" href="/newimag/Ellipse 9.svg">
+
+    <style>
+        /* Paleta de Cores e Tipografia da South Sea */
+        :root {
+            --bg-brand-navy: #0A192F;
+            --bg-brand-light-navy: #112240;
+            --text-brand-lightest: #E6F1FF;
+            --text-brand-light: #CCD6F6;
+            --text-brand-slate: #8892B0;
+            --brand-accent: #64FFDA; /* Menta Vibrante */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-brand-navy);
+            color: var(--text-brand-slate);
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-brand-lightest);
+        }
+
+        /* Efeito Glassmorphism para os botões de link */
+        .glass-link {
+            background: rgba(17, 34, 64, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(100, 255, 218, 0.1);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+        .glass-link:hover {
+            transform: translateY(-5px) scale(1.02);
+            border-color: rgba(100, 255, 218, 0.5);
+            box-shadow: 0 10px 30px -15px rgba(100, 255, 218, 0.2);
+            color: var(--brand-accent);
+        }
+
+        /* Botão de Ação Principal (CTA) para WhatsApp */
+        .whatsapp-cta {
+            background-color: #25D366; /* Verde clássico do WhatsApp */
+            color: #FFFFFF; /* Texto branco para melhor contraste */
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(37, 211, 102, 0.4);
+            animation: pulse-whatsapp 2s infinite;
+        }
+        .whatsapp-cta:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 20px rgba(37, 211, 102, 0.5);
+            animation-play-state: paused;
+            background-color: #29e26e;
+        }
+        
+        /* Estilo para contatos individuais da equipe */
+        .team-whatsapp-link {
+            background-color: transparent;
+            border: 2px solid #25D366;
+            color: #25D366;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .team-whatsapp-link:hover {
+            background-color: #25D366;
+            color: #FFFFFF;
+            transform: translateY(-5px);
+        }
+
+        @keyframes pulse-whatsapp {
+            0% { box-shadow: 0 0 20px rgba(37, 211, 102, 0.4); }
+            50% { box-shadow: 0 0 30px rgba(37, 211, 102, 0.6); }
+            100% { box-shadow: 0 0 20px rgba(37, 211, 102, 0.4); }
+        }
+        
+        /* Scrollbar customizada */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-brand-navy);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--text-brand-slate);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--brand-accent);
+        }
+    </style>
+</head>
+<body class="overflow-y-auto">
+
+    <!-- Fundo de Partículas -->
+    <div id="particles-js" class="fixed top-0 left-0 w-full h-full z-0"></div>
+
+    <!-- Conteúdo Principal -->
+    <main class="relative z-10 flex flex-col items-center justify-center min-h-screen p-4 sm:p-6 text-center">
+        
+        <!-- Cabeçalho -->
+        <header class="mb-12">
+            <!-- LOGO PLACEHOLDER: Substitua o 'src' pelo caminho da sua logo -->
+            <img src="/newimag/Vector.svg" alt="Logo South Sea" class="mx-auto h-20 w-auto">
+        </header>
+
+        <!-- Container das seções -->
+        <div class="w-full max-w-3xl space-y-10">
+
+            <!-- Seção: Apresentações para Clientes -->
+            <section>
+                <h2 class="text-xl font-bold text-brand-accent mb-4 text-left">Apresentações para Clientes</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <a href="/apresentações/pptportfolios.html" target="_blank" class="glass-link p-4 rounded-lg font-semibold text-brand-lightest"><i class="fa-solid fa-heart-pulse fa-fw"></i> Saúde & Bem-Estar</a>
+                    <a href="/apresentações/pptportfolios.html" target="_blank" class="glass-link p-4 rounded-lg font-semibold text-brand-lightest"><i class="fa-solid fa-palette fa-fw"></i> Criativos & Visuais</a>
+                    <a href="/apresentações/pptlançamentos.html" target="_blank" class="glass-link p-4 rounded-lg font-semibold text-brand-lightest"><i class="fa-solid fa-rocket fa-fw"></i> Lançamentos & Infoprodutos</a>
+                    <a href="/apresentações/pptcorporativo.html" target="_blank" class="glass-link p-4 rounded-lg font-semibold text-brand-lightest"><i class="fa-solid fa-briefcase fa-fw"></i> Corporativo & Consultivo</a>
+                    <a href="/apresentações/pptconstrução.html" target="_blank" class="glass-link p-4 rounded-lg font-semibold text-brand-lightest"><i class="fa-solid fa-industry fa-fw"></i> Indústria & Construção</a>
+                    <a href="#" target="_blank" class="glass-link p-4 rounded-lg font-semibold text-brand-lightest"><i class="fa-solid fa-star fa-fw"></i> Apresentação Geral</a>
+                </div>
+            </section>
+
+            <!-- Seção: Ferramentas Internas -->
+            <section>
+                <h2 class="text-xl font-bold text-brand-accent mb-4 text-left">Ferramentas Internas</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <a href="#" target="_blank" class="glass-link p-4 rounded-lg font-semibold text-brand-lightest"><i class="fab fa-trello fa-fw"></i> Trello</a>
+                    <a href="https://drive.google.com/drive/folders/1AzeU_zoMCePZlEhKXwTPeo3ejNcZpdx7?usp=sharing" target="_blank" class="glass-link p-4 rounded-lg font-semibold text-brand-lightest"><i class="fab fa-google-drive fa-fw"></i> Drive</a>
+                    <a href="https://www.instagram.com/co.southsea/?hl=pt" target="_blank" class="glass-link p-4 rounded-lg font-semibold text-brand-lightest"><i class="fab fa-instagram fa-fw"></i> Instagram</a>
+                </div>
+            </section>
+
+            <!-- Seção: Nosso Site -->
+            <section>
+                <h2 class="text-xl font-bold text-brand-accent mb-4 text-left">Navegue pelo Nosso Site</h2>
+                <div class="space-y-4">
+                    <a href="/index.html" target="_blank" class="glass-link block w-full p-4 rounded-lg font-semibold text-brand-lightest text-lg"><i class="fa-solid fa-house fa-fw"></i> Página Inicial</a>
+                    <a href="/branding.html" target="_blank" class="glass-link block w-full p-4 rounded-lg font-semibold text-brand-lightest text-lg"><i class="fa-solid fa-lightbulb fa-fw"></i> LP de Branding</a>
+                    <a href="/sites.html" target="_blank" class="glass-link block w-full p-4 rounded-lg font-semibold text-brand-lightest text-lg"><i class="fa-solid fa-globe fa-fw"></i> LP de Sites</a>
+                </div>
+            </section>
+            
+            <!-- Seção: Contato WhatsApp -->
+            <section>
+                <h2 class="text-xl font-bold text-brand-accent mb-4 text-left">Contato Rápido</h2>
+                <!-- Botão Principal -->
+                <a href="https://api.whatsapp.com/send/?phone=4899013968" target="_blank" class="whatsapp-cta block w-full p-4 rounded-lg text-lg flex items-center justify-center gap-3 mb-4">
+                    <i class="fab fa-whatsapp text-2xl"></i>
+                    <span>Fale com a South Sea</span>
+                </a>
+                <!-- Contatos da Equipe -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <a href="https://api.whatsapp.com/send/?phone=4899454375" target="_blank" class="team-whatsapp-link p-3 rounded-lg flex items-center justify-center gap-2">
+                        <i class="fab fa-whatsapp"></i><span>Bruno</span>
+                    </a>
+                    <a href="https://api.whatsapp.com/send/?phone=4888414664" target="_blank" class="team-whatsapp-link p-3 rounded-lg flex items-center justify-center gap-2">
+                        <i class="fab fa-whatsapp"></i><span>Alefy</span>
+                    </a>
+                    <a href="https://api.whatsapp.com/send/?phone=4888780389" target="_blank" class="team-whatsapp-link p-3 rounded-lg flex items-center justify-center gap-2">
+                        <i class="fab fa-whatsapp"></i><span>Paulo</span>
+                    </a>
+                </div>
+              
+            </section>
+
+        </div>
+
+        <!-- Rodapé -->
+       <footer class="py-8">
+        <div class="container mx-auto px-6 md:px-10 text-center text-brand-slate">
+            <br>
+            <p class="text-sm">&copy; 2025 South Sea.Todos os direitos reservados. <br> Made with 💙 by <a href="https://www.southsea.com.br/">South Sea</a></p>
+        </div>
+    </footer>
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // --- Configuração do Particle.js ---
+        document.addEventListener('DOMContentLoaded', () => {
+            if(document.getElementById('particles-js')){
+                particlesJS("particles-js", {
+                    "particles": {
+                        "number": { "value": 60, "density": { "enable": true, "value_area": 800 } },
+                        "color": { "value": "#64ffda" },
+                        "shape": { "type": "circle" },
+                        "opacity": { "value": 0.4, "random": false },
+                        "size": { "value": 2.5, "random": true },
+                        "line_linked": { "enable": true, "distance": 150, "color": "#8892b0", "opacity": 0.3, "width": 1 },
+                        "move": { "enable": true, "speed": 1, "direction": "none", "random": false, "straight": false, "out_mode": "out", "bounce": false }
+                    },
+                    "interactivity": {
+                        "detect_on": "canvas",
+                        "events": { "onhover": { "enable": true, "mode": "repulse" }, "onclick": { "enable": false }, "resize": true },
+                        "modes": { "repulse": { "distance": 100, "duration": 0.4 } }
+                    },
+                    "retina_detect": true
+                });
+            }
+        });
+    </script>
+</body>
+</html>
