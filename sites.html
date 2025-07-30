@@ -91,11 +91,31 @@
             animation-play-state: paused;
        }
 
-       @keyframes pulse-cta {
+        /* Botão de Ação Secundário (CTA) */
+       .cta-button-secondary {
+            background-color: transparent;
+            color: var(--brand-accent);
+            border: 2px solid var(--brand-accent);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            display: inline-block;
+            padding: 0.9rem 2.5rem;
+            border-radius: 0.375rem; /* rounded-md */
+        }
+       .cta-button-secondary:hover {
+            background-color: var(--brand-accent);
+            color: var(--bg-brand-navy);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(100, 255, 218, 0.2);
+        }
+
+
+        @keyframes pulse-cta {
             0% { box-shadow: 0 0 20px rgba(100, 255, 218, 0.3); }
             50% { box-shadow: 0 0 30px rgba(100, 255, 218, 0.5); }
             100% { box-shadow: 0 0 20px rgba(100, 255, 218, 0.3); }
-       }
+        }
 
          /* Estilo para o botão flutuante do WhatsApp */
         .whatsapp-button {
@@ -279,6 +299,10 @@
                         <p>O seu site recebe visitas, mas ninguém preenche o formulário. A falta de estratégia de conversão transforma o seu site num custo, não num investimento.</p>
                     </div>
                 </div>
+                <!-- NEW CTA BUTTON -->
+                <div class="mt-16">
+                    <a href="https://api.whatsapp.com/send/?phone=4899013968&text=Ol%C3%A1%21+Vi+que+meu+site+pode+estar+afastando+clientes+e+gostaria+de+uma+solu%C3%A7%C3%A3o.&type=phone_number&app_absent=0" class="cta-button-secondary text-lg">Quero uma solução para o meu site</a>
+                </div>
             </div>
         </section>
 
@@ -293,7 +317,7 @@
                         <p class="text-brand-slate mb-6">Ideal para profissionais liberais, lançamento de produtos ou campanhas de marketing focadas em máxima conversão.</p>
                         <div class="border-t border-brand-accent/20 pt-6 mt-auto">
                             <h4 class="font-bold mb-3 text-brand-lightest">Principais Entregas:</h4>
-                            <ul class="text-sm space-y-2">
+                            <ul class="text-sm space-y-2 mb-8">
                                 <li class="flex"><span class="text-brand-accent mr-2">✓</span>Página única com design moderno e responsivo</li>
                                 <li class="flex"><span class="text-brand-accent mr-2">✓</span>Até 4 seções estratégicas</li>
                                 <li class="flex"><span class="text-brand-accent mr-2">✓</span>Formulário de contato ou botão de WhatsApp</li>
@@ -301,6 +325,8 @@
                                 <li class="flex"><span class="text-brand-accent mr-2">✓</span>100% Codificado para Máxima Performance</li>
                                 <li class="flex"><span class="text-brand-accent mr-2">✓</span>Instalação de Pixel (Meta) e Google Tags</li>
                             </ul>
+                            <!-- NEW CTA BUTTON -->
+                            <a href="https://api.whatsapp.com/send/?phone=4899013968&text=Ol%C3%A1%21+Tenho+interesse+no+plano+%27Presen%C3%A7a+Essencial%27+%28Landing+Page%29.&type=phone_number&app_absent=0" class="cta-button-secondary w-full text-center">Quero a Presença Essencial</a>
                         </div>
                     </div>
                     <div class="glass-card p-8 rounded-lg flex flex-col text-left border-2 border-brand-accent shadow-2xl shadow-brand-accent/10">
@@ -308,7 +334,7 @@
                         <p class="text-brand-slate mb-6">Perfeito para empresas que desejam apresentar os seus serviços de forma completa, construir autoridade e escalar o seu negócio online.</p>
                         <div class="border-t border-brand-accent/20 pt-6 mt-auto">
                             <h4 class="font-bold mb-3 text-brand-lightest">Principais Entregas:</h4>
-                            <ul class="text-sm space-y-2">
+                            <ul class="text-sm space-y-2 mb-8">
                                 <li class="flex"><span class="text-brand-accent mr-2">✓</span>Site com até 5 páginas (Ex: Home, Sobre, Serviços)</li>
                                 <li class="flex"><span class="text-brand-accent mr-2">✓</span>Design personalizado à identidade da marca</li>
                                 <li class="flex"><span class="text-brand-accent mr-2">✓</span>Formulário de contato avançado com integração whatsapp</li>
@@ -317,6 +343,8 @@
                                 <li class="flex"><span class="text-brand-accent mr-2">✓</span>100% Codificado para Performance Superior</li>
                                 <li class="flex"><span class="text-brand-accent mr-2">✓</span>Instalação de Pixel (Meta) e Google Tags</li>
                             </ul>
+                            <!-- NEW CTA BUTTON -->
+                            <a href="https://api.whatsapp.com/send/?phone=4899013968&text=Ol%C3%A1%21+Tenho+interesse+no+plano+%27Neg%C3%B3cio+Digital%27+%28Site+Institucional%29.&type=phone_number&app_absent=0" class="cta-button w-full text-center py-3 px-8 rounded-md !animation-name-none">Quero o Negócio Digital</a>
                         </div>
                     </div>
                 </div>
@@ -432,6 +460,10 @@
                             </div>
                         </div>
                     </div>
+                     <!-- NEW CTA BUTTON -->
+                    <div class="mt-12 text-center">
+                        <a href="https://api.whatsapp.com/send/?phone=4899013968&text=Ol%C3%A1%21+Gostaria+de+saber+mais+sobre+os+benef%C3%ADcios+de+um+site+codificado.&type=phone_number&app_absent=0" class="cta-button text-lg py-4 px-10 rounded-md inline-block !animation-name-none">Quero um Site Codificado</a>
+                    </div>
                 </div>
             </div>
         </section>
@@ -446,6 +478,12 @@
                     <div class="glass-card p-6 rounded-lg text-left flex items-center space-x-6"><span class="text-4xl font-bold text-brand-accent">2</span><div><h3 class="text-xl font-bold">Alinhamento Criativo</h3><p class="text-brand-slate">Apresentamos a direção de design e a arquitetura do site para a sua validação.</p></div></div>
                     <div class="glass-card p-6 rounded-lg text-left flex items-center space-x-6"><span class="text-4xl font-bold text-brand-accent">3</span><div><h3 class="text-xl font-bold">Desenvolvimento</h3><p class="text-brand-slate">A nossa equipa executa o projeto com as melhores tecnologias, focando em performance e segurança.</p></div></div>
                     <div class="glass-card p-6 rounded-lg text-left flex items-center space-x-6"><span class="text-4xl font-bold text-brand-accent">4</span><div><h3 class="text-xl font-bold">Entrega e Lançamento</h3><p class="text-brand-slate">A sua nova presença digital, pronta para conquistar o mercado e gerar resultados.</p></div></div>
+                </div>
+                 <!-- NEW CTA BUTTON -->
+                <div class="mt-16">
+                    <a href="https://api.whatsapp.com/send/?phone=4899013968&text=Ol%C3%A1%21+Gostaria+de+iniciar+o+meu+projeto+com+a+South+Sea.&type=phone_number&app_absent=0" class="cta-button text-lg py-4 px-10 rounded-md inline-block">
+                        Vamos Iniciar a Jornada?
+                    </a>
                 </div>
             </div>
         </section>
@@ -465,6 +503,12 @@
                             <p class="text-lg font-bold text-brand-lightest mb-2">Resultado: Transformação completa da presença online e aumento expressivo no interesse de novas clínicas.</p>
                             <blockquote class="italic text-brand-light">"Eu não tenho palavras para agradecer à South Sea. Olhar para o meu site antigo era frustrante... Agora, tenho uma plataforma maravilhosa, que transborda profissionalismo e com a qual me identifico 100%."</blockquote>
                             <p class="font-bold text-right mt-2">- Liana Ferrary, Especialista em Aromaterapia</p>
+                             <!-- NEW CTA LINK -->
+                            <div class="mt-6">
+                                <a href="https://api.whatsapp.com/send/?phone=4899013968&text=Ol%C3%A1%21+Vi+o+case+de+sucesso+da+Liana+Ferrary+e+quero+um+resultado+parecido.&type=phone_number&app_absent=0" class="font-bold text-brand-accent hover:text-white transition-colors duration-300 text-lg">
+                                    Quero um resultado como este <span class="transition-all duration-300">→</span>
+                                </a>
+                            </div>
                         </div>
                     </div>
                     <div class="md:w-1/2 order-1 md:order-2 p-8 flex items-center justify-center">
@@ -558,12 +602,18 @@
                         </div>
                     </a>
                 </div>
+                 <!-- NEW CTA BUTTON -->
+                <div class="mt-16">
+                    <a href="https://api.whatsapp.com/send/?phone=4899013968&text=Ol%C3%A1%21+Tenho+interesse+na+solu%C3%A7%C3%A3o+360%C2%B0%2C+incluindo+branding+e+identidade+visual.&type=phone_number&app_absent=0" target="_blank" rel="noopener noreferrer" class="cta-button text-lg py-4 px-10 rounded-md inline-block">
+                        Quero uma Solução Completa
+                    </a>
+                </div>
             </div>
         </section>
     </main>
 
     <!-- BOTÃO FLUTUANTE DO WHATSAPP -->
-<a href="https://api.whatsapp.com/send/?phone=4899013968&text=Ol%C3%A1%21+Tenho+interesse+em+saber+mais+sobre+sites+&type=phone_number&app_absent=0" class="whatsapp-button" target="_blank" aria-label="Fale conosco pelo WhatsApp">
+<a href="https://api.whatsapp.com/send/?phone=4899013968&text=Ol%C3%A1%21+Tenho+interesse+em+saber+mais+sobre+os+sites+da+South+Sea.&type=phone_number&app_absent=0" class="whatsapp-button" target="_blank" aria-label="Fale conosco pelo WhatsApp">
     <i class="fab fa-whatsapp" aria-hidden="true"></i>
 </a>
 
@@ -1006,6 +1056,6 @@
         });
 
     </script>
- 
+ 
 </body>
 </html>
