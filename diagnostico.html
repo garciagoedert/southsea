@@ -75,15 +75,26 @@
 
         .checklist-form label {
             display: inline-block;
-            padding: 0.75rem 1.25rem;
+            padding: 0.5rem 1rem; /* Padding ajustado para mobile */
             border: 2px solid var(--bg-brand-light-navy);
             border-radius: 9999px; /* pill shape */
             cursor: pointer;
             transition: all 0.2s ease-in-out;
-            font-weight: 600;
+            font-weight: 500; /* Peso da fonte ligeiramente ajustado */
+            font-size: 0.875rem; /* Tamanho da fonte ajustado para mobile */
             color: var(--text-brand-light);
             background-color: var(--bg-brand-light-navy);
         }
+        
+        /* Media query para telas maiores */
+        @media (min-width: 640px) {
+             .checklist-form label {
+                padding: 0.75rem 1.25rem;
+                font-weight: 600;
+                font-size: 1rem;
+             }
+        }
+
 
         .checklist-form input[type="radio"]:hover + label {
             border-color: var(--brand-accent);
@@ -116,34 +127,36 @@
     <header class="min-h-screen flex items-center justify-center text-center p-6 relative">
         <div class="absolute inset-0 bg-gradient-to-b from-transparent to-bg-brand-navy z-10"></div>
         <div class="relative z-20 max-w-4xl reveal">
-            <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight mb-4">
+            <!-- Títulos com tamanhos de fonte responsivos -->
+            <h1 class="text-3xl sm:text-5xl md:text-6xl font-extrabold leading-tight mb-4">
                 <span class="text-brand-accent">Diagnóstico Digital Gratuito</span>
             </h1>
-            <p class="text-xl md:text-2xl text-brand-light max-w-3xl mx-auto mb-10">
+            <!-- Parágrafo com tamanhos de fonte responsivos -->
+            <p class="text-lg sm:text-xl md:text-2xl text-brand-light max-w-3xl mx-auto mb-10">
                 Seu site está realmente trabalhando a favor da sua marca? Descubra em 2 minutos os pontos fortes e as oportunidades de melhoria da sua presença online.
             </p>
-            <a href="#checklist" class="cta-button text-lg py-4 px-10 rounded-md inline-block">
+            <a href="#checklist" class="cta-button text-base sm:text-lg py-3 px-8 sm:py-4 sm:px-10 rounded-md inline-block">
                 Iniciar Diagnóstico
             </a>
         </div>
     </header>
 
-    <main class="container mx-auto px-6 md:px-10">
+    <main class="container mx-auto px-4 sm:px-6 md:px-10">
 
         <!-- Seção do Checklist -->
-        <section id="checklist" class="py-20 md:py-32">
+        <section id="checklist" class="py-16 md:py-24">
             <div class="max-w-4xl mx-auto">
-                <div class="text-center mb-16 reveal">
-                    <h2 class="text-3xl md:text-4xl font-bold mb-4">Checklist: O que um site profissional precisa ter?</h2>
-                    <p class="text-lg text-brand-slate">Seja honesto nas suas respostas. O objetivo é ter um panorama real para tomar a melhor decisão.</p>
+                <div class="text-center mb-12 sm:mb-16 reveal">
+                    <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">Checklist: O que um site profissional precisa ter?</h2>
+                    <p class="text-base sm:text-lg text-brand-slate">Seja honesto nas suas respostas. O objetivo é ter um panorama real para tomar a melhor decisão.</p>
                 </div>
 
                 <form id="checklist-form" class="space-y-12 reveal">
                     <!-- As perguntas serão injetadas aqui pelo JavaScript -->
                 </form>
                 
-                <div class="text-center mt-16 reveal">
-                    <button type="submit" form="checklist-form" class="cta-button text-xl py-4 px-12 rounded-md">
+                <div class="text-center mt-12 sm:mt-16 reveal">
+                    <button type="submit" form="checklist-form" class="cta-button text-lg sm:text-xl py-3 px-10 sm:py-4 sm:px-12 rounded-md w-full sm:w-auto">
                         Ver Meu Veredito
                     </button>
                 </div>
@@ -151,10 +164,10 @@
         </section>
 
         <!-- Seção de Resultados (inicialmente oculta) -->
-        <section id="results-section" class="hidden py-20 md:py-32">
-            <div class="max-w-4xl mx-auto text-center glass-card p-8 md:p-12 rounded-xl">
-                <h2 class="text-3xl md:text-4xl font-bold mb-4">Seu Diagnóstico Digital</h2>
-                <div id="verdict-text" class="text-lg text-brand-light my-8">
+        <section id="results-section" class="hidden py-16 md:py-24">
+            <div class="max-w-4xl mx-auto text-center glass-card p-6 sm:p-8 md:p-12 rounded-xl">
+                <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">Seu Diagnóstico Digital</h2>
+                <div id="verdict-text" class="text-base sm:text-lg text-brand-light my-6 sm:my-8">
                     <!-- O texto do veredito será inserido aqui -->
                 </div>
                 
@@ -167,7 +180,7 @@
     </main>
 
     <!-- Footer -->
-    <footer class="py-8 mt-20 border-t border-white/10">
+    <footer class="py-8 mt-16 border-t border-white/10">
         <div class="container mx-auto px-6 md:px-10 text-center text-brand-slate">
             <a href="https://www.southsea.com.br/" target="_blank">
                 <img src="https://www.southsea.com.br/newimag/Vector.svg" alt="Logo South Sea" class="h-10 w-auto mx-auto mb-4 opacity-70 hover:opacity-100 transition-opacity" onerror="this.onerror=null;this.src='https://placehold.co/100x40/0A192F/64FFDA?text=South+Sea';">
@@ -218,18 +231,20 @@
             { text: "Com Certeza", value: 5 }
         ];
 
-        // --- INJETAR PERGUNTAS NO FORMULÁRIO ---
-        const form = document.getElementById('checklist-form');
-        if (form) {
+        // --- FUNÇÃO PARA INICIALIZAR O CHECKLIST ---
+        function initializeChecklist() {
+            const form = document.getElementById('checklist-form');
+            if (!form) return;
+
             let html = '';
             questions.forEach(cat => {
                 html += `<div class="reveal">
-                            <h3 class="text-2xl font-bold text-brand-accent mb-8 text-center">${cat.category}</h3>
-                            <div class="space-y-10">`;
+                            <h3 class="text-xl sm:text-2xl font-bold text-brand-accent mb-8 text-center">${cat.category}</h3>
+                            <div class="space-y-8 sm:space-y-10">`;
                 cat.items.forEach(q => {
-                    html += `<div class="glass-card p-6 rounded-lg">
-                                <p class="text-lg font-semibold text-brand-lightest mb-4 text-center">${q.text}</p>
-                                <div class="flex flex-wrap justify-center gap-3 checklist-form">`;
+                    html += `<div class="glass-card p-4 sm:p-6 rounded-lg">
+                                <p class="text-base sm:text-lg font-semibold text-brand-lightest mb-5 text-center">${q.text}</p>
+                                <div class="flex flex-wrap justify-center gap-2 sm:gap-3 checklist-form">`;
                     options.forEach(opt => {
                         html += `<div>
                                     <input type="radio" id="${q.id}-${opt.value}" name="${q.id}" value="${opt.value}" required>
@@ -241,79 +256,113 @@
                 html += `</div></div>`;
             });
             form.innerHTML = html;
+
+            // --- NOVA FUNCIONALIDADE: AUTO-SCROLL ---
+            addAutoScroll();
         }
 
+        // --- FUNÇÃO PARA ADICIONAR O AUTO-SCROLL ---
+        function addAutoScroll() {
+            const allQuestionCards = document.querySelectorAll('#checklist-form .glass-card');
+            const allRadioInputs = document.querySelectorAll('#checklist-form input[type="radio"]');
+
+            allRadioInputs.forEach(radio => {
+                radio.addEventListener('change', (event) => {
+                    const currentCard = event.target.closest('.glass-card');
+                    
+                    // Encontra o índice do card atual
+                    const currentIndex = Array.from(allQuestionCards).indexOf(currentCard);
+                    const nextIndex = currentIndex + 1;
+
+                    // Verifica se existe um próximo card
+                    if (nextIndex < allQuestionCards.length) {
+                        const nextCard = allQuestionCards[nextIndex];
+                        // Rola para o próximo card após um pequeno atraso para o usuário ver a seleção
+                        setTimeout(() => {
+                            nextCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }, 350);
+                    }
+                });
+            });
+        }
+
+
         // --- LÓGICA DO FORMULÁRIO E RESULTADOS ---
-        const resultsSection = document.getElementById('results-section');
-        const verdictTextElem = document.getElementById('verdict-text');
-        const recommendationContainer = document.getElementById('recommendation-container');
+        function handleFormSubmit() {
+            const form = document.getElementById('checklist-form');
+            const resultsSection = document.getElementById('results-section');
+            const verdictTextElem = document.getElementById('verdict-text');
+            const recommendationContainer = document.getElementById('recommendation-container');
 
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            let totalScore = 0;
-            const totalQuestions = questions.flatMap(q => q.items).length;
-            const formData = new FormData(form);
-            
-            for (let value of formData.values()) {
-                totalScore += parseInt(value, 10);
-            }
-
-            const averageScore = totalScore / totalQuestions;
-
-            // Limiar: se a média for menor que 3.5, precisa de uma solução mais robusta.
-            const threshold = 3.5; 
-            
-            let verdictText, recommendationHTML, whatsappMessage;
-
-            if (averageScore < threshold) {
-                // RECOMENDAÇÃO: SITE INSTITUCIONAL
-                verdictText = "Seu diagnóstico mostra que existem oportunidades significativas para fortalecer sua base digital. Um site desalinhado com sua marca pode estar custando clientes e credibilidade. É hora de construir um ativo que trabalhe por você 24/7.";
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
                 
-                recommendationHTML = `
-                    <div class="border-2 border-brand-accent p-8 rounded-lg bg-brand-light-navy">
-                        <h3 class="text-2xl font-bold text-brand-accent mb-3">Solução Recomendada: Site Institucional Completo</h3>
-                        <p class="text-brand-light mb-6">A solução ideal é um <strong>Site Institucional completo</strong>, que reestrutura sua presença online, comunica seu valor de forma clara, constrói autoridade e transforma seu site em uma poderosa ferramenta de prospecção.</p>
-                        <a href="https://api.whatsapp.com/send/?phone=4899013968&text=Ol%C3%A1%21+Fiz+o+Diagn%C3%B3stico+Digital+e+gostaria+de+uma+proposta+para+um+Site+Institucional.&type=phone_number&app_absent=0" target="_blank" class="cta-button py-3 px-8 rounded-md inline-block">Quero um Site que Gera Resultados</a>
-                    </div>
-                `;
-            } else {
-                // RECOMENDAÇÃO: LANDING PAGE
-                verdictText = "Parabéns! Seu diagnóstico indica que você já tem uma boa base digital. Agora, o próximo passo é focar em conversão para campanhas específicas e maximizar seu retorno sobre investimento.";
+                let totalScore = 0;
+                const totalQuestions = questions.flatMap(q => q.items).length;
+                const formData = new FormData(form);
+                
+                if (Array.from(formData.keys()).length < totalQuestions) {
+                    console.error("Por favor, responda todas as perguntas.");
+                    // Idealmente, mostre uma mensagem para o usuário em um modal.
+                    return; 
+                }
 
-                recommendationHTML = `
-                    <div class="border-2 border-brand-accent p-8 rounded-lg bg-brand-light-navy">
-                        <h3 class="text-2xl font-bold text-brand-accent mb-3">Solução Recomendada: Landing Page de Alta Performance</h3>
-                        <p class="text-brand-light mb-6">Para campanhas de marketing, lançamento de produtos ou para capturar leads de anúncios, uma <strong>Landing Page focada</strong> é a peça que falta. Ela é 100% otimizada para um único objetivo: transformar visitantes qualificados em ações concretas.</p>
-                        <a href="https://api.whatsapp.com/send/?phone=4899013968&text=Ol%C3%A1%21+Fiz+o+Diagn%C3%B3stico+Digital+e+gostaria+de+uma+proposta+para+uma+Landing+Page.&type=phone_number&app_absent=0" target="_blank" class="cta-button py-3 px-8 rounded-md inline-block">Quero uma Página que Converte</a>
-                    </div>
-                `;
-            }
+                for (let value of formData.values()) {
+                    totalScore += parseInt(value, 10);
+                }
 
-            // Exibir resultados
-            verdictTextElem.innerText = verdictText;
-            recommendationContainer.innerHTML = recommendationHTML;
-            
-            document.getElementById('checklist').classList.add('hidden');
-            resultsSection.classList.remove('hidden');
-            resultsSection.classList.add('reveal', 'visible'); // Adiciona classes de animação
-            
-            resultsSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        });
+                const averageScore = totalScore / totalQuestions;
+                const threshold = 3.5; 
+                
+                let verdictText, recommendationHTML;
+
+                if (averageScore < threshold) {
+                    verdictText = "Seu diagnóstico mostra que existem oportunidades significativas para fortalecer sua base digital. Um site desalinhado com sua marca pode estar custando clientes e credibilidade. É hora de construir um ativo que trabalhe por você 24/7.";
+                    recommendationHTML = `
+                        <div class="border-2 border-brand-accent p-6 sm:p-8 rounded-lg bg-brand-light-navy">
+                            <h3 class="text-xl sm:text-2xl font-bold text-brand-accent mb-3">Solução Recomendada: Site Institucional Completo</h3>
+                            <p class="text-brand-light mb-6 text-sm sm:text-base">A solução ideal é um <strong>Site Institucional completo</strong>, que reestrutura sua presença online, comunica seu valor de forma clara, constrói autoridade e transforma seu site em uma poderosa ferramenta de prospecção.</p>
+                            <a href="https://api.whatsapp.com/send/?phone=4899013968&text=Ol%C3%A1%21+Fiz+o+Diagn%C3%B3stico+Digital+e+gostaria+de+uma+proposta+para+um+Site+Institucional.&type=phone_number&app_absent=0" target="_blank" class="cta-button py-3 px-6 sm:px-8 rounded-md inline-block text-sm sm:text-base w-full sm:w-auto">Quero um Site que Gera Resultados</a>
+                        </div>`;
+                } else {
+                    verdictText = "Parabéns! Seu diagnóstico indica que você já tem uma boa base digital. Agora, o próximo passo é focar em conversão para campanhas específicas e maximizar seu retorno sobre investimento.";
+                    recommendationHTML = `
+                        <div class="border-2 border-brand-accent p-6 sm:p-8 rounded-lg bg-brand-light-navy">
+                            <h3 class="text-xl sm:text-2xl font-bold text-brand-accent mb-3">Solução Recomendada: Landing Page de Alta Performance</h3>
+                            <p class="text-brand-light mb-6 text-sm sm:text-base">Para campanhas de marketing, lançamento de produtos ou para capturar leads de anúncios, uma <strong>Landing Page focada</strong> é a peça que falta. Ela é 100% otimizada para um único objetivo: transformar visitantes qualificados em ações concretas.</p>
+                            <a href="https://api.whatsapp.com/send/?phone=4899013968&text=Ol%C3%A1%21+Fiz+o+Diagn%C3%B3stico+Digital+e+gostaria+de+uma+proposta+para+uma+Landing+Page.&type=phone_number&app_absent=0" target="_blank" class="cta-button py-3 px-6 sm:px-8 rounded-md inline-block text-sm sm:text-base w-full sm:w-auto">Quero uma Página que Converte</a>
+                        </div>`;
+                }
+
+                verdictTextElem.innerText = verdictText;
+                recommendationContainer.innerHTML = recommendationHTML;
+                
+                document.getElementById('checklist').classList.add('hidden');
+                resultsSection.classList.remove('hidden');
+                resultsSection.classList.add('reveal', 'visible');
+                
+                resultsSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            });
+        }
 
         // --- ANIMAÇÃO DE REVELAÇÃO AO ROLAR ---
-        const revealElements = document.querySelectorAll('.reveal');
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    // Opcional: parar de observar depois que o elemento se torna visível
-                    // observer.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.1 });
+        function setupScrollAnimation() {
+            const revealElements = document.querySelectorAll('.reveal');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
 
-        revealElements.forEach(el => observer.observe(el));
+            revealElements.forEach(el => observer.observe(el));
+        }
+
+        // --- INICIALIZAÇÃO ---
+        initializeChecklist();
+        handleFormSubmit();
+        setupScrollAnimation();
     });
     </script>
 
