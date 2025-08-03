@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnóstico Estratégico de Marca e Digital | South Sea</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script> 
+    
+    <!-- Google Fonts: Montserrat & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Favicon -->
+    <link rel="icon" href="https://www.southsea.com.br/newimag/Ellipse%209.svg" onerror="this.onerror=null;this.src='https://placehold.co/32x32/0A192F/64FFDA?text=S';">
+
+    <style>
+        :root {
+            --bg-brand-navy: #0A192F;
+            --bg-brand-light-navy: #112240;
+            --text-brand-lightest: #E6F1FF;
+            --text-brand-light: #CCD6F6;
+            --text-brand-slate: #8892B0;
+            --brand-accent: #64FFDA;
+        }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-brand-navy);
+            color: var(--text-brand-slate);
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-brand-lightest);
+        }
+        #hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: radial-gradient(circle at 15% 25%, rgba(100, 255, 218, 0.07), transparent 40%);
+            animation: rotateBackground 80s linear infinite;
+            z-index: 0;
+        }
+        @keyframes rotateBackground {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .glass-card {
+            background: rgba(17, 34, 64, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(100, 255, 218, 0.1);
+            transition: all 0.3s ease;
+        }
+        .cta-button {
+            background-color: var(--brand-accent);
+            color: var(--bg-brand-navy);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(100, 255, 218, 0.2);
+        }
+        .diagnostic-form input[type="radio"] { display: none; }
+        .diagnostic-form label {
+            display: block;
+            padding: 1rem 1.5rem;
+            border: 2px solid var(--bg-brand-light-navy);
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            font-weight: 600;
+            color: var(--text-brand-light);
+            background-color: var(--bg-brand-light-navy);
+            text-align: left;
+        }
+        .diagnostic-form label:hover {
+            border-color: var(--brand-accent);
+            transform: translateY(-2px);
+        }
+        .diagnostic-form input[type="radio"]:checked + label {
+            background-color: var(--brand-accent);
+            border-color: var(--brand-accent);
+            color: var(--bg-brand-navy);
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(100, 255, 218, 0.3);
+        }
+        .question-card {
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+            will-change: opacity, transform;
+        }
+        .question-card.hidden {
+            opacity: 0;
+            transform: translateX(-30px);
+            position: absolute;
+            pointer-events: none;
+        }
+        .progress-bar-fill {
+            transition: width 0.5s ease-out;
+        }
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+
+    <!-- Seção Hero -->
+    <header id="hero-section" class="relative overflow-hidden min-h-screen flex items-center">
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="max-w-3xl reveal">
+                <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight mb-4 text-left">
+                    <span class="text-brand-accent">Diagnóstico Estratégico</span> de Marca e Digital
+                </h1>
+                <p class="text-lg sm:text-xl md:text-2xl text-brand-light max-w-2xl text-left mb-10">
+                    Sua marca está preparada para o futuro? Descubra em 90 segundos qual o próximo passo para conectar, cativar e converter mais clientes.
+                </p>
+                <div class="text-left">
+                    <a href="#diagnostic" class="cta-button text-base sm:text-lg py-3 px-8 sm:py-4 sm:px-10 rounded-md inline-block">
+                        Começar Diagnóstico
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 sm:px-6 md:px-10">
+
+        <!-- Seção do Diagnóstico -->
+        <section id="diagnostic" class="py-16 md:py-24">
+            <div class="max-w-3xl mx-auto">
+                
+                <div id="diagnostic-container">
+                    <div class="text-center mb-12 sm:mb-16">
+                        <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">Análise Rápida</h2>
+                        <p class="text-base sm:text-lg text-brand-slate">Responda com sinceridade para uma recomendação precisa.</p>
+                    </div>
+
+                    <div class="w-full bg-brand-light-navy rounded-full h-2.5 mb-8">
+                        <div id="progress-bar" class="bg-brand-accent h-2.5 rounded-full progress-bar-fill" style="width: 0%"></div>
+                    </div>
+                    
+                    <div id="question-category-title" class="text-center text-brand-accent font-semibold mb-6 transition-opacity duration-500"></div>
+
+                    <div class="relative min-h-[450px] sm:min-h-[400px]">
+                        <form id="diagnostic-form" class="diagnostic-form">
+                            <!-- Perguntas injetadas aqui -->
+                        </form>
+                    </div>
+
+                    <!-- Botões de Navegação -->
+                    <div id="navigation-controls" class="flex justify-between items-center mt-8">
+                        <button id="prev-btn" class="nav-button px-6 py-2 border-2 border-brand-slate text-brand-slate font-bold rounded-md hover:bg-brand-slate/10 transition-all duration-300">Voltar</button>
+                        <button id="next-btn" class="nav-button cta-button px-6 py-2 text-base">Próximo</button>
+                    </div>
+                </div>
+
+                <!-- Seção de Resultados -->
+                <div id="results-section" class="hidden text-center">
+                    <div class="glass-card p-6 sm:p-8 md:p-12 rounded-xl">
+                        <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">Seu Próximo Passo Estratégico</h2>
+                        <p id="results-intro" class="text-base sm:text-lg text-brand-light my-6 sm:my-8"></p>
+                        <div id="recommendation-container" class="space-y-8">
+                            <!-- Recomendações inseridas aqui -->
+                        </div>
+                         <button id="restart-button" class="mt-12 w-full sm:w-auto px-8 py-3 border-2 border-brand-accent text-brand-accent font-bold rounded-md hover:bg-brand-accent/10 transition-all duration-300">
+                            Refazer Diagnóstico
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-8 mt-16 border-t border-white/10">
+        <div class="container mx-auto px-6 md:px-10 text-center text-brand-slate">
+            <a href="https://www.southsea.com.br/" target="_blank">
+                <img src="https://www.southsea.com.br/newimag/Vector.svg" alt="Logo South Sea" class="h-10 w-auto mx-auto mb-4 opacity-70 hover:opacity-100 transition-opacity" onerror="this.onerror=null;this.src='https://placehold.co/100x40/0A192F/64FFDA?text=South+Sea';">
+            </a>
+            <p class="text-sm">&copy; 2025 South Sea. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const services = {
+            branding: {
+                title: "Construção de Marca",
+                plans: [
+                    { name: "Plano Essencial: Identidade Visual", recommended: false, description: "Criação de um logotipo profissional, paleta de cores e tipografia para dar uma cara profissional à sua nova marca.", cta: "Saber mais sobre Identidade Visual", link: "https://api.whatsapp.com/send/?phone=4899013968&text=Ol%C3%A1%21+Fiz+o+Diagn%C3%B3stico+e+tenho+interesse+no+plano+de+Identidade+Visual." },
+                    { name: "Plano Completo: Branding Estratégico (Recomendado)", recommended: true, description: "Uma imersão profunda para definir propósito, público, posicionamento, voz e o universo visual completo da sua marca.", cta: "Explorar o Branding Estratégico", link: "https://api.whatsapp.com/send/?phone=4899013968&text=Ol%C3%A1%21+Fiz+o+Diagn%C3%B3stico+e+tenho+interesse+no+plano+de+Branding+Estrat%C3%A9gico." }
+                ]
+            },
+            rebranding: {
+                title: "Evolução de Marca",
+                plans: [
+                    { name: "Plano Essencial: Atualização Visual", recommended: false, description: "Modernização da sua identidade visual existente (logo, cores) para refletir seu momento atual e reconectar com o público.", cta: "Saber mais sobre Atualização Visual", link: "https://api.whatsapp.com/send/?phone=4899013968&text=Ol%C3%A1%21+Fiz+o+Diagn%C3%B3stico+e+tenho+interesse+no+plano+de+Atualiza%C3%A7%C3%A3o+Visual." },
+                    { name: "Plano Completo: Rebranding Estratégico (Recomendado)", recommended: true, description: "Repensamos a estratégia, posicionamento e identidade da sua marca para um relançamento de impacto no mercado.", cta: "Explorar o Rebranding Estratégico", link: "https://api.whatsapp.com/send/?phone=4899013968&text=Ol%C3%A1%21+Fiz+o+Diagn%C3%B3stico+e+tenho+interesse+no+plano+de+Rebranding+Estrat%C3%A9gico." }
+                ]
+            },
+            website: {
+                title: "Presença Digital",
+                plans: [
+                    { name: "Plano Essencial: Site Institucional", recommended: false, description: "Um site de até 5 páginas, rápido, moderno e responsivo. A presença online profissional que sua empresa precisa para começar.", cta: "Saber mais sobre o Site Essencial", link: "https://api.whatsapp.com/send/?phone=4899013968&text=Ol%C3%A1%21+Fiz+o+Diagn%C3%B3stico+e+tenho+interesse+no+plano+de+Site+Institucional." },
+                    { name: "Plano de Performance (Recomendado)", recommended: true, description: "Um site completo com otimização para SEO, blog e design focado em conversão para transformar seu site em uma máquina de gerar negócios.", cta: "Explorar o Site de Performance", link: "https://api.whatsapp.com/send/?phone=4899013968&text=Ol%C3%A1%21+Fiz+o+Diagn%C3%B3stico+e+tenho+interesse+no+plano+de+Site+de+Performance." }
+                ]
+            },
+            landingPage: {
+                title: "Campanha de Foco",
+                plans: [
+                    { name: "Plano Único: Landing Page de Alta Conversão", recommended: true, description: "Uma página única, 100% focada em uma oferta, com design persuasivo e velocidade máxima para maximizar o retorno de suas campanhas.", cta: "Quero uma página que converte", link: "https://api.whatsapp.com/send/?phone=4899013968&text=Ol%C3%A1%21+Fiz+o+Diagn%C3%B3stico+e+tenho+interesse+em+uma+Landing+Page." }
+                ]
+            }
+        };
+
+        const questions = [
+            { category: "Etapa e Visão", text: "Qual frase melhor descreve o momento atual do seu negócio?", options: [ { text: "Estou no início, validando uma ideia ou lançando a empresa.", scores: { branding: 3, website: 1 } }, { text: "Já opero há algum tempo, mas sinto que estou estagnado e preciso de um novo fôlego.", scores: { rebranding: 3 } }, { text: "Estamos crescendo, mas nossa imagem e comunicação não acompanharam essa evolução.", scores: { rebranding: 3, website: 2 } }, { text: "Meu negócio é sólido, mas quero lançar um novo produto/serviço ou expandir.", scores: { landingPage: 3, branding: 1 } } ] },
+            { category: "Marca e Percepção", text: "Como você descreveria a clareza da sua mensagem principal?", options: [ { text: "Confusa. Nem eu consigo explicar o que fazemos de forma rápida e clara.", scores: { branding: 3 } }, { text: "Técnica demais. Nossos clientes têm dificuldade para entender o valor real.", scores: { branding: 2 } }, { text: "É clara, mas não nos diferencia dos concorrentes. Parecemos 'só mais um'.", scores: { branding: 3 } }, { text: "É clara, concisa e conecta emocionalmente com nosso público-alvo.", scores: {} } ] },
+            { category: "Marca e Percepção", text: "Ao pensar na sua identidade visual (logo, cores, fontes), qual a sua sensação?", options: [ { text: "Inexistente ou amadora. Foi feita às pressas e não transmite confiança.", scores: { branding: 2 } }, { text: "É funcional, mas genérica. Não tem personalidade e não é memorável.", scores: { rebranding: 1, branding: 1 } }, { text: "Gosto dela, mas sinto que está datada ou desalinhada com nosso público atual.", scores: { rebranding: 2 } }, { text: "Tenho orgulho. Ela representa perfeitamente a nossa marca e valores.", scores: {} } ] },
+            { category: "Presença Digital e Ferramentas", text: "Qual o papel do seu site hoje? (Se não tiver, escolha a primeira opção)", options: [ { text: "Não tenho um site, ou ele é um 'cartão de visitas' que não gera resultados.", scores: { website: 3 } }, { text: "Ele serve para mostrar informações, mas não é uma ferramenta de vendas.", scores: { website: 2 } }, { text: "É a principal ferramenta para atrair e converter clientes.", scores: {} }, { text: "Preciso de uma página específica para uma campanha, sem alterar meu site principal.", scores: { landingPage: 3 } } ] },
+            { category: "Presença Digital e Ferramentas", text: "Como você avalia a experiência do usuário no seu site, especialmente no celular?", options: [ { text: "Frustrante. É lento, difícil de navegar e não se adapta bem.", scores: { website: 3 } }, { text: "Razoável. Funciona, mas não é intuitivo e a aparência poderia ser melhor.", scores: { website: 2 } }, { text: "É boa, mas sinto que poderíamos otimizar a jornada para gerar mais conversões.", scores: { website: 1, landingPage: 1 } }, { text: "É excelente. Rápida, intuitiva e profissional em todos os dispositivos.", scores: {} } ] },
+            { category: "Objetivos e Desafios", text: "Qual destes é o seu maior desafio de negócio no momento?", options: [ { text: "Atrair a atenção do público certo e me destacar em um mercado concorrido.", scores: { branding: 3, website: 1 } }, { text: "Converter o interesse gerado por anúncios em vendas ou contatos reais.", scores: { landingPage: 3 } }, { text: "Justificar um preço mais alto e ser percebido como uma autoridade no setor.", scores: { branding: 2, website: 2 } }, { text: "Organizar a comunicação da empresa para que seja consistente em todos os canais.", scores: { branding: 2 } } ] },
+            { category: "Objetivos e Desafios", text: "Onde você quer que sua marca esteja em 12 meses?", options: [ { text: "Sendo reconhecida como a referência de qualidade e confiança no meu nicho.", scores: { branding: 3, website: 2 } }, { text: "Com um funil de vendas digital claro, gerando leads de forma previsível.", scores: { website: 2, landingPage: 2 } }, { text: "Com uma imagem renovada, atraindo um público mais qualificado.", scores: { rebranding: 3 } }, { text: "Com uma base sólida de marca e um site profissional para começar a escalar.", scores: { branding: 2, website: 1 } } ] }
+        ];
+
+        const form = document.getElementById('diagnostic-form');
+        const progressBar = document.getElementById('progress-bar');
+        const categoryTitle = document.getElementById('question-category-title');
+        const diagnosticContainer = document.getElementById('diagnostic-container');
+        const resultsSection = document.getElementById('results-section');
+        const recommendationContainer = document.getElementById('recommendation-container');
+        const resultsIntro = document.getElementById('results-intro');
+        const restartButton = document.getElementById('restart-button');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+
+        let currentQuestionIndex = 0;
+        let userAnswers = {};
+
+        function startDiagnostic() {
+            currentQuestionIndex = 0;
+            userAnswers = {};
+            form.innerHTML = '';
+            
+            questions.forEach((q, index) => {
+                const questionCard = document.createElement('div');
+                questionCard.className = `question-card ${index !== 0 ? 'hidden' : ''}`;
+                questionCard.id = `question-${index}`;
+                
+                let optionsHTML = '';
+                q.options.forEach((opt, optIndex) => {
+                    const isChecked = userAnswers[index] === optIndex ? 'checked' : '';
+                    optionsHTML += `<div><input type="radio" id="q${index}-opt${optIndex}" name="q${index}" value="${optIndex}" ${isChecked} required><label for="q${index}-opt${optIndex}">${opt.text}</label></div>`;
+                });
+
+                questionCard.innerHTML = `<h3 class="text-xl sm:text-2xl font-bold text-center mb-8">${q.text}</h3><div class="space-y-4">${optionsHTML}</div>`;
+                form.appendChild(questionCard);
+            });
+            
+            updateNavigation();
+            updateProgressBar();
+            addEventListenersToOptions();
+            
+            diagnosticContainer.style.display = 'block';
+            resultsSection.classList.add('hidden');
+        }
+
+        function addEventListenersToOptions() {
+            form.querySelectorAll('input[type="radio"]').forEach(radio => {
+                radio.addEventListener('change', (e) => {
+                    userAnswers[currentQuestionIndex] = parseInt(e.target.value);
+                    updateNavigation();
+                });
+            });
+        }
+        
+        function updateNavigation() {
+            prevBtn.disabled = currentQuestionIndex === 0;
+            nextBtn.disabled = userAnswers[currentQuestionIndex] === undefined;
+
+            if (currentQuestionIndex === questions.length - 1) {
+                nextBtn.textContent = 'Ver Meu Diagnóstico';
+            } else {
+                nextBtn.textContent = 'Próximo';
+            }
+        }
+
+        function goToNextQuestion() {
+            if (currentQuestionIndex < questions.length - 1) {
+                document.getElementById(`question-${currentQuestionIndex}`).classList.add('hidden');
+                currentQuestionIndex++;
+                document.getElementById(`question-${currentQuestionIndex}`).classList.remove('hidden');
+                updateProgressBar();
+                updateNavigation();
+            } else {
+                calculateAndShowResults();
+            }
+        }
+
+        function goToPreviousQuestion() {
+            if (currentQuestionIndex > 0) {
+                document.getElementById(`question-${currentQuestionIndex}`).classList.add('hidden');
+                currentQuestionIndex--;
+                document.getElementById(`question-${currentQuestionIndex}`).classList.remove('hidden');
+                updateProgressBar();
+                updateNavigation();
+            }
+        }
+
+        function updateProgressBar() {
+            const progress = (currentQuestionIndex / (questions.length -1)) * 100;
+            progressBar.style.width = `${progress}%`;
+            
+            const currentCategory = questions[currentQuestionIndex].category;
+            const previousCategory = currentQuestionIndex > 0 ? questions[currentQuestionIndex - 1].category : '';
+            
+            if (currentCategory !== previousCategory) {
+                categoryTitle.style.opacity = 0;
+                setTimeout(() => {
+                    categoryTitle.textContent = currentCategory;
+                    categoryTitle.style.opacity = 1;
+                }, 250);
+            }
+        }
+        
+        function calculateAndShowResults() {
+            let scores = Object.keys(services).reduce((acc, key) => ({ ...acc, [key]: 0 }), {});
+            
+            for (const qIndex in userAnswers) {
+                const optIndex = userAnswers[qIndex];
+                const optionScores = questions[qIndex].options[optIndex].scores;
+                for (const service in optionScores) {
+                    if (scores.hasOwnProperty(service)) {
+                        scores[service] += optionScores[service];
+                    }
+                }
+            }
+
+            if (scores.rebranding >= 3) {
+                scores.branding = 0;
+            }
+
+            const sortedServices = Object.keys(scores).map(key => ({ service: key, score: scores[key] })).filter(item => item.score > 0).sort((a, b) => b.score - a.score);
+            
+            diagnosticContainer.style.display = 'none';
+            recommendationContainer.innerHTML = '';
+            
+            if (sortedServices.length === 0) {
+                resultsIntro.textContent = "Parabéns! Parece que sua marca já está em um ótimo caminho. Se ainda assim quiser explorar novas possibilidades, estamos à disposição.";
+                recommendationContainer.innerHTML = createServiceRecommendationHTML(services.branding);
+            } else {
+                 resultsIntro.textContent = "Com base nas suas respostas, identificamos algumas oportunidades claras para impulsionar sua marca. Aqui estão nossas principais recomendações:";
+                const topServices = sortedServices.slice(0, 2);
+                topServices.forEach(item => {
+                    recommendationContainer.innerHTML += createServiceRecommendationHTML(services[item.service]);
+                });
+            }
+            
+            resultsSection.classList.remove('hidden');
+            resultsSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function createServiceRecommendationHTML(serviceInfo) {
+            let plansHTML = '';
+            serviceInfo.plans.forEach(plan => {
+                const isRecommended = plan.recommended;
+                const cardClass = isRecommended ? 'border-brand-accent' : 'border-transparent';
+                const badgeHTML = isRecommended ? `<span class="absolute top-0 -right-2 bg-brand-accent text-brand-navy text-xs font-bold px-3 py-1 rounded-full transform translate-y-[-50%]">RECOMENDADO</span>` : '';
+
+                plansHTML += `
+                    <div class="relative glass-card p-6 rounded-lg text-left border-2 ${cardClass}">
+                        ${badgeHTML}
+                        <h4 class="text-lg font-bold text-brand-lightest mb-2">${plan.name}</h4>
+                        <p class="text-brand-slate text-sm mb-4">${plan.description}</p>
+                        <a href="${plan.link}" target="_blank" class="text-brand-accent font-semibold hover:underline">
+                           ${plan.cta} &rarr;
+                        </a>
+                    </div>
+                `;
+            });
+
+            return `
+                <div class="space-y-6">
+                    <h3 class="text-2xl font-bold text-brand-lightest text-left">${serviceInfo.title}</h3>
+                    <div class="space-y-4">${plansHTML}</div>
+                </div>
+            `;
+        }
+
+        prevBtn.addEventListener('click', goToPreviousQuestion);
+        nextBtn.addEventListener('click', goToNextQuestion);
+        restartButton.addEventListener('click', () => {
+            resultsSection.classList.add('hidden');
+            startDiagnostic();
+            diagnosticContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+
+        // Initialize animations and the diagnostic tool
+        document.querySelectorAll('.reveal').forEach(el => {
+            new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 }).observe(el);
+        });
+
+        startDiagnostic();
+    });
+    </script>
+
+</body>
+</html>
