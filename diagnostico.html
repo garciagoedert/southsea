@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnóstico Digital: Seu Site é Profissional? | South Sea</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script> 
+    
+    <!-- Google Fonts: Montserrat & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Favicon -->
+    <link rel="icon" href="https://www.southsea.com.br/newimag/Ellipse%209.svg" onerror="this.onerror=null;this.src='https://placehold.co/32x32/0A192F/64FFDA?text=S';">
+
+    <style>
+        /* Paleta de Cores e Tipografia da South Sea */
+        :root {
+            --bg-brand-navy: #0A192F;
+            --bg-brand-light-navy: #112240;
+            --text-brand-lightest: #E6F1FF;
+            --text-brand-light: #CCD6F6;
+            --text-brand-slate: #8892B0;
+            --brand-accent: #64FFDA; /* Menta Vibrante */
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-brand-navy);
+            color: var(--text-brand-slate);
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-brand-lightest);
+        }
+
+        /* Efeito Glassmorphism para cards */
+        .glass-card {
+            background: rgba(17, 34, 64, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(100, 255, 218, 0.1);
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover {
+            border: 1px solid rgba(100, 255, 218, 0.3);
+        }
+
+        /* Botão de Ação Principal (CTA) */
+        .cta-button {
+            background-color: var(--brand-accent);
+            color: var(--bg-brand-navy);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(100, 255, 218, 0.2);
+        }
+
+        /* Estilização customizada para os radio buttons do checklist */
+        .checklist-form input[type="radio"] {
+            display: none; /* Esconde o radio button padrão */
+        }
+
+        .checklist-form label {
+            display: inline-block;
+            padding: 0.75rem 1.25rem;
+            border: 2px solid var(--bg-brand-light-navy);
+            border-radius: 9999px; /* pill shape */
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            font-weight: 600;
+            color: var(--text-brand-light);
+            background-color: var(--bg-brand-light-navy);
+        }
+
+        .checklist-form input[type="radio"]:hover + label {
+            border-color: var(--brand-accent);
+            color: var(--text-brand-lightest);
+        }
+
+        .checklist-form input[type="radio"]:checked + label {
+            background-color: var(--brand-accent);
+            border-color: var(--brand-accent);
+            color: var(--bg-brand-navy);
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(100, 255, 218, 0.3);
+        }
+        
+        /* Animações */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+
+    <!-- Seção Hero -->
+    <header class="min-h-screen flex items-center justify-center text-center p-6 relative">
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-bg-brand-navy z-10"></div>
+        <div class="relative z-20 max-w-4xl reveal">
+            <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight mb-4">
+                <span class="text-brand-accent">Diagnóstico Digital Gratuito</span>
+            </h1>
+            <p class="text-xl md:text-2xl text-brand-light max-w-3xl mx-auto mb-10">
+                Seu site está realmente trabalhando a favor da sua marca? Descubra em 2 minutos os pontos fortes e as oportunidades de melhoria da sua presença online.
+            </p>
+            <a href="#checklist" class="cta-button text-lg py-4 px-10 rounded-md inline-block">
+                Iniciar Diagnóstico
+            </a>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 md:px-10">
+
+        <!-- Seção do Checklist -->
+        <section id="checklist" class="py-20 md:py-32">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-16 reveal">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4">Checklist: O que um site profissional precisa ter?</h2>
+                    <p class="text-lg text-brand-slate">Seja honesto nas suas respostas. O objetivo é ter um panorama real para tomar a melhor decisão.</p>
+                </div>
+
+                <form id="checklist-form" class="space-y-12 reveal">
+                    <!-- As perguntas serão injetadas aqui pelo JavaScript -->
+                </form>
+                
+                <div class="text-center mt-16 reveal">
+                    <button type="submit" form="checklist-form" class="cta-button text-xl py-4 px-12 rounded-md">
+                        Ver Meu Veredito
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção de Resultados (inicialmente oculta) -->
+        <section id="results-section" class="hidden py-20 md:py-32">
+            <div class="max-w-4xl mx-auto text-center glass-card p-8 md:p-12 rounded-xl">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Seu Diagnóstico Digital</h2>
+                <div id="verdict-text" class="text-lg text-brand-light my-8">
+                    <!-- O texto do veredito será inserido aqui -->
+                </div>
+                
+                <div id="recommendation-container">
+                    <!-- A recomendação (Landing Page ou Site Institucional) será inserida aqui -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-8 mt-20 border-t border-white/10">
+        <div class="container mx-auto px-6 md:px-10 text-center text-brand-slate">
+            <a href="https://www.southsea.com.br/" target="_blank">
+                <img src="https://www.southsea.com.br/newimag/Vector.svg" alt="Logo South Sea" class="h-10 w-auto mx-auto mb-4 opacity-70 hover:opacity-100 transition-opacity" onerror="this.onerror=null;this.src='https://placehold.co/100x40/0A192F/64FFDA?text=South+Sea';">
+            </a>
+            <p class="text-sm">&copy; 2025 South Sea. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        
+        // --- DADOS DO CHECKLIST ---
+        const questions = [
+            {
+                category: "Design & Experiência do Usuário",
+                items: [
+                    { id: "q1", text: "O design do seu site atual transmite profissionalismo e a qualidade da sua marca?" },
+                    { id: "q2", text: "Seu site é fácil e intuitivo de navegar em celulares?" },
+                    { id: "q3", text: "As informações mais importantes são fáceis de encontrar (em até 3 cliques)?" },
+                    { id: "q4", text: "A identidade visual (cores, fontes) é consistente e agradável em todas as páginas?" }
+                ]
+            },
+            {
+                category: "Performance & SEO",
+                items: [
+                    { id: "q5", text: "Seu site carrega rapidamente (em menos de 3 segundos)?" },
+                    { id: "q6", text: "Você acredita que seu site aparece no Google quando buscam por seus serviços?" },
+                    { id: "q7", text: "Seu site possui URLs amigáveis e títulos de página otimizados para busca?" }
+                ]
+            },
+            {
+                category: "Conteúdo & Conversão",
+                items: [
+                    { id: "q8", text: "A mensagem principal do seu site é clara e diz o que você faz nos primeiros 5 segundos?" },
+                    { id: "q9", text: "Existem 'chamadas para ação' (botões como 'Fale Conosco') claras e visíveis?" },
+                    { id: "q10", text: "Seu site comunica claramente os problemas que você resolve e os benefícios que oferece?" },
+                    { id: "q11", text: "Você se sente 100% confiante para enviar o link do seu site para um cliente importante?" }
+                ]
+            }
+        ];
+
+        const options = [
+            { text: "Não", value: 1 },
+            { text: "Pouco", value: 2 },
+            { text: "Médio", value: 3 },
+            { text: "Muito", value: 4 },
+            { text: "Com Certeza", value: 5 }
+        ];
+
+        // --- INJETAR PERGUNTAS NO FORMULÁRIO ---
+        const form = document.getElementById('checklist-form');
+        if (form) {
+            let html = '';
+            questions.forEach(cat => {
+                html += `<div class="reveal">
+                            <h3 class="text-2xl font-bold text-brand-accent mb-8 text-center">${cat.category}</h3>
+                            <div class="space-y-10">`;
+                cat.items.forEach(q => {
+                    html += `<div class="glass-card p-6 rounded-lg">
+                                <p class="text-lg font-semibold text-brand-lightest mb-4 text-center">${q.text}</p>
+                                <div class="flex flex-wrap justify-center gap-3 checklist-form">`;
+                    options.forEach(opt => {
+                        html += `<div>
+                                    <input type="radio" id="${q.id}-${opt.value}" name="${q.id}" value="${opt.value}" required>
+                                    <label for="${q.id}-${opt.value}">${opt.text}</label>
+                                 </div>`;
+                    });
+                    html += `</div></div>`;
+                });
+                html += `</div></div>`;
+            });
+            form.innerHTML = html;
+        }
+
+        // --- LÓGICA DO FORMULÁRIO E RESULTADOS ---
+        const resultsSection = document.getElementById('results-section');
+        const verdictTextElem = document.getElementById('verdict-text');
+        const recommendationContainer = document.getElementById('recommendation-container');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            let totalScore = 0;
+            const totalQuestions = questions.flatMap(q => q.items).length;
+            const formData = new FormData(form);
+            
+            for (let value of formData.values()) {
+                totalScore += parseInt(value, 10);
+            }
+
+            const averageScore = totalScore / totalQuestions;
+
+            // Limiar: se a média for menor que 3.5, precisa de uma solução mais robusta.
+            const threshold = 3.5; 
+            
+            let verdictText, recommendationHTML, whatsappMessage;
+
+            if (averageScore < threshold) {
+                // RECOMENDAÇÃO: SITE INSTITUCIONAL
+                verdictText = "Seu diagnóstico mostra que existem oportunidades significativas para fortalecer sua base digital. Um site desalinhado com sua marca pode estar custando clientes e credibilidade. É hora de construir um ativo que trabalhe por você 24/7.";
+                
+                recommendationHTML = `
+                    <div class="border-2 border-brand-accent p-8 rounded-lg bg-brand-light-navy">
+                        <h3 class="text-2xl font-bold text-brand-accent mb-3">Solução Recomendada: Site Institucional Completo</h3>
+                        <p class="text-brand-light mb-6">A solução ideal é um <strong>Site Institucional completo</strong>, que reestrutura sua presença online, comunica seu valor de forma clara, constrói autoridade e transforma seu site em uma poderosa ferramenta de prospecção.</p>
+                        <a href="https://api.whatsapp.com/send/?phone=4899013968&text=Ol%C3%A1%21+Fiz+o+Diagn%C3%B3stico+Digital+e+gostaria+de+uma+proposta+para+um+Site+Institucional.&type=phone_number&app_absent=0" target="_blank" class="cta-button py-3 px-8 rounded-md inline-block">Quero um Site que Gera Resultados</a>
+                    </div>
+                `;
+            } else {
+                // RECOMENDAÇÃO: LANDING PAGE
+                verdictText = "Parabéns! Seu diagnóstico indica que você já tem uma boa base digital. Agora, o próximo passo é focar em conversão para campanhas específicas e maximizar seu retorno sobre investimento.";
+
+                recommendationHTML = `
+                    <div class="border-2 border-brand-accent p-8 rounded-lg bg-brand-light-navy">
+                        <h3 class="text-2xl font-bold text-brand-accent mb-3">Solução Recomendada: Landing Page de Alta Performance</h3>
+                        <p class="text-brand-light mb-6">Para campanhas de marketing, lançamento de produtos ou para capturar leads de anúncios, uma <strong>Landing Page focada</strong> é a peça que falta. Ela é 100% otimizada para um único objetivo: transformar visitantes qualificados em ações concretas.</p>
+                        <a href="https://api.whatsapp.com/send/?phone=4899013968&text=Ol%C3%A1%21+Fiz+o+Diagn%C3%B3stico+Digital+e+gostaria+de+uma+proposta+para+uma+Landing+Page.&type=phone_number&app_absent=0" target="_blank" class="cta-button py-3 px-8 rounded-md inline-block">Quero uma Página que Converte</a>
+                    </div>
+                `;
+            }
+
+            // Exibir resultados
+            verdictTextElem.innerText = verdictText;
+            recommendationContainer.innerHTML = recommendationHTML;
+            
+            document.getElementById('checklist').classList.add('hidden');
+            resultsSection.classList.remove('hidden');
+            resultsSection.classList.add('reveal', 'visible'); // Adiciona classes de animação
+            
+            resultsSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+
+        // --- ANIMAÇÃO DE REVELAÇÃO AO ROLAR ---
+        const revealElements = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    // Opcional: parar de observar depois que o elemento se torna visível
+                    // observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        revealElements.forEach(el => observer.observe(el));
+    });
+    </script>
+
+</body>
+</html>
