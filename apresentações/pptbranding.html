@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apresentação Comercial - Branding & Identidade Visual - Agência South Sea</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Favicon -->
+    <link rel="icon" href="/newimag/Ellipse 9.svg" type="image/png">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Paleta de Cores Otimizada e Versátil */
+        :root {
+            --color-primary: #2563eb;      /* Azul Confiável (Blue-600) */
+            --color-primary-dark: #1e40af; /* Azul Escuro para Destaque (Blue-800) */
+            --color-text-primary: #1e293b;  /* Cinza Escuro (Slate-800) para Texto Principal */
+            --color-text-secondary: #475569;/* Cinza Médio (Slate-600) para Texto de Apoio */
+            --color-light-bg: #f8fafc;      /* Fundo Claro (Slate-50) */
+            --color-white: #ffffff;
+            --color-shadow: rgba(45, 55, 72, 0.1);
+            --color-border: #e2e8f0;       /* Slate-200 */
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-light-bg);
+            color: var(--color-text-primary);
+            overflow-x: hidden; /* Prevenir scroll horizontal */
+        }
+        .slide {
+            min-height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            /* Padding responsivo: ajustado para diferentes telas */
+            padding: 4rem 1rem; /* Base para mobile */
+            position: relative; /* Adicionado para o posicionamento do overlay */
+        }
+        @media (min-width: 640px) {
+            .slide {
+                padding: 5rem 1.5rem; /* sm */
+            }
+        }
+        @media (min-width: 1024px) {
+            .slide {
+                padding: 5rem 2rem; /* lg */
+            }
+        }
+
+        /* Animação de Fade-in */
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .slide-content {
+            max-width: 1200px;
+            width: 100%;
+        }
+        h1, h2, h3, h4 {
+            font-family: 'Montserrat', sans-serif;
+        }
+        h2 { font-weight: 700; }
+        h3 { font-weight: 600; }
+
+        .navigation {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+        .nav-btn {
+            background-color: rgba(30, 64, 175, 0.8); /* Cor primária escura com transparência */
+            color: var(--color-white);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            backdrop-filter: blur(5px);
+        }
+        .nav-btn:hover {
+            background-color: var(--color-primary);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+        }
+        .nav-btn svg {
+            width: 24px;
+            height: 24px;
+        }
+        .fullscreen-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 100;
+        }
+        .bg-sea-calm {
+            background-image: url('https://images.unsplash.com/photo-1509343256512-d77a5cb3791b?q=80&w=1920&auto=format&fit=crop');
+            background-position: center center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        .bg-light { background-color: var(--color-light-bg); }
+        .bg-white { background-color: var(--color-white); }
+        .bg-card {
+            background-color: var(--color-white);
+            box-shadow: 0 4px 6px -1px var(--color-shadow), 0 2px 4px -1px var(--color-shadow);
+            border: 1px solid var(--color-border);
+        }
+        .icon-check {
+            color: var(--color-primary);
+            margin-right: 0.75rem;
+            flex-shrink: 0;
+            width: 1.5rem; /* 24px */
+            height: 1.5rem; /* 24px */
+        }
+        .text-primary { color: var(--color-primary); }
+        .bg-primary { background-color: var(--color-primary); }
+        .text-primary-dark { color: var(--color-primary-dark); }
+        .bg-primary-dark { background-color: var(--color-primary-dark); }
+        .text-main { color: var(--color-text-primary); }
+        .text-secondary { color: var(--color-text-secondary); }
+
+    </style>
+</head>
+<body>
+
+    <div class="scroll-container">
+
+        <!-- Slide 1: Capa -->
+        <section id="slide1" class="slide bg-sea-calm text-white text-center">
+            <div class="absolute inset-0 bg-black opacity-60"></div>
+            <div class="z-10 slide-content fade-in-section px-4">
+                <img src="/newimag/Vector.svg" alt="Logo South Sea" class="mx-auto mb-8 h-16 md:h-20" >
+                <h1 class="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-light">Construindo Marcas que Deixam um <br><span class="font-semibold text-blue-300">Legado Inesquecível</span>.</h1>
+            </div>
+        </section>
+
+        <!-- Slide 2: Quem Somos -->
+        <section id="slide2" class="slide bg-light">
+            <div class="slide-content grid md:grid-cols-2 gap-8 md:gap-16 items-center fade-in-section">
+                <div class="text-center md:text-left">
+                    <h2 class="text-3xl sm:text-4xl md:text-5xl mb-6 text-main">Navegadores da Sua Marca.</h2>
+                    <p class="text-lg leading-relaxed text-secondary">A South Sea é mais que uma agência de design: somos parceiros estratégicos na construção de marcas que comunicam valor, geram conexão e constroem um legado. Nossa missão é transformar sua visão de negócio em uma identidade poderosa que conquista o mercado.</p>
+                </div>
+                <div class="grid grid-cols-3 gap-2 sm:gap-4 mt-8 md:mt-0">
+                    <div class="text-center p-2 sm:p-4 bg-card rounded-lg transition-transform duration-300 hover:-translate-y-2">
+                        <svg class="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A11.953 11.953 0 0012 13.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0l-5.829-5.828" /></svg>
+                        <h3 class="text-sm sm:text-base font-semibold text-main">Estratégia</h3>
+                    </div>
+                     <div class="text-center p-2 sm:p-4 bg-card rounded-lg transition-transform duration-300 hover:-translate-y-2">
+                        <svg class="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" /></svg>
+                        <h3 class="text-sm sm:text-base font-semibold text-main">Design</h3>
+                    </div>
+                     <div class="text-center p-2 sm:p-4 bg-card rounded-lg transition-transform duration-300 hover:-translate-y-2">
+                        <svg class="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-3.75-.625m3.75.625V18" /></svg>
+                        <h3 class="text-sm sm:text-base font-semibold text-main">Legado</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 3: O Desafio -->
+        <section id="slide3" class="slide bg-light">
+            <div class="slide-content text-center fade-in-section">
+                <h2 class="text-3xl sm:text-4xl md:text-5xl mb-6 text-main">Sua marca está navegando à deriva?</h2>
+                <p class="text-lg max-w-4xl mx-auto mb-12 text-secondary">Muitas empresas com produtos excelentes falham por não terem uma marca que comunique o seu verdadeiro valor. Isto soa familiar?</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+                    <div class="bg-white p-6 rounded-lg shadow-sm text-center"><p>Sua marca se perde no ruído e parece <strong>invisível no mercado</strong>?</p></div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm text-center"><p>Sente que precisa <strong>competir por preço</strong> por que seu valor não é percebido?</p></div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm text-center"><p>Sua comunicação é <strong>inconsistente e confunde</strong> os clientes?</p></div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm text-center"><p>Você acaba <strong>atraindo o público errado</strong>, que não se torna embaixador da sua marca?</p></div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Slide 4: A Solução -->
+        <section id="slide4" class="slide bg-white">
+            <div class="slide-content text-center fade-in-section">
+                <h2 class="text-3xl sm:text-4xl md:text-5xl mb-6 text-main">Sua Marca: O Ativo Mais Valioso.</h2>
+                <p class="text-lg md:text-xl leading-relaxed max-w-4xl mx-auto mb-12 text-secondary">Uma marca forte é a base de toda a sua estratégia. É a sua promessa ao cliente, seu principal diferencial competitivo e a ferramenta definitiva para construir autoridade e confiança no seu mercado.</p>
+                <div class="w-full max-w-5xl mx-auto">
+                    <div class="bg-card rounded-lg p-6 md:p-8 grid md:grid-cols-2 gap-8 items-center">
+                        <div class="text-left">
+                           <h3 class="text-2xl mb-6 text-primary">Benefícios de uma Marca Estratégica:</h3>
+                           <ul class="space-y-4">
+                                <li class="flex items-start text-secondary"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong>Diferenciação Clara</strong> em um mar de concorrentes.</span></li>
+                                <li class="flex items-start text-secondary"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong>Conexão Emocional</strong> que fideliza seu público-alvo.</span></li>
+                                <li class="flex items-start text-secondary"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong>Percepção de Valor</strong> que justifica preços premium.</span></li>
+                                <li class="flex items-start text-secondary"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong>Consistência e Confiança</strong> em todos os pontos de contato.</span></li>
+                           </ul>
+                        </div>
+                        <div class="flex justify-center mt-8 md:mt-0">
+                           <img src="https://images.unsplash.com/photo-1580541832626-2a7131ee809f?q=80&w=877&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Pessoas de negócios apertando as mãos" class="rounded-lg shadow-lg object-cover w-full h-full max-h-96">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Slide 5: Nossas Soluções -->
+         <section id="slide5" class="slide bg-light">
+               <div class="slide-content text-center fade-in-section">
+                     <h2 class="text-3xl sm:text-4xl md:text-5xl mb-12 text-main">A Viagem Ideal para Cada Momento</h2>
+                     <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                           <div class="bg-white p-6 md:p-8 rounded-lg transform hover:scale-105 transition-transform duration-300 shadow-sm">
+                                 <h3 class="text-2xl md:text-3xl mb-4 text-main">Identidade Visual</h3>
+                                 <p class="text-base md:text-lg text-secondary"><strong>Hastear a Bandeira.</strong> Para marcas com um rumo definido, mas sem cores. Desenhamos uma bandeira inconfundível. Um sistema visual coeso que garante que seja reconhecido e lembrado.</p>
+                           </div>
+                           <div class="bg-primary-dark text-white p-6 md:p-8 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300">
+                                 <h3 class="text-2xl md:text-3xl mb-4">Branding & Rebranding</h3>
+                                 <p class="text-base md:text-lg"><strong>A Viagem Completa.</strong> A solução estratégica para quem parte do zero (Branding) ou para marcas que buscam um novo rumo (Rebranding). Mapeamos o mercado, definimos a estratégia e construímos uma marca completa para o futuro.</p>
+                           </div>
+                     </div>
+               </div>
+         </section>
+
+        <!-- Slide 6: Entregas Detalhadas -->
+        <section id="slide6" class="slide bg-white">
+            <div class="slide-content fade-in-section">
+                <h2 class="text-3xl sm:text-4xl md:text-5xl mb-12 text-center text-main">Nossas Viagens em Detalhe</h2>
+                <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto items-stretch">
+                    <!-- Identidade Visual -->
+                    <div class="bg-card p-6 rounded-lg flex flex-col transform hover:-translate-y-2 transition-transform duration-300 h-full">
+                        <h3 class="text-2xl mb-4 text-center text-main">Identidade Visual</h3>
+                        <div class="mb-6 text-center text-sm text-secondary flex-grow"><p>Ideal para negócios que já possuem uma estratégia clara e precisam de um sistema visual profissional para se apresentar ao mercado com confiança.</p></div>
+                        <div class="border-t pt-4 mt-auto">
+                            <h4 class="font-bold mb-3 text-center text-primary">Principais Entregas:</h4>
+                            <ul class="text-sm space-y-2 text-secondary">
+                                <li class="flex items-center"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Logo Principal e Variações</span></li>
+                                <li class="flex items-center"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Paleta de Cores Estratégica</span></li>
+                                <li class="flex items-center"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Seleção e Hierarquia de Tipografia</span></li>
+                                <li class="flex items-center"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Definição de Elementos Gráficos de Apoio</span></li>
+                                <li class="flex items-center"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Modelos de Posts para Mídias Sociais</span></li>
+                                <li class="flex items-center"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Design de Cartão de Visitas</span></li>
+                                <li class="flex items-center"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Mockups de Aplicação da Marca</span></li>
+                                <li class="flex items-center"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Manual de Identidade Visual Simplificado</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Branding & Rebranding -->
+                    <div class="bg-card p-6 rounded-lg flex flex-col transform hover:-translate-y-2 transition-transform duration-300 border-2 border-primary h-full">
+                        <h3 class="text-2xl mb-4 text-center text-main">Branding & Rebranding</h3>
+                        <div class="mb-6 text-center text-sm text-secondary flex-grow"><p>Perfeito para novas empresas ou marcas em evolução que buscam construir uma base sólida, alinhar percepção com valor e se destacar no mercado de forma duradoura.</p></div>
+                        <div class="border-t pt-4 mt-auto">
+                            <h4 class="font-bold mb-3 text-center text-primary">Principais Entregas:</h4>
+                            <ul class="text-sm space-y-2 text-secondary">
+                                <li class="flex items-center font-bold text-primary-dark"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Tudo da Identidade Visual, mais:</span></li>
+                                <li class="flex items-center"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Diagnóstico e Imersão Estratégica</span></li>
+                                <li class="flex items-center"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Análise de Concorrência e Mercado</span></li>
+                                <li class="flex items-center"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Definição de Arquétipos e Personalidade</span></li>
+                                <li class="flex items-center"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Plataforma e Tom de Voz da Marca</span></li>
+                                <li class="flex items-center"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Manual da Marca Completo (Brandbook)</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 7: Cases de Sucesso -->
+        <section id="slide7" class="slide bg-light">
+            <div class="slide-content text-center fade-in-section">
+                <h2 class="text-3xl sm:text-4xl md:text-5xl mb-4 text-main">Resultados que Falam por Si.</h2>
+                <p class="text-lg max-w-3xl mx-auto mb-12 text-secondary">Ajudamos empresas a transformar sua percepção de marca em uma poderosa ferramenta de crescimento.</p>
+                <div class="bg-card rounded-lg flex flex-col md:flex-row items-center overflow-hidden text-left shadow-xl max-w-5xl mx-auto">
+                    <div class="w-full md:w-1/2">
+                        <img src="/newimag/shapess (1).png" alt="Estudo de Caso - Rebranding de Sucesso" class="w-full h-full object-cover">
+                    </div>
+                    <div class="w-full md:w-1/2 p-6 sm:p-8 lg:p-12">
+                        <p class="text-primary font-semibold mb-2">Rebranding Estratégico</p>
+                        <h3 class="text-2xl sm:text-3xl font-bold mb-4 text-main">SHAPES english school</h3>
+                        <p class="mb-4 text-secondary"><strong>O Desafio:</strong> A identidade visual datada não refletia a metodologia de ensino excepcional da escola, falhando em conectar com o público jovem e profissional.</p>
+                        <p class="mb-6 text-secondary"><strong>A Solução:</strong> Desenvolvemos um rebranding completo, com uma nova identidade visual e narrativa de marca que traduziram a energia do fundador, reposicionando a Shapes como uma escola moderna e premium.</p>
+                        <div class="border-t border-gray-200 pt-6">
+                            <p class="text-lg font-bold text-primary-dark mb-2">Resultado: Aumento de 35% em novas matrículas no primeiro semestre.</p>
+                            <blockquote class="italic text-secondary">"O trabalho da South Sea foi cirúrgico: eles entenderam a alma da Shapes. Agora, sinto um orgulho imenso de apresentar a nossa marca. Eles não nos deram um logo novo, nos deram um futuro."</blockquote>
+                            <p class="font-bold text-right mt-2 text-main">- Fernando Schutz, Fundador</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 8: Portfólio de Logos -->
+        <section id="slide8" class="slide bg-white">
+            <div class="slide-content text-center fade-in-section">
+                <h2 class="text-3xl sm:text-4xl md:text-5xl mb-6 text-main">Marcas que Navegam Conosco</h2>
+                <p class="text-lg max-w-4xl mx-auto mb-12 text-secondary">Temos orgulho de construir a identidade de marcas que se destacam e prosperam em seus mercados. Cada logo representa uma história de sucesso e parceria.</p>
+                <div class="max-w-5xl mx-auto bg-card p-4 rounded-lg shadow-lg">
+                    <img src="https://placehold.co/1200x600/e2e8f0/475569?text=Galeria+de+Logos+de+Clientes" alt="Portfólio de logos de clientes da South Sea" class="rounded-md w-full">
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 9: Processo (REFORMULADO VISUALMENTE) -->
+        <section id="slide9" class="slide bg-light">
+            <div class="slide-content text-center fade-in-section">
+                <h2 class="text-3xl sm:text-4xl md:text-5xl mb-6 text-main">Nossa Rota para o Seu Legado</h2>
+                <p class="text-lg max-w-4xl mx-auto mb-12 text-secondary">
+                    Nossa jornada é transparente e colaborativa. Detalhamos cada etapa para que você saiba exatamente o que esperar.
+                </p>
+                
+                <!-- Ponto de Partida Visual -->
+                <div class="max-w-4xl mx-auto bg-card p-6 rounded-lg shadow-md mb-12">
+                    <h3 class="text-2xl font-bold text-primary mb-6 text-center">Ponto de Partida: O Início da Viagem</h3>
+                    <div class="grid sm:grid-cols-3 gap-6 text-center">
+                        <div class="flex flex-col items-center">
+                            <div class="bg-primary text-white rounded-full h-16 w-16 flex items-center justify-center mb-3">
+                                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                            </div>
+                            <h4 class="font-semibold text-main">1. Briefing</h4>
+                            <p class="text-sm text-secondary">Você preenche nosso formulário detalhado em até 7 dias.</p>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="bg-primary text-white rounded-full h-16 w-16 flex items-center justify-center mb-3">
+                                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                            </div>
+                            <h4 class="font-semibold text-main">2. Formalização</h4>
+                            <p class="text-sm text-secondary">Enviamos contrato e link de pagamento para início em 1 dia útil.</p>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="bg-primary text-white rounded-full h-16 w-16 flex items-center justify-center mb-3">
+                                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                            </div>
+                            <h4 class="font-semibold text-main">3. Início</h4>
+                            <p class="text-sm text-secondary">Com tudo certo, damos partida oficial no seu projeto.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto items-start">
+                    <!-- Coluna 1: Identidade Visual -->
+                    <div class="bg-card p-6 md:p-8 rounded-lg shadow-md h-full">
+                        <h3 class="text-2xl mb-2 text-primary text-center">Jornada da Identidade Visual</h3>
+                        <p class="font-bold text-secondary mb-6 text-center">Prazo: 30 a 60 dias</p>
+                        <div class="relative border-l-2 border-dashed border-primary pl-8 space-y-8">
+                            <div class="relative"><div class="absolute -left-[34px] top-1 h-4 w-4 rounded-full bg-primary ring-4 ring-white"></div><h4 class="font-semibold text-main">Produção e Protótipo V1</h4><p class="text-sm text-secondary">Criamos a primeira versão e enviamos para sua análise.</p></div>
+                            <div class="relative"><div class="absolute -left-[34px] top-1 h-4 w-4 rounded-full bg-primary ring-4 ring-white"></div><h4 class="font-semibold text-main">1ª Reunião de Alinhamento</h4><p class="text-sm text-secondary">Coletamos seu feedback para refinar o projeto.</p></div>
+                            <div class="relative"><div class="absolute -left-[34px] top-1 h-4 w-4 rounded-full bg-primary ring-4 ring-white"></div><h4 class="font-semibold text-main">Revisão e Protótipo V2</h4><p class="text-sm text-secondary">Apresentamos a versão revisada para aprovação.</p></div>
+                            <div class="relative"><div class="absolute -left-[34px] top-1 h-4 w-4 rounded-full bg-primary ring-4 ring-white"></div><h4 class="font-semibold text-main">Entrega Final</h4><p class="text-sm text-secondary">Com sua aprovação, entregamos todos os ativos.</p></div>
+                        </div>
+                    </div>
+
+                    <!-- Coluna 2: Branding & Rebranding -->
+                    <div class="bg-card p-6 md:p-8 rounded-lg shadow-md border-2 border-primary h-full">
+                         <h3 class="text-2xl mb-2 text-primary text-center">Jornada do Branding</h3>
+                        <p class="font-bold text-secondary mb-6 text-center">Prazo: 6 a 9 meses</p>
+                        <div class="relative border-l-2 border-dashed border-primary pl-8 space-y-8">
+                            <div class="relative"><div class="absolute -left-[34px] top-1 h-4 w-4 rounded-full bg-primary ring-4 ring-white"></div><h4 class="font-semibold text-main">Imersão e Pesquisa </h4><p class="text-sm text-secondary">Mergulhamos no seu universo com reuniões de alinhamento.</p></div>
+                            <div class="relative"><div class="absolute -left-[34px] top-1 h-4 w-4 rounded-full bg-primary ring-4 ring-white"></div><h4 class="font-semibold text-main">Construção Estratégica</h4><p class="text-sm text-secondary">Definimos o posicionamento, tom de voz e a plataforma da marca.</p></div>
+                            <div class="relative"><div class="absolute -left-[34px] top-1 h-4 w-4 rounded-full bg-primary ring-4 ring-white"></div><h4 class="font-semibold text-main">Criação da Identidade </h4><p class="text-sm text-secondary">Iniciamos o processo criativo, seguindo as etapas de protótipos e alinhamentos.</p></div>
+                            <div class="relative"><div class="absolute -left-[34px] top-1 h-4 w-4 rounded-full bg-primary ring-4 ring-white"></div><h4 class="font-semibold text-main">Entrega Final</h4><p class="text-sm text-secondary">Entregamos o Brandbook completo com toda a estratégia e ativos.</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 10: E-books Exclusivos -->
+        <section id="slide10" class="slide bg-white">
+            <div class="slide-content fade-in-section">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl sm:text-4xl md:text-5xl mb-4">Conteúdo Exclusivo para Parceiros</h2>
+                    <p class="text-lg max-w-3xl mx-auto text-secondary">Ao fechar negócio, você ganha acesso à nossa biblioteca de materiais estratégicos para aprofundar seu conhecimento.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                    <div class="bg-card p-6 rounded-lg flex items-center gap-6 transform hover:scale-105 transition-transform duration-300">
+                        <img src="/newimag/cpc1.png" alt="Capa do Ebook Oceano Azul" class="w-24 h-32 object-cover rounded-md shadow-lg flex-shrink-0">
+                        <div class="flex-1 min-w-0">
+                            <h3 class="text-xl font-bold mb-2">Encontrando seu Oceano Azul</h3>
+                            <p class="text-secondary text-sm">Como Posicionar sua Marca de Forma Única em um Mercado Competitivo.</p>
+                        </div>
+                    </div>
+                    <div class="bg-card p-6 rounded-lg flex items-center gap-6 transform hover:scale-105 transition-transform duration-300">
+                        <img src="/newimag/cpc.png" alt="Capa do Ebook Psicologia das Cores" class="w-24 h-32 object-cover rounded-md shadow-lg flex-shrink-0">
+                        <div class="flex-1 min-w-0">
+                            <h3 class="text-xl font-bold mb-2">Cor por Cor</h3>
+                            <p class="text-secondary text-sm">A Psicologia das Cores e Como Usá-las para Influenciar Emoções e Decisões.</p>
+                        </div>
+                    </div>
+                    <div class="bg-card p-6 rounded-lg flex items-center gap-6 transform hover:scale-105 transition-transform duration-300">
+                        <img src="/newimag/nb.png" alt="Capa do Ebook A Nova Bandeira" class="w-24 h-32 object-cover rounded-md shadow-lg flex-shrink-0">
+                        <div class="flex-1 min-w-0">
+                            <h3 class="text-xl font-bold mb-2">A Nova Bandeira</h3>
+                            <p class="text-secondary text-sm">Como Comunicar seu Rebranding para o Mercado, Clientes e Equipe sem Perder a Essência.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 11: Investimento -->
+        <section id="slide11" class="slide bg-light">
+            <div class="slide-content text-center fade-in-section">
+                <h2 class="text-3xl sm:text-4xl md:text-5xl mb-12 text-main">Investimento Estratégico no seu Legado</h2>
+                <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto items-stretch">
+                    <div class="bg-card rounded-lg p-6 md:p-8 flex flex-col">
+                        <h3 class="text-2xl sm:text-3xl mb-4 text-main">Identidade Visual</h3>
+                        <p class="text-secondary mb-6 flex-grow">A bandeira da sua marca. O sistema visual para garantir reconhecimento e impacto imediato.</p>
+                        <p class="text-4xl font-bold text-primary">R$ 4.585,00</p>
+                        <p class="text-sm text-gray-500 mt-2">(Consulte condições de parcelamento)</p>
+                    </div>
+                    <div class="relative bg-primary-dark text-white rounded-lg p-6 md:p-8 flex flex-col shadow-lg">
+                        <div class="absolute top-0 right-4 -mt-4 bg-white text-primary-dark px-3 py-1 rounded-full text-sm font-bold shadow-md">Mais Completo</div>
+                        <h3 class="text-2xl sm:text-3xl mb-4">Branding & Rebranding</h3>
+                        <p class="text-gray-200 mb-6 flex-grow">A viagem completa. A solução estratégica para construir uma marca forte, coerente e pronta para o futuro.</p>
+                        <p class="text-4xl font-bold">R$ 12.585,00</p>
+                         <p class="text-sm text-gray-300 mt-2">(Consulte condições de parcelamento)</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 12: O Que Você Recebe -->
+        <section id="slide12" class="slide bg-white">
+            <div class="slide-content text-center fade-in-section">
+                <h2 class="text-3xl sm:text-4xl md:text-5xl mb-6 text-main">Sua Marca Pronta Para Navegar</h2>
+                <p class="text-lg max-w-3xl mx-auto text-secondary mb-12">Ao final da nossa jornada, você recebe um kit completo com todos os ativos e guias para aplicar sua nova marca com consistência e confiança em qualquer lugar.</p>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 md:gap-8 max-w-5xl mx-auto">
+                    <!-- Logotipo -->
+                    <div class="text-center">
+                        <div class="bg-slate-100 rounded-lg shadow-inner p-6 mx-auto mb-4 w-36 h-36 flex items-center justify-center">
+                            <svg class="w-16 h-16 text-primary" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/><path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/><path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg>
+                        </div>
+                        <h4 class="font-semibold text-main">Logotipo e Variações</h4>
+                        <p class="text-sm text-secondary">Em todos os formatos para uso digital e impresso.</p>
+                    </div>
+                    <!-- Manual da Marca -->
+                    <div class="text-center">
+                        <div class="bg-slate-100 rounded-lg shadow-inner p-6 mx-auto mb-4 w-36 h-36 flex items-center justify-center">
+                            <svg class="w-16 h-16 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                        </div>
+                        <h4 class="font-semibold text-main">Manual da Marca</h4>
+                        <p class="text-sm text-secondary">As regras de uso para garantir a consistência.</p>
+                    </div>
+                    <!-- Cores e Fontes -->
+                    <div class="text-center">
+                        <div class="bg-slate-100 rounded-lg shadow-inner p-6 mx-auto mb-4 w-36 h-36 flex items-center justify-center">
+                           <svg class="w-16 h-16 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path></svg>
+                        </div>
+                        <h4 class="font-semibold text-main">Cores e Fontes</h4>
+                        <p class="text-sm text-secondary">Os códigos das cores e arquivos das fontes.</p>
+                    </div>
+                    <!-- Aplicações -->
+                    <div class="text-center">
+                        <div class="bg-slate-100 rounded-lg shadow-inner p-6 mx-auto mb-4 w-36 h-36 flex items-center justify-center">
+                            <svg class="w-16 h-16 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        </div>
+                        <h4 class="font-semibold text-main">Aplicações</h4>
+                        <p class="text-sm text-secondary">Exemplos práticos de como usar sua nova marca.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 13: Contato -->
+        <section id="slide13" class="slide bg-sea-calm text-white text-center">
+            <div class="absolute inset-0 bg-black opacity-60"></div>
+            <div class="z-10 slide-content fade-in-section px-4">
+                <h2 class="text-3xl sm:text-4xl md:text-5xl mb-8 font-bold">Vamos dar o próximo passo?</h2>
+                <div class="text-lg sm:text-xl md:text-2xl mb-12 max-w-3xl mx-auto space-y-4">
+                    <p>1. Com sua aprovação, iniciamos o processo.</p>
+                    <p>2. Enviaremos o link seguro com Contrato, Questionário Estratégico e Pagamento.</p>
+                    <p>3. Após as formalizações, sua nova marca começa a ser construída.</p>
+                </div>
+                <hr class="my-10 border-gray-400 max-w-md mx-auto"/>
+                <img src="/newimag/Vector.svg" alt="Logo South Sea" class="mx-auto mb-6 h-12">
+                <div class="mt-4 text-base sm:text-lg">
+                    <p>contato@southsea.com.br | (48) 99901-3968</p>
+                    <p>www.southsea.com.br</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Navegação e Fullscreen -->
+    <div class="navigation">
+        <button id="prevBtn" class="nav-btn" aria-label="Slide Anterior">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" /></svg>
+        </button>
+        <button id="nextBtn" class="nav-btn" aria-label="Próximo Slide">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
+        </button>
+    </div>
+    <button id="fullscreenBtn" class="nav-btn fullscreen-btn" aria-label="Ativar Tela Cheia">
+        <svg id="fullscreen-enter-icon" class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M20.25 3.75v4.5m0-4.5h-4.5m4.5 0L15 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15m11.25 5.25v-4.5m0 4.5h-4.5m4.5 0L15 15" />
+        </svg>
+        <svg id="fullscreen-exit-icon" class="w-6 h-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 9V4.5M9 9H4.5M9 9L3.75 3.75M9 15v4.5M9 15H4.5M9 15l-5.25 5.25M15 9V4.5M15 9h4.5M15 9l5.25-5.25M15 15v4.5M15 15h4.5M15 15l5.25 5.25" />
+        </svg>
+    </button>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const slides = document.querySelectorAll('.slide');
+            const fadeSections = document.querySelectorAll('.fade-in-section');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const fullscreenBtn = document.getElementById('fullscreenBtn');
+            const fullscreenEnterIcon = document.getElementById('fullscreen-enter-icon');
+            const fullscreenExitIcon = document.getElementById('fullscreen-exit-icon');
+            let currentSlide = 0;
+            let scrollTimeout;
+            let isScrolling = false;
+
+            // Animação de Fade-in com IntersectionObserver
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            fadeSections.forEach(section => {
+                observer.observe(section);
+            });
+
+            // Função para navegar para um slide específico
+            function showSlide(index) {
+                if (index >= 0 && index < slides.length && !isScrolling) {
+                    isScrolling = true;
+                    slides[index].scrollIntoView({ behavior: 'smooth' });
+                    currentSlide = index;
+                    // Prevenir scrolls múltiplos
+                    setTimeout(() => {
+                        isScrolling = false;
+                    }, 1000); // Duração do scroll suave
+                }
+            }
+            
+            // Atualiza o slide atual com base no scroll
+            function updateCurrentSlideOnScroll() {
+                let maxVisible = 0;
+                let newCurrentSlide = 0;
+                
+                slides.forEach((slide, index) => {
+                    const rect = slide.getBoundingClientRect();
+                    const visibleHeight = Math.max(0, Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0));
+                    
+                    if(visibleHeight > maxVisible) {
+                        maxVisible = visibleHeight;
+                        newCurrentSlide = index;
+                    }
+                });
+                currentSlide = newCurrentSlide;
+            }
+
+            // Event Listeners para botões de navegação
+            nextBtn.addEventListener('click', () => { showSlide(currentSlide + 1); });
+            prevBtn.addEventListener('click', () => { showSlide(currentSlide - 1); });
+
+            // Event Listener para teclas do teclado
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === 'ArrowRight' || e.key === ' ') { 
+                    e.preventDefault(); 
+                    showSlide(currentSlide + 1); 
+                } else if (e.key === 'ArrowUp' || e.key === 'PageUp' || e.key === 'ArrowLeft') { 
+                    e.preventDefault(); 
+                    showSlide(currentSlide - 1); 
+                }
+            });
+
+            // Otimização do evento de scroll
+            window.addEventListener('scroll', () => {
+                if (scrollTimeout) {
+                    clearTimeout(scrollTimeout);
+                }
+                scrollTimeout = setTimeout(updateCurrentSlideOnScroll, 100);
+            }, { passive: true });
+
+            // Função para alternar os ícones de tela cheia
+            function toggleFullscreenIcons() {
+                if (document.fullscreenElement || document.webkitFullscreenElement) {
+                    fullscreenEnterIcon.classList.add('hidden');
+                    fullscreenExitIcon.classList.remove('hidden');
+                    fullscreenBtn.setAttribute('aria-label', 'Sair da Tela Cheia');
+                } else {
+                    fullscreenEnterIcon.classList.remove('hidden');
+                    fullscreenExitIcon.classList.add('hidden');
+                    fullscreenBtn.setAttribute('aria-label', 'Ativar Tela Cheia');
+                }
+            }
+
+            // Event listener para o clique no botão de tela cheia
+            fullscreenBtn.addEventListener('click', () => {
+                try {
+                    const elem = document.documentElement;
+                    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                        if (elem.requestFullscreen) { elem.requestFullscreen(); } 
+                        else if (elem.webkitRequestFullscreen) { elem.webkitRequestFullscreen(); } // Safari
+                    } else {
+                        if (document.exitFullscreen) { document.exitFullscreen(); }
+                        else if (document.webkitExitFullscreen) { document.webkitExitFullscreen(); } // Safari
+                    }
+                } catch (e) {
+                    console.error("Fullscreen API não é suportada ou está bloqueada.", e);
+                    const messageBox = document.createElement('div');
+                    messageBox.textContent = 'O modo de tela cheia não é suportado ou foi bloqueado pelo navegador.';
+                    messageBox.style.position = 'fixed';
+                    messageBox.style.top = '20px';
+                    messageBox.style.left = '50%';
+                    messageBox.style.transform = 'translateX(-50%)';
+                    messageBox.style.backgroundColor = 'var(--color-primary-dark)';
+                    messageBox.style.color = 'white';
+                    messageBox.style.padding = '10px 20px';
+                    messageBox.style.borderRadius = '8px';
+                    messageBox.style.zIndex = '200';
+                    document.body.appendChild(messageBox);
+                    setTimeout(() => {
+                        document.body.removeChild(messageBox);
+                    }, 3000);
+                }
+            });
+
+            // Event listeners para mudança de estado da tela cheia
+            document.addEventListener('fullscreenchange', toggleFullscreenIcons);
+            document.addEventListener('webkitfullscreenchange', toggleFullscreenIcons); // Para Safari
+
+        });
+    </script>
+</body>
+</html>
