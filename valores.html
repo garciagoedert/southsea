@@ -6,7 +6,7 @@
     <title>Tabela de Preços - South Sea</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Favicon -->
-    <link rel="icon" href="/newimag/Ellipse 9.svg">
+    <link rel="icon" href="/newimag/Ellipse 9.svg" onerror="this.onerror=null;this.href='https://placehold.co/32x32/0284c7/FFFFFF?text=SS'">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,6 +18,78 @@
         /* Efeito de gradiente sutil para o fundo */
         .bg-south-sea-gradient {
             background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+        }
+
+        /* Estilos para a tabela responsiva em telas menores */
+        @media (max-width: 767px) {
+            /* Esconde o cabeçalho original da tabela */
+            .responsive-table thead {
+                display: none;
+            }
+
+            /* Transforma as linhas em blocos (cartões) */
+            .responsive-table tbody,
+            .responsive-table tr {
+                display: block;
+                width: 100%;
+            }
+            
+            /* Adiciona separação entre os serviços */
+            .responsive-table tr.service-separator {
+                border-top: 4px solid #0369a1; /* Cor mais forte para o separador principal */
+                margin-top: 2rem;
+                padding-top: 1rem;
+            }
+
+             .responsive-table tr.service-separator:first-child {
+                border-top: none;
+                margin-top: 0;
+                padding-top: 0;
+            }
+
+            /* Remove a junção de células e transforma em blocos */
+            .responsive-table td[rowspan] {
+                display: block;
+                width: 100%;
+                background-color: #f0f9ff; /* Fundo azul claro para destacar o serviço */
+                border-radius: 0.75rem 0.75rem 0 0;
+                padding: 1rem;
+                font-size: 1.125rem; /* 18px */
+                font-weight: 700;
+                color: #0c4a6e; /* Azul escuro */
+                text-align: center !important;
+            }
+            
+            .responsive-table td[rowspan]:last-of-type {
+                 background-color: #e0f2fe;
+                 border-radius: 0;
+                 font-size: 1rem;
+                 margin-bottom: 1rem;
+                 border-bottom: 2px solid #bae6fd;
+            }
+            
+            /* Transforma as células de dados em linhas dentro do cartão */
+            .responsive-table td {
+                display: block;
+                width: 100%;
+                text-align: right !important; /* Força alinhamento para consistência */
+                padding: 0.75rem 1rem;
+                border-bottom: 1px solid #e0f2fe;
+            }
+
+            .responsive-table td:last-child {
+                border-bottom: none;
+            }
+            
+            /* Adiciona o rótulo da coluna (do atributo data-label) antes do dado */
+            .responsive-table td::before {
+                content: attr(data-label);
+                float: left;
+                font-weight: 600;
+                color: #374151; /* Cinza mais escuro para o rótulo */
+                text-align: left !important;
+                margin-right: 1rem;
+            }
         }
     </style>
 </head>
@@ -33,7 +105,7 @@
             <!-- Container da tabela com sombra e bordas arredondadas -->
             <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
                 <div class="overflow-x-auto">
-                    <table class="w-full text-sm sm:text-base text-left text-gray-600">
+                    <table class="w-full text-sm sm:text-base text-left text-gray-600 responsive-table">
                         <thead class="bg-sky-700 text-white uppercase tracking-wider">
                             <tr>
                                 <th scope="col" class="px-6 py-4">Serviço</th>
@@ -51,8 +123,6 @@
                 </div>
             </div>
         </main>
-
-        
     </div>
 
     <script>
@@ -60,10 +130,11 @@
         const services = [
             { name: 'Landing Page', price: 2585.00 },
             { name: 'Site Institucional', price: 5858.00 },
-            { name: 'Atualização de Site', price: 578.00 }
+            { name: 'Atualização de Site', price: 578.00 },
+            { name: 'Identidade Visual', price: 4585.00 },
+            { name: 'Branding/Rebranding', price: 12858.00 }
         ];
 
-        // Estrutura de dados atualizada com taxas da empresa e número de parcelas
         const paymentMethods = [
             // Descontos para o cliente
             { name: 'PIX', adjustment: -0.07, label: '-7% (desconto)', companyFee: 0, installments: 1 },
@@ -108,42 +179,36 @@
 
             services.forEach((service, serviceIndex) => {
                 paymentMethods.forEach((method, methodIndex) => {
-                    // Calcula o valor que o cliente paga
                     const finalPrice = service.price * (1 + method.adjustment);
-                    // Calcula o valor que a empresa recebe (baseado no valor pago pelo cliente)
                     const amountReceived = finalPrice * (1 - method.companyFee);
                     
-                    // Gera o HTML para o valor da parcela, se aplicável
                     let monthlyPaymentHtml = '';
                     if (method.installments > 1) {
                         const monthlyValue = finalPrice / method.installments;
                         monthlyPaymentHtml = `<br><span class="text-xs text-gray-500 font-medium">(${method.installments}x de ${formatCurrency(monthlyValue)})</span>`;
                     }
 
-                    // Define a cor do texto de ajuste com base se é desconto, padrão ou acréscimo
                     let adjustmentColorClass = 'text-gray-600';
-                    if (method.adjustment < 0) {
-                        adjustmentColorClass = 'text-green-600 font-semibold';
-                    } else if (method.adjustment > 0) {
-                        adjustmentColorClass = 'text-red-600 font-semibold';
-                    }
+                    if (method.adjustment < 0) adjustmentColorClass = 'text-green-600 font-semibold';
+                    else if (method.adjustment > 0) adjustmentColorClass = 'text-red-600 font-semibold';
 
-                    // Adiciona uma borda superior para separar os serviços
+                    // Adiciona classe para separar os serviços e para a primeira linha de um serviço
                     const borderClass = methodIndex === 0 && serviceIndex > 0 ? 'border-t-4 border-sky-100' : '';
+                    const serviceSeparatorClass = methodIndex === 0 ? 'service-separator' : '';
 
                     htmlContent += `
-                        <tr class="bg-white hover:bg-sky-50 transition-colors duration-200 ${borderClass}">
-                            <!-- Coluna do Serviço (só aparece na primeira linha de cada grupo) -->
+                        <tr class="bg-white hover:bg-sky-50 transition-colors duration-200 ${borderClass} ${serviceSeparatorClass}">
+                            <!-- Coluna do Serviço (só aparece na primeira linha de cada grupo em desktop) -->
                             ${methodIndex === 0 ? `<td rowspan="${paymentMethods.length}" class="px-6 py-4 font-bold text-sky-800 align-top pt-6">${service.name}</td>` : ''}
                             
-                            <!-- Coluna do Valor Base (só aparece na primeira linha de cada grupo) -->
+                            <!-- Coluna do Valor Base (só aparece na primeira linha de cada grupo em desktop) -->
                             ${methodIndex === 0 ? `<td rowspan="${paymentMethods.length}" class="px-6 py-4 font-medium text-center align-top pt-6">${formatCurrency(service.price)}</td>` : ''}
                             
-                            <!-- Colunas que se repetem para cada método -->
-                            <td class="px-6 py-4 text-center leading-tight">${method.name}${monthlyPaymentHtml}</td>
-                            <td class="px-6 py-4 text-center ${adjustmentColorClass}">${method.label}</td>
-                            <td class="px-6 py-4 text-right font-semibold text-gray-900">${formatCurrency(finalPrice)}</td>
-                            <td class="px-6 py-4 text-right font-bold text-blue-700">${formatCurrency(amountReceived)}</td>
+                            <!-- Colunas que se repetem para cada método, com data-labels para responsividade -->
+                            <td data-label="Pagamento" class="px-6 py-4 text-center leading-tight">${method.name}${monthlyPaymentHtml}</td>
+                            <td data-label="Ajuste" class="px-6 py-4 text-center ${adjustmentColorClass}">${method.label}</td>
+                            <td data-label="Valor Final" class="px-6 py-4 text-right font-semibold text-gray-900">${formatCurrency(finalPrice)}</td>
+                            <td data-label="Valor Líquido" class="px-6 py-4 text-right font-bold text-blue-700">${formatCurrency(amountReceived)}</td>
                         </tr>
                     `;
                 });
@@ -153,7 +218,6 @@
         }
 
         // --- EXECUÇÃO ---
-        // Gera a tabela quando o DOM estiver pronto.
         document.addEventListener('DOMContentLoaded', generateTable);
     </script>
 </body>
