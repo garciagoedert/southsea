@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
     <!-- Favicon -->
+    <!-- O caminho original '/newimag/Ellipse 9.svg' não funciona online. Use um link completo ou um placeholder. -->
     <link rel="icon" href="/newimag/Ellipse 9.svg">
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
@@ -60,7 +61,7 @@
             width: 100%;
         }
         h1, h2, h3, h4, p {
-             font-family: 'Inter', sans-serif;
+            font-family: 'Inter', sans-serif;
         }
         h2 { font-weight: 700; color: var(--color-primary-dark); }
         h3 { font-weight: 700; color: var(--color-primary-dark); }
@@ -127,6 +128,15 @@
         .text-main { color: var(--color-text-primary); }
         .text-secondary { color: var(--color-text-secondary); }
         .text-dark-bg { color: var(--color-dark-bg); }
+        
+        /* Estilos para o slide com fundo branco para garantir contraste */
+        #slide12.bg-white .text-main { color: #1f2937; }
+        #slide12.bg-white .text-secondary { color: #4b5563; }
+        #slide12.bg-white .text-primary-dark { color: #111827; }
+        #slide12.bg-white .icon-check { color: #1f2937; }
+        #slide12.bg-white .bg-card { background-color: #f3f4f6; border-color: #d1d5db; }
+        #slide12.bg-white .bg-light { background-color: #e5e7eb; }
+        #slide12.bg-white .text-gray-500 { color: #6b7280; }
 
     </style>
 </head>
@@ -138,11 +148,12 @@
         <section id="slide1" class="slide bg-hero-creative text-white text-center">
             <div class="absolute inset-0 bg-black opacity-75"></div>
             <div class="z-10 slide-content fade-in-section">
-                  <div class="w-auto h-auto mx-auto mb-10">
-             <img src="/newimag/Vector.svg" 
-                  alt="Placeholder para logo" 
-                  class="w-full h-full object-cover rounded-lg">
-        </div>
+                <div class="w-48 h-auto mx-auto mb-10">
+                    <!-- O caminho original '/newimag/Vector.svg' não funciona online. Usei um placeholder. -->
+                    <img src="/newimag/Vector.svg" 
+                         alt="Logo South Sea" 
+                         class="w-full h-full object-contain rounded-lg">
+                </div>
                 <h1 class="text-4xl md:text-6xl font-bold text-primary-dark">Pare de Exibir Trabalhos.<br>Comece a Conquistar Clientes.</h1>
             </div>
         </section>
@@ -157,19 +168,19 @@
                 <div class="flex justify-center items-center gap-4 md:gap-8">
                     <div class="text-center p-4 md:p-6 bg-card rounded-lg">
                         <svg class="w-12 h-12 md:w-16 md:h-16 mx-auto mb-4 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.898 20.502L16.5 21.75l-.398-1.248a3.375 3.375 0 00-2.455-2.456L12.75 18l1.248-.398a3.375 3.375 0 002.455-2.456L16.5 14.25l.398 1.248a3.375 3.375 0 002.456 2.456l1.248.398-1.248.398a3.375 3.375 0 00-2.456 2.456z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.898 20.502L16.5 21.75l-.398-1.248a3.375 3.375 0 00-2.455-2.456L12.75 18l1.248-.398a3.375 3.375 0 002.455-2.456L16.5 14.25l.398 1.248a3.375 3.375 0 002.456 2.456l1.248.398-1.248.398a3.375 3.375 0 00-2.456 2.456z" />
                         </svg>
                         <h3 class="text-lg md:text-xl">Estética</h3>
                     </div>
                      <div class="text-center p-4 md:p-6 bg-card rounded-lg">
                         <svg class="w-12 h-12 md:w-16 md:h-16 mx-auto mb-4 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
                         </svg>
                         <h3 class="text-lg md:text-xl">Estratégia</h3>
                     </div>
                      <div class="text-center p-4 md:p-6 bg-card rounded-lg">
                         <svg class="w-12 h-12 md:w-16 md:h-16 mx-auto mb-4 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
                         </svg>
                         <h3 class="text-lg md:text-xl">Impacto</h3>
                     </div>
@@ -274,9 +285,9 @@
         </section>
 
         <!-- Slide 7: Processo -->
-        <section id="slide8" class="slide bg-light">
+        <section id="slide7" class="slide bg-dark">
             <div class="slide-content text-center fade-in-section">
-                <h2 class="text-3xl sm:text-4xl md:text-5xl mb-6 text-main">Nossa Jornada: Da Estratégia ao Lançamento</h2>
+                <h2 class="text-3xl sm:text-4xl md:text-5xl mb-6">Nossa Jornada: Da Estratégia ao Lançamento</h2>
                 <p class="text-lg max-w-4xl mx-auto mb-12 text-secondary">
                     Nosso processo é transparente e colaborativo, garantindo que sua visão se torne realidade em cada etapa do caminho.
                 </p>
@@ -321,7 +332,63 @@
             </div>
         </section>
 
-        <!-- Slide 8: Investimento -->
+    
+
+        <!-- Slide 9: E-books Exclusivos -->
+        <section id="slide9" class="slide bg-dark">
+            <div class="slide-content fade-in-section">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl md:text-5xl mb-4">Conteúdo Exclusivo para Nossos Parceiros</h2>
+                    <p class="text-lg max-w-3xl mx-auto text-secondary">Ao fechar negócio, você ganha acesso à nossa biblioteca de materiais estratégicos para aprofundar seu conhecimento em branding e posicionamento.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                   <div class="bg-card p-6 rounded-lg flex flex-col sm:flex-row items-center gap-6 transform hover:scale-105 transition-transform duration-300">
+                        <!-- O caminho original '/newimag/cpc1.png' não funciona online. Usei um placeholder. -->
+                        <img src="/newimag/cpc1.png" alt="Capa do Ebook Oceano Azul" class="w-24 h-32 sm:w-28 sm:h-40 object-cover rounded-md shadow-lg flex-shrink-0">
+                        <div>
+                            <h3 class="text-xl font-bold mb-2">Encontrando seu Oceano Azul</h3>
+                            <p class="text-secondary text-sm">Como Posicionar sua Marca de Forma Única em um Mercado Competitivo.</p>
+                        </div>
+                    </div>
+                   <div class="bg-card p-6 rounded-lg flex flex-col sm:flex-row items-center gap-6 transform hover:scale-105 transition-transform duration-300">
+                        <!-- O caminho original '/newimag/cpc.png' não funciona online. Usei um placeholder. -->
+                        <img src="/newimag/cpc.png" alt="Capa do Ebook Psicologia das Cores" class="w-24 h-32 sm:w-28 sm:h-40 object-cover rounded-md shadow-lg flex-shrink-0">
+                        <div>
+                            <h3 class="text-xl font-bold mb-2">Cor por Cor</h3>
+                            <p class="text-secondary text-sm">A Psicologia das Cores e Como Usá-las para Influenciar Emoções e Decisões.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+         <!-- Slide 10: Bônus Cartão de Visita Digital -->
+        <section id="slide10" class="slide bg-light">
+            <div class="slide-content text-center fade-in-section">
+                <h2 class="text-3xl sm:text-4xl md:text-5xl mb-6">Sua Conexão Direta</h2>
+                <p class="text-lg max-w-3xl mx-auto text-gray-400 mb-12">Para maximizar seu alcance, incluímos uma ferramenta essencial: um <strong>Cartão de Visita Digital</strong> personalizado, perfeito para centralizar todos os seus links importantes.</p>
+                <div class="max-w-2xl mx-auto bg-card p-8 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300">
+                    <div class="flex flex-col md:flex-row items-center gap-8">
+                        <div class="text-primary flex-shrink-0">
+                             <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                                 <path stroke-linecap="round" stroke-linejoin="round" d="M10.172 13.828L13.828 10.172" />
+                             </svg>
+                        </div>
+                        <div class="text-left">
+                            <h3 class="text-2xl mb-4">Seu Cartão de Visita Digital</h3>
+                            <ul class="space-y-3 text-gray-400">
+                                <li class="flex items-start"><svg class="icon-check w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Ideal para a bio do Instagram, WhatsApp e outras redes.</span></li>
+                                <li class="flex items-start"><svg class="icon-check w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Reúna seus links mais importantes em um só lugar.</span></li>
+                                <li class="flex items-start"><svg class="icon-check w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Design alinhado com a identidade visual da sua marca.</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+          <!-- Slide 8: Investimento -->
         <section id="slide8" class="slide bg-light">
             <div class="slide-content text-center fade-in-section">
                 <h2 class="text-4xl md:text-5xl mb-12">Um Investimento no seu Legado Criativo</h2>
@@ -342,61 +409,9 @@
                 </div>
             </div>
         </section>
-
-        <!-- Slide 9: E-books Exclusivos -->
-        <section id="slide9" class="slide bg-dark">
-            <div class="slide-content fade-in-section">
-                <div class="text-center mb-12">
-                    <h2 class="text-4xl md:text-5xl mb-4">Conteúdo Exclusivo para Nossos Parceiros</h2>
-                    <p class="text-lg max-w-3xl mx-auto text-secondary">Ao fechar negócio, você ganha acesso à nossa biblioteca de materiais estratégicos para aprofundar seu conhecimento em branding e posicionamento.</p>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                   <div class="bg-card p-6 rounded-lg flex flex-col sm:flex-row items-center gap-6 transform hover:scale-105 transition-transform duration-300">
-                        <img src="/newimag/cpc1.png" alt="Capa do Ebook Oceano Azul" class="w-24 h-32 sm:w-28 sm:h-40 object-cover rounded-md shadow-lg flex-shrink-0">
-                        <div>
-                            <h3 class="text-xl font-bold mb-2">Encontrando seu Oceano Azul</h3>
-                            <p class="text-secondary text-sm">Como Posicionar sua Marca de Forma Única em um Mercado Competitivo.</p>
-                        </div>
-                    </div>
-                   <div class="bg-card p-6 rounded-lg flex flex-col sm:flex-row items-center gap-6 transform hover:scale-105 transition-transform duration-300">
-                        <img src="/newimag/cpc.png" alt="Capa do Ebook Psicologia das Cores" class="w-24 h-32 sm:w-28 sm:h-40 object-cover rounded-md shadow-lg flex-shrink-0">
-                        <div>
-                            <h3 class="text-xl font-bold mb-2">Cor por Cor</h3>
-                            <p class="text-secondary text-sm">A Psicologia das Cores e Como Usá-las para Influenciar Emoções e Decisões.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
         
-         <!-- Slide 10: Bônus Cartão de Visita Digital -->
-        <section id="slide10" class="slide bg-light">
-            <div class="slide-content text-center fade-in-section">
-                <h2 class="text-3xl sm:text-4xl md:text-5xl mb-6">Sua Conexão Direta</h2>
-                <p class="text-lg max-w-3xl mx-auto text-gray-400 mb-12">Para maximizar seu alcance, incluímos uma ferramenta essencial: um <strong>Cartão de Visita Digital</strong> personalizado, perfeito para centralizar todos os seus links importantes.</p>
-                <div class="max-w-2xl mx-auto bg-card p-8 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300">
-                    <div class="flex flex-col md:flex-row items-center gap-8">
-                        <div class="text-primary flex-shrink-0" style="color: var(--color-primary);">
-                             <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-                                 <path stroke-linecap="round" stroke-linejoin="round" d="M10.172 13.828L13.828 10.172" />
-                             </svg>
-                        </div>
-                        <div class="text-left">
-                            <h3 class="text-2xl mb-4" style="color: var(--color-primary);">Seu Cartão de Visita Digital</h3>
-                            <ul class="space-y-3 text-gray-400">
-                                <li class="flex items-start"><svg class="icon-check w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Ideal para a bio do Instagram, WhatsApp e outras redes.</span></li>
-                                <li class="flex items-start"><svg class="icon-check w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Reúna seus links mais importantes em um só lugar.</span></li>
-                                <li class="flex items-start"><svg class="icon-check w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Design alinhado com a identidade visual da sua marca.</span></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <!-- Slide 10: Atualização de Portfólio -->
-        <section id="slide10" class="slide bg-light">
+        <!-- Slide 11: Atualização de Portfólio -->
+        <section id="slide11" class="slide bg-dark">
             <div class="slide-content fade-in-section text-center">
                 <h2 class="text-4xl md:text-5xl mb-4">Seu Legado em Constante Evolução</h2>
                 <p class="text-lg max-w-3xl mx-auto text-secondary mb-12">Sabemos que seu trabalho não para. Oferecemos um serviço de atualização de portfólio para garantir que sua presença digital sempre reflita seus projetos mais recentes e impressionantes.</p>
@@ -409,8 +424,58 @@
             </div>
         </section>
 
-        <!-- Slide 11: Contato -->
-        <section id="slide11" class="slide bg-hero-creative text-white text-center">
+        <!-- Slide 12: UPSELL -->
+        <section id="slide12" class="slide bg-white">
+            <div class="slide-content text-center fade-in-section">
+                <h2 class="text-3xl sm:text-4xl md:text-5xl mb-4 text-main">Potencialize Sua Estratégia Digital</h2>
+                <p class="text-lg max-w-3xl mx-auto text-secondary mb-12">Adicione nossos serviços de performance e branding com um <span class="text-indigo-600 font-semibold">desconto exclusivo</span> ao contratar seu novo site.</p>
+                <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto items-stretch">
+                    
+                    <!-- Card Gestão de Tráfego -->
+                    <!-- O caminho original para outra apresentação não funciona online. Troquei por '#' -->
+                    <a href="#" class="block no-underline text-current">
+                        <div class="bg-card rounded-lg p-6 md:p-8 flex flex-col border-2 border-dashed border-gray-400 transform hover:scale-105 transition-transform duration-300 h-full">
+                            <h3 class="text-2xl mb-4 text-primary-dark">Gestão de Tráfego</h3>
+                            <p class="text-secondary mb-6 flex-grow">Atraia o público certo e transforme cliques em clientes com campanhas otimizadas no Google e Meta Ads.</p>
+                            <div class="space-y-4 mt-auto">
+                                <div class="bg-light p-4 rounded-lg">
+                                    <p class="text-secondary">1 Plataforma</p>
+                                    <p class="text-xl font-semibold text-gray-500"><del>R$ 1.500/mês</del></p>
+                                    <p class="text-3xl font-bold text-primary-dark">R$ 1.200/mês</p>
+                                </div>
+                                <div class="bg-light p-4 rounded-lg">
+                                    <p class="text-secondary">2 Plataformas</p>
+                                    <p class="text-xl font-semibold text-gray-500"><del>R$ 2.000/mês</del></p>
+                                    <p class="text-3xl font-bold text-primary-dark">R$ 1.800/mês</p>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- Card Identidade Visual -->
+                    <!-- O caminho original para outra apresentação não funciona online. Troquei por '#' -->
+                    <a href="#" class="block no-underline text-current">
+                        <div class="bg-card rounded-lg p-6 md:p-8 flex flex-col border-2 border-dashed border-gray-400 transform hover:scale-105 transition-transform duration-300 h-full">
+                            <h3 class="text-2xl mb-4 text-primary-dark">Identidade Visual</h3>
+                            <p class="text-secondary mb-6">Construa uma marca memorável que gera confiança, profissionalismo e se destaca no mercado.</p>
+                            <ul class="text-left text-sm space-y-2 text-secondary mb-6 flex-grow">
+                                <li class="flex items-center"><svg class="icon-check w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Logo e Variações</span></li>
+                                <li class="flex items-center"><svg class="icon-check w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Manual da Marca Simplificado</span></li>
+                                <li class="flex items-center"><svg class="icon-check w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Paleta de Cores e Tipografia</span></li>
+                            </ul>
+                            <div class="mt-auto bg-light p-4 rounded-lg text-center">
+                                 <p class="text-secondary">Projeto Completo</p>
+                                <p class="text-xl font-semibold text-gray-500"><del>R$ 4.585,00</del></p>
+                                <p class="text-3xl font-bold text-primary-dark">R$ 4.126,50</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 13: Contato -->
+        <section id="slide13" class="slide bg-hero-creative text-white text-center">
              <div class="absolute inset-0 bg-black opacity-80"></div>
             <div class="z-10 slide-content fade-in-section">
                 <h2 class="text-4xl md:text-6xl mb-8 font-bold">Pronto para um portfólio que conquista clientes?</h2>
@@ -421,10 +486,11 @@
                 </div>
                 <hr class="my-10 border-gray-700 max-w-md mx-auto"/>
                <div class="w-60 h-auto mx-auto mb-10">
-             <img src="/newimag/Vector.svg" 
-                  alt="Placeholder para logo" 
-                  class="w-full h-full object-cover rounded-lg">
-        </div>
+                    <!-- O caminho original '/newimag/Vector.svg' não funciona online. Usei um placeholder. -->
+                    <img src="/newimag/Vector.svg" 
+                         alt="Logo South Sea" 
+                         class="w-full h-full object-contain rounded-lg">
+                </div>
                 <div class="mt-4 text-lg">
                     <p>contato@southsea.com.br | (48) 99901-3968</p>
                     <p>www.southsea.com.br</p>
@@ -452,6 +518,7 @@
             let scrollTimeout;
             let isScrolling = false;
 
+            // Observador para animação de fade-in
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
@@ -464,17 +531,20 @@
                 observer.observe(section);
             });
 
+            // Função para navegar para um slide específico
             function showSlide(index) {
                 if (index >= 0 && index < slides.length && !isScrolling) {
                     isScrolling = true;
                     slides[index].scrollIntoView({ behavior: 'smooth' });
                     currentSlide = index;
+                    // Previne múltiplos scrolls seguidos
                     setTimeout(() => {
                         isScrolling = false;
-                    }, 1000);
+                    }, 1000); // Duração da animação de scroll
                 }
             }
             
+            // Função para atualizar o slide atual baseado no scroll do usuário
             function updateCurrentSlideOnScroll() {
                 let maxVisible = 0;
                 let newCurrentSlide = 0;
@@ -491,9 +561,11 @@
                 currentSlide = newCurrentSlide;
             }
 
+            // Event Listeners para os botões
             nextBtn.addEventListener('click', () => { showSlide(currentSlide + 1); });
             prevBtn.addEventListener('click', () => { showSlide(currentSlide - 1); });
 
+            // Event Listeners para as teclas do teclado
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === 'ArrowRight' || e.key === ' ') { 
                     e.preventDefault(); 
@@ -504,22 +576,24 @@
                 }
             });
 
+            // Atualiza o slide atual quando o usuário rola a página manualmente
             window.addEventListener('scroll', () => {
                 if (scrollTimeout) {
                     clearTimeout(scrollTimeout);
                 }
-                scrollTimeout = setTimeout(updateCurrentSlideOnScroll, 100);
+                scrollTimeout = setTimeout(updateCurrentSlideOnScroll, 150);
             }, { passive: true });
 
+            // Funcionalidade de Tela Cheia
             fullscreenBtn.addEventListener('click', () => {
                 try {
                     const elem = document.documentElement;
                     if (!document.fullscreenElement) {
                         if (elem.requestFullscreen) { elem.requestFullscreen(); } 
-                        else if (elem.webkitRequestFullscreen) { elem.webkitRequestFullscreen(); }
+                        else if (elem.webkitRequestFullscreen) { /* Safari */ elem.webkitRequestFullscreen(); }
                     } else {
                         if (document.exitFullscreen) { document.exitFullscreen(); }
-                        else if (document.webkitExitFullscreen) { document.webkitExitFullscreen(); }
+                        else if (document.webkitExitFullscreen) { /* Safari */ document.webkitExitFullscreen(); }
                     }
                 } catch (e) {
                     console.error("Fullscreen API não é suportada ou está bloqueada.", e);
@@ -529,4 +603,3 @@
     </script>
 </body>
 </html>
- 

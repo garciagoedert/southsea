@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apresentação Comercial - Gestão de Tráfego</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Favicon -->
+    <link rel="icon" href="/newimag/Ellipse 9.svg" onerror="this.onerror=null;this.src='https://placehold.co/32x32';">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Paleta de Cores Otimizada e Versátil */
+        :root {
+            --color-primary: #2563eb;      /* Azul Confiável (Blue-600) */
+            --color-primary-dark: #1e40af; /* Azul Escuro para Destaque (Blue-800) */
+            --color-text-primary: #1e293b;  /* Cinza Escuro (Slate-800) para Texto Principal */
+            --color-text-secondary: #475569;/* Cinza Médio (Slate-600) para Texto de Apoio */
+            --color-light-bg: #f8fafc;      /* Fundo Claro (Slate-50) */
+            --color-white: #ffffff;
+            --color-shadow: rgba(45, 55, 72, 0.1);
+            --color-border: #e2e8f0;       /* Slate-200 */
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-light-bg);
+            color: var(--color-text-primary);
+            overflow-x: hidden; /* Prevenir scroll horizontal */
+        }
+        .slide {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            /* Padding responsivo: menor em telas pequenas, maior em telas grandes */
+            padding: 4rem 1.5rem;
+            position: relative;
+            width: 100%;
+        }
+        /* Animação de Fade-in */
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .slide-content {
+            max-width: 1200px;
+            width: 100%;
+        }
+        h1, h2, h3, h4, p {
+             font-family: 'Inter', sans-serif;
+        }
+        h2 { font-weight: 700; }
+        h3 { font-weight: 600; }
+
+        .navigation {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+        .nav-btn {
+            background-color: rgba(37, 99, 235, 0.25);
+            color: var(--color-primary-dark);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .nav-btn:hover {
+            background-color: var(--color-primary);
+            color: white;
+        }
+        .fullscreen-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 100;
+        }
+        .bg-sea-calm {
+            background-image: url('https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1920&auto=format&fit=crop');
+            background-position: center center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        .bg-light { background-color: var(--color-light-bg); }
+        .bg-white { background-color: var(--color-white); }
+        .bg-card {
+            background-color: var(--color-white);
+            box-shadow: 0 4px 6px -1px var(--color-shadow), 0 2px 4px -1px var(--color-shadow);
+            border: 1px solid var(--color-border);
+        }
+        .icon-check {
+            color: var(--color-primary);
+            margin-right: 0.75rem;
+            flex-shrink: 0;
+            width: 1.5rem; /* 24px */
+            height: 1.5rem; /* 24px */
+        }
+        .text-primary { color: var(--color-primary); }
+        .bg-primary { background-color: var(--color-primary); }
+        .text-primary-dark { color: var(--color-primary-dark); }
+        .bg-primary-dark { background-color: var(--color-primary-dark); }
+        .text-main { color: var(--color-text-primary); }
+        .text-secondary { color: var(--color-text-secondary); }
+
+    </style>
+</head>
+<body>
+
+    <div class="scroll-container">
+
+        <!-- Slide 1: Capa -->
+        <section id="slide1" class="slide bg-sea-calm text-white text-center">
+            <div class="absolute inset-0 bg-black opacity-60"></div>
+            <div class="z-10 slide-content fade-in-section">
+                <img src="/newimag/Vector.svg" alt="Logo South Sea" class="mx-auto mb-8 h-16 md:h-20" onerror="this.onerror=null;this.src='https://placehold.co/200x80/ffffff/000000?text=South+Sea';">
+                <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light">Transformando Cliques em <br><span class="font-semibold text-blue-300">Clientes Reais</span>.</h1>
+            </div>
+        </section>
+
+        <!-- Slide 2: Quem Somos -->
+        <section id="slide2" class="slide bg-light">
+            <div class="slide-content grid md:grid-cols-2 gap-12 md:gap-16 items-center fade-in-section">
+                <div class="text-center md:text-left">
+                    <h2 class="text-3xl sm:text-4xl md:text-5xl mb-6 text-main">Estrategistas do seu Crescimento Digital.</h2>
+                    <p class="text-lg leading-relaxed text-secondary">A South Sea é mais que uma agência: somos parceiros estratégicos que conectam sua marca aos clientes certos, gerando valor real. Nossa missão é traduzir seus objetivos de negócio em campanhas de tráfego que não apenas alcançam, mas convertem.</p>
+                </div>
+                <div class="grid grid-cols-3 gap-4 md:gap-6">
+                    <div class="text-center p-4 md:p-6 bg-card rounded-lg">
+                        <svg class="w-12 h-12 md:w-16 md:h-16 mx-auto mb-4 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A11.953 11.953 0 0012 13.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0l-5.829-5.828" /></svg>
+                        <h3 class="text-base md:text-xl text-main">Estratégia</h3>
+                    </div>
+                     <div class="text-center p-4 md:p-6 bg-card rounded-lg">
+                        <svg class="w-12 h-12 md:w-16 md:h-16 mx-auto mb-4 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" /></svg>
+                        <h3 class="text-base md:text-xl text-main">Análise</h3>
+                    </div>
+                     <div class="text-center p-4 md:p-6 bg-card rounded-lg">
+                        <svg class="w-12 h-12 md:w-16 md:h-16 mx-auto mb-4 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-3.75-.625m3.75.625V18" /></svg>
+                        <h3 class="text-base md:text-xl text-main">Resultados</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 3: O Desafio Digital -->
+        <section id="slide3" class="slide bg-white">
+            <div class="slide-content text-center fade-in-section">
+                <h2 class="text-3xl sm:text-4xl md:text-5xl mb-6 text-main">No mercado atual, a invisibilidade custa caro.</h2>
+                <p class="text-lg max-w-4xl mx-auto mb-12 md:mb-16 text-secondary">Muitos negócios excelentes perdem oportunidades todos os dias por não terem uma presença online à altura da sua qualidade. Uma vitrine digital mal construída ou inexistente pode minar a confiança e afastar clientes em potencial.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+                    <div class="bg-light p-6 rounded-lg shadow-sm text-center"><p>Sua marca se perde em meio a <strong>concorrentes online</strong>?</p></div>
+                    <div class="bg-light p-6 rounded-lg shadow-sm text-center"><p>Sente dificuldade em <strong>atrair os clientes</strong> que realmente valorizam seu trabalho?</p></div>
+                    <div class="bg-light p-6 rounded-lg shadow-sm text-center"><p>Sua presença digital atual <strong>não transmite a credibilidade</strong> que seu negócio merece?</p></div>
+                    <div class="bg-light p-6 rounded-lg shadow-sm text-center"><p>Frustrado com estratégias de marketing que <strong>prometem muito e entregam pouco</strong>?</p></div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Slide 4: A Solução -->
+        <section id="slide4" class="slide bg-light">
+            <div class="slide-content text-center fade-in-section">
+                <h2 class="text-3xl sm:text-4xl md:text-5xl mb-6 text-main">Seu Ativo Digital Mais Importante.</h2>
+                <p class="text-lg md:text-xl leading-relaxed max-w-4xl mx-auto mb-12 text-secondary">Um site profissional e uma rede social bem estruturada é a base de toda a sua estratégia digital, é a sua vitrine 24/7, seu principal canal de vendas e a ferramenta definitiva para construir autoridade e confiança no seu mercado.</p>
+                <div class="w-full max-w-5xl mx-auto">
+                    <div class="bg-card rounded-lg p-6 md:p-8 grid md:grid-cols-2 gap-8 items-center">
+                        <div class="text-left">
+                           <h3 class="text-2xl mb-6 text-primary">Benefícios de uma Presença Digital Estratégica:</h3>
+                           <ul class="space-y-4">
+                                <li class="flex items-start text-secondary"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong>Constrói Credibilidade</strong> e confiança instantânea.</span></li>
+                                <li class="flex items-start text-secondary"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong>Gera Oportunidades</strong> de negócio 24 horas por dia, 7 dias por semana.</span></li>
+                                <li class="flex items-start text-secondary"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong>Alcança Visibilidade Estratégica</strong> no Google e nas mídias sociais, onde seus clientes estão e procuram.</span></li>
+                                <li class="flex items-start text-secondary"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong>Estabelece Autoridade</strong> e posiciona sua marca como líder no setor.</span></li>
+                           </ul>
+                        </div>
+                        <div class="flex justify-center">
+                           <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1920&auto=format&fit=crop" alt="Pessoa analisando gráficos de performance em um laptop" class="rounded-lg shadow-lg object-cover w-full h-full max-h-96">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Slide 5: Nossas Soluções em Detalhe -->
+        <section id="slide5" class="slide bg-white">
+            <div class="slide-content fade-in-section">
+                <h2 class="text-3xl sm:text-4xl md:text-5xl mb-12 text-center text-main">Nossa Solução em Detalhe</h2>
+                <div class="max-w-3xl mx-auto">
+                    <!-- Gestão de Tráfego Estratégica -->
+                    <div class="bg-card p-6 md:p-8 rounded-lg flex flex-col transform hover:-translate-y-2 transition-transform duration-300 border-2 border-primary h-full">
+                        <h3 class="text-2xl md:text-3xl mb-4 text-center text-main">Gestão de Tráfego Estratégica</h3>
+                        <div class="mb-6 text-center text-base text-secondary flex-grow"><p>Para o profissional que tem foco em crescimento e conversão, que busca alcançar mais clientes e aumentar sua presença digital.</p></div>
+                        <div class="border-t pt-6 mt-auto">
+                            <h4 class="font-bold mb-4 text-center text-primary text-xl">Principais Entregas:</h4>
+                            <ul class="text-base space-y-3 text-secondary">
+                                <li class="flex items-center"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Gestão de tráfego para plataforma Google Ads e/ou Meta Ads</span></li>
+                                <li class="flex items-center"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Entrega de relatórios personalizados</span></li>
+                                <li class="flex items-center"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Reuniões quinzenais para alinhamento e fechamento</span></li>
+                                <li class="flex items-center"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Acompanhamento em conjunto com a equipe comercial</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 6: Processo -->
+        <section id="slide6" class="slide bg-light">
+            <div class="slide-content text-center fade-in-section">
+                <h2 class="text-3xl sm:text-4xl md:text-5xl mb-6 text-main">Nossa Jornada: Da Análise à Performance</h2>
+                <p class="text-lg max-w-4xl mx-auto mb-12 text-secondary">
+                    Nosso processo é transparente e colaborativo, garantindo que sua visão se torne realidade em cada etapa do caminho.
+                </p>
+                
+                <div class="bg-card p-6 md:p-8 rounded-lg shadow-md max-w-4xl mx-auto">
+                    <h3 class="text-2xl mb-2 text-primary text-center">Jornada de Performance</h3>
+                    <p class="font-bold text-secondary mb-6 text-center">Prazo: 7 a 15 dias</p>
+                    <div class="relative border-l-2 border-dashed border-primary pl-8 space-y-8">
+                        <div class="relative"><div class="absolute -left-[34px] top-1 h-4 w-4 rounded-full bg-primary"></div><h4 class="font-semibold text-main">Onboarding</h4><p class="text-sm text-secondary">Coletamos todas as informações e acessos necessários para começar.</p></div>
+                        <div class="relative"><div class="absolute -left-[34px] top-1 h-4 w-4 rounded-full bg-primary"></div><h4 class="font-semibold text-main">Reunião de Alinhamento</h4><p class="text-sm text-secondary">Definimos juntos as metas, público-alvo e estratégias iniciais.</p></div>
+                        <div class="relative"><div class="absolute -left-[34px] top-1 h-4 w-4 rounded-full bg-primary"></div><h4 class="font-semibold text-main">Revisão Final e Início das Campanhas</h4><p class="text-sm text-secondary">Com tudo aprovado, suas campanhas vão ao ar para atrair os primeiros clientes.</p></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 9: Investimento -->
+        <section id="slide9" class="slide bg-light">
+            <div class="slide-content text-center fade-in-section">
+                <h2 class="text-3xl sm:text-4xl md:text-5xl mb-4 text-main">Investimento em Performance</h2>
+                 <p class="text-lg max-w-3xl mx-auto text-secondary mb-12">Planos flexíveis para impulsionar seu negócio.</p>
+                <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto items-stretch">
+                    <div class="bg-card rounded-lg p-6 md:p-8 flex flex-col">
+                        <h3 class="text-3xl mb-4 text-main">1 Plataforma</h3>
+                        <p class="text-secondary mb-6 flex-grow">Gestão completa em Google Ads ou Meta Ads.</p>
+                        <p class="text-4xl font-bold text-primary">R$ 1.500<span class="text-2xl font-normal">/mês</span></p>
+                    </div>
+                    <div class="bg-primary-dark text-white rounded-lg p-6 md:p-8 flex flex-col shadow-lg">
+                        <h3 class="text-3xl mb-4">2 Plataformas</h3>
+                        <p class="text-gray-200 mb-6 flex-grow">Gestão integrada em Google Ads e Meta Ads para máxima sinergia.</p>
+                        <p class="text-4xl font-bold">R$ 2.000<span class="text-2xl font-normal">/mês</span></p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto items-stretch mt-8">
+                     <div class="bg-card rounded-lg p-6 flex flex-col items-center justify-center text-center">
+                        <h3 class="text-2xl mb-2 text-main">Taxa de Onboarding</h3>
+                        <p class="text-secondary mb-4">Configuração inicial completa da sua conta e estratégia.</p>
+                        <p class="text-3xl font-bold text-primary-dark">R$ 500 <span class="text-lg font-normal">(Pagamento único)</span></p>
+                    </div>
+                     <div class="bg-card rounded-lg p-6 flex flex-col items-center justify-center text-center">
+                        <h3 class="text-2xl mb-2 text-main">Investimento em Anúncios</h3>
+                        <p class="text-secondary mb-4">Verba destinada diretamente para as plataformas de anúncio.</p>
+                        <p class="text-3xl font-bold text-primary-dark">A partir de R$ 1.000</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Slide 7: E-books Exclusivos -->
+        <section id="slide7" class="slide bg-white">
+            <div class="slide-content fade-in-section">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl sm:text-4xl md:text-5xl mb-4">Conteúdo Exclusivo para Parceiros</h2>
+                    <p class="text-lg max-w-3xl mx-auto text-secondary">Ao fechar negócio, você ganha acesso à nossa biblioteca de materiais estratégicos para aprofundar seu conhecimento.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                    <div class="bg-card p-6 rounded-lg flex flex-col text-center sm:flex-row sm:text-left items-center gap-6 transform hover:scale-105 transition-transform duration-300">
+                        <img src="/newimag/cpc1.png" alt="Capa do Ebook Oceano Azul" class="w-24 h-32 sm:w-28 sm:h-40 object-cover rounded-md shadow-lg flex-shrink-0" onerror="this.onerror=null;this.src='https://placehold.co/112x160/e0e7ff/3730a3?text=Ebook+1';">
+                        <div>
+                            <h3 class="text-xl font-bold mb-2">Encontrando seu Oceano Azul</h3>
+                            <p class="text-secondary text-sm">Como Posicionar sua Marca de Forma Única em um Mercado Competitivo.</p>
+                        </div>
+                    </div>
+                    <div class="bg-card p-6 rounded-lg flex flex-col text-center sm:flex-row sm:text-left items-center gap-6 transform hover:scale-105 transition-transform duration-300">
+                        <img src="/newimag/cpc.png" alt="Capa do Ebook Psicologia das Cores" class="w-24 h-32 sm:w-28 sm:h-40 object-cover rounded-md shadow-lg flex-shrink-0" onerror="this.onerror=null;this.src='https://placehold.co/112x160/dbeafe/1e40af?text=Ebook+2';">
+                        <div>
+                            <h3 class="text-xl font-bold mb-2">Cor por Cor</h3>
+                            <p class="text-secondary text-sm">A Psicologia das Cores e Como Usá-las para Influenciar Emoções e Decisões.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+      
+
+      
+
+        <!-- Slide 10: Contato -->
+        <section id="slide10" class="slide bg-sea-calm text-white text-center">
+             <div class="absolute inset-0 bg-black opacity-75"></div>
+            <div class="z-10 slide-content fade-in-section">
+                <h2 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-8 font-bold">Vamos dar o próximo passo?</h2>
+                <div class="text-xl md:text-2xl mb-12 max-w-3xl mx-auto space-y-4">
+                    <p>1. Com sua aprovação, iniciamos o processo.</p>
+                    <p>2. Enviaremos o link seguro com Contrato, Questionário Estratégico e Pagamento.</p>
+                    <p>3. Após as formalizações, suas novas campanhas começam a ser construídas.</p>
+                </div>
+                <hr class="my-10 border-gray-400 max-w-md mx-auto"/>
+                <img src="/newimag/Vector.svg" alt="Logo South Sea" class="mx-auto mb-6 h-12" onerror="this.onerror=null;this.src='https://placehold.co/150x50/ffffff/000000?text=South+Sea';">
+                <div class="mt-4 text-lg">
+                    <p>contato@southsea.com.br | (48) 99901-3968</p>
+                    <p>www.southsea.com.br</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Navegação e Fullscreen -->
+    <div class="navigation">
+        <button id="prevBtn" class="nav-btn">▲</button>
+        <button id="nextBtn" class="nav-btn">▼</button>
+    </div>
+    <button id="fullscreenBtn" class="nav-btn fullscreen-btn">⛶</button>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const slides = document.querySelectorAll('.slide');
+            const fadeSections = document.querySelectorAll('.fade-in-section');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const fullscreenBtn = document.getElementById('fullscreenBtn');
+            let currentSlide = 0;
+            let scrollTimeout;
+            let isScrolling = false;
+
+            // Animação de Fade-in com IntersectionObserver
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            fadeSections.forEach(section => {
+                observer.observe(section);
+            });
+
+            // Função para navegar para um slide específico
+            function showSlide(index) {
+                if (index >= 0 && index < slides.length && !isScrolling) {
+                    isScrolling = true;
+                    slides[index].scrollIntoView({ behavior: 'smooth' });
+                    currentSlide = index;
+                    // Prevenir scrolls múltiplos
+                    setTimeout(() => {
+                        isScrolling = false;
+                    }, 1000); // Duração do scroll suave
+                }
+            }
+            
+            // Atualiza o slide atual com base no scroll
+            function updateCurrentSlideOnScroll() {
+                let maxVisible = 0;
+                let newCurrentSlide = 0;
+                
+                slides.forEach((slide, index) => {
+                    const rect = slide.getBoundingClientRect();
+                    const visibleHeight = Math.max(0, Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0));
+                    
+                    if(visibleHeight > maxVisible) {
+                        maxVisible = visibleHeight;
+                        newCurrentSlide = index;
+                    }
+                });
+                currentSlide = newCurrentSlide;
+            }
+
+            // Event Listeners para botões de navegação
+            nextBtn.addEventListener('click', () => { showSlide(currentSlide + 1); });
+            prevBtn.addEventListener('click', () => { showSlide(currentSlide - 1); });
+
+            // Event Listener para teclas do teclado
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === 'ArrowRight' || e.key === ' ') { 
+                    e.preventDefault(); 
+                    showSlide(currentSlide + 1); 
+                } else if (e.key === 'ArrowUp' || e.key === 'PageUp' || e.key === 'ArrowLeft') { 
+                    e.preventDefault(); 
+                    showSlide(currentSlide - 1); 
+                }
+            });
+
+            // Otimização do evento de scroll
+            window.addEventListener('scroll', () => {
+                if (scrollTimeout) {
+                    clearTimeout(scrollTimeout);
+                }
+                scrollTimeout = setTimeout(updateCurrentSlideOnScroll, 100);
+            }, { passive: true });
+
+            // Funcionalidade de Tela Cheia
+            fullscreenBtn.addEventListener('click', () => {
+                try {
+                    const elem = document.documentElement;
+                    if (!document.fullscreenElement) {
+                        if (elem.requestFullscreen) { elem.requestFullscreen(); } 
+                        else if (elem.webkitRequestFullscreen) { elem.webkitRequestFullscreen(); } // Safari
+                    } else {
+                        if (document.exitFullscreen) { document.exitFullscreen(); }
+                        else if (document.webkitExitFullscreen) { document.webkitExitFullscreen(); } // Safari
+                    }
+                } catch (e) {
+                    console.error("Fullscreen API não é suportada ou está bloqueada.", e);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -7,8 +7,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
 
-    <!-- Favicon -->
+    <!-- Favicon (SVG embutido para evitar links quebrados) -->
     <link rel="icon" href="/newimag/Ellipse 9.svg">
     
     <style>
@@ -19,6 +20,7 @@
             --color-text-primary: #E0E0E0;   /* Cinza Claro */
             --color-text-secondary: #a0a0a0; /* Cinza Médio */
             --color-dark-bg: #0A101E;      /* Fundo Azul Escuro */
+            --color-light-bg: #111827;     /* Fundo Azul Acinzentado */
             --color-card-bg: rgba(255, 255, 255, 0.05); /* Fundo de Card com Transparência */
             --color-border: rgba(255, 255, 255, 0.1); /* Borda com Transparência */
         }
@@ -44,6 +46,7 @@
             padding: 5rem 1.5rem; /* Padding vertical e horizontal ajustado */
             position: relative;
             width: 100%;
+            box-sizing: border-box;
         }
 
         /* Ajuste de padding para telas maiores (tablets e desktops) */
@@ -67,7 +70,7 @@
             width: 100%;
         }
         h1, h2, h3, h4, p {
-             font-family: 'Inter', sans-serif;
+            font-family: 'Inter', sans-serif;
         }
         h1, h2 { font-weight: 800; color: #ffffff; }
         h3 { font-weight: 700; color: #ffffff; }
@@ -120,7 +123,7 @@
             background-size: cover;
         }
         .bg-light {
-            background-color: #111827; /* Azul acinzentado */
+            background-color: var(--color-light-bg);
         }
         .bg-dark {
             background-color: var(--color-dark-bg);
@@ -133,8 +136,10 @@
         }
         .icon-check {
             color: var(--color-primary);
-            margin-right: 0.75rem; /* Aumentado um pouco o espaçamento */
+            margin-right: 0.75rem;
             flex-shrink: 0;
+            width: 1.5rem;
+            height: 1.5rem;
         }
     </style>
 </head>
@@ -149,6 +154,7 @@
                 <div class="w-40 md:w-60 mx-auto mb-10">
                     <img src="/newimag/Vector.svg" 
                          alt="Logo South Sea" 
+                         onerror="this.onerror=null;this.src='https://placehold.co/240x80?text=Logo';"
                          class="w-full h-full object-contain">
                 </div>
                 <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight">Sua Expertise Merece um<br><span class="gradient-text">Lançamento Lendário</span></h1>
@@ -191,9 +197,9 @@
                  <h2 class="text-3xl sm:text-4xl md:text-5xl mb-6">O ciclo de um lançamento é familiar?</h2>
                  <p class="text-md md:text-lg max-w-4xl mx-auto mb-12 text-gray-400">Você cria um produto incrível, mas a tecnologia parece sempre ser o obstáculo entre você e o sucesso.</p>
                  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto">
-                      <div class="bg-card p-6 rounded-lg text-center"><svg class="w-10 h-10 text-primary mb-3 mx-auto" style="color: var(--color-primary);" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 15.75l-2.489-2.489m0 0a3.375 3.375 0 10-4.773-4.773 3.375 3.375 0 004.774 4.774zM21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg><h3 class="text-xl mb-2">O Medo do "Flop"</h3><p class="text-gray-400 text-sm md:text-base">Meses de trabalho e investimento culminam na ansiedade de um carrinho que não vende como o esperado.</p></div>
-                      <div class="bg-card p-6 rounded-lg text-center"><svg class="w-10 h-10 text-primary mb-3 mx-auto" style="color: var(--color-primary);" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg><h3 class="text-xl mb-2">A Síndrome do "Balde Furado"</h3><p class="text-gray-400 text-sm md:text-base">Investir em tráfego para uma página que não converte. Cada clique perdido é dinheiro e potencial desperdiçados.</p></div>
-                      <div class="bg-card p-6 rounded-lg text-center"><svg class="w-10 h-10 text-primary mb-3 mx-auto" style="color: var(--color-primary);" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg><h3 class="text-xl mb-2">Sobrecarga Técnica</h3><p class="text-gray-400 text-sm md:text-base">A complexidade de plataformas, integrações e otimizações que paralisam e adiam o seu lançamento.</p></div>
+                      <div class="bg-card p-6 rounded-lg text-center"><svg class="w-10 h-10 mb-3 mx-auto" style="color: var(--color-primary);" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 15.75l-2.489-2.489m0 0a3.375 3.375 0 10-4.773-4.773 3.375 3.375 0 004.774 4.774zM21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg><h3 class="text-xl mb-2">O Medo do "Flop"</h3><p class="text-gray-400 text-sm md:text-base">Meses de trabalho e investimento culminam na ansiedade de um carrinho que não vende como o esperado.</p></div>
+                      <div class="bg-card p-6 rounded-lg text-center"><svg class="w-10 h-10 mb-3 mx-auto" style="color: var(--color-primary);" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg><h3 class="text-xl mb-2">A Síndrome do "Balde Furado"</h3><p class="text-gray-400 text-sm md:text-base">Investir em tráfego para uma página que não converte. Cada clique perdido é dinheiro e potencial desperdiçados.</p></div>
+                      <div class="bg-card p-6 rounded-lg text-center"><svg class="w-10 h-10 mb-3 mx-auto" style="color: var(--color-primary);" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg><h3 class="text-xl mb-2">Sobrecarga Técnica</h3><p class="text-gray-400 text-sm md:text-base">A complexidade de plataformas, integrações e otimizações que paralisam e adiam o seu lançamento.</p></div>
                  </div>
             </div>
         </section>
@@ -208,11 +214,11 @@
                         <div class="text-left">
                             <h3 class="text-xl md:text-2xl mb-4" style="color: var(--color-primary);">Pilares de um Site de Vendas de Sucesso:</h3>
                             <ul class="space-y-3">
-                                <li class="flex items-start text-gray-300"><svg class="w-6 h-6 icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span class="text-sm md:text-base"><strong>Clareza Absoluta</strong> na oferta e transformação</span></li>
-                                <li class="flex items-start text-gray-300"><svg class="w-6 h-6 icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span class="text-sm md:text-base"><strong>Máxima Persuasão</strong> com copy e design estratégicos</span></li>
-                                <li class="flex items-start text-gray-300"><svg class="w-6 h-6 icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span class="text-sm md:text-base"><strong>Velocidade Extrema</strong> para não perder vendas</span></li>
-                                <li class="flex items-start text-gray-300"><svg class="w-6 h-6 icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span class="text-sm md:text-base"><strong>Confiança e Autoridade</strong> que quebram objeções</span></li>
-                                <li class="flex items-start text-gray-300"><svg class="w-6 h-6 icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span class="text-sm md:text-base"><strong>Experiência Mobile</strong> impecável</span></li>
+                                <li class="flex items-start text-gray-300"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span class="text-sm md:text-base"><strong>Clareza Absoluta</strong> na oferta e transformação</span></li>
+                                <li class="flex items-start text-gray-300"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span class="text-sm md:text-base"><strong>Máxima Persuasão</strong> com copy e design estratégicos</span></li>
+                                <li class="flex items-start text-gray-300"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span class="text-sm md:text-base"><strong>Velocidade Extrema</strong> para não perder vendas</span></li>
+                                <li class="flex items-start text-gray-300"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span class="text-sm md:text-base"><strong>Confiança e Autoridade</strong> que quebram objeções</span></li>
+                                <li class="flex items-start text-gray-300"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span class="text-sm md:text-base"><strong>Experiência Mobile</strong> impecável</span></li>
                             </ul>
                         </div>
                         <div class="flex justify-center">
@@ -250,10 +256,10 @@
                         <div class="border-t border-gray-700 pt-4 mt-auto">
                             <h4 class="font-bold mb-3 text-center" style="color: var(--color-primary);">Principais Entregas:</h4>
                             <ul class="space-y-3 text-gray-300">
-                                <li class="flex items-start"><span class="icon-check text-lg">✓</span><span class="text-sm md:text-base">Design e Copy focados em uma única ação: a captura do lead</span></li>
-                                <li class="flex items-start"><span class="icon-check text-lg">✓</span><span class="text-sm md:text-base">Copywriting com foco em conversão de leads</span></li>
-                                <li class="flex items-start"><span class="icon-check text-lg">✓</span><span class="text-sm md:text-base">Otimização de velocidade e para dispositivos móveis</span></li>
-                                <li class="flex items-start"><span class="icon-check text-lg">✓</span><span class="text-sm md:text-base">Instalação de Pixel (Meta) e Google Analytics</span></li>
+                                <li class="flex items-start"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="text-sm md:text-base">Design e Copy focados em uma única ação: a captura do lead</span></li>
+                                <li class="flex items-start"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="text-sm md:text-base">Copywriting com foco em conversão de leads</span></li>
+                                <li class="flex items-start"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="text-sm md:text-base">Otimização de velocidade e para dispositivos móveis</span></li>
+                                <li class="flex items-start"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="text-sm md:text-base">Instalação de Pixel (Meta) e Google Analytics</span></li>
                             </ul>
                         </div>
                     </div>
@@ -262,12 +268,12 @@
                         <div class="border-t border-gray-700 pt-4 mt-auto">
                             <h4 class="font-bold mb-3 text-center" style="color: var(--color-primary);">Principais Entregas:</h4>
                             <ul class="space-y-3 text-gray-300">
-                                <li class="flex items-start"><span class="icon-check text-lg">✓</span><span class="text-sm md:text-base">Estrutura completa de uma Sales Page de alta conversão</span></li>
-                                <li class="flex items-start"><span class="icon-check text-lg">✓</span><span class="text-sm md:text-base">Seção para Vídeo de Vendas (VSL)</span></li>
-                                <li class="flex items-start"><span class="icon-check text-lg">✓</span><span class="text-sm md:text-base">Design e Copywriting persuasivos em todas as seções</span></li>
-                                <li class="flex items-start"><span class="icon-check text-lg">✓</span><span class="text-sm md:text-base">Prova social, Garantia, Escassez e Bônus</span></li>
-                                <li class="flex items-start"><span class="icon-check text-lg">✓</span><span class="text-sm md:text-base">Integração com plataforma de pagamento (Hotmart, Eduzz, etc.)</span></li>
-                                <li class="flex items-start"><span class="icon-check text-lg">✓</span><span class="text-sm md:text-base">Otimização de performance e SEO</span></li>
+                                <li class="flex items-start"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="text-sm md:text-base">Estrutura completa de uma Sales Page de alta conversão</span></li>
+                                <li class="flex items-start"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="text-sm md:text-base">Seção para Vídeo de Vendas (VSL)</span></li>
+                                <li class="flex items-start"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="text-sm md:text-base">Design e Copywriting persuasivos em todas as seções</span></li>
+                                <li class="flex items-start"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="text-sm md:text-base">Prova social, Garantia, Escassez e Bônus</span></li>
+                                <li class="flex items-start"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="text-sm md:text-base">Integração com plataforma de pagamento (Hotmart, Eduzz, etc.)</span></li>
+                                <li class="flex items-start"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="text-sm md:text-base">Otimização de performance e SEO</span></li>
                             </ul>
                         </div>
                     </div>
@@ -287,21 +293,21 @@
                     <h3 class="text-2xl font-bold mb-6 text-center" style="color: var(--color-primary);">Ponto de Partida do Projeto</h3>
                     <div class="grid sm:grid-cols-3 gap-6 text-center">
                         <div class="flex flex-col items-center">
-                            <div class="bg-primary bg-opacity-20 text-primary rounded-full h-16 w-16 flex items-center justify-center mb-3">
+                            <div class="bg-primary bg-opacity-20 text-primary rounded-full h-16 w-16 flex items-center justify-center mb-3" style="background-color: rgba(56, 189, 248, 0.1); color: var(--color-primary);">
                                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
                             </div>
                             <h4 class="font-semibold">1. Briefing</h4>
                             <p class="text-sm text-gray-400">Você preenche nosso formulário detalhado em até 7 dias.</p>
                         </div>
                         <div class="flex flex-col items-center">
-                            <div class="bg-primary bg-opacity-20 text-primary rounded-full h-16 w-16 flex items-center justify-center mb-3">
+                            <div class="bg-primary bg-opacity-20 text-primary rounded-full h-16 w-16 flex items-center justify-center mb-3" style="background-color: rgba(56, 189, 248, 0.1); color: var(--color-primary);">
                                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                             </div>
                             <h4 class="font-semibold">2. Formalização</h4>
                             <p class="text-sm text-gray-400">Enviamos contrato e link de pagamento para início em 1 dia útil.</p>
                         </div>
                         <div class="flex flex-col items-center">
-                            <div class="bg-primary bg-opacity-20 text-primary rounded-full h-16 w-16 flex items-center justify-center mb-3">
+                            <div class="bg-primary bg-opacity-20 text-primary rounded-full h-16 w-16 flex items-center justify-center mb-3" style="background-color: rgba(56, 189, 248, 0.1); color: var(--color-primary);">
                                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                             </div>
                             <h4 class="font-semibold">3. Início</h4>
@@ -313,17 +319,71 @@
                 <div class="bg-card p-6 md:p-8 rounded-lg shadow-md max-w-4xl mx-auto">
                     <h3 class="text-2xl mb-2 text-center" style="color: var(--color-primary);">Jornada do Projeto Digital</h3>
                     <p class="font-bold text-gray-400 mb-6 text-center">Prazo: 30 a 60 dias</p>
-                    <div class="relative border-l-2 border-dashed border-primary pl-8 space-y-8">
-                        <div class="relative"><div class="absolute -left-[34px] top-1 h-4 w-4 rounded-full bg-primary"></div><h4 class="font-semibold">Pesquisa e Design (UI/UX)</h4><p class="text-sm text-gray-400">Criamos o protótipo visual do seu site, focado na experiência do usuário.</p></div>
-                        <div class="relative"><div class="absolute -left-[34px] top-1 h-4 w-4 rounded-full bg-primary"></div><h4 class="font-semibold">1ª Reunião de Alinhamento</h4><p class="text-sm text-gray-400">Apresentamos o design para coletar seu feedback e fazer ajustes.</p></div>
-                        <div class="relative"><div class="absolute -left-[34px] top-1 h-4 w-4 rounded-full bg-primary"></div><h4 class="font-semibold">Desenvolvimento</h4><p class="text-sm text-gray-400">Com o design aprovado, construímos e codificamos o seu site.</p></div>
-                        <div class="relative"><div class="absolute -left-[34px] top-1 h-4 w-4 rounded-full bg-primary"></div><h4 class="font-semibold">Revisão Final e Lançamento</h4><p class="text-sm text-gray-400">Fazemos os últimos testes com você e colocamos o site no ar.</p></div>
+                    <div class="relative border-l-2 border-dashed border-primary pl-8 space-y-8" style="border-color: var(--color-primary);">
+                        <div class="relative"><div class="absolute -left-[34px] top-1 h-4 w-4 rounded-full" style="background-color: var(--color-primary);"></div><h4 class="font-semibold">Pesquisa e Design (UI/UX)</h4><p class="text-sm text-gray-400">Criamos o protótipo visual do seu site, focado na experiência do usuário.</p></div>
+                        <div class="relative"><div class="absolute -left-[34px] top-1 h-4 w-4 rounded-full" style="background-color: var(--color-primary);"></div><h4 class="font-semibold">1ª Reunião de Alinhamento</h4><p class="text-sm text-gray-400">Apresentamos o design para coletar seu feedback e fazer ajustes.</p></div>
+                        <div class="relative"><div class="absolute -left-[34px] top-1 h-4 w-4 rounded-full" style="background-color: var(--color-primary);"></div><h4 class="font-semibold">Desenvolvimento</h4><p class="text-sm text-gray-400">Com o design aprovado, construímos e codificamos o seu site.</p></div>
+                        <div class="relative"><div class="absolute -left-[34px] top-1 h-4 w-4 rounded-full" style="background-color: var(--color-primary);"></div><h4 class="font-semibold">Revisão Final e Lançamento</h4><p class="text-sm text-gray-400">Fazemos os últimos testes com você e colocamos o site no ar.</p></div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Slide 8: Investimento -->
+    
+
+        <!-- Slide 9: E-books Exclusivos -->
+        <section id="slide9" class="slide bg-dark">
+            <div class="slide-content fade-in-section">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl sm:text-4xl md:text-5xl mb-4">Conteúdo Exclusivo para Nossos Parceiros</h2>
+                    <p class="text-md md:text-lg max-w-3xl mx-auto text-gray-400">Ao fechar negócio, você ganha acesso à nossa biblioteca de materiais estratégicos para aprofundar seu conhecimento em branding e posicionamento.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                    <div class="bg-card p-6 rounded-lg flex flex-col text-center sm:flex-row sm:text-left items-center gap-6 transform hover:scale-105 transition-transform duration-300">
+                        <img src="/newimag/cpc1.png" alt="Capa do Ebook Oceano Azul" class="w-24 h-auto sm:w-28 rounded-md shadow-lg flex-shrink-0" onerror="this.onerror=null;this.src='https://placehold.co/112x158?text=Ebook';">
+                        <div>
+                            <h3 class="text-xl font-bold mb-2">Encontrando seu Oceano Azul</h3>
+                            <p class="text-gray-400 text-sm">Como Posicionar sua Marca de Forma Única em um Mercado Competitivo.</p>
+                        </div>
+                    </div>
+                   <div class="bg-card p-6 rounded-lg flex flex-col text-center sm:flex-row sm:text-left items-center gap-6 transform hover:scale-105 transition-transform duration-300">
+                        <img src="/newimag/cpc.png" alt="Capa do Ebook Psicologia das Cores" class="w-24 h-auto sm:w-28 rounded-md shadow-lg flex-shrink-0" onerror="this.onerror=null;this.src='https://placehold.co/112x158?text=Ebook';">
+                        <div>
+                            <h3 class="text-xl font-bold mb-2">Cor por Cor</h3>
+                            <p class="text-gray-400 text-sm">A Psicologia das Cores e Como Usá-las para Influenciar Emoções e Decisões.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 10: Bônus Cartão de Visita Digital -->
+        <section id="slide10" class="slide bg-light">
+            <div class="slide-content text-center fade-in-section">
+                <h2 class="text-3xl sm:text-4xl md:text-5xl mb-6">Sua Conexão Direta</h2>
+                <p class="text-lg max-w-3xl mx-auto text-gray-400 mb-12">Para maximizar seu alcance, incluímos uma ferramenta essencial: um <strong>Cartão de Visita Digital</strong> personalizado, perfeito para centralizar todos os seus links importantes.</p>
+                <div class="max-w-2xl mx-auto bg-card p-8 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300">
+                    <div class="flex flex-col md:flex-row items-center gap-8">
+                        <div class="flex-shrink-0" style="color: var(--color-primary);">
+                             <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                                 <path stroke-linecap="round" stroke-linejoin="round" d="M10.172 13.828L13.828 10.172" />
+                             </svg>
+                        </div>
+                        <div class="text-left">
+                            <h3 class="text-2xl mb-4" style="color: var(--color-primary);">Seu Cartão de Visita Digital</h3>
+                            <ul class="space-y-3 text-gray-400">
+                                <li class="flex items-start"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Ideal para a bio do Instagram, WhatsApp e outras redes.</span></li>
+                                <li class="flex items-start"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Reúna seus links mais importantes em um só lugar.</span></li>
+                                <li class="flex items-start"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Design alinhado com a identidade visual da sua marca.</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+            <!-- Slide 8: Investimento -->
         <section id="slide8" class="slide bg-light">
             <div class="slide-content text-center fade-in-section">
                 <h2 class="text-3xl sm:text-4xl md:text-5xl mb-12">Um Investimento no Sucesso do seu Lançamento</h2>
@@ -344,61 +404,57 @@
                 </div>
             </div>
         </section>
-
-        <!-- Slide 9: E-books Exclusivos -->
-        <section id="slide9" class="slide bg-dark">
-            <div class="slide-content fade-in-section">
-                <div class="text-center mb-12">
-                    <h2 class="text-3xl sm:text-4xl md:text-5xl mb-4">Conteúdo Exclusivo para Nossos Parceiros</h2>
-                    <p class="text-md md:text-lg max-w-3xl mx-auto text-gray-400">Ao fechar negócio, você ganha acesso à nossa biblioteca de materiais estratégicos para aprofundar seu conhecimento em branding e posicionamento.</p>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                    <div class="bg-card p-6 rounded-lg flex flex-col text-center sm:flex-row sm:text-left items-center gap-6 transform hover:scale-105 transition-transform duration-300">
-                        <img src="/newimag/cpc1.png" alt="Capa do Ebook Oceano Azul" class="w-24 h-auto sm:w-28 rounded-md shadow-lg flex-shrink-0">
-                        <div>
-                            <h3 class="text-xl font-bold mb-2">Encontrando seu Oceano Azul</h3>
-                            <p class="text-gray-400 text-sm">Como Posicionar sua Marca de Forma Única em um Mercado Competitivo.</p>
-                        </div>
-                    </div>
-                   <div class="bg-card p-6 rounded-lg flex flex-col text-center sm:flex-row sm:text-left items-center gap-6 transform hover:scale-105 transition-transform duration-300">
-                        <img src="/newimag/cpc.png" alt="Capa do Ebook Psicologia das Cores" class="w-24 h-auto sm:w-28 rounded-md shadow-lg flex-shrink-0">
-                        <div>
-                            <h3 class="text-xl font-bold mb-2">Cor por Cor</h3>
-                            <p class="text-gray-400 text-sm">A Psicologia das Cores e Como Usá-las para Influenciar Emoções e Decisões.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 10: Bônus Cartão de Visita Digital -->
-        <section id="slide10" class="slide bg-light">
+        
+        <!-- SLIDE 11: UPSELL (Antigo slide 12, agora corrigido e renumerado) -->
+        <section id="slide11" class="slide bg-dark">
             <div class="slide-content text-center fade-in-section">
-                <h2 class="text-3xl sm:text-4xl md:text-5xl mb-6">Sua Conexão Direta</h2>
-                <p class="text-lg max-w-3xl mx-auto text-gray-400 mb-12">Para maximizar seu alcance, incluímos uma ferramenta essencial: um <strong>Cartão de Visita Digital</strong> personalizado, perfeito para centralizar todos os seus links importantes.</p>
-                <div class="max-w-2xl mx-auto bg-card p-8 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300">
-                    <div class="flex flex-col md:flex-row items-center gap-8">
-                        <div class="text-primary flex-shrink-0" style="color: var(--color-primary);">
-                             <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-                                 <path stroke-linecap="round" stroke-linejoin="round" d="M10.172 13.828L13.828 10.172" />
-                             </svg>
+                <h2 class="text-3xl sm:text-4xl md:text-5xl mb-4">Potencialize Sua Estratégia Digital</h2>
+                <p class="text-lg max-w-3xl mx-auto text-gray-400 mb-12">Adicione nossos serviços de performance e branding com um <span class="gradient-text font-semibold">desconto exclusivo</span> ao contratar seu novo site.</p>
+                <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto items-stretch">
+                    
+                    <!-- Card Gestão de Tráfego -->
+                    <a href="#" class="block no-underline text-current">
+                        <div class="bg-card rounded-lg p-6 md:p-8 flex flex-col border-2 border-dashed border-gray-700 transform hover:scale-105 transition-transform duration-300 h-full">
+                            <h3 class="text-2xl mb-4" style="color: var(--color-primary);">Gestão de Tráfego</h3>
+                            <p class="text-gray-400 mb-6 flex-grow">Atraia o público certo e transforme cliques em clientes com campanhas otimizadas no Google e Meta Ads.</p>
+                            <div class="space-y-4 mt-auto">
+                                <div class="bg-dark p-4 rounded-lg">
+                                    <p class="text-gray-400">1 Plataforma</p>
+                                    <p class="text-xl font-semibold text-gray-500"><del>R$ 1.500/mês</del></p>
+                                    <p class="text-3xl font-bold" style="color: var(--color-primary);">R$ 1.200/mês</p>
+                                </div>
+                                <div class="bg-dark p-4 rounded-lg">
+                                    <p class="text-gray-400">2 Plataformas</p>
+                                    <p class="text-xl font-semibold text-gray-500"><del>R$ 2.000/mês</del></p>
+                                    <p class="text-3xl font-bold" style="color: var(--color-primary);">R$ 1.800/mês</p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="text-left">
-                            <h3 class="text-2xl mb-4" style="color: var(--color-primary);">Seu Cartão de Visita Digital</h3>
-                            <ul class="space-y-3 text-gray-400">
-                                <li class="flex items-start"><svg class="icon-check w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Ideal para a bio do Instagram, WhatsApp e outras redes.</span></li>
-                                <li class="flex items-start"><svg class="icon-check w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Reúna seus links mais importantes em um só lugar.</span></li>
-                                <li class="flex items-start"><svg class="icon-check w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Design alinhado com a identidade visual da sua marca.</span></li>
+                    </a>
+
+                    <!-- Card Identidade Visual -->
+                    <a href="#" class="block no-underline text-current">
+                        <div class="bg-card rounded-lg p-6 md:p-8 flex flex-col border-2 border-dashed border-gray-700 transform hover:scale-105 transition-transform duration-300 h-full">
+                            <h3 class="text-2xl mb-4" style="color: var(--color-secondary);">Identidade Visual</h3>
+                            <p class="text-gray-400 mb-6">Construa uma marca memorável que gera confiança, profissionalismo e se destaca no mercado.</p>
+                            <ul class="text-left text-sm space-y-2 text-gray-400 mb-6 flex-grow">
+                                <li class="flex items-start"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Logo e Variações</span></li>
+                                <li class="flex items-start"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Manual da Marca Simplificado</span></li>
+                                <li class="flex items-start"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Paleta de Cores e Tipografia</span></li>
                             </ul>
+                            <div class="mt-auto bg-dark p-4 rounded-lg text-center">
+                                 <p class="text-gray-400">Projeto Completo</p>
+                                <p class="text-xl font-semibold text-gray-500"><del>R$ 4.585,00</del></p>
+                                <p class="text-3xl font-bold" style="color: var(--color-secondary);">R$ 4.126,50</p>
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
             </div>
         </section>
         
-        <!-- Slide 11: Contato -->
-        <section id="slide11" class="slide bg-hero-launch text-white text-center">
+        <!-- Slide 12: Contato (Antigo slide 11) -->
+        <section id="slide12" class="slide bg-hero-launch text-white text-center">
              <div class="absolute inset-0 bg-black opacity-80"></div>
             <div class="z-10 slide-content fade-in-section">
                 <h2 class="text-3xl sm:text-4xl md:text-5xl mb-8 font-bold">Pronto para construir a máquina de conversão do seu próximo lançamento?</h2>
@@ -411,6 +467,7 @@
                 <div class="w-40 md:w-52 h-auto mx-auto mb-10">
                     <img src="/newimag/Vector.svg" 
                          alt="Logo South Sea" 
+                         onerror="this.onerror=null;this.src='https://placehold.co/208x80?text=Logo';"
                          class="w-full h-full object-contain">
                 </div>
                 <div class="mt-4 text-base md:text-lg space-y-1">
@@ -438,7 +495,7 @@
             const fullscreenBtn = document.getElementById('fullscreenBtn');
             let currentSlide = 0;
             let scrollTimeout;
-            let isScrolling = false;
+            let isNavigating = false; // Renomeado de isScrolling para maior clareza
 
             // Animação de fade-in para as seções
             const observer = new IntersectionObserver((entries) => {
@@ -455,20 +512,23 @@
 
             // Função para navegar entre os slides
             function showSlide(index) {
-                if (index >= 0 && index < slides.length && !isScrolling) {
-                    isScrolling = true;
-                    // Atualiza o slide atual antes de rolar
+                if (index >= 0 && index < slides.length && !isNavigating) {
+                    isNavigating = true;
                     currentSlide = index;
                     slides[index].scrollIntoView({ behavior: 'smooth' });
-                    // Previne múltiplos scrolls rápidos
+                    
+                    // Previne múltiplos scrolls/cliques rápidos
                     setTimeout(() => {
-                        isScrolling = false;
-                    }, 1000); // Aumenta o tempo de espera para garantir que a rolagem termine
+                        isNavigating = false;
+                    }, 1000); // Tempo de espera para garantir que a rolagem termine
                 }
             }
             
             // Atualiza o slide atual com base na rolagem do usuário
             function updateCurrentSlideOnScroll() {
+                // Se a navegação foi iniciada por um clique/tecla, não faça nada
+                if (isNavigating) return;
+
                 let maxVisible = 0;
                 let newCurrentSlide = 0;
                 
@@ -476,12 +536,13 @@
                     const rect = slide.getBoundingClientRect();
                     const visibleHeight = Math.max(0, Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0));
                     
+                    // Encontra o slide que está mais visível na tela
                     if(visibleHeight > maxVisible) {
                         maxVisible = visibleHeight;
                         newCurrentSlide = index;
                     }
                 });
-                // Apenas atualiza se o slide mudou para evitar conflito com a navegação por clique
+
                 if (newCurrentSlide !== currentSlide) {
                     currentSlide = newCurrentSlide;
                 }
@@ -502,7 +563,7 @@
                 }
             });
 
-            // Otimiza o evento de scroll para performance
+            // Otimiza o evento de scroll para performance (debounce)
             window.addEventListener('scroll', () => {
                 if (scrollTimeout) {
                     clearTimeout(scrollTimeout);
@@ -529,4 +590,4 @@
         });
     </script>
 </body>
-</ht
+</html>
