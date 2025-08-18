@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>South Sea - Agência Criativa</title>
+    
+    <!-- Meta Pixel Code will be initialized by JavaScript based on consent -->
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script> 
+    
+    <!-- Google Fonts: Montserrat & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Alpine.js for interactivity -->
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Favicon -->
+    <link rel="icon" href="/newimag/Ellipse 9.svg">
+
+    <style>
+        /* Custom styles to integrate the chosen fonts */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0A192F; /* Deep Navy Blue */
+            color: #E6F1FF; /* Light Blueish White */
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+        }
+        .font-montserrat {
+            font-family: 'Montserrat', sans-serif;
+        }
+        .bg-brand-navy { background-color: #0A192F; }
+        .bg-brand-light-navy { background-color: #112240; }
+        .text-brand-lightest { color: #E6F1FF; }
+        .text-brand-light { color: #CCD6F6; }
+        .text-brand-slate { color: #8892B0; }
+        .text-brand-accent { color: #64FFDA; } /* Vibrant Mint */
+        .border-brand-accent { border-color: #64FFDA; }
+        .ring-brand-accent { --tw-ring-color: #64FFDA; }
+        
+        /* Glassmorphism effect for cards */
+        .glass-card {
+            background: rgba(17, 34, 64, 0.6); /* bg-brand-light-navy with opacity */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(100, 255, 218, 0.1);
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover {
+            transform: translateY(-4px);
+            border: 1px solid rgba(100, 255, 218, 0.3);
+        }
+
+        /* Gradient for CTA button */
+        .btn-gradient {
+            background: linear-gradient(90deg, #2EC9A8, #00B88A);
+            transition: all 0.3s ease;
+        }
+        .btn-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(46, 201, 168, 0.2);
+        }
+
+        /* Scroll-triggered animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Carousel transition */
+        .carousel-slider {
+            transition: transform 0.5s ease-in-out;
+        }
+
+        /* Cookie Banner & Modal Styles */
+        #cookie-banner, #cookie-modal {
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .banner-hidden, .modal-hidden {
+            opacity: 0;
+            transform: translateY(100%);
+            pointer-events: none;
+        }
+        #cookie-modal {
+            transform: translateY(0);
+        }
+        #cookie-modal.modal-hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .modal-content {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            transform: scale(0.95);
+            opacity: 0;
+        }
+        #cookie-modal:not(.modal-hidden) .modal-content {
+            transform: scale(1);
+            opacity: 1;
+        }
+        .modal-open {
+            overflow: hidden;
+        }
+
+        /* Typing animation for hero */
+        .typing-cursor {
+            display: inline-block;
+            width: 3px;
+            height: 1em;
+            background-color: #64FFDA;
+            margin-left: 5px;
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        /* Back to Top Button */
+        #back-to-top {
+            transition: opacity 0.3s, transform 0.3s;
+        }
+
+        /* Gallery Modal Styles */
+        .gallery-modal-open {
+            overflow: hidden;
+        }
+        .content-blur {
+            filter: blur(5px) brightness(50%);
+            pointer-events: none;
+            transition: filter 0.3s ease-out;
+        }
+        #gallery-modal {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        #gallery-modal.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+    </style>
+</head>
+<body class="bg-brand-navy" x-data="{ mobileMenuOpen: false, showBackToTop: false }" @scroll.window="showBackToTop = (window.pageYOffset > 400)">
+
+    <!-- =================================================================
+    HEADER
+    ================================================================== -->
+    <header x-data="{ scrolled: false }" @scroll.window="scrolled = (window.pageYOffset > 50)" 
+            class="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+            :class="{ 'bg-brand-navy/80 backdrop-blur-sm shadow-lg': scrolled, 'py-4': !scrolled, 'py-2': scrolled }">
+        <div class="container mx-auto px-6 md:px-10 flex justify-between items-center">
+            
+            <!-- LOGO -->
+            <a href="#hero">
+                <img src="/newimag/Vector.svg" alt="Logo South Sea" class="h-10 w-auto">
+            </a>
+
+            <!-- NAVEGAÇÃO -->
+            <nav class="hidden md:flex items-center space-x-8">
+                <a href="#services" class="text-brand-light hover:text-brand-accent transition-colors duration-300">Serviços</a>
+                <a href="#projects" class="text-brand-light hover:text-brand-accent transition-colors duration-300">Projetos</a>
+                <a href="#about" class="text-brand-light hover:text-brand-accent transition-colors duration-300">Sobre</a>
+                <a href="#ebooks" class="text-brand-light hover:text-brand-accent transition-colors duration-300">Ebooks</a>
+                <a href="#contact" class="text-brand-light hover:text-brand-accent transition-colors duration-300">Contato</a>
+            </nav>
+
+            <!-- BOTÃO CTA (CALL TO ACTION) -->
+            <a href="https://api.whatsapp.com/send/?phone=4899013968&text=Ol%C3%A1%21+Tenho+interesse+em+iniciar+um+projeto+&type=phone_number&app_absent=0" class="hidden md:block px-5 py-2 text-brand-navy font-bold rounded-md btn-gradient">Iniciar um Projeto</a>
+            
+            <!-- MENU MOBILE -->
+            <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden text-brand-accent z-50">
+                <svg x-show="!mobileMenuOpen" class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                <svg x-show="mobileMenuOpen" class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+        <div x-show="mobileMenuOpen" x-transition @click.away="mobileMenuOpen = false" class="md:hidden absolute top-0 left-0 w-full h-screen bg-brand-navy pt-24">
+            <nav class="flex flex-col items-center space-y-8 text-xl">
+                <a href="#services" @click="mobileMenuOpen = false" class="text-brand-light hover:text-brand-accent">Serviços</a>
+                <a href="#projects" @click="mobileMenuOpen = false" class="text-brand-light hover:text-brand-accent">Projetos</a>
+                <a href="#about" @click="mobileMenuOpen = false" class="text-brand-light hover:text-brand-accent">Sobre</a>
+                <a href="#ebooks" @click="mobileMenuOpen = false" class="text-brand-light hover:text-brand-accent">Ebooks</a>
+                <a href="#contact" @click="mobileMenuOpen = false" class="text-brand-light hover:text-brand-accent">Contato</a>
+                <a href="https://api.whatsapp.com/send/?phone=48988780389&text=Ol%C3%A1%21+Tenho+interesse+em+iniciar+um+projeto+&type=phone_number&app_absent=0" @click="mobileMenuOpen = false" class="mt-8 px-6 py-3 text-brand-navy font-bold rounded-md btn-gradient">Iniciar um Projeto</a>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main-content" class="container mx-auto px-6 md:px-10">
+        <!-- =================================================================
+        SEÇÃO 1: HERO
+        ================================================================== -->
+        <section id="hero" class="min-h-screen flex items-center pt-24 md:pt-0">
+            <div class="max-w-4xl reveal">
+                <p class="text-brand-accent font-montserrat text-lg mb-4">Olá, somos a South Sea.</p>
+                <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-brand-lightest leading-tight">
+                    <span id="typing-text"></span><span class="typing-cursor"></span>
+                </h1>
+                <p class="mt-6 text-lg md:text-xl text-brand-slate max-w-2xl">
+                    Acreditamos que a sua marca merece uma presença que transcende o comum. Navegamos a complexidade para revelar a sua essência, criando experiências que conectam, cativam e convertem.
+                </p>
+                <a href="#projects" class="inline-block mt-10 px-8 py-4 border-2 border-brand-accent text-brand-accent font-bold rounded-md hover:bg-brand-accent/10 transition-all duration-300">
+                    Veja nossos projetos
+                </a>
+            </div>
+        </section>
+
+        <!-- =================================================================
+        SEÇÃO 2: SERVIÇOS
+        ================================================================== -->
+        <section id="services" class="py-20 md:py-32">
+            <div class="text-left reveal mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-brand-lightest mb-4"><span class="text-brand-accent">01.</span> Nossos Serviços</h2>
+                <p class="text-lg text-brand-slate max-w-2xl">Oferecemos uma jornada integrada, desde a concepção da marca até a sua expressão digital. Clique para saber mais.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-6 gap-6">
+                <a href="/branding.html" class="glass-card rounded-lg p-8 md:col-span-2 reveal block"><h3 class="text-2xl font-bold text-brand-lightest mb-2">Branding</h3><p class="text-brand-slate">A estratégia e a alma da sua marca. Criamos a base para uma conexão emocional e duradoura com seu público.</p></a>
+                <a href="/branding.html" class="glass-card rounded-lg p-8 md:col-span-2 reveal block"><h3 class="text-2xl font-bold text-brand-lightest mb-2">Identidade Visual</h3><p class="text-brand-slate">O rosto da sua marca. Design que traduz sua essência em cada ponto de contato.</p></a>
+                <a href="/branding.html" class="glass-card rounded-lg p-8 md:col-span-2 reveal block"><h3 class="text-2xl font-bold text-brand-lightest mb-2">Rebranding</h3><p class="text-brand-slate">Evolução com propósito. Reposicionamos sua marca para o futuro, mantendo sua autenticidade.</p></a>
+                <a href="/sites.html" class="glass-card rounded-lg p-8 md:col-span-2 reveal block"><h3 class="text-2xl font-bold text-brand-lightest mb-2">Sites Institucionais</h3><p class="text-brand-slate">Seu lar digital. Criamos websites de alta performance, visualmente impressionantes.</p></a>
+                <a href="/sites.html" class="glass-card rounded-lg p-8 md:col-span-2 reveal block"><h3 class="text-2xl font-bold text-brand-lightest mb-2">Landing Pages</h3><p class="text-brand-slate">Conversão máxima. Páginas focadas em transformar visitantes em clientes.</p></a>
+                <a href="/trafego.html" class="glass-card rounded-lg p-8 md:col-span-2 reveal block"><h3 class="text-2xl font-bold text-brand-lightest mb-2">Gestão de Tráfego</h3><p class="text-brand-slate">Atraímos o público certo e otimizamos seus anúncios para gerar resultados reais e mensuráveis.</p></a>
+            </div>
+            <div class="text-center mt-16 reveal">
+                <a href="https://api.whatsapp.com/send/?phone=4899013968&text=Ol%C3%A1%21+Tenho+interesse+em+falar+com+um+especialista+&type=phone_number&app_absent=0" class="inline-block px-8 py-4 text-brand-navy font-bold rounded-md btn-gradient text-lg">Fale com um Especialista</a>
+            </div>
+        </section>
+
+        <!-- =================================================================
+        SEÇÃO 3: PROJETOS
+        ================================================================== -->
+        <section id="projects" class="py-20 md:py-32">
+            <div class="text-left reveal mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-brand-lightest mb-4"><span class="text-brand-accent">02.</span> Projetos em Destaque</h2>
+                <p class="text-lg text-brand-slate max-w-2xl">Nosso portfólio é a maior prova do nosso compromisso com a excelência.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <!-- PROJETO 1 -->
+                <a href="https://www.shapeschool.com.br/" target="_blank" rel="noopener noreferrer" class="group reveal block">
+                    <div class="relative overflow-hidden rounded-lg">
+                        <img src="/newimag/shapes 2.png" alt="Imagem do Projeto Alpha" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-6">
+                            <div>
+                                <p class="text-brand-accent text-sm font-montserrat">Rebranding & Website</p>
+                                <h3 class="text-2xl font-bold text-brand-lightest mt-1">SHAPES SCHOOL</h3>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- PROJETO 2 -->
+                <a href="https://liferrary.vercel.app/" target="_blank" rel="noopener noreferrer" class="group reveal block">
+                    <div class="relative overflow-hidden rounded-lg">
+                        <img src="/newimag/lianaferray.png" alt="Imagem do Projeto Beta" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-6">
+                            <div>
+                                <p class="text-brand-accent text-sm font-montserrat">Website Institucional</p>
+                                <h3 class="text-2xl font-bold text-brand-lightest mt-1">Liana Ferrary</h3>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- PROJETO 3 -->
+                <a href="https://www.djvoxxx.com/index.html" target="_blank" rel="noopener noreferrer" class="group reveal block">
+                    <div class="relative overflow-hidden rounded-lg">
+                        <img src="/newimag/voxxx.png" alt="Imagem do Projeto Gama" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-6">
+                            <div>
+                                <p class="text-brand-accent text-sm font-montserrat">Branding & Website</p>
+                                <h3 class="text-2xl font-bold text-brand-lightest mt-1">Dj Voxxx</h3>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- NEW: Botão Ver Mais Projetos -->
+                <a href="javascript:void(0);" onclick="openGalleryModal()" class="group reveal block relative overflow-hidden rounded-lg bg-brand-light-navy flex items-center justify-center p-8 text-center min-h-[250px] md:min-h-full">
+                    <div class="z-10">
+                        <div class="w-16 h-16 rounded-full bg-brand-accent/10 flex items-center justify-center mx-auto mb-4 border-2 border-brand-accent/20 group-hover:bg-brand-accent/20 transition-colors">
+                            <i class="fas fa-plus text-brand-accent text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-brand-lightest mt-1">Ver Mais Projetos</h3>
+                        <p class="text-brand-slate">Explore nossa galeria completa</p>
+                    </div>
+                    <div class="absolute inset-0 bg-brand-accent opacity-0 group-hover:opacity-5 transition-opacity"></div>
+                </a>
+            </div>
+        </section>
+
+        <!-- =================================================================
+        SEÇÃO 4: SOBRE NÓS
+        ================================================================== -->
+        <section id="about" class="py-20 md:py-32">
+            <div class="grid md:grid-cols-5 gap-10 items-center">
+                <div class="md:col-span-3 reveal">
+                    <h2 class="text-3xl md:text-4xl font-bold text-brand-lightest mb-6 text-left">
+                        <span class="text-brand-accent">03.</span> Sobre Nós
+                    </h2>
+                    <div class="space-y-4 text-brand-slate text-lg">
+                        <p>A South Sea nasceu da convicção de que grandes marcas merecem uma presença digital à sua altura. Somos mais do que uma agência; somos parceiros estratégicos na jornada de construção de legados digitais duradouros.</p>
+                        <p>Nossa equipe une a profundidade da estratégia de branding com a vanguarda da tecnologia e do design. Em Florianópolis, um polo de inovação, encontramos a inspiração para criar soluções que não apenas seguem tendências, mas as definem.</p>
+                        <p>Acreditamos num processo colaborativo, transparente e focado em resultados tangíveis.</p>
+                    </div>
+                </div>
+                <div class="md:col-span-2 flex justify-center md:justify-end reveal">
+                    <div class="relative w-72 h-72">
+                        <div class="absolute inset-0 bg-brand-accent rounded-lg transform rotate-3"></div>
+                        <img src="/newimag/time.png" alt="Foto da equipe South Sea" class="relative w-full h-full object-cover rounded-lg shadow-2xl">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =================================================================
+        SEÇÃO 5: DIAGNOSTIC CTA
+        ================================================================== -->
+        <section id="diagnostic-cta" class="py-20 md:py-32">
+            <div class="glass-card rounded-xl p-8 md:p-12 text-center reveal">
+                <h2 class="text-3xl md:text-4xl font-bold text-brand-lightest mb-4">Não sabe por onde começar?</h2>
+                <p class="text-lg text-brand-slate max-w-2xl mx-auto mb-8">Sua marca tem um potencial incrível. Mas qual o próximo passo para desbloqueá-lo? Nosso diagnóstico estratégico gratuito de 90 segundos te dá a clareza necessária.</p>
+                <a href="diagnos.html" target="_blank" class="inline-block px-8 py-4 text-brand-navy font-bold rounded-md btn-gradient text-lg">
+                    Descobrir Meu Próximo Passo
+                </a>
+            </div>
+        </section>
+        
+        <!-- =================================================================
+        SEÇÃO 6: EBOOKS
+        ================================================================== -->
+        <section id="ebooks" class="py-20 md:py-32">
+            <div class="text-left reveal mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-brand-lightest mb-4"><span class="text-brand-accent">04.</span> Conteúdo Exclusivo</h2>
+                <p class="text-lg text-brand-slate max-w-2xl">Aprofunde seu conhecimento com nossos ebooks gratuitos sobre branding, design, estratégia digital e muito mais.</p>
+            </div>
+            
+            <div class="relative reveal" x-data="ebookCarousel()">
+                <div id="ebook-carousel-container" class="overflow-hidden w-full" x-ref="container">
+                    <div id="ebook-carousel-slider" class="flex carousel-slider" x-ref="slider" :style="`transform: translateX(-${currentIndex * itemWidth}px)`">
+                        <!-- Os cards dos ebooks são gerados pelo JavaScript abaixo -->
+                    </div>
+                </div>
+                <button @click="prev()" id="ebook-prev-btn" class="absolute top-1/2 -left-4 transform -translate-y-1/2 bg-brand-light-navy/50 p-2 rounded-full text-brand-accent hover:bg-brand-light-navy z-10 transition-opacity">
+                    <i class="fas fa-chevron-left fa-lg w-6 h-6"></i>
+                </button>
+                <button @click="next()" id="ebook-next-btn" class="absolute top-1/2 -right-4 transform -translate-y-1/2 bg-brand-light-navy/50 p-2 rounded-full text-brand-accent hover:bg-brand-light-navy z-10 transition-opacity">
+                    <i class="fas fa-chevron-right fa-lg w-6 h-6"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- =================================================================
+        SEÇÃO 7: CONTATO
+        ================================================================== -->
+        <section id="contact" class="py-20 md:py-32">
+            <div class="text-center reveal mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-brand-lightest mb-4"><span class="text-brand-accent">05.</span> Vamos Conversar?</h2>
+                <p class="text-lg text-brand-slate max-w-2xl mx-auto">Tem um desafio de branding ou um projeto digital em mente? Preencha o formulário e vamos criar algo incrível juntos.</p>
+            </div>
+            <div class="reveal max-w-2xl mx-auto">
+                <iframe src="https://southsea-kanban.vercel.app/form.html" width="100%" height="700px" frameborder="0" class="rounded-lg"></iframe>
+            </div>
+        </section>
+    </main>
+
+    <!-- =================================================================
+    FOOTER
+    ================================================================== -->
+    <footer id="footer" class="py-8">
+        <div class="container mx-auto px-6 md:px-10 text-center text-brand-slate">
+            <div class="flex justify-center space-x-6 mb-4">
+                <!-- LINKS DAS REDES SOCIAIS -->
+                <a href="https://www.instagram.com/co.southsea/" class="text-brand-slate hover:text-brand-accent transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-instagram" viewBox="0 0 16 16"><path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.9 3.9 0 0 0-1.417.923A3.9 3.9 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.9 3.9 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.9 3.9 0 0 0-.923-1.417A3.9 3.9 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599s.453.546.598.92c.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.5 2.5 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.5 2.5 0 0 1-.92-.598 2.5 2.5 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233s.008-2.388.046-3.231c.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92s.546-.453.92-.598c.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92m-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217m0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334"/></svg></a>
+                <a href="https://api.whatsapp.com/send/?phone=4899013968&text=Ol%C3%A1%21+Tenho+interesse+em+saber+mais+&type=phone_number&app_absent=0" class="text-brand-slate hover:text-brand-accent transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-whatsapp" viewBox="0 0 16 16"><path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232"/></svg></a>
+            </div>
+            <p class="text-sm">&copy; 2025 South Sea. Todos os direitos reservados. <br> Made with 💙 by <a href="https://www.southsea.com.br/" class="hover:text-brand-accent">South Sea</a></p>
+        </div>
+    </footer>
+    
+    <!-- =================================================================
+    UI ELEMENTS (MODALS, BUTTONS)
+    ================================================================== -->
+    <!-- Cookie Banner -->
+    <div id="cookie-banner" class="fixed bottom-0 inset-x-0 p-4 z-[60] banner-hidden">
+        <div class="max-w-7xl mx-auto">
+            <div class="p-4 bg-brand-light-navy/80 backdrop-blur-md rounded-xl shadow-2xl ring-1 ring-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                <div class="flex-grow text-brand-light">
+                    <p>Usamos cookies para otimizar sua experiência e para fins de marketing. 
+                    <button id="open-cookie-modal" class="text-brand-accent hover:underline">Saiba mais</button>.</p>
+                </div>
+                <div class="w-full sm:w-auto flex-shrink-0 flex justify-end items-center gap-4">
+                    <button id="decline-cookies" class="text-xs font-medium text-brand-slate hover:text-white transition-colors">
+                        Recusar
+                    </button>
+                    <button id="accept-cookies" class="px-5 py-2 rounded-lg text-sm font-medium text-brand-accent border-2 border-brand-accent hover:bg-brand-accent/10 transition-colors">
+                        Aceitar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cookie Policy Modal -->
+    <div id="cookie-modal" class="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-brand-navy/50 backdrop-blur-sm modal-hidden">
+        <div class="modal-content glass-card w-full max-w-2xl max-h-[90vh] flex flex-col rounded-xl overflow-hidden">
+            <div class="p-6 border-b border-brand-accent/20">
+                <h3 class="text-2xl font-bold text-brand-lightest">Política de Cookies e Privacidade</h3>
+            </div>
+            <div class="p-6 space-y-4 text-brand-slate overflow-y-auto">
+                <p>Nós, da South Sea, levamos sua privacidade a sério. Este aviso descreve como usamos cookies e tecnologias semelhantes para reconhecer você quando visita nosso site.</p>
+                
+                <h4 class="text-xl font-bold text-brand-light pt-2">O que são cookies?</h4>
+                <p>Cookies são pequenos arquivos de texto que são colocados no seu computador ou dispositivo móvel quando você visita um site. Eles são amplamente utilizados para fazer os sites funcionarem, ou funcionarem de forma mais eficiente, bem como para fornecer informações de relatórios.</p>
+                
+                <h4 class="text-xl font-bold text-brand-light pt-2">Por que usamos cookies?</h4>
+                <p>Utilizamos cookies por diversos motivos. Alguns são essenciais para o funcionamento técnico do nosso site. Outros nos ajudam a rastrear e direcionar os interesses dos nossos usuários para melhorar a experiência (por exemplo, através de marketing).</p>
+                <ul class="list-disc list-inside space-y-2 pl-4">
+                    <li><strong>Cookies Essenciais:</strong> Necessários para fornecer os serviços disponíveis através do nosso site e para usar algumas de suas funcionalidades, como o acesso a áreas seguras.</li>
+                    <li><strong>Cookies de Marketing (se aplicável):</strong> São usados para tornar as mensagens publicitárias mais relevantes para você. Eles nos ajudam a selecionar anúncios baseados nos seus interesses e a medir a eficácia das nossas campanhas. Ao aceitar, você concorda com o uso desses cookies. Atualmente, utilizamos o Meta Pixel para este fim.</li>
+                </ul>
+
+                <h4 class="text-xl font-bold text-brand-light pt-2">Seu Controle</h4>
+                <p>Você tem o direito de decidir se aceita ou rejeita os cookies de marketing. Você pode exercer suas preferências clicando nos botões apropriados no banner de cookies. Se optar por rejeitar, apenas os cookies essenciais para o funcionamento do site serão utilizados.</p>
+            </div>
+            <div class="p-4 mt-auto bg-brand-light-navy/50 border-t border-brand-accent/20 text-right">
+                <button id="close-cookie-modal" class="px-6 py-2 rounded-lg text-sm font-medium text-brand-navy bg-brand-accent hover:bg-opacity-90 transition-colors">
+                    Fechar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back to Top Button -->
+    <a href="#hero" id="back-to-top" x-show="showBackToTop" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform translate-y-4" x-transition:enter-end="opacity-100 transform translate-y-0" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100 transform translate-y-0" x-transition:leave-end="opacity-0 transform translate-y-4" class="fixed bottom-20 right-5 bg-brand-accent/80 hover:bg-brand-accent text-brand-navy w-12 h-12 rounded-full flex items-center justify-center shadow-lg z-50">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+
+    <!-- WhatsApp Button -->
+    <a href="https://api.whatsapp.com/send/?phone=4899013968&text=Ol%C3%A1%21+Tenho+interesse+em+saber+mais+&type=phone_number&app_absent=0" class="fixed bottom-5 right-5 bg-[#25D366] text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg z-50 hover:scale-110 transition-transform" target="_blank" aria-label="Fale conosco pelo WhatsApp">
+        <i class="fab fa-whatsapp text-2xl"></i>
+    </a>
+
+    <!-- Gallery Modal -->
+    <div id="gallery-modal" class="fixed inset-0 bg-bg-brand-navy z-[70] overflow-y-auto hidden">
+        <!-- Sticky Header -->
+        <div class="sticky top-0 z-20 bg-bg-brand-navy/90 backdrop-blur-sm border-b border-brand-accent/10">
+            <div class="container mx-auto max-w-7xl px-6">
+                <div class="flex justify-between items-center py-5">
+                    <h2 class="text-2xl md:text-3xl font-bold text-brand-lightest">
+                        <span class="text-brand-accent font-mono"></span> Nossos Projetos
+                    </h2>
+                    <button onclick="closeGalleryModal()" class="text-brand-accent text-4xl md:text-5xl font-light hover:text-white transition-colors leading-none">&times;</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scrollable Content -->
+        <div class="relative z-10">
+            <div class="container mx-auto max-w-7xl p-6 pt-8">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Gallery Item 1 -->
+                    <a href="https://liferrary.vercel.app/" target="_blank" rel="noopener noreferrer" class="group block rounded-lg overflow-hidden glass-card !p-4">
+                        <div class="overflow-hidden rounded-md mb-4"><img src="/newimag/lianaferray.png" alt="Consultora de aromaterapia" class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"></div>
+                        <h3 class="text-xl font-bold text-brand-lightest mb-2">Liana Ferrary</h3>
+                        <p class="text-sm text-brand-slate">Site institucional estratégico para especialista do setor de estética.</p>
+                    </a>
+                    <!-- Gallery Item 2 -->
+                    <a href="https://www.shapeschool.com.br/" target="_blank" rel="noopener noreferrer" class="group block rounded-lg overflow-hidden glass-card !p-4">
+                        <div class="overflow-hidden rounded-md mb-4"><img src="/newimag/shapes 2.png" alt="E-commerce de Moda" class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"></div>
+                        <h3 class="text-xl font-bold text-brand-lightest mb-2">Shapes School</h3>
+                        <p class="text-sm text-brand-slate">Portal digital para escola de inglês com foco no aprendizado infantil.</p>
+                    </a>
+                     <!-- Gallery Item -->
+                    <a href="https://nataliafreirenutricionista.vercel.app" target="_blank" rel="noopener noreferrer" class="group block rounded-lg overflow-hidden glass-card !p-4">
+                        <div class="overflow-hidden rounded-md mb-4"><img src="/newimag/Nat (1).png" alt="E-commerce de Moda" class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"></div>
+                        <h3 class="text-xl font-bold text-brand-lightest mb-2">Natália Freire</h3>
+                        <p class="text-sm text-brand-slate">Site completo para nutricionista esportiva com foco em performance e saúde.</p>
+                    </a>
+                    <!-- Gallery Item 3 -->
+                    <a href="https://voxxx.vercel.app/" target="_blank" rel="noopener noreferrer" class="group block rounded-lg overflow-hidden glass-card !p-4">
+                        <div class="overflow-hidden rounded-md mb-4"><img src="/newimag/voxxx.png" alt="Startup de Tecnologia" class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"></div>
+                        <h3 class="text-xl font-bold text-brand-lightest mb-2">Dj VOXXX</h3>
+                        <p class="text-sm text-brand-slate">Plataforma imersiva para promover a música e conectar o artista com o público.</p>
+                    </a>
+                    <!-- Gallery Item 4 -->
+                    <a href="https://efyia.vercel.app/" target="_blank" rel="noopener noreferrer" class="group block rounded-lg overflow-hidden glass-card !p-4">
+                        <div class="overflow-hidden rounded-md mb-4"><img src="/newimag/efyia.png" alt="Clínica Médica" class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"></div>
+                        <h3 class="text-xl font-bold text-brand-lightest mb-2">Efyía </h3>
+                        <p class="text-sm text-brand-slate">Site corporativo para escritório de contabilidade e consultoria tributária.</p>
+                    </a>
+                    <!-- Gallery Item 5 -->
+                    <a href="https://gaia-sage.vercel.app/" target="_blank" rel="noopener noreferrer" class="group block rounded-lg overflow-hidden glass-card !p-4">
+                        <div class="overflow-hidden rounded-md mb-4"><img src="/newimag/gaia.png" alt="Restaurante" class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"></div>
+                        <h3 class="text-xl font-bold text-brand-lightest mb-2">Clínica Gaia</h3>
+                        <p class="text-sm text-brand-slate">Site institucional para clínica integrativa.</p>
+                    </a>
+                    <!-- Gallery Item 6 -->
+                    <a href="https://www.formafitness.net.br/lagoa.html" target="_blank" rel="noopener noreferrer" class="group block rounded-lg overflow-hidden glass-card !p-4">
+                        <div class="overflow-hidden rounded-md mb-4"><img src="/newimag/Forma.png" alt="Escritório de Advocacia" class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"></div>
+                        <h3 class="text-xl font-bold text-brand-lightest mb-2">Forma </h3>
+                        <p class="text-sm text-brand-slate">Site de alta performance para captação de novos membros e divulgação de planos.</p>
+                    </a>
+                    <!-- Gallery Item 7 -->
+                    <a href="https://www.lilianealvespsi.com.br" target="_blank" rel="noopener noreferrer" class="group block rounded-lg overflow-hidden glass-card !p-4">
+                        <div class="overflow-hidden rounded-md mb-4"><img src="/newimag/liliane.png" alt="Escritório de Advocacia" class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"></div>
+                        <h3 class="text-xl font-bold text-brand-lightest mb-2">Liliana Alves</h3>
+                        <p class="text-sm text-brand-slate">Site institucional para Psicoterapeuta Sistêmica.</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- =================================================================
+    SCRIPTS
+    ================================================================== -->
+    <script>
+        // --- ANIMAÇÃO DE REVELAÇÃO AO ROLAR ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const revealElements = document.querySelectorAll('.reveal');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+            revealElements.forEach(el => observer.observe(el));
+        });
+
+        // --- LÓGICA DE ANIMAÇÃO DE DIGITAÇÃO ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const textElement = document.getElementById('typing-text');
+            if (textElement) {
+                const textToType = "Transformamos marcas em legados digitais.";
+                let index = 0;
+                function type() {
+                    if (index < textToType.length) {
+                        textElement.textContent += textToType.charAt(index);
+                        index++;
+                        setTimeout(type, 50);
+                    }
+                }
+                type();
+            }
+        });
+
+        // --- LÓGICA DO CARROSSEL DE EBOOKS (com Alpine.js) ---
+        function ebookCarousel() {
+            return {
+                currentIndex: 0,
+                itemWidth: 0,
+                itemsPerView: 3,
+                totalItems: 0,
+                autoScrollInterval: null,
+                ebooks: [
+                    { title: 'A Nova Bandeira', description: 'Como Comunicar seu Rebranding para o Mercado, Clientes e Equipe sem Perder a Essência.', image: '/newimag/anbmk1.png', link: '/lp-anovabandeira.html' },
+                    { title: 'Cor por Cor', description: 'O segredo para o sucesso pessoal e profissional.', image: '/newimag/cor4x22.png', link: '/corporcor.html' },
+                    { title: 'Encontrando o Seu Oceano Azul', description: 'Como Posicionar sua Marca de Forma Única em um Mercado Competitivo.', image: '/newimag/eoa4x22.png', link: '/encontrandoseuoceanoazul.html' },
+                    { title: 'O Poder da Disciplina', description: 'O segredo para o sucesso pessoal e profissional.', image: '/newimag/pdmk.png', link: '/opoderdadisciplina.html' }
+                ],
+                init() {
+                    const slider = this.$refs.slider;
+                    if (!slider) return;
+
+                    this.ebooks.forEach(ebook => {
+                        const card = `<div class="flex-shrink-0 w-full sm:w-1/2 md:w-1/3 p-3"><a href="${ebook.link}" class="glass-card rounded-lg p-6 h-full flex flex-col block group"><img src="${ebook.image}" alt="Capa do ${ebook.title}" class="rounded-md mb-4 aspect-[16/9] object-cover bg-brand-light-navy group-hover:scale-105 transition-transform duration-300"><h4 class="font-bold text-brand-lightest text-xl mb-2">${ebook.title}</h4><p class="text-brand-slate text-sm flex-grow mb-4">${ebook.description}</p><span class="inline-block mt-auto text-brand-accent font-bold group-hover:underline">Confira agora &rarr;</span></a></div>`;
+                        slider.innerHTML += card;
+                    });
+
+                    this.totalItems = this.ebooks.length;
+                    
+                    this.$nextTick(() => {
+                        this.updateDimensions();
+                    });
+                    
+                    window.addEventListener('resize', () => this.updateDimensions());
+                    this.startAutoScroll();
+
+                    this.$el.addEventListener('mouseenter', () => this.stopAutoScroll());
+                    this.$el.addEventListener('mouseleave', () => this.startAutoScroll());
+                },
+                updateDimensions() {
+                    if (window.innerWidth >= 768) this.itemsPerView = 3;
+                    else if (window.innerWidth >= 640) this.itemsPerView = 2;
+                    else this.itemsPerView = 1;
+
+                    if (this.$refs.slider && this.$refs.slider.children.length > 0) {
+                        this.itemWidth = this.$refs.slider.children[0].clientWidth;
+                    }
+
+                    if (this.currentIndex > this.totalItems - this.itemsPerView) {
+                        this.currentIndex = Math.max(0, this.totalItems - this.itemsPerView);
+                    }
+                },
+                next() {
+                    const lastPossibleIndex = Math.max(0, this.totalItems - this.itemsPerView);
+                    if (this.currentIndex >= lastPossibleIndex) {
+                        this.currentIndex = 0;
+                    } else {
+                        this.currentIndex++;
+                    }
+                },
+                prev() {
+                    const lastPossibleIndex = Math.max(0, this.totalItems - this.itemsPerView);
+                    if (this.currentIndex === 0) {
+                        this.currentIndex = lastPossibleIndex;
+                    } else {
+                        this.currentIndex--;
+                    }
+                },
+                startAutoScroll() {
+                    this.stopAutoScroll();
+                    this.autoScrollInterval = setInterval(() => this.next(), 5000);
+                },
+                stopAutoScroll() {
+                    clearInterval(this.autoScrollInterval);
+                },
+                restartAutoScroll() {
+                    this.stopAutoScroll();
+                    this.startAutoScroll();
+                }
+            }
+        }
+
+        // --- LÓGICA DE CONSENTIMENTO DE COOKIES (LGPD) ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const COOKIE_CONSENT_KEY = 'cookie_consent_status';
+            const banner = document.getElementById('cookie-banner');
+            const modal = document.getElementById('cookie-modal');
+            const body = document.querySelector('body');
+
+            const acceptBtn = document.getElementById('accept-cookies');
+            const declineBtn = document.getElementById('decline-cookies');
+            const openModalBtn = document.getElementById('open-cookie-modal');
+            const closeModalBtn = document.getElementById('close-cookie-modal');
+
+            function initializeTracking() {
+                // This function contains the tracking scripts
+                console.log("Cookie consent accepted. Initializing tracking.");
+                !function(f,b,e,v,n,t,s)
+                {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+                n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+                if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+                n.queue=[];t=b.createElement(e);t.async=!0;
+                t.src=v;s=b.getElementsByTagName(e)[0];
+                s.parentNode.insertBefore(t,s)}(window, document,'script',
+                'https://connect.facebook.net/en_US/fbevents.js');
+                fbq('init', '459784769803882');
+                fbq('track', 'PageView');
+                // You can add other tracking scripts here (e.g., Google Analytics)
+            }
+
+            function handleConsent(status) {
+                localStorage.setItem(COOKIE_CONSENT_KEY, status);
+                banner.classList.add('banner-hidden');
+                if (status === 'accepted') {
+                    initializeTracking();
+                }
+            }
+
+            function showBanner() {
+                banner.classList.remove('banner-hidden');
+            }
+            
+            function openCookieModal() {
+                modal.classList.remove('modal-hidden');
+                body.classList.add('modal-open');
+            }
+
+            function closeCookieModal() {
+                modal.classList.add('modal-hidden');
+                body.classList.remove('modal-open');
+            }
+
+            // Event Listeners
+            acceptBtn.addEventListener('click', () => handleConsent('accepted'));
+            declineBtn.addEventListener('click', () => handleConsent('declined'));
+            openModalBtn.addEventListener('click', openCookieModal);
+            closeModalBtn.addEventListener('click', closeCookieModal);
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) closeCookieModal();
+            });
+
+            // Initial Check
+            const consentStatus = localStorage.getItem(COOKIE_CONSENT_KEY);
+            if (consentStatus === 'accepted') {
+                initializeTracking();
+            } else if (consentStatus === 'declined') {
+                console.log("Cookie consent previously declined.");
+            } else {
+                setTimeout(showBanner, 1000);
+            }
+        });
+
+        // --- GALLERY MODAL LOGIC ---
+        const galleryModal = document.getElementById('gallery-modal');
+        const pageBody = document.querySelector('body');
+        const elementsToBlur = [document.getElementById('main-content'), document.querySelector('header'), document.getElementById('footer')];
+
+        function openGalleryModal() {
+            if (galleryModal) {
+                galleryModal.classList.remove('hidden');
+                galleryModal.classList.add('visible');
+                pageBody.classList.add('gallery-modal-open');
+                elementsToBlur.forEach(el => el && el.classList.add('content-blur'));
+            }
+        }
+
+        function closeGalleryModal() {
+            if (galleryModal) {
+                galleryModal.classList.remove('visible');
+                setTimeout(() => {
+                    galleryModal.classList.add('hidden');
+                }, 300);
+                pageBody.classList.remove('gallery-modal-open');
+                elementsToBlur.forEach(el => el && el.classList.remove('content-blur'));
+            }
+        }
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if(galleryModal && galleryModal.classList.contains('visible')) {
+                    closeGalleryModal();
+                }
+                const cookieModal = document.getElementById('cookie-modal');
+                if(cookieModal && !cookieModal.classList.contains('modal-hidden')) {
+                    cookieModal.querySelector('#close-cookie-modal').click();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
