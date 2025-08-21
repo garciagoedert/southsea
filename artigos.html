@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artigos - South Sea Agência Criativa</title>
+    <meta name="description" content="Explore nossos artigos e insights sobre branding, design, SEO e desenvolvimento web para impulsionar sua marca no universo digital.">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script> 
+    
+    <!-- Google Fonts: Montserrat & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Alpine.js for interactivity -->
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Favicon -->
+    <link rel="icon" href="/newimag/Ellipse 9.svg">
+
+    <style>
+        /* Estilos (copiados do index.html para consistência) */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0A192F;
+            color: #E6F1FF;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+        }
+        .font-montserrat { font-family: 'Montserrat', sans-serif; }
+        .bg-brand-navy { background-color: #0A192F; }
+        .bg-brand-light-navy { background-color: #112240; }
+        .text-brand-lightest { color: #E6F1FF; }
+        .text-brand-light { color: #CCD6F6; }
+        .text-brand-slate { color: #8892B0; }
+        .text-brand-accent { color: #64FFDA; }
+        .border-brand-accent { border-color: #64FFDA; }
+        .ring-brand-accent { --tw-ring-color: #64FFDA; }
+        /* Adicionada classe de texto para o azul escuro */
+        .text-brand-navy { color: #0A192F; }
+        
+        .glass-card {
+            background: rgba(17, 34, 64, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(100, 255, 218, 0.1);
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover {
+            transform: translateY(-4px);
+            border: 1px solid rgba(100, 255, 218, 0.3);
+        }
+
+        .btn-gradient {
+            background: linear-gradient(90deg, #2EC9A8, #00B88A);
+            transition: all 0.3s ease;
+        }
+        .btn-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(46, 201, 168, 0.2);
+        }
+
+        /* Animação de entrada */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-brand-navy" x-data="{ mobileMenuOpen: false }">
+
+    <!-- =================================================================
+    HEADER
+    ================================================================== -->
+    <header x-data="{ scrolled: false }" @scroll.window="scrolled = (window.pageYOffset > 50)" 
+            class="sticky top-0 left-0 right-0 z-50 transition-all duration-300 bg-brand-navy/80 backdrop-blur-sm shadow-lg py-2">
+        <div class="container mx-auto px-6 md:px-10 flex justify-between items-center">
+            <!-- LOGO -->
+            <a href="/index.html">
+                <img src="/newimag/Vector.svg" alt="Logo South Sea" class="h-10 w-auto" onerror="this.onerror=null;this.src='https://placehold.co/100x40/0A192F/E6F1FF?text=Logo';">
+            </a>
+
+            <!-- NAVEGAÇÃO -->
+            <nav class="hidden md:flex items-center space-x-8">
+                <a href="/index.html#services" class="text-brand-light hover:text-brand-accent transition-colors duration-300">Serviços</a>
+                <a href="/index.html#projects" class="text-brand-light hover:text-brand-accent transition-colors duration-300">Projetos</a>
+                <a href="/artigos.html" class="text-brand-accent transition-colors duration-300">Artigos</a>
+                <a href="/index.html#ebooks" class="text-brand-light hover:text-brand-accent transition-colors duration-300">Ebooks</a>
+                <a href="/index.html#about" class="text-brand-light hover:text-brand-accent transition-colors duration-300">Sobre</a>
+                <a href="/index.html#contact" class="text-brand-light hover:text-brand-accent transition-colors duration-300">Contato</a>
+            </nav>
+
+            <!-- BOTÃO CTA -->
+            <a href="https://api.whatsapp.com/send/?phone=4899013968&text=Ol%C3%A1%21+Tenho+interesse+em+iniciar+um+projeto+&type=phone_number&app_absent=0" class="hidden md:block px-5 py-2 text-brand-navy font-bold rounded-md btn-gradient">Iniciar um Projeto</a>
+            
+            <!-- MENU MOBILE -->
+            <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden text-brand-accent z-50">
+                <svg x-show="!mobileMenuOpen" class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                <svg x-show="mobileMenuOpen" class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+        <div x-show="mobileMenuOpen" x-transition @click.away="mobileMenuOpen = false" class="md:hidden absolute top-0 left-0 w-full h-screen bg-brand-navy pt-24">
+            <nav class="flex flex-col items-center space-y-8 text-xl">
+                 <a href="/index.html#services" @click="mobileMenuOpen = false" class="text-brand-light hover:text-brand-accent">Serviços</a>
+                <a href="/index.html#projects" @click="mobileMenuOpen = false" class="text-brand-light hover:text-brand-accent">Projetos</a>
+                <a href="/artigos.html" @click="mobileMenuOpen = false" class="text-brand-accent">Artigos</a>
+                <a href="/index.html#ebooks" @click="mobileMenuOpen = false" class="text-brand-light hover:text-brand-accent">Ebooks</a>
+                <a href="/index.html#about" @click="mobileMenuOpen = false" class="text-brand-light hover:text-brand-accent">Sobre</a>
+                <a href="/index.html#contact" @click="mobileMenuOpen = false" class="text-brand-light hover:text-brand-accent">Contato</a>
+                <a href="https://api.whatsapp.com/send/?phone=48988780389&text=Ol%C3%A1%21+Tenho+interesse+em+iniciar+um+projeto+&type=phone_number&app_absent=0" @click="mobileMenuOpen = false" class="mt-8 px-6 py-3 text-brand-navy font-bold rounded-md btn-gradient">Iniciar um Projeto</a>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main-content" class="container mx-auto px-6 md:px-10">
+        
+        <!-- =================================================================
+        SEÇÃO DE ARTIGOS
+        ================================================================== -->
+        <section id="artigos-page" class="py-24 md:py-32">
+            
+            <!-- TÍTULO DA PÁGINA -->
+            <div class="text-center mb-16 md:mb-20 fade-in-up" x-data x-init="$el.classList.add('visible')">
+                <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-brand-lightest">Nossos Artigos</h1>
+                <p class="mt-4 text-lg md:text-xl text-brand-slate max-w-2xl mx-auto">
+                    Conhecimento é poder. Mergulhe em nossos conteúdos e descubra como podemos elevar sua marca.
+                </p>
+            </div>
+
+            <div x-data="{
+                filter: 'todos',
+                categoryNames: {
+                    'web': 'Criação de Sites',
+                    'branding': 'Branding',
+                    'estrategia': 'Estratégia Digital',
+                    'agencia': 'Escolhendo a Agência',
+                    'outros': 'Outros'
+                },
+                articles: [
+                    // Categoria: Criação de Sites
+                    { category: 'web', title: 'Sua Empresa Perde Vendas Sem um Site? 5 Sinais Claros de Alerta.', description: 'Se seus concorrentes são encontrados online e você não, este artigo é crucial. Descubra os sintomas de que a falta de um site profissional está limitando seu crescimento.', image: 'https://plus.unsplash.com/premium_photo-1713820010572-b8c4b2ecbd55?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', link: '/artigos/empresa-perde-vendas-sem-site.html' },
+                    { category: 'web', title: 'O Guia Definitivo: 7 Razões Pelas Quais Sua PME Precisa de um Site Profissional Agora.', description: 'Aumente a credibilidade, alcance clientes 24/7 e seja encontrado no Google. Veja os motivos essenciais para investir na sua presença digital.', image: 'https://placehold.co/600x400/112240/64FFDA?text=Guia', link: '/artigos/7-razoes-pme-precisa-de-site.html' },
+                    { category: 'web', title: 'Quanto Custa um Site Profissional no Brasil? (Guia de Preços 2025).', description: 'De R$700 a mais de R$20.000. Desvendamos os fatores que definem o preço de um site e o que esperar de cada faixa de investimento.', image: 'https://placehold.co/600x400/112240/64FFDA?text=Preços', link: '/artigos/quanto-custa-site-profissional-brasil.html' },
+                    { category: 'web', title: 'Site Grátis vs. Agência Profissional: O Custo Real do &quot;Barato&quot;.', description: 'Antes de usar uma plataforma gratuita, entenda as limitações de SEO, segurança e design que podem custar caro a longo prazo.', image: 'https://placehold.co/600x400/112240/64FFDA?text=Comparativo', link: '/artigos/site-gratis-vs-agencia-profissional.html' },
+                    { category: 'web', title: 'Fazer um Site Sozinho ou Contratar uma Agência? Análise Completa de Prós e Contras.', description: 'Economia de tempo vs. custo inicial. Controle total vs. expertise profissional. Analisamos todos os fatores para ajudar você a tomar a melhor decisão.', image: 'https://placehold.co/600x400/112240/64FFDA?text=Decisão', link: '/artigos/fazer-site-sozinho-ou-contratar-agencia.html' },
+                    { category: 'web', title: 'Checklist: 10 Funcionalidades Indispensáveis em um Site Corporativo Moderno.', description: 'Seu site está preparado para competir? Verifique se ele possui design responsivo, SSL, carregamento rápido e outras features essenciais.', image: 'https://placehold.co/600x400/112240/64FFDA?text=Checklist', link: '/artigos/10-funcionalidades-indispensaveis-site-corporativo.html' },
+                    { category: 'web', title: 'Por Que um Site é Mais Importante que Suas Redes Sociais em 2025.', description: 'As redes sociais são alugadas, seu site é próprio. Entenda por que ter um ativo digital sob seu controle total é a base para um crescimento seguro.', image: 'https://placehold.co/600x400/112240/64FFDA?text=Ativo+Digital', link: '/artigos/por-que-site-e-mais-importante-que-redes-sociais.html' },
+                    { category: 'web', title: '&quot;Meu Negócio é Local, Preciso de um Site?&quot; A Resposta é Sim, e Explicamos o Porquê.', description: 'Mesmo que você não venda online, um site atrai clientes da sua região, fortalece sua marca local e transmite profissionalismo.', image: 'https://placehold.co/600x400/112240/64FFDA?text=Negócio+Local', link: '/artigos/negocio-local-precisa-de-site.html' },
+                    { category: 'web', title: 'Os 5 Maiores Erros que Empresas Cometem ao Criar um Site (e Como Evitá-los).', description: 'Desde ignorar a versão mobile até negligenciar a velocidade. Conheça as armadilhas mais comuns que sabotam o sucesso de um site.', image: 'https://placehold.co/600x400/112240/64FFDA?text=Erros', link: '/artigos/5-maiores-erros-ao-criar-site.html' },
+                    { category: 'web', title: 'Por que um Site Amador Prejudica a Credibilidade do seu Negócio.', description: 'Um design ruim e links quebrados afastam clientes. Entenda como um site de baixa qualidade pode destruir a confiança na sua marca.', image: 'https://placehold.co/600x400/112240/64FFDA?text=Credibilidade', link: '/artigos/site-amador-prejudica-credibilidade.html' },
+                    { category: 'web', title: 'Freelancer, Agência ou Plataforma DIY: Qual a Melhor Opção para Criar seu Site?', description: 'Comparamos as três principais formas de criar um site, analisando custo, qualidade, prazo e suporte para que você escolha o caminho ideal.', image: 'https://placehold.co/600x400/112240/64FFDA?text=Opções', link: '/artigos/freelancer-vs-agencia-vs-diy.html' },
+                    { category: 'web', title: 'Site Institucional ou E-commerce: Qual Modelo de Negócio é o Certo para Você?', description: 'Não sabe se precisa de uma vitrine online ou de uma loja virtual completa? Analisamos as diferenças para ajudar você a decidir.', image: 'https://placehold.co/600x400/112240/64FFDA?text=Modelo+de+Negócio', link: '/artigos/site-institucional-vs-ecommerce.html' },
+                    { category: 'web', title: 'Landing Page vs. Site Completo: Entenda a Diferença e Quando Usar Cada Um.', description: 'Uma landing page foca em conversão, um site constrói autoridade. Saiba qual ferramenta usar para cada objetivo de marketing.', image: 'https://placehold.co/600x400/112240/64FFDA?text=LP+vs+Site', link: '/artigos/landing-page-vs-site-completo.html' },
+                    { category: 'web', title: 'O Guia Completo para Escolher o Domínio e a Hospedagem Perfeita para seu Site.', description: 'O endereço do seu site e onde ele &quot;mora&quot; são decisões cruciais. Aprenda a escolher um domínio memorável e uma hospedagem confiável.', image: 'https://placehold.co/600x400/112240/64FFDA?text=Domínio', link: '/artigos/guia-dominio-e-hospedagem.html' },
+                    { category: 'web', title: 'O que é um Site Responsivo e Por Que o Google Penaliza Quem Não Tem.', description: 'Mais da metade dos acessos à internet vem de celulares. Se seu site não se adapta, você está perdendo clientes e sendo rebaixado pelo Google.', image: 'https://placehold.co/600x400/112240/64FFDA?text=Responsivo', link: '/artigos/o-que-e-site-responsivo.html' },
+                    { category: 'web', title: 'Velocidade do Site: Como Segundos de Carregamento Impactam suas Vendas e seu SEO.', description: 'Cada segundo de atraso na abertura do seu site aumenta a taxa de abandono. Entenda a importância da velocidade para não perder dinheiro.', image: 'https://placehold.co/600x400/112240/64FFDA?text=Velocidade', link: '/artigos/velocidade-do-site-impacto-vendas-seo.html' },
+                    { category: 'web', title: 'Como um Site Profissional Aumenta a Confiança e a Credibilidade da sua Marca.', description: 'Veja como um site bem estruturado, com design profissional e conteúdo claro, pode ser o fator decisivo para um cliente escolher você.', image: 'https://placehold.co/600x400/112240/64FFDA?text=Confiança', link: '/artigos/como-site-aumenta-confianca-marca.html' },
+                    { category: 'web', title: '7 Elementos de Design que Fazem um Site Parecer Profissional (e Confiável).', description: 'Espaçamento, tipografia, cores. Conheça os elementos que separam um site amador de um profissional.', image: 'https://placehold.co/600x400/112240/64FFDA?text=Design', link: '/artigos/7-elementos-design-site-profissional.html' },
+                    
+                    // Categoria: Branding
+                    { category: 'branding', title: 'O que é Branding? Um Guia para Pequenas Empresas que Querem Deixar uma Marca.', description: 'Branding vai muito além do logotipo. É a promessa que você faz aos seus clientes. Aprenda os fundamentos para construir uma marca forte.', image: 'https://placehold.co/600x400/112240/64FFDA?text=Branding', link: '/artigos/o-que-e-branding-guia-pequenas-empresas.html' },
+                    { category: 'branding', title: 'O que é Identidade Visual e Como Ela Impacta suas Vendas.', description: 'Cores, fontes e logotipo comunicam a personalidade da sua marca e constroem confiança. Veja como uma identidade visual forte pode aumentar seus lucros.', image: 'https://placehold.co/600x400/112240/64FFDA?text=ID+Visual', link: '/artigos/o-que-e-identidade-visual.html' },
+                    { category: 'branding', title: 'Rebranding Estratégico: Quando e Como Renovar a Marca da sua Empresa.', description: 'Sua marca parece datada? Saiba identificar o momento certo para um rebranding e os passos para um processo de sucesso que revitaliza seu negócio.', image: 'https://placehold.co/600x400/112240/64FFDA?text=Rebranding', link: '/artigos/rebranding-estrategico-quando-e-como.html' },
+                    { category: 'branding', title: 'A Psicologia das Cores no Branding: Como Escolher a Paleta Perfeita para sua Marca.', description: 'As cores evocam emoções e influenciam decisões. Aprenda a usar a psicologia das cores para criar uma conexão instantânea com seu público.', image: 'https://placehold.co/600x400/112240/64FFDA?text=Cores', link: '/artigos/psicologia-das-cores-no-branding.html' },
+                    { category: 'branding', title: 'Manual de Marca: Por que sua Empresa Precisa de Um e Como Criá-lo.', description: 'Garanta consistência em toda a sua comunicação. Entenda o que é um manual de marca e por que ele é essencial para um branding profissional.', image: 'https://placehold.co/600x400/112240/64FFDA?text=Manual', link: '/artigos/manual-de-marca-por-que-precisa.html' },
+                    { category: 'branding', title: '5 Erros de Branding que Estão Custando Clientes para sua Empresa.', description: 'Da inconsistência visual à falta de uma mensagem clara. Identifique e corrija as falhas de branding que podem estar sabotando seu crescimento.', image: 'https://placehold.co/600x400/112240/64FFDA?text=Erros', link: '/artigos/5-erros-de-branding.html' },
+                    { category: 'branding', title: 'Rebranding de Sucesso: Como uma Nova Marca e um Novo Site Podem Dobrar seus Leads.', description: 'Veja como a renovação estratégica da identidade visual, alinhada a um site moderno, pode revitalizar a percepção e os resultados do seu negócio.', image: 'https://placehold.co/600x400/112240/64FFDA?text=Sucesso', link: '/artigos/rebranding-de-sucesso-dobrar-leads.html' },
+                    { category: 'branding', title: 'Logotipo vs. Identidade Visual: Entenda a Diferença Fundamental.', description: 'Muitos confundem os dois termos. Saiba por que um logotipo é apenas a ponta do iceberg de uma identidade visual completa e estratégica.', image: 'https://placehold.co/600x400/112240/64FFDA?text=Diferença', link: '/artigos/logotipo-vs-identidade-visual.html' },
+                    { category: 'branding', title: 'Como Construir uma Proposta de Valor Irresistível para sua Marca.', description: 'O que torna sua empresa única? Aprenda a comunicar claramente por que os clientes devem escolher você em vez da concorrência.', image: 'https://placehold.co/600x400/112240/64FFDA?text=Valor', link: '/artigos/como-construir-proposta-de-valor.html' },
+                    { category: 'branding', title: 'O Guia Completo para um Rebranding sem Traumas para seus Clientes.', description: 'Mudar a marca pode ser arriscado. Siga nosso passo a passo para comunicar a mudança de forma eficaz e fortalecer o relacionamento com seu público.', image: 'https://placehold.co/600x400/112240/64FFDA?text=Guia', link: '/artigos/guia-rebranding-sem-traumas.html' },
+
+                    // Categoria: Estratégia Digital (SEO e Marketing)
+                    { category: 'estrategia', title: 'SEO para Leigos: Como Fazer sua Empresa Aparecer no Google (Sem Termos Técnicos).', description: 'Esqueça o jargão complicado. Explicamos de forma simples como o SEO funciona e o que você precisa saber para atrair mais clientes através das buscas.', image: 'https://placehold.co/600x400/112240/64FFDA?text=SEO', link: '/artigos/seo-para-leigos.html' },
+                    { category: 'estrategia', title: 'Marketing Digital para PMEs: Um Glossário com os 15 Termos que Você Precisa Conhecer.', description: 'De &quot;Lead&quot; a &quot;ROI&quot;, desvendamos o vocabulário do marketing digital para que você possa tomar decisões mais inteligentes para o seu negócio.', image: 'https://placehold.co/600x400/112240/64FFDA?text=Glossário', link: '/artigos/glossario-marketing-digital-pmes.html' },
+                    { category: 'estrategia', title: 'Seu Site Está no Ar. E Agora? O Guia Definitivo para Gerar Tráfego e Vendas.', description: 'Lançar o site é só o começo. Apresentamos um plano de ação com estratégias de SEO e marketing para transformar seu novo site em uma máquina de leads.', image: 'https://placehold.co/600x400/112240/64FFDA?text=Pós-Lançamento', link: '/artigos/site-no-ar-e-agora.html' },
+                    { category: 'estrategia', title: 'SEO Local: O Passo a Passo para Colocar sua Empresa no Mapa do Google.', description: 'Atraia clientes que estão perto de você. Aprenda a otimizar seu site e seu Perfil da Empresa no Google para dominar os resultados de busca na sua cidade.', image: 'https://placehold.co/600x400/112240/64FFDA?text=SEO+Local', link: '/artigos/seo-local-passo-a-passo.html' },
+                    { category: 'estrategia', title: 'Marketing de Conteúdo para Vender Mais: Como um Blog pode se Tornar seu Melhor Vendedor.', description: 'Um blog é uma ferramenta estratégica para atrair, educar e converter clientes. Descubra como criar conteúdo que gera negócios.', image: 'https://placehold.co/600x400/112240/64FFDA?text=Conteúdo', link: '/artigos/marketing-de-conteudo-para-vender.html' },
+                    { category: 'estrategia', title: 'A Dupla Perfeita: Como a Criação de Sites e o Marketing Digital Trabalham Juntos.', description: 'Um site potente precisa de marketing para brilhar, e o marketing precisa de um bom site para converter. Entenda a sinergia essencial entre essas duas áreas.', image: 'https://placehold.co/600x400/112240/64FFDA?text=Sinergia', link: '/artigos/sites-e-marketing-digital.html' },
+                    { category: 'estrategia', title: '5 Sinais de que Está na Hora de Contratar uma Agência de Marketing Digital.', description: 'Seus resultados estão estagnados? Você não tem tempo? Saiba identificar os sinais de que terceirizar seu marketing é o próximo passo para crescer.', image: 'https://placehold.co/600x400/112240/64FFDA?text=Contratar', link: '/artigos/5-sinais-contratar-agencia-marketing.html' },
+                    { category: 'estrategia', title: 'O que são Títulos H1, H2, H3 e Por que Eles são Cruciais para o SEO do seu Site.', description: 'A estrutura de títulos do seu conteúdo diz ao Google sobre o que é sua página. Aprenda a usar as heading tags corretamente para ranquear melhor.', image: 'https://placehold.co/600x400/112240/64FFDA?text=H1+H2+H3', link: '/artigos/o-que-sao-titulos-h1-h2-h3-seo.html' },
+                    { category: 'estrategia', title: 'Guia de SEO para Imagens: Como Otimizar Fotos para Rankear Melhor no Google.', description: 'As imagens do seu site podem ser uma fonte poderosa de tráfego. Aprenda a usar texto alternativo (alt text) e comprimir arquivos para impulsionar seu SEO.', image: 'https://placehold.co/600x400/112240/64FFDA?text=SEO+Imagens', link: '/artigos/guia-seo-para-imagens.html' },
+                    { category: 'estrategia', title: 'Análise de Concorrência Online: Como Espionar seus Concorrentes (de Forma Ética).', description: 'Descubra quais palavras-chave seus concorrentes usam e de onde vem o tráfego deles para criar uma estratégia vencedora.', image: 'https://placehold.co/600x400/112240/64FFDA?text=Concorrência', link: '/artigos/analise-de-concorrencia-online.html' },
+                    { category: 'estrategia', title: 'Como Medir o Sucesso do seu Site: 5 KPIs que Realmente Importam.', description: 'Tráfego orgânico, taxa de conversão, leads gerados. Foco nos indicadores que mostram o verdadeiro ROI do seu investimento digital.', image: 'https://placehold.co/600x400/112240/64FFDA?text=KPIs', link: '/artigos/como-medir-sucesso-site-5-kpis.html' },
+                    { category: 'estrategia', title: 'Google Analytics para Iniciantes: Como Entender os Dados do seu Site.', description: 'Não se assuste com os gráficos. Mostramos as métricas essenciais que você precisa acompanhar para entender o comportamento dos seus visitantes.', image: 'https://placehold.co/600x400/112240/64FFDA?text=Analytics', link: '/artigos/google-analytics-para-iniciantes.html' },
+                    { category: 'estrategia', title: 'Palavras-Chave: O Guia Completo para Encontrar os Termos que seus Clientes Usam no Google.', description: 'Aprenda a pesquisar e selecionar as palavras-chave certas para atrair um público qualificado e interessado nos seus serviços.', image: 'https://placehold.co/600x400/112240/64FFDA?text=Keywords', link: '/artigos/guia-palavras-chave.html' },
+                    { category: 'estrategia', title: 'Link Building para PMEs: Como Conseguir Links de Qualidade e Aumentar a Autoridade do seu Site.', description: 'Links são como &quot;votos de confiança&quot; para o Google. Descubra estratégias práticas para construir uma rede de links que impulsione seu ranking.', image: 'https://placehold.co/600x400/112240/64FFDA?text=Link+Building', link: '/artigos/link-building-para-pmes.html' },
+                    { category: 'estrategia', title: 'O que é Tráfego Orgânico e Por que Ele é o Ativo Mais Valioso do seu Site.', description: 'Entenda a diferença entre tráfego pago e orgânico e por que investir em SEO é a estratégia mais sustentável e lucrativa a longo prazo.', image: 'https://placehold.co/600x400/112240/64FFDA?text=Tráfego', link: '/artigos/o-que-e-trafego-organico.html' },
+                    
+                    // Categoria: Escolhendo a Agência
+                    { category: 'agencia', title: 'Como Escolher a Agência de Criação de Sites Certa: 10 Perguntas Essenciais.', description: 'Contratar a agência errada custa tempo e dinheiro. Use nosso checklist para avaliar portfólios e garantir que você está escolhendo um parceiro de crescimento.', image: 'https://placehold.co/600x400/112240/64FFDA?text=Escolha', link: '/artigos/como-escolher-agencia-criacao-sites.html' },
+                    { category: 'agencia', title: 'Portfólio de Sucesso: Veja os Sites que Criamos para Empresas como a Sua.', description: 'Explore nossos projetos e veja na prática como transformamos desafios de negócio em soluções digitais eficientes e impactantes.', image: 'https://placehold.co/600x400/112240/64FFDA?text=Portfólio', link: '/artigos/portfolio-de-sucesso-south-sea.html' },
+                    { category: 'agencia', title: 'Orçamento de Site: O que Está Incluso no Preço de uma Agência de Ponta.', description: 'Entenda o que compõe o valor de um projeto de site profissional, do design exclusivo e SEO técnico ao gerenciamento e suporte.', image: 'https://placehold.co/600x400/112240/64FFDA?text=Orçamento', link: '/artigos/orcamento-de-site-o-que-esta-incluso.html' },
+                    { category: 'agencia', title: 'Por que a South Sea é a Parceira Ideal para a Criação do seu Novo Site.', description: 'Conheça nossa metodologia focada em resultados, nossa equipe de especialistas e nosso compromisso com o sucesso dos nossos clientes.', image: 'https://placehold.co/600x400/112240/64FFDA?text=South+Sea', link: '/artigos/por-que-a-south-sea-e-parceira-ideal.html' },
+                    { category: 'agencia', title: 'Contrato de Desenvolvimento de Site: Cláusulas Essenciais que Protegem seu Investimento.', description: 'Propriedade intelectual, prazos, escopo e suporte. Saiba o que procurar em um contrato para garantir uma parceria transparente e segura.', image: 'https://placehold.co/600x400/112240/64FFDA?text=Contrato', link: '/artigos/contrato-desenvolvimento-de-site-clausulas.html' },
+                    { category: 'agencia', title: 'Depoimentos de Clientes: O que Dizem as Empresas que Confiaram na South Sea.', description: 'Leia as histórias de sucesso de empresários que, como você, buscaram um parceiro digital e encontraram a solução para impulsionar seus negócios.', image: 'https://placehold.co/600x400/112240/64FFDA?text=Depoimentos', link: '/artigos/depoimentos-de-clientes-south-sea.html' },
+                    { category: 'agencia', title: 'Agência Boutique vs. Grande Agência: Qual o Melhor Modelo para sua PME?', description: 'Entenda as vantagens de trabalhar com uma agência focada e com atendimento personalizado, como a South Sea, para o seu projeto.', image: 'https://placehold.co/600x400/112240/64FFDA?text=Boutique', link: '/artigos/agencia-boutique-vs-grande-agencia.html' },
+                    { category: 'agencia', title: 'O Valor do Suporte Pós-Lançamento: Por que a Parceria Não Termina com a Entrega do Site.', description: 'Um site precisa de manutenção e atualizações. Saiba a importância de ter um parceiro confiável para garantir que seu investimento continue seguro e performando bem.', image: 'https://placehold.co/600x400/112240/64FFDA?text=Suporte', link: '/artigos/valor-suporte-pos-lancamento.html' },
+                    { category: 'agencia', title: 'Design Centrado no Usuário (UX): Como Criamos Sites que seus Clientes Amam Usar.', description: 'Um site bonito não é suficiente. Ele precisa ser fácil e intuitivo. Conheça nossa abordagem para criar experiências digitais que convertem.', image: 'https://placehold.co/600x400/112240/64FFDA?text=UX', link: '/artigos/design-centrado-no-usuario-ux.html' },
+                    { category: 'agencia', title: 'Nosso Compromisso com Prazos: Como Garantimos que seu Site Seja Lançado na Data Certa.', description: 'Atrasos em projetos são uma dor de cabeça comum. Explicamos nossa metodologia de gerenciamento de projetos que assegura a entrega pontual.', image: 'https://placehold.co/600x400/112240/64FFDA?text=Prazos', link: '/artigos/compromisso-com-prazos.html' },
+                    { category: 'agencia', title: 'Preparando o Briefing Perfeito: O que sua Agência Precisa Saber para Construir o Site dos seus Sonhos.', description: 'Fornecemos um modelo e dicas para você organizar suas ideias e garantir que a agência entenda perfeitamente seus objetivos.', image: 'https://placehold.co/600x400/112240/64FFDA?text=Briefing', link: '/artigos/preparando-o-briefing-perfeito.html' },
+                    
+                    // Categoria: Outros
+                    { category: 'outros', title: 'Os Desafios das PMEs no Brasil: Como a Tecnologia Pode Ser sua Maior Aliada.', description: 'Descubra como ferramentas digitais, a começar por um site, podem simplificar operações e impulsionar o crescimento do seu negócio.', image: 'https://placehold.co/600x400/112240/64FFDA?text=PMEs', link: '/artigos/desafios-pmes-tecnologia-aliada.html' },
+                    { category: 'outros', title: 'Bill Gates Estava Certo: &quot;Se seu negócio não está na internet, ele deixará de existir&quot;.', description: 'Analisamos a famosa citação e mostramos por que, no cenário atual, estar online não é uma opção, é uma questão de sobrevivência.', image: 'https://placehold.co/600x400/112240/64FFDA?text=Bill+Gates', link: '/artigos/bill-gates-negocio-na-internet.html' },
+                    { category: 'outros', title: 'A Verdade Sobre Redes Sociais: Por que sua Empresa Não Pode Depender Apenas do Instagram.', description: 'Algoritmos mudam, contas são bloqueadas. Entenda os riscos de construir seu negócio em &quot;terreno alugado&quot; e por que um site é seu porto seguro digital.', image: 'https://placehold.co/600x400/112240/64FFDA?text=Instagram', link: '/artigos/nao-depender-apenas-do-instagram.html' },
+                    { category: 'outros', title: 'Como Transformar o Site da sua Empresa em uma Ferramenta de Vendas 24/7.', description: 'Seu site pode trabalhar para você enquanto você dorme. Aprenda a otimizá-lo com CTAs, formulários e conteúdo para gerar leads automaticamente.', image: 'https://placehold.co/600x400/112240/64FFDA?text=Vendas+24/7', link: '/artigos/transformar-site-em-ferramenta-de-vendas.html' },
+                    { category: 'outros', title: 'O Futuro do Web Design: 5 Tendências que sua Empresa Precisa Conhecer em 2025.', description: 'Da inteligência artificial à microinterações. Fique por dentro das tendências que vão moldar a experiência do usuário e o design de sites nos próximos anos.', image: 'https://placehold.co/600x400/112240/64FFDA?text=Tendências', link: '/artigos/futuro-web-design-5-tendencias.html' },
+                    { category: 'outros', title: 'Segurança de Site: Como Proteger sua Empresa e seus Clientes de Ameaças Online.', description: 'Um site invadido pode destruir sua reputação. Entenda os fundamentos da segurança digital (SSL, senhas fortes, backups) e por que isso é crucial.', image: 'https://placehold.co/600x400/112240/64FFDA?text=Segurança', link: '/artigos/seguranca-de-site-como-proteger.html' }
+                ],
+                get filteredArticles() {
+                    if (this.filter === 'todos') {
+                        return this.articles;
+                    }
+                    return this.articles.filter(article => article.category === this.filter);
+                }
+            }" x-init="$el.classList.add('visible')" class="fade-in-up">
+                
+                <!-- FILTROS DE CATEGORIA -->
+                <div class="flex justify-center flex-wrap gap-2 md:gap-4 mb-12">
+                    <button @click="filter = 'todos'" :class="{ 'bg-[#E6F1FF] text-brand-navy scale-105': filter === 'todos', 'border-brand-accent/50 text-brand-accent/80 hover:bg-brand-accent/10 hover:text-brand-accent': filter !== 'todos' }" class="px-4 py-2 text-sm font-bold rounded-full border-2 transition-all duration-200">Todos</button>
+                    <button @click="filter = 'web'" :class="{ 'bg-[#E6F1FF] text-brand-navy scale-105': filter === 'web', 'border-brand-accent/50 text-brand-accent/80 hover:bg-brand-accent/10 hover:text-brand-accent': filter !== 'web' }" class="px-4 py-2 text-sm font-bold rounded-full border-2 transition-all duration-200">Criação de Sites</button>
+                    <button @click="filter = 'branding'" :class="{ 'bg-[#E6F1FF] text-brand-navy scale-105': filter === 'branding', 'border-brand-accent/50 text-brand-accent/80 hover:bg-brand-accent/10 hover:text-brand-accent': filter !== 'branding' }" class="px-4 py-2 text-sm font-bold rounded-full border-2 transition-all duration-200">Branding</button>
+                    <button @click="filter = 'estrategia'" :class="{ 'bg-[#E6F1FF] text-brand-navy scale-105': filter === 'estrategia', 'border-brand-accent/50 text-brand-accent/80 hover:bg-brand-accent/10 hover:text-brand-accent': filter !== 'estrategia' }" class="px-4 py-2 text-sm font-bold rounded-full border-2 transition-all duration-200">Estratégia Digital</button>
+                    <button @click="filter = 'agencia'" :class="{ 'bg-[#E6F1FF] text-brand-navy scale-105': filter === 'agencia', 'border-brand-accent/50 text-brand-accent/80 hover:bg-brand-accent/10 hover:text-brand-accent': filter !== 'agencia' }" class="px-4 py-2 text-sm font-bold rounded-full border-2 transition-all duration-200">Escolhendo a Agência</button>
+                    <button @click="filter = 'outros'" :class="{ 'bg-[#E6F1FF] text-brand-navy scale-105': filter === 'outros', 'border-brand-accent/50 text-brand-accent/80 hover:bg-brand-accent/10 hover:text-brand-accent': filter !== 'outros' }" class="px-4 py-2 text-sm font-bold rounded-full border-2 transition-all duration-200">Outros</button>
+                </div>
+
+                <!-- GRADE DE ARTIGOS -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <template x-for="(article, index) in filteredArticles" :key="article.link">
+                        <a :href="article.link" class="glass-card rounded-lg p-6 h-full flex flex-col block group fade-in-up" x-data="{}" x-init="$el.style.transitionDelay = `${index * 50}ms`; $el.classList.add('visible')">
+                            <img :src="article.image" :alt="`Capa do artigo ${article.title}`" class="rounded-md mb-4 aspect-video object-cover bg-brand-light-navy group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null;this.src='https://placehold.co/600x400/112240/64FFDA?text=Artigo';">
+                            <p class="text-brand-accent text-sm font-montserrat mb-2 capitalize" x-text="categoryNames[article.category]"></p>
+                            <h4 class="font-bold text-brand-lightest text-xl mb-2 flex-grow" x-text="article.title"></h4>
+                            <p class="text-brand-slate text-sm mb-4" x-text="article.description"></p>
+                            <span class="inline-block mt-auto text-brand-accent font-bold group-hover:underline">Leia mais &rarr;</span>
+                        </a>
+                    </template>
+                </div>
+
+                 <div x-show="filteredArticles.length === 0" class="text-center py-16 fade-in-up" x-data x-init="$el.classList.add('visible')">
+                    <p class="text-brand-slate text-lg">Nenhum artigo encontrado nesta categoria.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- =================================================================
+    FOOTER
+    ================================================================== -->
+    <footer class="py-8">
+        <div class="container mx-auto px-6 md:px-10 text-center text-brand-slate">
+            <div class="flex justify-center space-x-6 mb-4">
+                <a href="https://www.instagram.com/co.southsea/" class="text-brand-slate hover:text-brand-accent transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-instagram" viewBox="0 0 16 16"><path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.9 3.9 0 0 0-1.417.923A3.9 3.9 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.9 3.9 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.9 3.9 0 0 0-.923-1.417A3.9 3.9 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599s.453.546.598.92c.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.5 2.5 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.5 2.5 0 0 1-.92-.598 2.5 2.5 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233s.008-2.388.046-3.231c.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92s.546-.453.92-.598c.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92m-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217m0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334"/></svg></a>
+                <a href="https://api.whatsapp.com/send/?phone=4899013968&text=Ol%C3%A1%21+Tenho+interesse+em+saber+mais+&type=phone_number&app_absent=0" class="text-brand-slate hover:text-brand-accent transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-whatsapp" viewBox="0 0 16 16"><path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232"/></svg></a>
+            </div>
+            <p class="text-sm">&copy; 2025 South Sea. Todos os direitos reservados. <br> Made with 💙 by <a href="https://www.southsea.com.br/" class="hover:text-brand-accent">South Sea</a></p>
+        </div>
+    </footer>
+
+    <!-- REMOVIDO SCRIPT DE ANIMAÇÃO EXTERNO -->
+
+</body>
+</html>

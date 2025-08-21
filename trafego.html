@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <!-- Google tag (gtag.js) - Substitua pelo seu ID -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q1BM4Q685Y"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-Q1BM4Q685Y');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>South Sea | Gestão de Tráfego que Gera Vendas</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="/newimag/Ellipse 9.svg" onerror="this.onerror=null;this.src='https://placehold.co/32x32/0A192F/64FFDA?text=S';">
+
+    <style>
+        /* Paleta de Cores e Tipografia da South Sea */
+        :root {
+            --bg-brand-navy: #0A192F;
+            --bg-brand-light-navy: #112240;
+            --text-brand-lightest: #E6F1FF;
+            --text-brand-light: #CCD6F6;
+            --text-brand-slate: #8892B0;
+            --brand-accent: #64FFDA; /* Menta Vibrante */
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-brand-navy);
+            color: var(--text-brand-slate);
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-brand-lightest);
+        }
+
+       .section {
+            padding: 6rem 1.5rem;
+        }
+
+        @media (min-width: 768px) {
+           .section {
+                padding: 8rem 2rem;
+            }
+        }
+
+        /* Animação de entrada */
+       .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+       .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Efeito Glassmorphism para cards */
+       .glass-card {
+            background: rgba(17, 34, 64, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(100, 255, 218, 0.1);
+            transition: all 0.3s ease;
+        }
+       .glass-card:hover {
+            transform: translateY(-5px);
+            border: 1px solid rgba(100, 255, 218, 0.3);
+            box-shadow: 0 10px 30px -15px rgba(100, 255, 218, 0.1);
+        }
+
+        /* Botão de Ação Principal (CTA) */
+       .cta-button {
+            background-color: var(--brand-accent);
+            color: var(--bg-brand-navy);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(100, 255, 218, 0.3);
+            animation: pulse-cta 2s infinite;
+        }
+       .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(100, 255, 218, 0.4);
+            animation-play-state: paused;
+       }
+
+        /* Botão de Ação Secundário (CTA) */
+       .cta-button-secondary {
+            background-color: transparent;
+            color: var(--brand-accent);
+            border: 2px solid var(--brand-accent);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            display: inline-block;
+            padding: 0.9rem 2.5rem;
+            border-radius: 0.375rem; /* rounded-md */
+        }
+       .cta-button-secondary:hover {
+            background-color: var(--brand-accent);
+            color: var(--bg-brand-navy);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(100, 255, 218, 0.2);
+        }
+
+
+        @keyframes pulse-cta {
+            0% { box-shadow: 0 0 20px rgba(100, 255, 218, 0.3); }
+            50% { box-shadow: 0 0 30px rgba(100, 255, 218, 0.5); }
+            100% { box-shadow: 0 0 20px rgba(100, 255, 218, 0.3); }
+        }
+
+         /* Estilo para o botão flutuante do WhatsApp */
+        .whatsapp-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #25D366;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 40;
+            transition: transform 0.3s ease;
+        }
+        .whatsapp-button:hover {
+            transform: scale(1.1);
+        }
+        
+        .content-blur {
+            filter: blur(5px) brightness(50%);
+            pointer-events: none;
+            transition: filter 0.3s ease-out;
+        }
+
+        /* --- START: Niche Modal Styles --- */
+        .niche-modal {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .niche-modal.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        .niche-modal-content {
+            transform: translateY(-20px) scale(0.98);
+            opacity: 0;
+            transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.4s ease;
+        }
+        .niche-modal.visible .niche-modal-content {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+        
+    </style>
+</head>
+<body class="overflow-x-hidden">
+
+    <header class="relative min-h-screen flex items-center justify-center text-center p-6 overflow-hidden">
+        <div id="particles-js" class="absolute top-0 left-0 w-full h-full z-0"></div>
+        <div class="absolute inset-0 bg-brand-navy/80"></div>
+        
+        <div class="relative z-10 max-w-4xl reveal">
+            <img src="/newimag/Vector.svg" alt="Logo South Sea" class="mx-auto h-16 w-auto mb-10" onerror="this.onerror=null;this.src='https://placehold.co/120x60/0A192F/64FFDA?text=South+Sea';">
+            <h1 class="text-4xl sm:text-5xl md:text-5xl font-extrabold leading-tight mb-4">
+                Transforme Cliques em Clientes Reais.
+            </h1>
+            <p class="text-xl md:text-2xl text-brand-slate max-w-3xl mx-auto mb-10">
+                Conectamos sua marca aos clientes certos no momento exato. Com nossa gestão de tráfego estratégico, seu investimento em anúncios se transforma em resultados mensuráveis e crescimento contínuo para o seu negócio.
+            </p>
+            <a href="https://api.whatsapp.com/send/?phone=4899013968&text=Ol%C3%A1%21+Gostaria+de+uma+proposta+de+gest%C3%A3o+de+tr%C3%A1fego." target="_blank" class="cta-button text-lg py-4 px-10 rounded-md inline-block">
+                Receber Análise Gratuita
+            </a>
+        </div>
+    </header>
+
+    <main id="main-content">
+        <section id="problema" class="section">
+            <div class="container mx-auto max-w-5xl text-center reveal">
+                <h2 class="text-3xl md:text-4xl font-bold mb-6">
+                    <span class="text-brand-accent font-mono">01.</span> Seu investimento em anúncios está indo para o ralo?
+                </h2>
+                <p class="text-lg text-brand-slate max-w-3xl mx-auto mb-16">Muitos negócios perdem dinheiro com campanhas de tráfego ineficazes. Sem uma estratégia clara, seus anúncios se tornam um custo, não um motor de crescimento, afastando clientes e minando seu potencial de vendas.</p>
+                
+                <div class="grid md:grid-cols-3 gap-8 text-center">
+                    <div class="glass-card p-8 rounded-lg">
+                        <h3 class="font-bold text-xl mb-3 text-brand-lightest">Invisibilidade Digital</h3>
+                        <p>Sua marca se perde no meio da concorrência, não alcançando os clientes que realmente valorizam o seu trabalho.</p>
+                    </div>
+                    <div class="glass-card p-8 rounded-lg">
+                        <h3 class="font-bold text-xl mb-3 text-brand-lightest">Cliques sem Conversão</h3>
+                        <p>Você atrai visitantes, mas eles não se tornam clientes. O tráfego existe, mas as vendas não acontecem.</p>
+                    </div>
+                    <div class="glass-card p-8 rounded-lg">
+                        <h3 class="font-bold text-xl mb-3 text-brand-lightest">Orçamento Desperdiçado</h3>
+                        <p>Seu dinheiro é gasto em plataformas como Google e Meta Ads sem um retorno claro sobre o investimento (ROI).</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="solucao" class="section bg-brand-light-navy">
+            <div class="container mx-auto max-w-6xl text-center reveal">
+                <h2 class="text-3xl md:text-4xl font-bold mb-16">
+                    <span class="text-brand-accent font-mono">02.</span> A Estratégia Certa para Cada Objetivo
+                </h2>
+                <div class="grid md:grid-cols-2 gap-8 items-stretch">
+                    <!-- Plano 1 Plataforma -->
+                    <div class="glass-card p-8 rounded-lg flex flex-col text-left">
+                        <h3 class="text-2xl font-bold mb-2">Gestão Focada</h3>
+                        <p class="text-brand-slate mb-6">Ideal para negócios que querem dominar um canal específico, seja Google Ads para capturar demanda ou Meta Ads para criar desejo.</p>
+                        <div class="border-t border-brand-accent/20 pt-6 mt-auto">
+                            <h4 class="font-bold mb-3 text-brand-lightest">O que inclui:</h4>
+                            <ul class="text-sm space-y-2 mb-8">
+                                <li class="flex"><span class="text-brand-accent mr-2">✓</span>Gestão de Tráfego em <strong>1 Plataforma</strong> (Google ou Meta)</li>
+                                <li class="flex"><span class="text-brand-accent mr-2">✓</span>Análise de público e mercado</li>
+                                <li class="flex"><span class="text-brand-accent mr-2">✓</span>Criação e otimização de campanhas</li>
+                                <li class="flex"><span class="text-brand-accent mr-2">✓</span>Relatórios de performance quinzenais</li>
+                                <li class="flex"><span class="text-brand-accent mr-2">✓</span>Reuniões estratégicas de alinhamento</li>
+                            </ul>
+                            <a href="https://api.whatsapp.com/send/?phone=4899013968&text=Ol%C3%A1%21+Tenho+interesse+no+plano+de+Gest%C3%A3o+Focada." class="cta-button-secondary w-full text-center">Quero a Gestão Focada</a>
+                        </div>
+                    </div>
+                    <!-- Plano 2 Plataformas -->
+                    <div class="glass-card p-8 rounded-lg flex flex-col text-left border-2 border-brand-accent shadow-2xl shadow-brand-accent/10">
+                        <h3 class="text-2xl font-bold mb-2">Gestão Integrada</h3>
+                        <p class="text-brand-slate mb-6">A solução completa para máxima sinergia. Capture clientes no Google e crie relacionamento no Instagram e Facebook, dominando a jornada do consumidor.</p>
+                        <div class="border-t border-brand-accent/20 pt-6 mt-auto">
+                            <h4 class="font-bold mb-3 text-brand-lightest">O que inclui:</h4>
+                            <ul class="text-sm space-y-2 mb-8">
+                                <li class="flex"><span class="text-brand-accent mr-2">✓</span>Gestão de Tráfego em <strong>2 Plataformas</strong> (Google e Meta)</li>
+                                <li class="flex"><span class="text-brand-accent mr-2">✓</span>Tudo do plano Focado, e mais:</li>
+                                <li class="flex"><span class="text-brand-accent mr-2">✓</span>Estratégias de Remarketing integradas</li>
+                                <li class="flex"><span class="text-brand-accent mr-2">✓</span>Análise completa do funil de vendas</li>
+                                <li class="flex"><span class="text-brand-accent mr-2">✓</span>Acompanhamento próximo com equipe comercial</li>
+                            </ul>
+                            <a href="https://api.whatsapp.com/send/?phone=4899013968&text=Ol%C3%A1%21+Tenho+interesse+no+plano+de+Gest%C3%A3o+Integrada." class="cta-button w-full text-center py-3 px-8 rounded-md !animation-name-none">Quero a Gestão Integrada</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="nichos" class="section">
+            <div class="container mx-auto max-w-7xl text-center reveal">
+                <h2 class="text-3xl md:text-4xl font-bold mb-6">
+                    <span class="text-brand-accent font-mono">03.</span> Campanhas para o Seu Mercado. Anúncios para o Seu Cliente.
+                </h2>
+                <p class="text-lg text-brand-slate max-w-3xl mx-auto mb-16">Entendemos que cada setor tem desafios e públicos únicos. Por isso, não criamos apenas anúncios; criamos estratégias de tráfego sob medida que falam a língua do seu nicho e geram os resultados que você precisa.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <!-- Niche 1: Negócios Locais -->
+                    <div class="glass-card p-8 rounded-lg flex flex-col text-left h-full group cursor-pointer" onclick="openNicheModal('locais')">
+                        <div class="text-brand-accent text-5xl mb-6"><i class="fas fa-store-alt"></i></div>
+                        <h3 class="text-xl font-bold mb-3">Negócios Locais</h3>
+                        <p class="mb-6">Para <strong>restaurantes, lojas, clínicas e serviços</strong>, atraímos clientes da sua região que estão prontos para comprar.</p>
+                        <div class="mt-auto pt-4 font-semibold text-brand-accent group-hover:text-white transition-colors duration-300">
+                            Saber Mais <span class="group-hover:ml-2 transition-all duration-300">→</span>
+                        </div>
+                    </div>
+
+                    <!-- Niche 2: E-commerce -->
+                    <div class="glass-card p-8 rounded-lg flex flex-col text-left h-full group cursor-pointer" onclick="openNicheModal('ecommerce')">
+                        <div class="text-brand-accent text-5xl mb-6"><i class="fas fa-shopping-cart"></i></div>
+                        <h3 class="text-xl font-bold mb-3">E-commerce</h3>
+                        <p class="mb-6">Para <strong>lojas virtuais</strong>, criamos campanhas focadas em vendas, otimizando cada etapa do funil para maximizar seu ROAS.</p>
+                        <div class="mt-auto pt-4 font-semibold text-brand-accent group-hover:text-white transition-colors duration-300">
+                            Saber Mais <span class="group-hover:ml-2 transition-all duration-300">→</span>
+                        </div>
+                    </div>
+
+                    <!-- Niche 3: Infoprodutos -->
+                    <div class="glass-card p-8 rounded-lg flex flex-col text-left h-full group cursor-pointer" onclick="openNicheModal('infoprodutos')">
+                        <div class="text-brand-accent text-5xl mb-6"><i class="fas fa-rocket"></i></div>
+                        <h3 class="text-xl font-bold mb-3">Infoprodutos</h3>
+                        <p class="mb-6">Para <strong>lançamentos de cursos e mentorias</strong>, construímos a estratégia de tráfego que enche seus grupos e garante o sucesso do seu projeto.</p>
+                        <div class="mt-auto pt-4 font-semibold text-brand-accent group-hover:text-white transition-colors duration-300">
+                            Saber Mais <span class="group-hover:ml-2 transition-all duration-300">→</span>
+                        </div>
+                    </div>
+
+                    <!-- Niche 4: Saúde & Bem-Estar -->
+                    <div class="glass-card p-8 rounded-lg flex flex-col text-left h-full group cursor-pointer" onclick="openNicheModal('saude')">
+                        <div class="text-brand-accent text-5xl mb-6"><i class="fas fa-heartbeat"></i></div>
+                        <h3 class="text-xl font-bold mb-3">Saúde & Bem-Estar</h3>
+                        <p class="mb-6">Para <strong>médicos, psicólogos e terapeutas</strong>, criamos campanhas que transmitem confiança e enchem sua agenda de pacientes.</p>
+                        <div class="mt-auto pt-4 font-semibold text-brand-accent group-hover:text-white transition-colors duration-300">
+                            Saber Mais <span class="group-hover:ml-2 transition-all duration-300">→</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="processo" class="section">
+            <div class="container mx-auto max-w-3xl text-center reveal">
+                <h2 class="text-3xl md:text-4xl font-bold mb-16">
+                    <span class="text-brand-accent font-mono">04.</span> Nossa Jornada de Performance
+                </h2>
+                <div class="space-y-8">
+                    <div class="glass-card p-6 rounded-lg text-left flex items-center space-x-6"><span class="text-4xl font-bold text-brand-accent">1</span><div><h3 class="text-xl font-bold">Onboarding e Diagnóstico</h3><p class="text-brand-slate">Coletamos todos os acessos e mergulhamos no seu negócio para entender seus objetivos e desafios.</p></div></div>
+                    <div class="glass-card p-6 rounded-lg text-left flex items-center space-x-6"><span class="text-4xl font-bold text-brand-accent">2</span><div><h3 class="text-xl font-bold">Reunião de Alinhamento Estratégico</h3><p class="text-brand-slate">Definimos juntos as metas, o público-alvo, as plataformas e as estratégias iniciais.</p></div></div>
+                    <div class="glass-card p-6 rounded-lg text-left flex items-center space-x-6"><span class="text-4xl font-bold text-brand-accent">3</span><div><h3 class="text-xl font-bold">Construção e Lançamento</h3><p class="text-brand-slate">Nossa equipe estrutura e lança suas campanhas, prontas para atrair os primeiros clientes.</p></div></div>
+                    <div class="glass-card p-6 rounded-lg text-left flex items-center space-x-6"><span class="text-4xl font-bold text-brand-accent">4</span><div><h3 class="text-xl font-bold">Otimização e Escala</h3><p class="text-brand-slate">Analisamos os dados continuamente para otimizar o investimento e escalar os resultados.</p></div></div>
+                </div>
+                <div class="mt-16">
+                    <a href="https://api.whatsapp.com/send/?phone=4899013968&text=Ol%C3%A1%21+Gostaria+de+iniciar+meu+projeto+de+tr%C3%A1fego+com+a+South+Sea." class="cta-button text-lg py-4 px-10 rounded-md inline-block">
+                        Vamos Iniciar a Jornada?
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="section">
+            <div class="container mx-auto max-w-4xl reveal">
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div class="text-center md:text-left">
+                        <h2 class="text-3xl md:text-4xl font-bold mb-4">
+                            <span class="text-brand-accent font-mono">05.</span> Pronto para escalar seu negócio?
+                        </h2>
+                        <p class="text-lg text-brand-slate mb-6">Receba uma análise gratuita e uma proposta personalizada. Vamos analisar suas necessidades e desenhar a estratégia de tráfego ideal para o seu negócio.</p>
+                        <p class="text-brand-light">Preencha o formulário e um dos nossos especialistas entrará em contacto.</p>
+                    </div>
+                    <div class="bg-brand-light-navy p-8 rounded-lg shadow-2xl">
+                        <form id="contact-form">
+                            <div class="mb-5"><label for="name" class="block text-brand-slate mb-2">Nome</label><input type="text" id="name" required class="w-full p-3 bg-brand-navy border border-brand-slate/30 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-accent text-brand-lightest"></div>
+                            <div class="mb-5"><label for="email" class="block text-brand-slate mb-2">Email Empresarial</label><input type="email" id="email" required class="w-full p-3 bg-brand-navy border border-brand-slate/30 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-accent text-brand-lightest"></div>
+                            <div class="mb-6"><label for="service" class="block text-brand-slate mb-2">Qual plano te interessa?</label><select id="service" class="w-full p-3 bg-brand-navy border border-brand-slate/30 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-accent text-brand-lightest"><option>Gestão Focada (1 Plataforma)</option><option>Gestão Integrada (2 Plataformas)</option><option>Ainda não tenho a certeza</option></select></div>
+                            <button type="submit" class="cta-button text-lg py-3 px-8 rounded-md w-full !animation-name-none">Receber Proposta Personalizada</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- BOTÃO FLUTUANTE DO WHATSAPP -->
+    <a href="https://api.whatsapp.com/send/?phone=4899013968&text=Ol%C3%A1%21+Tenho+interesse+em+saber+mais+sobre+a+gest%C3%A3o+de+tr%C3%A1fego." class="whatsapp-button" target="_blank" aria-label="Fale conosco pelo WhatsApp">
+        <i class="fab fa-whatsapp" aria-hidden="true"></i>
+    </a>
+
+    <footer class="bg-brand-light-navy text-center p-8">
+        <div class="container mx-auto text-brand-slate">
+           <img src="/newimag/Vector.svg" alt="Logo South Sea" class="mx-auto h-12 w-auto mb-4 opacity-70" onerror="this.onerror=null;this.src='https://placehold.co/120x60/112240/64FFDA?text=South+Sea';">
+           <p class="text-sm">&copy; 2025 South Sea. Todos os direitos reservados. <br> Feito com 💙 by <a href="#">South Sea</a></p>
+        </div>
+    </footer>
+
+    <!-- START: Niche Details Modal -->
+    <div id="niche-modal" class="niche-modal fixed inset-0 bg-bg-brand-navy/80 flex items-start justify-center p-4 z-50 overflow-y-auto">
+        <div id="niche-modal-content" class="niche-modal-content glass-card !bg-brand-light-navy w-full max-w-4xl my-8 rounded-lg shadow-2xl flex flex-col">
+            <!-- Modal Header -->
+            <div class="flex justify-between items-start p-6 border-b border-brand-accent/10">
+                <div id="niche-modal-header" class="flex items-center">
+                    <!-- O conteúdo do header (ícone e título) será inserido aqui pelo JS -->
+                </div>
+                <button id="niche-modal-close-x" class="text-brand-accent text-4xl font-light hover:text-white transition-colors leading-none">&times;</button>
+            </div>
+            <!-- Modal Body -->
+            <div id="niche-modal-body" class="p-8">
+                <!-- O conteúdo do corpo será inserido aqui pelo JS -->
+            </div>
+            <!-- Modal Footer -->
+            <div id="niche-modal-footer" class="p-6 mt-auto border-t border-brand-accent/10 text-right flex justify-end items-center gap-4">
+               <!-- O conteúdo do footer (botões) será inserido aqui pelo JS -->
+            </div>
+        </div>
+    </div>
+    <!-- END: Niche Details Modal -->
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // --- START: Particle Animation ---
+        document.addEventListener('DOMContentLoaded', () => {
+            if(document.getElementById('particles-js')){
+                particlesJS("particles-js", {
+                    "particles": {
+                        "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
+                        "color": { "value": "#64ffda" },
+                        "shape": { "type": "circle" },
+                        "opacity": { "value": 0.5, "random": false },
+                        "size": { "value": 3, "random": true },
+                        "line_linked": { "enable": true, "distance": 150, "color": "#8892b0", "opacity": 0.4, "width": 1 },
+                        "move": { "enable": true, "speed": 1, "direction": "none", "random": false, "straight": false, "out_mode": "out", "bounce": false }
+                    },
+                    "interactivity": {
+                        "detect_on": "canvas",
+                        "events": { "onhover": { "enable": true, "mode": "repulse" }, "onclick": { "enable": true, "mode": "push" }, "resize": true },
+                        "modes": { "repulse": { "distance": 100, "duration": 0.4 }, "push": { "particles_nb": 4 } }
+                    },
+                    "retina_detect": true
+                });
+            }
+        });
+        // --- END: Particle Animation ---
+
+        // --- START: Data for Niche Modals ---
+        const nicheData = {
+            locais: {
+                title: "Negócios Locais",
+                icon: "fas fa-store-alt",
+                argument: "Atraia clientes que estão a poucos passos de distância. Criamos campanhas geolocalizadas que colocam seu negócio no mapa e trazem pessoas pela porta.",
+                idealFor: ["Restaurantes e Cafés", "Lojas de Varejo", "Salões de Beleza e Barbearias", "Clínicas e Consultórios", "Academias e Studios"],
+                solutions: ["Campanhas no Google Maps", "Anúncios para público local no Instagram", "Ofertas e promoções geolocalizadas", "Estratégia para 'Perto de mim'"],
+            },
+            ecommerce: {
+                title: "E-commerce",
+                icon: "fas fa-shopping-cart",
+                argument: "Transformamos seu tráfego em vendas. Otimizamos cada centavo do seu investimento para aumentar o Retorno Sobre o Investimento em Anúncios (ROAS) e escalar suas vendas.",
+                idealFor: ["Lojas de Moda e Acessórios", "Eletrônicos e Gadgets", "Produtos de Beleza e Cosméticos", "Artigos para Casa e Decoração", "Nichos específicos"],
+                solutions: ["Google Shopping e Performance Max", "Remarketing dinâmico para carrinhos", "Campanhas de catálogo no Meta Ads", "Funis de conversão otimizados"],
+            },
+            infoprodutos: {
+                title: "Lançamentos & Infoprodutos",
+                icon: "fas fa-rocket",
+                argument: "Sua mensagem precisa alcançar as pessoas certas. Orquestramos o tráfego para seus lançamentos, enchendo seus grupos e garantindo que seu conhecimento se transforme em vendas.",
+                idealFor: ["Especialistas e Experts", "Mentores e Coaches", "Criadores de Cursos Online", "Lançamentos de produtos digitais"],
+                solutions: ["Estratégia de captação de leads", "Campanhas para aquecer o público", "Tráfego para CPL, Aulões e Vendas", "Análise de métricas de lançamento"],
+            },
+            saude: {
+                title: "Saúde & Bem-Estar",
+                icon: "fas fa-heartbeat",
+                argument: "Construa autoridade e confiança para encher sua agenda. Criamos campanhas éticas e eficazes que conectam você a pacientes que buscam seus serviços especializados.",
+                idealFor: ["Médicos e Clínicas", "Psicólogos e Terapeutas", "Nutricionistas", "Clínicas de Estética", "Fisioterapeutas"],
+                solutions: ["Campanhas de agendamento", "Anúncios para procedimentos específicos", "Construção de autoridade online", "Conformidade com normas de publicidade"],
+            }
+        };
+        // --- END: Data for Niche Modals ---
+
+        // --- START: Modal Logic ---
+        const pageBody = document.querySelector('body');
+        const nicheModal = document.getElementById('niche-modal');
+        const nicheModalHeader = document.getElementById('niche-modal-header');
+        const nicheModalBody = document.getElementById('niche-modal-body');
+        const nicheModalFooter = document.getElementById('niche-modal-footer');
+        const mainContent = document.getElementById('main-content');
+        const header = document.querySelector('header');
+        const footer = document.querySelector('footer');
+        const whatsappButton = document.querySelector('.whatsapp-button');
+
+        const elementsToBlur = [mainContent, header, footer, whatsappButton];
+
+        function openNicheModal(nicheKey) {
+            if (nicheData[nicheKey] && nicheModal) {
+                const data = nicheData[nicheKey];
+                
+                nicheModalHeader.innerHTML = `
+                    <div class="text-brand-accent text-4xl mr-5"><i class="${data.icon}"></i></div>
+                    <h2 class="text-2xl md:text-3xl font-bold text-brand-lightest">${data.title}</h2>
+                `;
+
+                nicheModalBody.innerHTML = `
+                    <blockquote class="text-brand-light text-lg lg:text-xl italic border-l-4 border-brand-accent pl-6 mb-8">
+                        ${data.argument}
+                    </blockquote>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <h4 class="font-bold text-brand-lightest mb-3 text-lg">Ideal para:</h4>
+                            <ul class="space-y-2">
+                                ${data.idealFor.map(item => `<li class="flex items-start"><span class="text-brand-accent mr-2 mt-1">▪</span><span>${item}</span></li>`).join('')}
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-brand-lightest mb-3 text-lg">Nossas Soluções:</h4>
+                            <ul class="space-y-2">
+                                ${data.solutions.map(item => `<li class="flex items-start"><span class="text-brand-accent mr-2 mt-1">▪</span><span>${item}</span></li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                `;
+
+                const whatsappMessage = `Olá! Tenho interesse em uma proposta de tráfego para ${data.title}. Podemos conversar?`;
+                const whatsappURL = `https://api.whatsapp.com/send/?phone=4899013968&text=${encodeURIComponent(whatsappMessage)}`;
+
+                nicheModalFooter.innerHTML = `
+                    <a href="${whatsappURL}" target="_blank" class="cta-button py-3 px-8 rounded-md text-base">
+                        Pedir Proposta para ${data.title}
+                    </a>
+                `;
+                
+                pageBody.style.overflow = 'hidden';
+                elementsToBlur.forEach(el => el && el.classList.add('content-blur'));
+                nicheModal.classList.add('visible');
+            }
+        }
+
+        function closeNicheModal() {
+            if (nicheModal) {
+                nicheModal.classList.remove('visible');
+                elementsToBlur.forEach(el => el && el.classList.remove('content-blur'));
+                pageBody.style.overflow = '';
+            }
+        }
+        // --- END: Modal Logic ---
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Animação de entrada dos elementos
+            const revealElements = document.querySelectorAll('.reveal');
+            if (typeof IntersectionObserver !== 'undefined') {
+                const revealObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                        }
+                    });
+                }, { threshold: 0.1 });
+                revealElements.forEach(el => revealObserver.observe(el));
+            }
+
+            // Lógica do formulário de contacto
+            const contactForm = document.getElementById('contact-form');
+            if(contactForm) {
+                contactForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const name = document.getElementById('name').value;
+                    const email = document.getElementById('email').value;
+                    const service = document.getElementById('service').value;
+                    const phoneNumber = "4899013968"; 
+                    const message = `Olá! Tenho interesse nos serviços de tráfego.\n\n*Nome:* ${name}\n*Email:* ${email}\n*Plano de Interesse:* ${service}`;
+                    const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+                    
+                    window.open(whatsappURL, '_blank');
+                    contactForm.reset();
+                });
+            }
+            
+            // --- Adiciona os eventos para FECHAR o modal ---
+            if (nicheModal) {
+                document.getElementById('niche-modal-close-x').addEventListener('click', closeNicheModal);
+                nicheModal.addEventListener('click', (e) => {
+                    if (e.target === nicheModal) {
+                        closeNicheModal();
+                    }
+                });
+            }
+
+            // Evento de fecho com a tecla 'Esc'
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    if (nicheModal && nicheModal.classList.contains('visible')) {
+                        closeNicheModal();
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

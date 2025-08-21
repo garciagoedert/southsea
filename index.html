@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>South Sea - Agência Criativa</title>
+    <meta name="description" content="South Sea: Agência criativa em Florianópolis especializada em branding, identidade visual e desenvolvimento de sites de alta performance. Transformamos marcas em legados digitais.">
     
     <!-- Meta Pixel Code will be initialized by JavaScript based on consent -->
     
@@ -173,6 +174,7 @@
             <nav class="hidden md:flex items-center space-x-8">
                 <a href="#services" class="text-brand-light hover:text-brand-accent transition-colors duration-300">Serviços</a>
                 <a href="#projects" class="text-brand-light hover:text-brand-accent transition-colors duration-300">Projetos</a>
+                <a href="/artigos.html" class="text-brand-light hover:text-brand-accent transition-colors duration-300">Artigos</a>
                 <a href="#ebooks" class="text-brand-light hover:text-brand-accent transition-colors duration-300">Ebooks</a>
                 <a href="#about" class="text-brand-light hover:text-brand-accent transition-colors duration-300">Sobre</a>
                 <a href="#contact" class="text-brand-light hover:text-brand-accent transition-colors duration-300">Contato</a>
@@ -191,6 +193,7 @@
             <nav class="flex flex-col items-center space-y-8 text-xl">
                 <a href="#services" @click="mobileMenuOpen = false" class="text-brand-light hover:text-brand-accent">Serviços</a>
                 <a href="#projects" @click="mobileMenuOpen = false" class="text-brand-light hover:text-brand-accent">Projetos</a>
+                <a href="/artigos.html" @click="mobileMenuOpen = false" class="text-brand-light hover:text-brand-accent">Artigos</a>
                 <a href="#ebooks" @click="mobileMenuOpen = false" class="text-brand-light hover:text-brand-accent">Ebooks</a>
                 <a href="#about" @click="mobileMenuOpen = false" class="text-brand-light hover:text-brand-accent">Sobre</a>
                 <a href="#contact" @click="mobileMenuOpen = false" class="text-brand-light hover:text-brand-accent">Contato</a>
@@ -334,13 +337,57 @@
                 </a>
             </div>
         </section>
-        
+
         <!-- =================================================================
-        SEÇÃO 5: EBOOKS
+        SEÇÃO 5: ARTIGOS
+        ================================================================== -->
+        <section id="artigos" class="py-20 md:py-32">
+            <div class="text-left reveal mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-brand-lightest mb-4"><span class="text-brand-accent">04.</span> Nossos Artigos</h2>
+                <p class="text-lg text-brand-slate max-w-2xl">Insights, dicas e estratégias sobre branding, design e o universo digital para impulsionar sua marca.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 reveal">
+                <!-- ARTIGO 1 (EXEMPLO) -->
+                <a href="/artigos/quanto-custa-um-site-profissional.html" class="glass-card rounded-lg p-6 h-full flex flex-col block group">
+                    <img src="https://placehold.co/600x400/112240/64FFDA?text=Artigo+1" alt="Capa do artigo sobre custo de sites" class="rounded-md mb-4 aspect-video object-cover bg-brand-light-navy group-hover:scale-105 transition-transform duration-300">
+                    <p class="text-brand-accent text-sm font-montserrat mb-2">Desenvolvimento Web</p>
+                    <h4 class="font-bold text-brand-lightest text-xl mb-2 flex-grow">Quanto Custa um Site Profissional em 2025?</h4>
+                    <p class="text-brand-slate text-sm mb-4">Um guia completo sobre os fatores que influenciam o preço e como investir de forma inteligente.</p>
+                    <span class="inline-block mt-auto text-brand-accent font-bold group-hover:underline">Leia mais &rarr;</span>
+                </a>
+                
+                <!-- ARTIGO 2 (EXEMPLO) -->
+                <a href="/artigos/5-erros-de-branding-para-evitar.html" class="glass-card rounded-lg p-6 h-full flex flex-col block group">
+                    <img src="https://placehold.co/600x400/112240/64FFDA?text=Artigo+2" alt="Capa do artigo sobre erros de branding" class="rounded-md mb-4 aspect-video object-cover bg-brand-light-navy group-hover:scale-105 transition-transform duration-300">
+                    <p class="text-brand-accent text-sm font-montserrat mb-2">Branding</p>
+                    <h4 class="font-bold text-brand-lightest text-xl mb-2 flex-grow">5 Erros de Branding que Podem Afundar sua Empresa</h4>
+                    <p class="text-brand-slate text-sm mb-4">Veja como evitar as armadilhas mais comuns na construção de uma marca forte e memorável.</p>
+                    <span class="inline-block mt-auto text-brand-accent font-bold group-hover:underline">Leia mais &rarr;</span>
+                </a>
+                
+                <!-- ARTIGO 3 (EXEMPLO) -->
+                <a href="/artigos/seo-local-para-negocios-florianopolis.html" class="glass-card rounded-lg p-6 h-full flex flex-col block group">
+                    <img src="https://placehold.co/600x400/112240/64FFDA?text=Artigo+3" alt="Capa do artigo sobre SEO Local" class="rounded-md mb-4 aspect-video object-cover bg-brand-light-navy group-hover:scale-105 transition-transform duration-300">
+                    <p class="text-brand-accent text-sm font-montserrat mb-2">SEO</p>
+                    <h4 class="font-bold text-brand-lightest text-xl mb-2 flex-grow">SEO Local: O Guia para Negócios em Florianópolis</h4>
+                    <p class="text-brand-slate text-sm mb-4">Aprenda a otimizar sua presença online para atrair mais clientes na sua região.</p>
+                    <span class="inline-block mt-auto text-brand-accent font-bold group-hover:underline">Leia mais &rarr;</span>
+                </a>
+            </div>
+            <div class="text-center mt-16 reveal">
+                <a href="/artigos.html" class="inline-block px-8 py-4 border-2 border-brand-accent text-brand-accent font-bold rounded-md hover:bg-brand-accent/10 transition-all duration-300">
+                    Ver todos os artigos
+                </a>
+            </div>
+        </section>
+
+        <!-- =================================================================
+        SEÇÃO 6: EBOOKS (RENUMERADA)
         ================================================================== -->
         <section id="ebooks" class="py-20 md:py-32">
             <div class="text-left reveal mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold text-brand-lightest mb-4"><span class="text-brand-accent">04.</span> Conteúdo Exclusivo</h2>
+                <h2 class="text-3xl md:text-4xl font-bold text-brand-lightest mb-4"><span class="text-brand-accent">05.</span> Conteúdo Exclusivo</h2>
                 <p class="text-lg text-brand-slate max-w-2xl">Aprofunde seu conhecimento com nossos ebooks gratuitos sobre branding, design, estratégia digital e muito mais.</p>
             </div>
             
@@ -360,11 +407,11 @@
         </section>
 
         <!-- =================================================================
-        SEÇÃO 6: CONTATO
+        SEÇÃO 7: CONTATO (RENUMERADA)
         ================================================================== -->
         <section id="contact" class="py-20 md:py-32">
             <div class="text-center reveal mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold text-brand-lightest mb-4"><span class="text-brand-accent">05.</span> Vamos Conversar?</h2>
+                <h2 class="text-3xl md:text-4xl font-bold text-brand-lightest mb-4"><span class="text-brand-accent">06.</span> Vamos Conversar?</h2>
                 <p class="text-lg text-brand-slate max-w-2xl mx-auto">Tem um desafio de branding ou um projeto digital em mente? Preencha o formulário e vamos criar algo incrível juntos.</p>
             </div>
             <form id="whatsapp-form" class="reveal max-w-2xl mx-auto">
