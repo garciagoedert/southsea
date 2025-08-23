@@ -48,17 +48,22 @@
             -webkit-backdrop-filter: blur(10px);
             border: 1px solid rgba(100, 255, 218, 0.1);
             transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.75rem;
         }
         .glass-link:hover {
-            transform: translateY(-5px) scale(1.02);
             border-color: rgba(100, 255, 218, 0.5);
             box-shadow: 0 10px 30px -15px rgba(100, 255, 218, 0.2);
-            color: var(--brand-accent);
         }
+        
+        /* Efeito de hover separado para o link e o botão de cópia */
+        .glass-link a:hover {
+             color: var(--brand-accent);
+             transform: scale(1.02);
+        }
+        .copy-btn:hover {
+            color: var(--brand-accent);
+            transform: scale(1.1);
+        }
+
 
         /* Botão de Ação Principal (CTA) para WhatsApp */
         .whatsapp-cta {
@@ -135,19 +140,75 @@
             <section>
                 <h2 class="text-xl font-bold text-brand-accent mb-4 text-left">Apresentações para Clientes</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <a href="/apresentações/pptSaúde.html" target="_blank" class="glass-link p-4 rounded-lg font-semibold text-brand-lightest"><i class="fa-solid fa-heart-pulse fa-fw"></i> Saúde & Bem-Estar</a>
-                    <a href="/apresentações/pptportfolios.html" target="_blank" class="glass-link p-4 rounded-lg font-semibold text-brand-lightest"><i class="fa-solid fa-palette fa-fw"></i> Criativos & Visuais</a>
-                    <a href="/apresentações/pptlançamentos.html" target="_blank" class="glass-link p-4 rounded-lg font-semibold text-brand-lightest"><i class="fa-solid fa-rocket fa-fw"></i> Lançamentos & Infoprodutos</a>
-                    <a href="/apresentações/pptcorporativo.html" target="_blank" class="glass-link p-4 rounded-lg font-semibold text-brand-lightest"><i class="fa-solid fa-briefcase fa-fw"></i> Corporativo & Consultivo</a>
-                    <a href="/apresentações/pptconstrução.html" target="_blank" class="glass-link p-4 rounded-lg font-semibold text-brand-lightest"><i class="fa-solid fa-industry fa-fw"></i> Indústria & Construção</a>
-                    <a href="/apresentações/ppt.html" target="_blank" class="glass-link p-4 rounded-lg font-semibold text-brand-lightest"><i class="fa-solid fa-star fa-fw"></i> Apresentação Geral</a>
-                    
-                    <!-- Botões de Tráfego e Design -->
-                    <a href="/apresentações/pptTrafego.html" target="_blank" class="glass-link p-4 rounded-lg font-semibold text-brand-lightest"><i class="fa-solid fa-filter fa-fw"></i> Gestão de Tráfego</a>
-                    <a href="/apresentações/pptbranding.html" target="_blank" class="glass-link p-4 rounded-lg font-semibold text-brand-lightest"><i class="fa-solid fa-pencil-ruler fa-fw"></i> Design</a>
+                    <!-- Item de Apresentação com Botão de Copiar -->
+                    <div class="glass-link rounded-lg flex items-center justify-between p-0 overflow-hidden">
+                        <a href="/apresentações/pptSaúde.html" target="_blank" class="flex-grow p-4 flex items-center gap-3 font-semibold text-brand-lightest transition-transform duration-300"><i class="fa-solid fa-heart-pulse fa-fw"></i> Saúde & Bem-Estar</a>
+                        <button onclick="copyLink(this)" data-link="https://www.southsea.com.br/apresentações/pptSaúde.html" class="copy-btn p-4 text-brand-slate transition-all duration-300"><i class="fa-solid fa-copy"></i></button>
+                    </div>
+                    <div class="glass-link rounded-lg flex items-center justify-between p-0 overflow-hidden">
+                        <a href="/apresentações/pptportfolios.html" target="_blank" class="flex-grow p-4 flex items-center gap-3 font-semibold text-brand-lightest transition-transform duration-300"><i class="fa-solid fa-palette fa-fw"></i> Criativos & Visuais</a>
+                        <button onclick="copyLink(this)" data-link="https://www.southsea.com.br/apresentações/pptportfolios.html" class="copy-btn p-4 text-brand-slate transition-all duration-300"><i class="fa-solid fa-copy"></i></button>
+                    </div>
+                    <div class="glass-link rounded-lg flex items-center justify-between p-0 overflow-hidden">
+                        <a href="/apresentações/pptlançamentos.html" target="_blank" class="flex-grow p-4 flex items-center gap-3 font-semibold text-brand-lightest transition-transform duration-300"><i class="fa-solid fa-rocket fa-fw"></i> Lançamentos & Infoprodutos</a>
+                        <button onclick="copyLink(this)" data-link="https://www.southsea.com.br/apresentações/pptlançamentos.html" class="copy-btn p-4 text-brand-slate transition-all duration-300"><i class="fa-solid fa-copy"></i></button>
+                    </div>
+                    <div class="glass-link rounded-lg flex items-center justify-between p-0 overflow-hidden">
+                        <a href="/apresentações/pptcorporativo.html" target="_blank" class="flex-grow p-4 flex items-center gap-3 font-semibold text-brand-lightest transition-transform duration-300"><i class="fa-solid fa-briefcase fa-fw"></i> Corporativo & Consultivo</a>
+                        <button onclick="copyLink(this)" data-link="https://www.southsea.com.br/apresentações/pptcorporativo.html" class="copy-btn p-4 text-brand-slate transition-all duration-300"><i class="fa-solid fa-copy"></i></button>
+                    </div>
+                    <div class="glass-link rounded-lg flex items-center justify-between p-0 overflow-hidden">
+                        <a href="/apresentações/pptconstrução.html" target="_blank" class="flex-grow p-4 flex items-center gap-3 font-semibold text-brand-lightest transition-transform duration-300"><i class="fa-solid fa-industry fa-fw"></i> Indústria & Construção</a>
+                        <button onclick="copyLink(this)" data-link="https://www.southsea.com.br/apresentações/pptconstrução.html" class="copy-btn p-4 text-brand-slate transition-all duration-300"><i class="fa-solid fa-copy"></i></button>
+                    </div>
+                    <div class="glass-link rounded-lg flex items-center justify-between p-0 overflow-hidden">
+                        <a href="/apresentações/ppt.html" target="_blank" class="flex-grow p-4 flex items-center gap-3 font-semibold text-brand-lightest transition-transform duration-300"><i class="fa-solid fa-star fa-fw"></i> Apresentação Geral</a>
+                        <button onclick="copyLink(this)" data-link="https://www.southsea.com.br/apresentações/ppt.html" class="copy-btn p-4 text-brand-slate transition-all duration-300"><i class="fa-solid fa-copy"></i></button>
+                    </div>
+                    <div class="glass-link rounded-lg flex items-center justify-between p-0 overflow-hidden">
+                        <a href="/apresentações/pptTrafego.html" target="_blank" class="flex-grow p-4 flex items-center gap-3 font-semibold text-brand-lightest transition-transform duration-300"><i class="fa-solid fa-filter fa-fw"></i> Gestão de Tráfego</a>
+                        <button onclick="copyLink(this)" data-link="https://www.southsea.com.br/apresentações/pptTrafego.html" class="copy-btn p-4 text-brand-slate transition-all duration-300"><i class="fa-solid fa-copy"></i></button>
+                    </div>
+                    <div class="glass-link rounded-lg flex items-center justify-between p-0 overflow-hidden">
+                        <a href="/apresentações/pptbranding.html" target="_blank" class="flex-grow p-4 flex items-center gap-3 font-semibold text-brand-lightest transition-transform duration-300"><i class="fa-solid fa-pencil-ruler fa-fw"></i> Design</a>
+                        <button onclick="copyLink(this)" data-link="https://www.southsea.com.br/apresentações/pptbranding.html" class="copy-btn p-4 text-brand-slate transition-all duration-300"><i class="fa-solid fa-copy"></i></button>
+                    </div>
                     
                     <!-- Botão Largo -->
-                    <a href="/valores.html" target="_blank" class="glass-link p-4 rounded-lg font-semibold text-brand-lightest text-lg md:col-span-2 mt-2"><i class="fa-solid fa-file-invoice-dollar fa-fw"></i> Condições de Pagamento</a>
+                    <a href="/valores.html" target="_blank" class="glass-link p-4 rounded-lg font-semibold text-brand-lightest text-lg md:col-span-2 mt-2 flex items-center justify-center gap-3"><i class="fa-solid fa-file-invoice-dollar fa-fw"></i> Condições de Pagamento</a>
+                </div>
+            </section>
+
+            <!-- Seção: Formulários -->
+            <section>
+                <h2 class="text-xl font-bold text-brand-accent mb-4 text-left">Formulários</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="glass-link rounded-lg flex items-center justify-between p-0 overflow-hidden">
+                        <a href="https://docs.google.com/forms/d/1mMQ9dLMq4hqqKLJmtpD4Ix_OU_fTtAQUrY23vCB2_nA/edit" target="_blank" class="flex-grow p-4 flex items-center gap-3 font-semibold text-brand-lightest transition-transform duration-300"><i class="fa-solid fa-signature fa-fw"></i> Identidade Visual</a>
+                        <button onclick="copyLink(this)" data-link="https://forms.gle/yoNgZf5daixJCyXp6" class="copy-btn p-4 text-brand-slate transition-all duration-300"><i class="fa-solid fa-copy"></i></button>
+                    </div>
+                    <div class="glass-link rounded-lg flex items-center justify-between p-0 overflow-hidden">
+                        <a href="https://docs.google.com/forms/d/11hZMW9Yu8Vlm5ht4AXRnnLSeh3GqQUH3rLr6nmyJJIs/edit" target="_blank" class="flex-grow p-4 flex items-center gap-3 font-semibold text-brand-lightest transition-transform duration-300"><i class="fa-solid fa-display fa-fw"></i> Site Profissional</a>
+                        <button onclick="copyLink(this)" data-link="https://forms.gle/SUrZ82h2S7xz9feS6" class="copy-btn p-4 text-brand-slate transition-all duration-300"><i class="fa-solid fa-copy"></i></button>
+                    </div>
+                    <div class="glass-link rounded-lg flex items-center justify-between p-0 overflow-hidden">
+                        <a href="https://docs.google.com/forms/d/1E5QhrXZQIXT5b8ASSoubaBUQXezgXSemMkjQUEcLs3Y/edit" target="_blank" class="flex-grow p-4 flex items-center gap-3 font-semibold text-brand-lightest transition-transform duration-300"><i class="fa-solid fa-window-maximize fa-fw"></i> Site Completo</a>
+                        <button onclick="copyLink(this)" data-link="https://forms.gle/DbwLnecbfBjRsjxC6" class="copy-btn p-4 text-brand-slate transition-all duration-300"><i class="fa-solid fa-copy"></i></button>
+                    </div>
+                    <div class="glass-link rounded-lg flex items-center justify-between p-0 overflow-hidden">
+                        <a href="docs.google.com/forms/u/3/d/1y6HfoHXPBBwzfkxNvfIcWoSYKN48_3Cr3VccPbyIZec/edit?usp=drive_web&ouid=113688507184110873162" target="_blank" class="flex-grow p-4 flex items-center gap-3 font-semibold text-brand-lightest transition-transform duration-300"><i class="fa-solid fa-database fa-fw"></i> Dados</a>
+                        <button onclick="copyLink(this)" data-link="https://forms.gle/Hjzp8xicERVgaYi5A" class="copy-btn p-4 text-brand-slate transition-all duration-300"><i class="fa-solid fa-copy"></i></button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seção: Contratos -->
+            <section>
+                <h2 class="text-xl font-bold text-brand-accent mb-4 text-left">Contratos</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <a href="https://drive.google.com/drive/u/3/folders/1rrta8TGijXr30oNpxR63W4yYBNfwJO6z" target="_blank" class="glass-link p-4 rounded-lg font-semibold text-brand-lightest flex items-center justify-center gap-3"><i class="fa-solid fa-file-contract fa-fw"></i> Site</a>
+                    <a href="#" target="_blank" class="glass-link p-4 rounded-lg font-semibold text-brand-lightest flex items-center justify-center gap-3"><i class="fa-solid fa-file-signature fa-fw"></i> Branding</a>
+                    <a href="#" target="_blank" class="glass-link p-4 rounded-lg font-semibold text-brand-lightest flex items-center justify-center gap-3"><i class="fa-solid fa-file-pen fa-fw"></i> Gestão de Tráfego</a>
                 </div>
             </section>
 
@@ -158,15 +219,15 @@
                 <div class="space-y-4">
                     <!-- Primeira Linha de Botões -->
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <a href="https://southsea-kanban.vercel.app/index.html" target="_blank" class="glass-link p-4 rounded-lg font-semibold text-brand-lightest"><i class="fa-solid fa-table-columns fa-fw"></i> CRM Interno</a>
-                        <a href="https://drive.google.com/drive/folders/0AAINxDilRkfRUk9PVA" target="_blank" class="glass-link p-4 rounded-lg font-semibold text-brand-lightest"><i class="fab fa-google-drive fa-fw"></i> Drive</a>
-                        <a href="https://ads.google.com/aw/overview?ocid=1571283003&euid=1063433660&__u=8041477340&uscid=1571283003&__c=2021184547&authuser=0&workspaceId=0&subid=ww-ww-xs-ip-awhc-a-ogb_cons!o2-ogbaic-ahpm-0000000188-0000000000" target="_blank" class="glass-link p-4 rounded-lg font-semibold text-brand-lightest"><i class="fab fa-google fa-fw"></i> Google Ads</a>
+                        <a href="https://southsea-kanban.vercel.app/index.html" target="_blank" class="glass-link p-4 rounded-lg font-semibold text-brand-lightest flex items-center justify-center gap-3"><i class="fa-solid fa-table-columns fa-fw"></i> CRM Interno</a>
+                        <a href="https://drive.google.com/drive/folders/0AAINxDilRkfRUk9PVA" target="_blank" class="glass-link p-4 rounded-lg font-semibold text-brand-lightest flex items-center justify-center gap-3"><i class="fab fa-google-drive fa-fw"></i> Drive</a>
+                        <a href="https://ads.google.com/aw/overview?ocid=1571283003&euid=1063433660&__u=8041477340&uscid=1571283003&__c=2021184547&authuser=0&workspaceId=0&subid=ww-ww-xs-ip-awhc-a-ogb_cons!o2-ogbaic-ahpm-0000000188-0000000000" target="_blank" class="glass-link p-4 rounded-lg font-semibold text-brand-lightest flex items-center justify-center gap-3"><i class="fab fa-google fa-fw"></i> Google Ads</a>
                     </div>
                     <!-- Segunda Linha de Botões -->
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <a href="https://mail.google.com/mail/u/3/#inbox" target="_blank" class="glass-link p-4 rounded-lg font-semibold text-brand-lightest"><i class="fa-solid fa-envelope fa-fw"></i> Email</a>
-                        <a href="https://www.instagram.com/co.southsea/?hl=pt" target="_blank" class="glass-link p-4 rounded-lg font-semibold text-brand-lightest"><i class="fab fa-instagram fa-fw"></i> Instagram</a>
-                        <a href="https://www.linkedin.com/company/96053515/admin/dashboard/" target="_blank" class="glass-link p-4 rounded-lg font-semibold text-brand-lightest"><i class="fab fa-linkedin fa-fw"></i> LinkedIn</a>
+                        <a href="https://mail.google.com/mail/u/3/#inbox" target="_blank" class="glass-link p-4 rounded-lg font-semibold text-brand-lightest flex items-center justify-center gap-3"><i class="fa-solid fa-envelope fa-fw"></i> Email</a>
+                        <a href="https://www.instagram.com/co.southsea/?hl=pt" target="_blank" class="glass-link p-4 rounded-lg font-semibold text-brand-lightest flex items-center justify-center gap-3"><i class="fab fa-instagram fa-fw"></i> Instagram</a>
+                        <a href="https://www.linkedin.com/company/96053515/admin/dashboard/" target="_blank" class="glass-link p-4 rounded-lg font-semibold text-brand-lightest flex items-center justify-center gap-3"><i class="fab fa-linkedin fa-fw"></i> LinkedIn</a>
                     </div>
                 </div>
             </section>
@@ -175,9 +236,9 @@
             <section>
                 <h2 class="text-xl font-bold text-brand-accent mb-4 text-left">Navegue pelo Nosso Site</h2>
                 <div class="space-y-4">
-                    <a href="/index.html" target="_blank" class="glass-link block w-full p-4 rounded-lg font-semibold text-brand-lightest text-lg"><i class="fa-solid fa-house fa-fw"></i> Página Inicial</a>
-                    <a href="/branding.html" target="_blank" class="glass-link block w-full p-4 rounded-lg font-semibold text-brand-lightest text-lg"><i class="fa-solid fa-lightbulb fa-fw"></i> LP de Branding</a>
-                    <a href="/sites.html" target="_blank" class="glass-link block w-full p-4 rounded-lg font-semibold text-brand-lightest text-lg"><i class="fa-solid fa-globe fa-fw"></i> LP de Sites</a>
+                    <a href="/index.html" target="_blank" class="glass-link block w-full p-4 rounded-lg font-semibold text-brand-lightest text-lg flex items-center justify-center gap-3"><i class="fa-solid fa-house fa-fw"></i> Página Inicial</a>
+                    <a href="/branding.html" target="_blank" class="glass-link block w-full p-4 rounded-lg font-semibold text-brand-lightest text-lg flex items-center justify-center gap-3"><i class="fa-solid fa-lightbulb fa-fw"></i> LP de Branding</a>
+                    <a href="/sites.html" target="_blank" class="glass-link block w-full p-4 rounded-lg font-semibold text-brand-lightest text-lg flex items-center justify-center gap-3"><i class="fa-solid fa-globe fa-fw"></i> LP de Sites</a>
                 </div>
             </section>
             
@@ -240,6 +301,52 @@
                 });
             }
         });
+
+        // --- Função para Copiar Link ---
+        function copyLink(buttonElement) {
+            // The data-link attribute now holds the full, correct URL to be copied.
+            const linkToCopy = buttonElement.getAttribute('data-link');
+
+            // Create a temporary input element to copy from
+            const tempInput = document.createElement('textarea');
+            tempInput.value = linkToCopy;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            
+            try {
+                // Use the newer clipboard API if available, otherwise fall back to execCommand
+                if (navigator.clipboard && window.isSecureContext) {
+                    navigator.clipboard.writeText(linkToCopy);
+                } else {
+                    document.execCommand('copy');
+                }
+
+                // Visual feedback for success
+                const originalIcon = buttonElement.innerHTML;
+                buttonElement.innerHTML = '<i class="fa-solid fa-check"></i>';
+                buttonElement.classList.add('text-green-400');
+
+                setTimeout(() => {
+                    buttonElement.innerHTML = originalIcon;
+                    buttonElement.classList.remove('text-green-400');
+                }, 2000);
+
+            } catch (err) {
+                console.error('Failed to copy text: ', err);
+                
+                // Visual feedback for failure
+                const originalIcon = buttonElement.innerHTML;
+                buttonElement.innerHTML = '<i class="fa-solid fa-times"></i>';
+                buttonElement.classList.add('text-red-400');
+
+                setTimeout(() => {
+                    buttonElement.innerHTML = originalIcon;
+                    buttonElement.classList.remove('text-red-400');
+                }, 2000);
+            } finally {
+                 document.body.removeChild(tempInput);
+            }
+        }
     </script>
 </body>
 </html>
