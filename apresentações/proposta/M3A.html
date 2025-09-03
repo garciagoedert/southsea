@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proposta Comercial | South Sea & Método 3A Médicos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Favicon -->
+    <link rel="icon" href="/newimag/Ellipse 9.svg" onerror="this.onerror=null;this.src='https://placehold.co/32x32/2563eb/ffffff?text=SS';">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Paleta de Cores South Sea */
+        :root {
+            --color-primary: #2563eb;      /* Azul Confiável (Blue-600) */
+            --color-primary-dark: #1e40af; /* Azul Escuro para Destaque (Blue-800) */
+            --color-text-primary: #1e293b;  /* Cinza Escuro (Slate-800) para Texto Principal */
+            --color-text-secondary: #475569;/* Cinza Médio (Slate-600) para Texto de Apoio */
+            --color-light-bg: #f8fafc;      /* Fundo Claro (Slate-50) */
+            --color-white: #ffffff;
+            --color-shadow: rgba(45, 55, 72, 0.1);
+            --color-border: #e2e8f0;       /* Slate-200 */
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-light-bg);
+            color: var(--color-text-primary);
+            overflow-x: hidden;
+        }
+        .slide {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem 1.5rem;
+            position: relative;
+            width: 100%;
+        }
+        /* Animação de Fade-in */
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .slide-content {
+            max-width: 1200px;
+            width: 100%;
+        }
+        h1, h2, h3, h4, p {
+             font-family: 'Inter', sans-serif;
+        }
+        h2 { font-weight: 700; }
+        h3 { font-weight: 600; }
+
+        .navigation {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+        .nav-btn {
+            background-color: rgba(37, 99, 235, 0.25);
+            color: var(--color-primary-dark);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .nav-btn:hover {
+            background-color: var(--color-primary);
+            color: white;
+        }
+        .fullscreen-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 100;
+        }
+        .bg-sea-calm {
+            background-image: url('https://images.unsplash.com/photo-1559825481-12a05cc00344?q=80&w=1920&auto=format&fit=crop');
+            background-position: center center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        .bg-light { background-color: var(--color-light-bg); }
+        .bg-white { background-color: var(--color-white); }
+        .bg-card {
+            background-color: var(--color-white);
+            box-shadow: 0 4px 6px -1px var(--color-shadow), 0 2px 4px -1px var(--color-shadow);
+            border: 1px solid var(--color-border);
+        }
+        .icon-check {
+            color: var(--color-primary);
+            margin-right: 0.75rem;
+            flex-shrink: 0;
+            width: 1.5rem; /* 24px */
+            height: 1.5rem; /* 24px */
+        }
+        .text-primary { color: var(--color-primary); }
+        .bg-primary { background-color: var(--color-primary); }
+        .text-primary-dark { color: var(--color-primary-dark); }
+        .bg-primary-dark { background-color: var(--color-primary-dark); }
+        .text-main { color: var(--color-text-primary); }
+        .text-secondary { color: var(--color-text-secondary); }
+
+    </style>
+</head>
+<body>
+
+    <div class="scroll-container">
+
+        <!-- Slide 1: Capa -->
+        <section id="slide1" class="slide bg-sea-calm text-white text-center">
+            <div class="absolute inset-0 bg-black opacity-60"></div>
+            <div class="z-10 slide-content fade-in-section">
+                <img src="/newimag/Vector.svg" alt="Logo South Sea" class="mx-auto mb-8 h-16 md:h-20" onerror="this.onerror=null;this.src='https://placehold.co/200x80/ffffff/000000?text=South+Sea';">
+                <p class="text-xl md:text-2xl mb-4 text-blue-200">Proposta de Desenvolvimento Web para:</p>
+                <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6">Método 3A Médico</h1>
+                <h2 class="text-2xl sm:text-3xl md:text-4xl font-light">Transformando seu design Figma <br>em um <span class="font-semibold text-blue-300">Site WordPress de Alta Performance</span>.</h2>
+            </div>
+        </section>
+
+        <!-- Slide 2: O Desafio -->
+        <section id="slide2" class="slide bg-light">
+            <div class="slide-content text-center fade-in-section">
+                <h2 class="text-3xl sm:text-4xl md:text-5xl mb-6 text-main">Você tem um design incrível. E agora?</h2>
+                <p class="text-lg max-w-4xl mx-auto mb-12 md:mb-16 text-secondary">A distância entre um protótipo visual no Figma e um site funcional, rápido e que gera resultados é a execução técnica. Uma implementação inadequada pode comprometer a experiência do usuário, a performance no Google e a capacidade de gerenciamento do seu time.</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+                    <div class="bg-card p-6 rounded-lg shadow-sm text-center">
+                        <h3 class="font-semibold text-lg mb-2 text-primary-dark">Fidelidade ao Design</h3>
+                        <p>Como garantir que cada pixel e cada interação do Figma sejam perfeitamente traduzidos para o ambiente web em todos os dispositivos?</p>
+                    </div>
+                    <div class="bg-card p-6 rounded-lg shadow-sm text-center">
+                        <h3 class="font-semibold text-lg mb-2 text-primary-dark">Performance Real</h3>
+                        <p>Como transformar um layout visual em um site com carregamento veloz, otimizado para os Core Web Vitals do Google?</p>
+                    </div>
+                    <div class="bg-card p-6 rounded-lg shadow-sm text-center">
+                        <h3 class="font-semibold text-lg mb-2 text-primary-dark">Gestão Autônoma</h3>
+                        <p>Como assegurar que o site final seja 100% editável pela sua equipe, sem a necessidade de conhecimento técnico em programação?</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 3: A Solução -->
+        <section id="slide3" class="slide bg-white">
+            <div class="slide-content grid md:grid-cols-2 gap-12 md:gap-16 items-center fade-in-section">
+                <div class="flex justify-center">
+                    <img src="/newimag/cod (1).png" alt="Interface do Figma e código lado a lado" class="rounded-lg shadow-off object-cover w-full h-full max-h-96">
+                </div>
+                <div class="text-center md:text-left">
+                    <h2 class="text-3xl sm:text-4xl md:text-5xl mb-6 text-main">A Ponte entre Design e Resultado.</h2>
+                    <p class="text-lg leading-relaxed text-secondary">Nossa especialidade é traduzir sua visão estratégica, materializada no Figma, em um ativo digital robusto. Construímos sites em WordPress com Elementor Pro que não apenas são fiéis ao design, mas também são projetados para performance, conversão e facilidade de gerenciamento.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 4: Escopo do Projeto -->
+        <section id="slide4" class="slide bg-light">
+            <div class="slide-content fade-in-section">
+                <h2 class="text-3xl sm:text-4xl md:text-5xl mb-12 text-center text-main">Escopo do Projeto: Figma para WordPress</h2>
+                <div class="w-full max-w-5xl mx-auto bg-card rounded-lg p-6 md:p-10">
+                     <div class="grid md:grid-cols-2 gap-x-12 gap-y-8">
+                        <div class="flex items-start"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong>Implementação Técnica:</strong> WordPress e Elementor Pro em ambiente otimizado (PHP 8+, HTTPS, cache).</span></div>
+                        <div class="flex items-start"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong>Fidelidade ao Design:</strong> Conversão precisa do layout do Figma para todas as resoluções (desktop, tablet, mobile).</span></div>
+                        <div class="flex items-start"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong>Estrutura de Páginas:</strong> Desenvolvimento de todas as páginas previstas no sitemap, incluindo Home, Sobre, Serviços, Planos, Blog, Contato, etc.</span></div>
+                        <div class="flex items-start"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong>Templates Reutilizáveis:</strong> Criação de até 3 modelos de Landing Pages de campanha para uso futuro.</span></div>
+                        <div class="flex items-start"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong>Otimização de Performance:</strong> Foco em Core Web Vitals (LCP, CLS, INP) com cache, compressão de imagens e lazy-loading.</span></div>
+                        <div class="flex items-start"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong>SEO Técnico:</strong> Implementação de Schema.org, sitemap.xml, URLs amigáveis e otimizações on-page.</span></div>
+                        <div class="flex items-start"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong>Integrações Essenciais:</strong> Google Analytics 4, Search Console, Meta Pixel, WhatsApp e links de checkout (Hotmart).</span></div>
+                        <div class="flex items-start"><svg class="icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong>Segurança e LGPD:</strong> Hardening básico de segurança, formulários com reCAPTCHA e conformidade com a LGPD (banner de cookies e páginas legais).</span></div>
+                     </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Slide 5: Processo -->
+        <section id="slide5" class="slide bg-white">
+            <div class="slide-content text-center fade-in-section">
+                <h2 class="text-3xl sm:text-4xl md:text-5xl mb-6 text-main">Nossa Jornada de Construção</h2>
+                <p class="text-lg max-w-4xl mx-auto mb-12 text-secondary">Um processo transparente e colaborativo, com prazo estimado de 5 a 7 semanas, para garantir a excelência do projeto.</p>
+                <div class="relative border-l-2 border-dashed border-primary pl-8 space-y-8 max-w-2xl mx-auto text-left">
+                    <div class="relative"><div class="absolute -left-[34px] top-1 h-4 w-4 rounded-full bg-primary"></div><h4 class="font-semibold text-main">1. Alinhamento & Kick-off</h4><p class="text-sm text-secondary">Análise final do Figma, definição do cronograma detalhado e acessos necessários.</p></div>
+                    <div class="relative"><div class="absolute -left-[34px] top-1 h-4 w-4 rounded-full bg-primary"></div><h4 class="font-semibold text-main">2. Implantação e Estruturação</h4><p class="text-sm text-secondary">Configuração do ambiente WordPress e montagem da estrutura base do site e tema.</p></div>
+                    <div class="relative"><div class="absolute -left-[34px] top-1 h-4 w-4 rounded-full bg-primary"></div><h4 class="font-semibold text-main">3. Desenvolvimento das Páginas</h4><p class="text-sm text-secondary">Fase principal de construção, transformando cada tela do Figma em páginas navegáveis e responsivas.</p></div>
+                    <div class="relative"><div class="absolute -left-[34px] top-1 h-4 w-4 rounded-full bg-primary"></div><h4 class="font-semibold text-main">4. Conteúdo e Integrações</h4><p class="text-sm text-secondary">Migração de conteúdo do site atual (se aplicável) e configuração de todas as ferramentas de mensuração.</p></div>
+                    <div class="relative"><div class="absolute -left-[34px] top-1 h-4 w-4 rounded-full bg-primary"></div><h4 class="font-semibold text-main">5. Testes e Homologação</h4><p class="text-sm text-secondary">Você recebe o link para a versão navegável, realiza testes e aprova o projeto.</p></div>
+                    <div class="relative"><div class="absolute -left-[34px] top-1 h-4 w-4 rounded-full bg-primary"></div><h4 class="font-semibold text-main">6. Lançamento e Treinamento</h4><p class="text-sm text-secondary">Publicação oficial do site e treinamento de 2 horas para sua equipe gerenciar o conteúdo.</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 6: Investimento -->
+        <section id="slide6" class="slide bg-light">
+            <div class="slide-content text-center fade-in-section">
+                <h2 class="text-3xl sm:text-4xl md:text-5xl mb-4 text-main">Investimento no seu Ativo Digital</h2>
+                <p class="text-lg max-w-3xl mx-auto text-secondary mb-12">Uma proposta completa para garantir que seu investimento em design se transforme em um poderoso canal de negócios.</p>
+                <div class="grid md:grid-cols-5 gap-8 max-w-4xl mx-auto items-center">
+                    <div class="md:col-span-3 bg-card rounded-lg p-6 md:p-8 text-left h-full flex flex-col">
+                        <h3 class="text-2xl mb-4 text-primary-dark">Projeto Figma-to-WordPress Completo</h3>
+                        <p class="text-secondary mb-6">Inclui todos os itens de escopo, entregáveis e o processo detalhado nesta apresentação.</p>
+                        <ul class="text-sm space-y-2 text-secondary flex-grow">
+                            <li class="flex items-center"><svg class="icon-check w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Até 12 páginas + templates</span></li>
+                            <li class="flex items-center"><svg class="icon-check w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Integrações avançadas de conversão</span></li>
+                            <li class="flex items-center"><svg class="icon-check w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>SEO técnico completo</span></li>
+                             <li class="flex items-center"><svg class="icon-check w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Treinamento WordPress para sua equipe</span></li>
+                           <li class="flex items-center"><svg class="icon-check w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Implementação do Blog existente</span></li>
+                             <li class="flex items-center"><svg class="icon-check w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Garantia de 90 dias para correções</span></li>
+                        </ul>
+                    </div>
+                    <div class="md:col-span-2 bg-primary-dark text-white rounded-lg p-6 md:p-8 flex flex-col h-full shadow-lg">
+                        <h3 class="text-2xl mb-4">Investimento Total</h3>
+                        <p class="text-5xl font-bold mb-4">R$ 11.900,00</p>
+                        <p class="text-lg font-semibold text-gray-200">Condições de Pagamento:</p>
+                        <ul class="text-gray-300 mt-2 text-sm list-disc list-inside">
+                            <li>40% na aprovação e kick-off</li>
+                            <li>40% na entrega para homologação</li>
+                            <li>20% na publicação do site</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 7: Contato -->
+        <section id="slide7" class="slide bg-sea-calm text-white text-center">
+             <div class="absolute inset-0 bg-black opacity-75"></div>
+            <div class="z-10 slide-content fade-in-section">
+                <h2 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-8 font-bold">Vamos transformar seu design em realidade?</h2>
+                <div class="text-xl md:text-2xl mb-12 max-w-3xl mx-auto space-y-4">
+                    <p>1. Com sua aprovação, damos o próximo passo.</p>
+                    <p>2. Enviaremos o Contrato, o link de Pagamento e solicitaremos os acessos necessários.</p>
+                    <p>3. Após as formalizações, seu novo site começa a ser construído.</p>
+                </div>
+                <hr class="my-10 border-gray-400 max-w-md mx-auto"/>
+                <img src="/newimag/Vector.svg" alt="Logo South Sea" class="mx-auto mb-6 h-12" onerror="this.onerror=null;this.src='https://placehold.co/150x50/ffffff/000000?text=South+Sea';">
+                <div class="mt-4 text-lg">
+                    <p>contato@southsea.com.br | (48) 99901-3968</p>
+                    <p>www.southsea.com.br</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Navegação e Fullscreen -->
+    <div class="navigation">
+        <button id="prevBtn" class="nav-btn">▲</button>
+        <button id="nextBtn" class="nav-btn">▼</button>
+    </div>
+    <button id="fullscreenBtn" class="nav-btn fullscreen-btn">⛶</button>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const slides = document.querySelectorAll('.slide');
+            const fadeSections = document.querySelectorAll('.fade-in-section');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const fullscreenBtn = document.getElementById('fullscreenBtn');
+            let currentSlide = 0;
+            let scrollTimeout;
+            let isScrolling = false;
+
+            // Animação de Fade-in com IntersectionObserver
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            fadeSections.forEach(section => {
+                observer.observe(section);
+            });
+
+            // Função para navegar para um slide específico
+            function showSlide(index) {
+                if (index >= 0 && index < slides.length && !isScrolling) {
+                    isScrolling = true;
+                    slides[index].scrollIntoView({ behavior: 'smooth' });
+                    currentSlide = index;
+                    // Prevenir scrolls múltiplos
+                    setTimeout(() => {
+                        isScrolling = false;
+                    }, 1000); // Duração do scroll suave
+                }
+            }
+            
+            // Atualiza o slide atual com base no scroll
+            function updateCurrentSlideOnScroll() {
+                let maxVisible = 0;
+                let newCurrentSlide = 0;
+                
+                slides.forEach((slide, index) => {
+                    const rect = slide.getBoundingClientRect();
+                    const visibleHeight = Math.max(0, Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0));
+                    
+                    if(visibleHeight > maxVisible) {
+                        maxVisible = visibleHeight;
+                        newCurrentSlide = index;
+                    }
+                });
+                currentSlide = newCurrentSlide;
+            }
+
+            // Event Listeners para botões de navegação
+            nextBtn.addEventListener('click', () => { showSlide(currentSlide + 1); });
+            prevBtn.addEventListener('click', () => { showSlide(currentSlide - 1); });
+
+            // Event Listener para teclas do teclado
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === 'ArrowRight' || e.key === ' ') { 
+                    e.preventDefault(); 
+                    showSlide(currentSlide + 1); 
+                } else if (e.key === 'ArrowUp' || e.key === 'PageUp' || e.key === 'ArrowLeft') { 
+                    e.preventDefault(); 
+                    showSlide(currentSlide - 1); 
+                }
+            });
+
+            // Otimização do evento de scroll
+            window.addEventListener('scroll', () => {
+                if (scrollTimeout) {
+                    clearTimeout(scrollTimeout);
+                }
+                scrollTimeout = setTimeout(updateCurrentSlideOnScroll, 100);
+            }, { passive: true });
+
+            // Funcionalidade de Tela Cheia
+            fullscreenBtn.addEventListener('click', () => {
+                try {
+                    const elem = document.documentElement;
+                    if (!document.fullscreenElement) {
+                        if (elem.requestFullscreen) { elem.requestFullscreen(); } 
+                        else if (elem.webkitRequestFullscreen) { elem.webkitRequestFullscreen(); } // Safari
+                    } else {
+                        if (document.exitFullscreen) { document.exitFullscreen(); }
+                        else if (document.webkitExitFullscreen) { document.webkitExitFullscreen(); } // Safari
+                    }
+                } catch (e) {
+                    console.error("Fullscreen API não é suportada ou está bloqueada.", e);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
