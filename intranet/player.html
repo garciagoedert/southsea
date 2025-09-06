@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>South Sea - Aula</title>
+    <link rel="icon" href="https://www.southsea.com.br/newimag/Ellipse%209.svg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css?v=1">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="log.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .aspect-video {
+            aspect-ratio: 16 / 9;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200">
+    <div class="flex h-screen">
+        <div id="sidebar-container"></div>
+        
+        <div id="sidebar-backdrop" class="fixed inset-0 bg-black/50 z-30 hidden"></div>
+
+        <main id="main-content" class="flex-1 flex flex-col h-screen transition-all duration-300 ease-in-out">
+            <div id="header-container"></div>
+
+            <div class="flex-grow p-4 md:p-6 lg:p-8 flex flex-col md:flex-row overflow-y-auto gap-6">
+                <!-- Video Player -->
+                <div class="flex-grow md:w-2/3">
+                    <h1 id="course-title" class="text-2xl font-bold mb-4"></h1>
+                    <div id="video-container" class="bg-black rounded-lg shadow-lg aspect-video">
+                        <!-- YouTube iframe will be inserted here -->
+                    </div>
+                    <h2 id="lesson-title" class="text-xl font-semibold mt-4"></h2>
+                </div>
+
+                <!-- Modules and Lessons Sidebar -->
+                <div class="md:w-1/3 bg-gray-800 p-4 rounded-lg shadow-lg overflow-y-auto">
+                    <h3 class="text-lg font-semibold mb-4">Módulos do Curso</h3>
+                    <div id="modules-container">
+                        <!-- Modules and lessons will be listed here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script type="module" src="player.js"></script>
+</body>
+</html>

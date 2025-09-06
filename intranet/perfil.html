@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>South Sea - Perfil</title>
+    <link rel="icon" href="https://www.southsea.com.br/newimag/Ellipse%209.svg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css?v=1">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="log.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200">
+    <div class="flex h-screen">
+        <div id="sidebar-container"></div>
+        
+        <div id="sidebar-backdrop" class="fixed inset-0 bg-black/50 z-30 hidden"></div>
+
+        <main id="main-content" class="flex-1 flex flex-col h-screen transition-all duration-300 ease-in-out">
+            <div id="header-container"></div>
+
+            <div class="flex-grow p-4 md:p-6 lg:p-8 flex flex-col overflow-hidden">
+                <h1 class="text-2xl font-bold mb-6">Meu Perfil</h1>
+                
+                <!-- Profile Info -->
+                <div class="bg-gray-800 p-6 rounded-lg shadow-lg mb-6">
+                    <div class="flex items-center space-x-6">
+                        <img id="user-avatar" src="default-profile.svg" alt="User Avatar" class="w-24 h-24 rounded-full">
+                        <div>
+                            <h2 id="user-name-display" class="text-2xl font-bold"></h2>
+                            <p id="user-email-display" class="text-gray-400"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Edit Profile Form -->
+                <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                    <h2 class="text-xl font-semibold mb-4">Editar Informações</h2>
+                    <form id="edit-profile-form">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="name" class="block text-sm font-medium text-gray-300">Nome</label>
+                                <input type="text" id="name" required class="w-full px-3 py-2 mt-1 text-white bg-gray-700 border border-gray-600 rounded-md">
+                            </div>
+                            <div>
+                                <label for="password" class="block text-sm font-medium text-gray-300">Nova Senha</label>
+                                <input type="password" id="password" placeholder="Deixe em branco para não alterar" class="w-full px-3 py-2 mt-1 text-white bg-gray-700 border border-gray-600 rounded-md">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label for="profile-picture-input" class="block text-sm font-medium text-gray-300">Foto de Perfil</label>
+                                <input type="file" id="profile-picture-input" accept="image/*" class="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary-dark mt-1">
+                            </div>
+                        </div>
+                        <div class="mt-6">
+                            <button type="submit" class="px-4 py-2 font-bold text-white bg-primary rounded-md hover:bg-primary-dark">Salvar Alterações</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Logout Button -->
+                <div class="mt-auto pt-6 text-right">
+                     <button id="logout-btn" class="px-6 py-2 font-bold text-white bg-red-600 rounded-md hover:bg-red-700">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Sair
+                    </button>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script src="auth.js"></script>
+    <script type="module" src="perfil.js"></script>
+</body>
+</html>

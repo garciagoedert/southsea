@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>South Sea - Produção</title>
+    <!-- Favicon -->
+    <link rel="icon" href="https://www.southsea.com.br/newimag/Ellipse%209.svg">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="log.css">
+
+    <style>
+        /* Custom Styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-y: hidden; /* Prevent body scroll */
+        }
+        
+        /* Dragging styles */
+        .dragging {
+            opacity: 0.5;
+            transform: rotate(2deg);
+        }
+        .drag-over {
+            @apply border-dashed border-2 border-blue-500 bg-blue-500/10;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200">
+
+    <div id="kanban-container" class="flex h-screen">
+        <div id="sidebar-container"></div>
+        
+        <!-- Backdrop for mobile sidebar -->
+        <div id="sidebar-backdrop" class="fixed inset-0 bg-black/50 z-30 hidden"></div>
+
+        <!-- Main Content -->
+        <main id="main-content" class="flex-1 flex flex-col h-screen overflow-hidden transition-all duration-300 ease-in-out">
+            <div id="header-container"></div>
+
+            <!-- Board Content -->
+            <div class="p-4 md:p-6 lg:p-8 flex flex-col flex-1 min-h-0 overflow-y-auto">
+                <!-- Stats -->
+                <div id="stats" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                    <!-- Stat cards will be injected here by JS -->
+                </div>
+
+                <!-- Filters -->
+                <div class="bg-gray-800 p-4 rounded-lg mb-6 flex flex-col xl:flex-row items-center gap-4 shadow-md">
+                     <div class="relative flex-grow w-full">
+                        <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                        <input type="text" id="searchInput" placeholder="Buscar por empresa ou setor..." class="w-full bg-gray-700 border border-gray-600 rounded-lg py-2 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="flex flex-col sm:flex-row w-full xl:w-auto gap-4">
+                        <select id="priorityFilter" class="w-full sm:w-auto bg-gray-700 border border-gray-600 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-label="Filter by priority">
+                            <option value="">Todas as Prioridades</option>
+                            <option value="5">Máxima (5)</option>
+                            <option value="4">Alta (4)</option>
+                            <option value="3">Média (3)</option>
+                            <option value="2">Baixa (2)</option>
+                            <option value="1">Mínima (1)</option>
+                        </select>
+                        <button id="resetFiltersBtn" class="w-full sm:w-auto bg-teal-600 hover:bg-teal-500 font-semibold py-2 px-4 rounded-lg transition-all duration-200 flex-shrink-0">Limpar</button>
+                    </div>
+                </div>
+
+                <!-- Kanban Board -->
+                <div id="kanban-board" class="flex flex-col md:grid md:grid-cols-3 lg:grid-cols-6 gap-6 flex-1 min-h-0">
+                    <!-- Columns will be injected here by JS -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add/Edit Prospect Modal -->
+    <div id="formModal" class="fixed inset-0 bg-black bg-opacity-70 z-50 hidden items-center justify-center sm:p-4">
+        <div class="bg-gray-800 w-full h-full sm:h-auto sm:rounded-xl shadow-2xl sm:max-w-3xl sm:max-h-[90vh] flex flex-col">
+            <div class="flex justify-between items-center p-4 border-b border-gray-700 gap-4">
+                <h2 id="modalTitle" class="text-xl font-bold">Adicionar Novo Prospect</h2>
+                <button id="closeFormModalBtn" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+            </div>
+            <form id="prospectForm" class="p-4 sm:p-6 overflow-y-auto">
+                <input type="hidden" id="prospectId">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="form-group md:col-span-2">
+                        <label for="empresa" class="block text-sm font-medium text-gray-300 mb-1">Empresa *</label>
+                        <input type="text" id="empresa" placeholder="Nome da Empresa" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    </div>
+                     <div class="form-group">
+                        <label for="telefone" class="block text-sm font-medium text-gray-300 mb-1">Telefone</label>
+                        <input type="text" id="telefone" placeholder="(48) 99999-9999" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <a id="whatsappLink" href="#" target="_blank" class="hidden w-full mt-2 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg text-sm items-center justify-center gap-2">
+                            <i class="fab fa-whatsapp"></i>
+                            <span>Chamar no WhatsApp</span>
+                        </a>
+                    </div>
+                    <div class="form-group">
+                        <label for="setor" class="block text-sm font-medium text-gray-300 mb-1">Setor *</label>
+                        <input type="text" id="setor" placeholder="Ex: Imobiliário" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="prioridade" class="block text-sm font-medium text-gray-300 mb-1">Prioridade *</label>
+                        <select id="prioridade" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                            <option value="">Selecione</option>
+                            <option value="5">Máxima (5)</option>
+                            <option value="4">Alta (4)</option>
+                            <option value="3">Média (3)</option>
+                            <option value="2">Baixa (2)</option>
+                            <option value="1">Mínima (1)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="ticketEstimado" class="block text-sm font-medium text-gray-300 mb-1">Ticket Estimado (R$)</label>
+                        <input type="number" id="ticketEstimado" placeholder="15000" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="form-group">
+                        <label for="responsavel" class="block text-sm font-medium text-gray-300 mb-1">Nome do responsável</label>
+                        <input type="text" id="responsavel" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="form-group">
+                        <label for="email" class="block text-sm font-medium text-gray-300 mb-1">Email</label>
+                        <input type="email" id="email" placeholder="contato@empresa.com" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="form-group">
+                        <label for="cpf" class="block text-sm font-medium text-gray-300 mb-1">CPF</label>
+                        <input type="text" id="cpf" placeholder="000.000.000-00" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="form-group">
+                        <label for="cnpj" class="block text-sm font-medium text-gray-300 mb-1">CNPJ</label>
+                        <input type="text" id="cnpj" placeholder="00.000.000/0000-00" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="form-group md:col-span-2">
+                        <label for="endereco" class="block text-sm font-medium text-gray-300 mb-1">Endereço</label>
+                        <div class="flex items-center">
+                            <input type="text" id="endereco" placeholder="Rua, Número, Bairro, Cidade" class="w-full bg-gray-700 border border-gray-600 rounded-l-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <button type="button" id="openMapBtn" title="Abrir no Google Maps" class="bg-primary hover:bg-primary-dark text-white font-bold p-2 rounded-r-lg">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group md:col-span-2">
+                        <label for="redesSociais" class="block text-sm font-medium text-gray-300 mb-1">Redes Sociais</label>
+                        <textarea id="redesSociais" rows="2" placeholder="Links do Instagram, Facebook, etc." class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                    </div>
+                    <div class="form-group md:col-span-2">
+                        <label for="siteAtual" class="block text-sm font-medium text-gray-300 mb-1">Site Atual</label>
+                        <input type="text" id="siteAtual" placeholder="empresa.com.br" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="form-group md:col-span-2">
+                        <label for="observacoes" class="block text-sm font-medium text-gray-300 mb-1">Observações</label>
+                        <textarea id="observacoes" rows="3" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                    </div>
+                    <div class="form-group md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Log de Contatos</label>
+                        <div id="contactLogContainer" class="max-h-40 overflow-y-auto bg-gray-900/50 p-3 rounded-lg space-y-3 mb-3 border border-gray-700">
+                            <!-- Log entries will be injected here -->
+                        </div>
+                        <div class="flex gap-2">
+                            <textarea id="newContactLog" rows="2" placeholder="Adicionar novo contato..." class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                            <button type="button" id="addContactLogBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg self-start">Adicionar</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="pagina" class="block text-sm font-medium text-gray-300 mb-1">Página</label>
+                        <select id="pagina" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="Prospecção">Prospecção</option>
+                            <option value="WhatsApp">WhatsApp</option>
+                            <option value="Produção">Produção</option>
+                        </select>
+                    </div>
+                    <div id="createdByContainer" class="form-group md:col-span-2 mt-4 hidden">
+                        <p class="text-sm text-gray-400">Criado por: <span id="createdByInfo" class="font-semibold"></span></p>
+                    </div>
+                </div>
+                <div class="flex flex-col-reverse sm:flex-row sm:justify-between items-center gap-4 mt-6 pt-4 border-t border-gray-700">
+                    <div id="modalActionButtons" class="flex gap-3 w-full sm:w-auto">
+                        <button type="button" id="archiveBtn" class="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-lg w-full sm:w-auto">Arquivar</button>
+                        <button type="button" id="deleteBtn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg w-full sm:w-auto">Excluir</button>
+                    </div>
+                    <div id="formControls" class="flex gap-3 w-full sm:w-auto">
+                        <button type="button" id="editBtn" class="bg-primary hover:bg-primary-dark font-semibold py-2 px-4 rounded-lg w-full sm:w-auto">Editar</button>
+                        <button type="button" id="cancelFormBtn" class="bg-gray-600 hover:bg-gray-500 font-semibold py-2 px-4 rounded-lg hidden w-full sm:w-auto">Cancelar</button>
+                        <button type="submit" id="saveBtn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg hidden w-full sm:w-auto">Salvar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Import Modal -->
+    <div id="importModal" class="fixed inset-0 bg-black bg-opacity-70 z-50 hidden items-center justify-center p-4">
+        <div class="bg-gray-800 rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col">
+            <div class="flex justify-between items-center p-4 border-b border-gray-700">
+                <h2 class="text-xl font-bold">Importar Leads</h2>
+                <button id="closeImportModalBtn" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+            </div>
+            <div class="p-6 overflow-y-auto">
+                <p class="text-gray-400 mb-4">Copie e cole os dados da sua planilha (formato CSV). A primeira linha deve ser o cabeçalho e as colunas devem estar na seguinte ordem:</p>
+                <code class="block bg-gray-900 text-gray-300 p-2 rounded-md text-xs mb-4">Empresa,Setor,Prioridade,Ticket Estimado,Telefone,Email,CPF,CNPJ,Endereço,Redes Sociais,Site,Observações</code>
+                <textarea id="csvData" rows="10" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Cole seus dados aqui..."></textarea>
+            </div>
+            <div class="flex justify-end gap-3 p-6 border-t border-gray-700">
+                <button type="button" id="cancelImportBtn" class="bg-gray-600 hover:bg-gray-500 font-semibold py-2 px-4 rounded-lg">Cancelar</button>
+                <button type="button" id="processImportBtn" class="bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-lg">Importar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="fixed inset-0 bg-black bg-opacity-70 z-50 hidden items-center justify-center p-4">
+        <div class="bg-gray-800 rounded-lg shadow-xl w-full max-w-sm p-6 text-center">
+            <h3 class="text-lg font-bold mb-2">Confirmar Ação</h3>
+            <p id="confirmMessage" class="text-gray-300 mb-6">Você tem certeza?</p>
+            <div class="flex justify-center gap-4">
+                <button id="cancelConfirmBtn" class="bg-gray-600 hover:bg-gray-500 font-semibold py-2 px-6 rounded-lg">Cancelar</button>
+                <button id="confirmActionBtn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Firebase Imports
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { collection, doc, addDoc, onSnapshot, updateDoc, deleteDoc, serverTimestamp, writeBatch, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { db, appId, app } from './firebase-config.js';
+        import { setupUIListeners, loadComponents } from './common-ui.js';
+
+        // --- INITIALIZATION ---
+        const auth = getAuth(app);
+
+        // --- GLOBAL STATE ---
+        let prospects = [];
+        let filteredProspects = [];
+        let prospectsListener = null;
+
+        const COLUMNS = {
+            'Produção // V1': 'criacao',
+            'Aprovação': 'aprovacao',
+            'Produção // V2': 'producao_v2',
+            'Finalização': 'finalizacao',
+            'Entrega': 'entrega',
+            'Concluído': 'concluido'
+        };
+        const COLUMN_NAMES = Object.keys(COLUMNS);
+
+        // --- UI ELEMENTS ---
+        const kanbanBoard = document.getElementById('kanban-board');
+        const statsContainer = document.getElementById('stats');
+        const formModal = document.getElementById('formModal');
+        const prospectForm = document.getElementById('prospectForm');
+        const confirmModal = document.getElementById('confirmModal');
+        const loginPage = document.getElementById('login-page');
+        const kanbanContainer = document.getElementById('kanban-container');
+        const importModal = document.getElementById('importModal');
+        
+        // --- AUTHENTICATION ---
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                if (sessionStorage.getItem('isLoggedIn') === 'true') {
+                    document.getElementById('kanban-container').classList.remove('hidden');
+                    setupProspectsListener();
+                } else {
+                    window.location.href = 'login.html';
+                }
+            } else {
+                try {
+                    await signInAnonymously(auth);
+                } catch (error) {
+                    console.error("Anonymous Authentication Error:", error);
+                    document.body.innerHTML = `<div class="flex items-center justify-center h-screen text-red-500">Erro de autenticação com o servidor. Tente novamente mais tarde.</div>`;
+                }
+            }
+        });
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorEl = document.getElementById('login-error');
+
+            if (email === 'marketing@southsea.com.br' && password === 'Southsea@!') {
+                sessionStorage.setItem('isLoggedIn', 'true');
+                errorEl.classList.add('hidden');
+                showKanban();
+            } else {
+                errorEl.classList.remove('hidden');
+            }
+        }
+
+        // --- DATA HANDLING (FIRESTORE) ---
+        function setupProspectsListener() {
+            if (prospectsListener) prospectsListener();
+
+            const prospectsCollection = collection(db, 'artifacts', appId, 'public', 'data', 'prospects');
+            prospectsListener = onSnapshot(prospectsCollection, (snapshot) => {
+                prospects = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })).filter(p => p.pagina === 'Produção');
+                applyFilters();
+            }, (error) => {
+                console.error("Error fetching prospects:", error);
+                kanbanBoard.innerHTML = `<p class="text-red-500 text-center col-span-full">Não foi possível carregar os prospects. Verifique sua conexão e as regras do Firestore.</p>`;
+            });
+        }
+
+        // --- RENDERING ---
+        function renderBoard() {
+            kanbanBoard.innerHTML = ''; 
+            const isMobile = window.innerWidth < 768;
+
+            COLUMN_NAMES.forEach(status => {
+                const columnId = COLUMNS[status];
+                const columnProspects = filteredProspects.filter(p => p.status === status);
+                
+                const columnEl = document.createElement('div');
+                
+                let contentHTML;
+                if (isMobile) {
+                    columnEl.className = 'bg-gray-800 rounded-lg flex flex-col';
+                    contentHTML = `
+                        <div class="overflow-x-auto pb-3">
+                            <div id="${columnId}" data-status="${status}" class="column-content flex flex-nowrap space-x-3 p-2 min-h-[120px] pr-2">
+                                <!-- Cards will be injected here -->
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    columnEl.className = 'bg-gray-800 rounded-lg flex flex-col overflow-hidden';
+                    contentHTML = `
+                        <div id="${columnId}" data-status="${status}" class="column-content flex-grow p-2 space-y-3 rounded-md overflow-y-auto">
+                           <!-- Cards will be injected here -->
+                        </div>
+                    `;
+                }
+
+                columnEl.innerHTML = `
+                    <div class="flex justify-between items-center p-3 flex-shrink-0">
+                        <h3 class="font-bold">${status}</h3>
+                        <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2 py-1 rounded-full">${columnProspects.length}</span>
+                    </div>
+                    ${contentHTML}
+                `;
+                kanbanBoard.appendChild(columnEl);
+                
+                const contentArea = columnEl.querySelector('.column-content');
+                if (columnProspects.length === 0) {
+                    contentArea.innerHTML = `<div class="text-center text-gray-500 p-4 text-sm flex-shrink-0 w-full">Nenhum card aqui</div>`;
+                } else {
+                    columnProspects
+                        .sort((a, b) => b.prioridade - a.prioridade)
+                        .forEach(prospect => {
+                            contentArea.appendChild(createProspectCard(prospect, isMobile));
+                        });
+                }
+            });
+            addDragAndDropHandlers();
+            updateStats();
+        }
+
+        function createProspectCard(prospect, isMobile = false) {
+            const card = document.createElement('div');
+            const mobileClasses = isMobile ? 'w-72 flex-shrink-0' : '';
+            card.className = `prospect-card bg-gray-900 p-3 rounded-lg shadow-md cursor-pointer border-l-4 transition-all duration-200 hover:shadow-xl hover:bg-gray-700 ${mobileClasses}`;
+            card.style.borderLeftColor = getPriorityColor(prospect.prioridade);
+            card.draggable = true;
+            card.dataset.id = prospect.id;
+
+            const sectorColor = getSectorColor(prospect.setor);
+
+            card.innerHTML = `
+                <div class="flex justify-between items-start">
+                    <h4 class="font-bold mb-2 flex-grow pr-2">${prospect.empresa}</h4>
+                </div>
+                <div class="flex items-center gap-2 mb-2 flex-wrap">
+                    <span class="text-xs font-semibold px-2 py-0.5 rounded-full ${sectorColor.bg} ${sectorColor.text}">${prospect.setor}</span>
+                    <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-gray-700 text-gray-300">P${prospect.prioridade}</span>
+                </div>
+                ${prospect.origemLead ? `<p class="text-xs text-gray-400 mb-2"><i class="fas fa-sign-in-alt mr-1"></i> ${prospect.origemLead}</p>` : ''}
+                <p class="text-sm text-green-400 font-semibold mb-2">R$ ${prospect.ticketEstimado?.toLocaleString('pt-BR') || 'N/A'}</p>
+                ${prospect.createdBy ? `<p class="text-xs text-gray-500 mt-2 pt-2 border-t border-gray-700"><i class="fas fa-user-plus mr-1"></i> ${prospect.createdBy}</p>` : ''}
+            `;
+            
+            card.addEventListener('click', () => {
+                openFormModal(prospect);
+            });
+
+            return card;
+        }
+
+        function updateStats() {
+            const totalInProduction = filteredProspects.length;
+            const pendingApproval = filteredProspects.filter(p => p.status === 'Aprovação').length;
+            const inFinalization = filteredProspects.filter(p => p.status === 'Finalização').length;
+            const delivered = filteredProspects.filter(p => p.status === 'Entrega').length;
+
+            statsContainer.innerHTML = `
+                ${createStatCard('Total em Produção', totalInProduction, 'fa-industry', 'text-gray-300')}
+                ${createStatCard('Aguardando Aprovação', pendingApproval, 'fa-clock', 'text-yellow-400')}
+                ${createStatCard('Em Finalização', inFinalization, 'fa-cogs', 'text-blue-500')}
+                ${createStatCard('Entregues', delivered, 'fa-check-circle', 'text-green-500')}
+            `;
+        }
+
+        function createStatCard(label, value, icon, iconColor) {
+            return `
+                <div class="bg-gray-800 p-4 rounded-lg flex items-center gap-4 shadow-md">
+                    <div class="bg-gray-700 p-3 rounded-full">
+                        <i class="fas ${icon} fa-lg ${iconColor}"></i>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-bold">${value}</div>
+                        <div class="text-sm text-gray-400">${label}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- DRAG & DROP ---
+        function addDragAndDropHandlers() {
+            const cards = document.querySelectorAll('.prospect-card');
+            const columns = document.querySelectorAll('.column-content');
+
+            cards.forEach(card => {
+                card.addEventListener('dragstart', () => card.classList.add('dragging'));
+                card.addEventListener('dragend', () => card.classList.remove('dragging'));
+            });
+
+            columns.forEach(column => {
+                column.addEventListener('dragover', e => {
+                    e.preventDefault();
+                    column.classList.add('drag-over');
+                });
+                column.addEventListener('dragleave', () => column.classList.remove('drag-over'));
+                column.addEventListener('drop', e => {
+                    e.preventDefault();
+                    column.classList.remove('drag-over');
+                    const draggingCard = document.querySelector('.dragging');
+                    if (draggingCard) {
+                        const prospectId = draggingCard.dataset.id;
+                        const newStatus = column.dataset.status;
+                        updateProspectStatus(prospectId, newStatus);
+                    }
+                });
+            });
+        }
+        
+        async function updateProspectStatus(prospectId, newStatus) {
+            try {
+                const prospectRef = doc(db, 'artifacts', appId, 'public', 'data', 'prospects', prospectId);
+                await updateDoc(prospectRef, { 
+                    status: newStatus,
+                    updatedAt: serverTimestamp()
+                });
+            } catch (error) {
+                console.error("Error updating status:", error);
+            }
+        }
+
+        // --- FILTERS ---
+        function applyFilters() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const priority = document.getElementById('priorityFilter').value;
+            const productionStatuses = Object.keys(COLUMNS);
+
+            filteredProspects = prospects.filter(p => {
+                const isInProduction = productionStatuses.includes(p.status) && p.status !== 'Concluído';
+                if (!isInProduction) return false;
+
+                const matchSearch = !search || p.empresa.toLowerCase().includes(search) || (p.setor && p.setor.toLowerCase().includes(search));
+                const matchPriority = !priority || p.prioridade.toString() === priority;
+                return matchSearch && matchPriority;
+            });
+            renderBoard();
+        }
+
+        // --- MODAL HANDLING ---
+        function renderContactLog(prospect) {
+            const logContainer = document.getElementById('contactLogContainer');
+            if (!logContainer) return;
+
+            const logs = prospect.contactLog || [];
+
+            if (logs.length === 0) {
+                logContainer.innerHTML = '<p class="text-gray-500 text-sm">Nenhum contato registrado.</p>';
+                return;
+            }
+
+            const isAdmin = sessionStorage.getItem('isAdmin') === 'true';
+
+            logContainer.innerHTML = logs
+                .sort((a, b) => (b.timestamp.toMillis ? b.timestamp.toMillis() : b.timestamp.getTime()) - (a.timestamp.toMillis ? a.timestamp.toMillis() : a.timestamp.getTime()))
+                .map((log, index) => {
+                    const date = log.timestamp ? (log.timestamp.toDate ? log.timestamp.toDate().toLocaleString('pt-BR') : new Date(log.timestamp).toLocaleString('pt-BR')) : 'Data pendente';
+                    const author = log.author || 'Sistema';
+                    const deleteButtonHTML = isAdmin ? `<button data-log-index="${index}" class="delete-log-btn text-red-500 hover:text-red-400 text-xs ml-2">&times;</button>` : '';
+                    return `
+                        <div class="bg-gray-700/50 p-2 rounded-md flex justify-between items-start">
+                            <div>
+                                <p class="text-sm text-gray-300 whitespace-pre-wrap">${log.description}</p>
+                                <p class="text-xs text-gray-500 mt-1">${author} - ${date}</p>
+                            </div>
+                            ${deleteButtonHTML}
+                        </div>
+                    `;
+                }).join('');
+
+            if (isAdmin) {
+                logContainer.querySelectorAll('.delete-log-btn').forEach(button => {
+                    button.addEventListener('click', async (e) => {
+                        const logIndex = parseInt(e.target.dataset.logIndex, 10);
+                        const logToDelete = logs[logIndex];
+                        
+                        if (confirm('Tem certeza que deseja excluir este log?')) {
+                            try {
+                                const prospectRef = doc(db, 'artifacts', appId, 'public', 'data', 'prospects', prospect.id);
+                                await updateDoc(prospectRef, {
+                                    contactLog: arrayRemove(logToDelete)
+                                });
+                            } catch (error) {
+                                console.error("Error deleting contact log:", error);
+                                alert("Erro ao excluir o registro de contato.");
+                            }
+                        }
+                    });
+                });
+            }
+        }
+
+        function openFormModal(prospect = null) {
+            prospectForm.reset();
+
+            const modalTitle = document.getElementById('modalTitle');
+            const prospectIdInput = document.getElementById('prospectId');
+            const whatsappLink = document.getElementById('whatsappLink');
+            const telefoneInput = document.getElementById('telefone');
+            const modalActionButtons = document.getElementById('modalActionButtons');
+            const archiveBtn = document.getElementById('archiveBtn');
+            const deleteBtn = document.getElementById('deleteBtn');
+
+            const fields = prospectForm.querySelectorAll('input, select, textarea');
+            const editBtn = document.getElementById('editBtn');
+            const saveBtn = document.getElementById('saveBtn');
+            const cancelFormBtn = document.getElementById('cancelFormBtn');
+            const addContactLogBtn = document.getElementById('addContactLogBtn');
+            const newContactLogTextarea = document.getElementById('newContactLog');
+            const contactLogSection = newContactLogTextarea.parentElement;
+
+            const setFormEditable = (isEditable) => {
+                fields.forEach(field => {
+                    if (field.id !== 'prospectId') field.disabled = !isEditable;
+                });
+                contactLogSection.style.display = isEditable ? 'flex' : 'none';
+                editBtn.classList.toggle('hidden', isEditable);
+                saveBtn.classList.toggle('hidden', !isEditable);
+                cancelFormBtn.classList.toggle('hidden', !isEditable);
+            };
+
+            const updateWhatsAppLink = () => {
+                const phone = telefoneInput.value.replace(/\D/g, '');
+                if (phone) {
+                    whatsappLink.href = `https://wa.me/55${phone}`;
+                    whatsappLink.classList.remove('hidden');
+                    whatsappLink.classList.add('flex');
+                } else {
+                    whatsappLink.classList.add('hidden');
+                    whatsappLink.classList.remove('flex');
+                }
+            };
+            telefoneInput.addEventListener('input', updateWhatsAppLink);
+
+            const newAddContactBtn = addContactLogBtn.cloneNode(true);
+            addContactLogBtn.parentNode.replaceChild(newAddContactBtn, addContactLogBtn);
+            newAddContactBtn.addEventListener('click', async () => {
+                const description = newContactLogTextarea.value.trim();
+                if (!description) return alert('Por favor, adicione uma descrição para o contato.');
+                
+                if (!prospect || !prospect.id) {
+                    return alert('Salve o card antes de adicionar um log.');
+                }
+
+                try {
+                    const newLog = {
+                        author: sessionStorage.getItem('userName') || (auth.currentUser ? auth.currentUser.email || 'anonymous' : 'anonymous'),
+                        description: description,
+                        timestamp: new Date()
+                    };
+
+                    const prospectRef = doc(db, 'artifacts', appId, 'public', 'data', 'prospects', prospect.id);
+                    await updateDoc(prospectRef, {
+                        contactLog: arrayUnion(newLog)
+                    });
+
+                    if (!prospect.contactLog) {
+                        prospect.contactLog = [];
+                    }
+                    prospect.contactLog.push(newLog);
+                    renderContactLog(prospect);
+
+                    newContactLogTextarea.value = '';
+                } catch (error) {
+                    console.error("Error adding contact log:", error);
+                    alert("Erro ao adicionar o registro de contato.");
+                }
+            });
+
+            if (prospect) {
+                modalActionButtons.classList.remove('hidden');
+                modalTitle.textContent = 'Detalhes do Prospect';
+                prospectIdInput.value = prospect.id;
+
+                const createdByContainer = document.getElementById('createdByContainer');
+                const createdByInfo = document.getElementById('createdByInfo');
+                if (prospect.createdBy) {
+                    createdByInfo.textContent = prospect.createdBy;
+                    createdByContainer.classList.remove('hidden');
+                } else {
+                    createdByContainer.classList.add('hidden');
+                }
+                
+                document.getElementById('empresa').value = prospect.empresa || '';
+                document.getElementById('setor').value = prospect.setor || '';
+                document.getElementById('prioridade').value = prospect.prioridade || '';
+                document.getElementById('ticketEstimado').value = prospect.ticketEstimado || '';
+                document.getElementById('responsavel').value = prospect.responsavel || '';
+                document.getElementById('telefone').value = prospect.telefone || '';
+                document.getElementById('email').value = prospect.email || '';
+                document.getElementById('cpf').value = prospect.cpf || '';
+                document.getElementById('cnpj').value = prospect.cnpj || '';
+                document.getElementById('endereco').value = prospect.endereco || '';
+                document.getElementById('redesSociais').value = prospect.redesSociais || '';
+                document.getElementById('siteAtual').value = prospect.siteAtual || '';
+                document.getElementById('observacoes').value = prospect.observacoes || '';
+                document.getElementById('pagina').value = prospect.pagina || 'Produção';
+
+                renderContactLog(prospect);
+
+                archiveBtn.onclick = () => showConfirmModal(`Deseja arquivar "${prospect.empresa}"?`, () => { archiveProspect(prospect.id); closeFormModal(); });
+                deleteBtn.onclick = () => showConfirmModal(`Deseja realmente excluir "${prospect.empresa}"?`, () => { deleteProspect(prospect.id); closeFormModal(); });
+
+                setFormEditable(false);
+                editBtn.onclick = () => setFormEditable(true);
+                cancelFormBtn.onclick = () => openFormModal(prospect);
+
+            } else {
+                modalActionButtons.classList.add('hidden');
+                modalTitle.textContent = 'Adicionar Novo Prospect';
+                prospectIdInput.value = '';
+                renderContactLog({ contactLog: [] });
+                setFormEditable(true);
+            }
+
+            updateWhatsAppLink();
+            formModal.style.display = 'flex';
+        }
+
+        function closeFormModal() {
+            formModal.style.display = 'none';
+        }
+
+        function openImportModal() {
+            importModal.style.display = 'flex';
+        }
+
+        function closeImportModal() {
+            importModal.style.display = 'none';
+            document.getElementById('csvData').value = '';
+        }
+        
+        function showConfirmModal(message, onConfirm) {
+            document.getElementById('confirmMessage').textContent = message;
+            confirmModal.style.display = 'flex';
+            
+            const confirmBtn = document.getElementById('confirmActionBtn');
+            const cancelBtn = document.getElementById('cancelConfirmBtn');
+
+            const confirmHandler = () => {
+                onConfirm();
+                closeConfirmModal();
+                cleanup();
+            };
+            
+            const cancelHandler = () => {
+                closeConfirmModal();
+                cleanup();
+            };
+
+            function cleanup() {
+                confirmBtn.removeEventListener('click', confirmHandler);
+                cancelBtn.removeEventListener('click', cancelHandler);
+            }
+
+            confirmBtn.addEventListener('click', confirmHandler);
+            cancelBtn.addEventListener('click', cancelHandler);
+        }
+
+        function closeConfirmModal() {
+            confirmModal.style.display = 'none';
+        }
+
+        // --- CRUD OPERATIONS ---
+        async function handleFormSubmit(e) {
+            e.preventDefault();
+            
+            const prospectId = document.getElementById('prospectId').value;
+            const data = {
+                empresa: document.getElementById('empresa').value,
+                setor: document.getElementById('setor').value,
+                prioridade: parseInt(document.getElementById('prioridade').value),
+                ticketEstimado: parseInt(document.getElementById('ticketEstimado').value) || 0,
+                responsavel: document.getElementById('responsavel').value,
+                telefone: document.getElementById('telefone').value,
+                email: document.getElementById('email').value,
+                cpf: document.getElementById('cpf').value,
+                cnpj: document.getElementById('cnpj').value,
+                endereco: document.getElementById('endereco').value,
+                redesSociais: document.getElementById('redesSociais').value,
+                siteAtual: document.getElementById('siteAtual').value,
+                observacoes: document.getElementById('observacoes').value,
+                pagina: document.getElementById('pagina').value,
+                updatedAt: serverTimestamp()
+            };
+
+            try {
+                const collectionPath = collection(db, 'artifacts', appId, 'public', 'data', 'prospects');
+                if (prospectId) { // Update
+                    const prospectRef = doc(collectionPath, prospectId);
+                    await updateDoc(prospectRef, data);
+                } else { // Create
+                    data.status = 'Produção // V1';
+                    data.pagina = 'Produção';
+                    data.createdAt = serverTimestamp();
+                    data.createdBy = sessionStorage.getItem('userName') || (auth.currentUser ? auth.currentUser.email : 'Desconhecido');
+                    await addDoc(collectionPath, data);
+                }
+                closeFormModal();
+            } catch (error) {
+                console.error("Error saving prospect:", error);
+                alert("Erro ao salvar. Tente novamente.");
+            }
+        }
+        
+        async function deleteProspect(prospectId) {
+            try {
+                const prospectRef = doc(db, 'artifacts', appId, 'public', 'data', 'prospects', prospectId);
+                await deleteDoc(prospectRef);
+            } catch (error) {
+                console.error("Error deleting prospect:", error);
+            }
+        }
+
+        async function archiveProspect(prospectId) {
+            const user = auth.currentUser ? auth.currentUser.email || 'anonymous' : 'anonymous';
+            const prospect = prospects.find(p => p.id === prospectId);
+            try {
+                const prospectRef = doc(db, 'artifacts', appId, 'public', 'data', 'prospects', prospectId);
+                await updateDoc(prospectRef, {
+                    pagina: 'Arquivo',
+                    updatedAt: serverTimestamp()
+                });
+                if(prospect) {
+                    generalLog.add(user, 'Archive Card', `Card "${prospect.empresa}" archived`);
+                }
+            } catch (error) {
+                console.error("Error archiving prospect:", error);
+            }
+        }
+
+        async function handleImport() {
+            const csvText = document.getElementById('csvData').value.trim();
+            if (!csvText) {
+                alert("Por favor, cole os dados CSV na área de texto.");
+                return;
+            }
+
+            const rows = csvText.split('\n').slice(1); // Skip header row
+            if (rows.length === 0) {
+                alert("Nenhum dado para importar foi encontrado (ignorando a primeira linha como cabeçalho).");
+                return;
+            }
+
+            const batch = writeBatch(db);
+            const prospectsCollection = collection(db, 'artifacts', appId, 'public', 'data', 'prospects');
+            let importedCount = 0;
+
+            rows.forEach(row => {
+                const columns = row.split(',');
+                if (columns.length < 3) return; // Minimum required fields: Empresa, Setor, Prioridade
+
+                const newProspect = {
+                    empresa: columns[0] || '',
+                    setor: columns[1] || '',
+                    prioridade: parseInt(columns[2]) || 3,
+                    ticketEstimado: parseInt(columns[3]) || 0,
+                    telefone: columns[4] || '',
+                    email: columns[5] || '',
+                    cpf: columns[6] || '',
+                    cnpj: columns[7] || '',
+                    endereco: columns[8] || '',
+                    redesSociais: columns[9] || '',
+                    siteAtual: columns[10] || '',
+                    observacoes: columns[11] || '',
+                    status: 'Pendente',
+                    createdAt: serverTimestamp(),
+                    updatedAt: serverTimestamp()
+                };
+
+                const newDocRef = doc(prospectsCollection);
+                batch.set(newDocRef, newProspect);
+                importedCount++;
+            });
+
+            try {
+                await batch.commit();
+                alert(`${importedCount} leads importados com sucesso!`);
+                closeImportModal();
+            } catch (error) {
+                console.error("Error importing leads:", error);
+                alert("Ocorreu um erro ao importar os leads. Verifique o console para mais detalhes.");
+            }
+        }
+
+        // --- UTILITY ---
+        function getPriorityColor(priority) {
+            const colors = {
+                5: '#ef4444', 4: '#f97316', 3: '#eab308', 2: '#3b82f6', 1: '#8b5cf6',
+            };
+            return colors[priority] || '#6b7280';
+        }
+
+        function stringToColorIndex(str, colorArrayLength) {
+            if (!str) return 0;
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                hash = str.charCodeAt(i) + ((hash << 5) - hash);
+            }
+            return Math.abs(hash % colorArrayLength);
+        }
+
+        function getSectorColor(sector) {
+            const colorPalette = [
+                { bg: 'bg-blue-900/50', text: 'text-blue-200' },
+                { bg: 'bg-purple-900/50', text: 'text-purple-200' },
+                { bg: 'bg-teal-900/50', text: 'text-teal-200' },
+                { bg: 'bg-red-900/50', text: 'text-red-200' },
+                { bg: 'bg-cyan-900/50', text: 'text-cyan-200' },
+                { bg: 'bg-green-900/50', text: 'text-green-200' },
+                { bg: 'bg-amber-900/50', text: 'text-amber-200' },
+                { bg: 'bg-pink-900/50', text: 'text-pink-200' },
+                { bg: 'bg-indigo-900/50', text: 'text-indigo-200' },
+                { bg: 'bg-lime-900/50', text: 'text-lime-200' }
+            ];
+            
+            const index = stringToColorIndex(sector, colorPalette.length);
+            return colorPalette[index] || { bg: 'bg-gray-700', text: 'text-gray-200' };
+        }
+        
+        function exportData() {
+            if (prospects.length === 0) {
+                alert("Não há dados para exportar.");
+                return;
+            }
+            const headers = ['ID', 'Empresa', 'Setor', 'Prioridade', 'Status', 'Ticket Estimado', 'Telefone', 'Email', 'CPF', 'CNPJ', 'Endereço', 'Redes Sociais', 'Site', 'Observações'];
+            let csvContent = "data:text/csv;charset=utf-8," + headers.join(",") + "\n";
+
+            prospects.forEach(p => {
+                const row = [
+                    p.id, `"${p.empresa}"`, p.setor, p.prioridade, p.status, p.ticketEstimado,
+                    `"${p.telefone}"`, p.email, p.cpf, p.cnpj, `"${p.endereco}"`, `"${p.redesSociais}"`, p.siteAtual, `"${(p.observacoes || '').replace(/"/g, '&#39;&#39;')}"`
+                ].join(",");
+                csvContent += row + "\n";
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `prospects_${new Date().toISOString().slice(0,10)}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        
+        async function createProductionCard() {
+            const newCard = {
+                empresa: `Nova Produção ${new Date().toLocaleTimeString()}`,
+                setor: 'Produção',
+                prioridade: 3, // Média
+                ticketEstimado: 0,
+                status: 'Produção // V1',
+                pagina: 'Produção',
+                createdAt: serverTimestamp(),
+                updatedAt: serverTimestamp()
+            };
+
+            try {
+                const collectionPath = collection(db, 'artifacts', appId, 'public', 'data', 'prospects');
+                await addDoc(collectionPath, newCard);
+            } catch (error) {
+                console.error("Error creating new production card:", error);
+                alert("Erro ao criar novo card de produção.");
+            }
+        }
+        
+        // --- INITIALIZE APP ---
+        document.addEventListener('DOMContentLoaded', () => {
+            let resizeTimer;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => {
+                    renderBoard();
+                }, 250);
+            });
+
+            document.getElementById('openMapBtn').addEventListener('click', () => {
+                const address = document.getElementById('endereco').value;
+                if (address) {
+                    const encodedAddress = encodeURIComponent(address);
+                    const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`;
+                    window.open(mapUrl, '_blank');
+                } else {
+                    alert('Por favor, insira um endereço.');
+                }
+            });
+
+            loadComponents(() => {
+                // Page-specific setup
+                setupUIListeners({
+                    // Omit openFormModal for the header button on this page
+                    exportData,
+                    openImportModal,
+                    closeFormModal,
+                    handleFormSubmit,
+                    closeImportModal,
+                    handleImport,
+                    applyFilters
+                });
+
+                const addProductionBtn = document.getElementById('addProspectBtnHeader');
+                if (addProductionBtn) {
+                    const btnText = addProductionBtn.querySelector('span');
+                    if (btnText) {
+                        btnText.textContent = 'Nova Produção';
+                    }
+                    // Replace the button to ensure no old listeners are attached
+                    const newBtn = addProductionBtn.cloneNode(true);
+                    addProductionBtn.parentNode.replaceChild(newBtn, addProductionBtn);
+                    newBtn.addEventListener('click', createProductionCard);
+                }
+
+                const urlParams = new URLSearchParams(window.location.search);
+                const cardIdToOpen = urlParams.get('cardId');
+                if (cardIdToOpen) {
+                    const unsubscribe = onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'prospects'), (snapshot) => {
+                        const prospect = prospects.find(p => p.id === cardIdToOpen);
+                        if (prospect) {
+                            openFormModal(prospect);
+                            unsubscribe(); // Stop listening once we've found and opened the card
+                        }
+                    });
+                }
+            });
+        });
+
+    </script>
+    <script type="module" src="production.js"></script>
+</body>
+</html>

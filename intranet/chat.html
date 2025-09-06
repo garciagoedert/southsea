@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>South Sea - Chat Interno</title>
+    <!-- Favicon -->
+    <link rel="icon" href="https://www.southsea.com.br/newimag/Ellipse%209.svg">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="log.css">
+
+    <style>
+        /* Custom Styles */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200">
+
+    <div class="flex h-screen">
+        <div id="sidebar-container"></div>
+        
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col h-screen">
+            <div id="header-container"></div>
+
+            <div class="flex-1 flex overflow-hidden">
+                <!-- Users/Groups List -->
+                <div class="w-1/4 bg-gray-800 p-4 flex flex-col">
+                    <h2 class="text-xl font-bold mb-4">Conversas</h2>
+                    <button id="newGroupBtn" class="w-full bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-lg mb-4">Novo Grupo</button>
+                    <div id="user-list" class="flex-1 overflow-y-auto">
+                        <!-- User and group list will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Chat Window -->
+                <div class="flex-1 flex flex-col">
+                    <div id="chat-header" class="p-4 border-b border-gray-700">
+                        <h2 id="chat-title" class="text-xl font-bold">Selecione uma conversa</h2>
+                    </div>
+                    <div id="chat-messages" class="flex-1 p-4 overflow-y-auto flex flex-col">
+                        <!-- Messages will be displayed here -->
+                    </div>
+                    <div id="chat-input-container" class="p-4 border-t border-gray-700">
+                        <div class="flex items-center">
+                            <input type="text" id="message-input" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Selecione uma conversa para começar" disabled>
+                            <button id="send-button" class="ml-2 bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-lg" disabled>Enviar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- New Group Modal -->
+    <div id="newGroupModal" class="fixed inset-0 bg-black bg-opacity-70 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-gray-800 rounded-xl shadow-2xl w-full max-w-md">
+            <div class="flex justify-between items-center p-4 border-b border-gray-700">
+                <h2 class="text-xl font-bold">Criar Novo Grupo</h2>
+                <button id="closeGroupModalBtn" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+            </div>
+            <div class="p-6">
+                <div class="mb-4">
+                    <label for="groupName" class="block text-sm font-medium text-gray-300 mb-1">Nome do Grupo</label>
+                    <input type="text" id="groupName" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-300 mb-1">Membros</label>
+                    <div id="group-members" class="max-h-48 overflow-y-auto bg-gray-900 p-2 rounded-lg">
+                        <!-- User checkboxes will be populated here -->
+                    </div>
+                </div>
+            </div>
+            <div class="flex justify-end gap-3 p-6 border-t border-gray-700">
+                <button type="button" id="cancelGroupBtn" class="bg-gray-600 hover:bg-gray-500 font-semibold py-2 px-4 rounded-lg">Cancelar</button>
+                <button type="button" id="createGroupBtn" class="bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-lg">Criar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { db, app } from './firebase-config.js';
+        import { loadComponents, setupUIListeners } from './common-ui.js';
+
+        const auth = getAuth(app);
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                if (sessionStorage.getItem('isLoggedIn') === 'true') {
+                    loadComponents(setupUIListeners);
+                } else {
+                    window.location.href = 'login.html';
+                }
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+    </script>
+    <script type="module" src="chat.js"></script>
+</body>
+</html>

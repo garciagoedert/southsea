@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>South Sea - Recuperação de Dados</title>
+    <link rel="icon" href="https://www.southsea.com.br/newimag/Ellipse%209.svg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200 p-8">
+
+    <div class="max-w-4xl mx-auto bg-gray-800 p-6 rounded-lg shadow-xl">
+        <h1 class="text-2xl font-bold mb-4">Ferramenta de Recuperação de Cards</h1>
+        <p class="text-gray-400 mb-6">Esta página irá verificar se existem cards que desapareceram devido a bugs anteriores e permitirá que você os corrija.</p>
+
+        <div id="auth-section">
+            <p class="text-yellow-400 mb-4">Por favor, faça login para acessar os dados.</p>
+            <button id="loginBtn" class="bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-lg">
+                <i class="fas fa-sign-in-alt mr-2"></i>Fazer Login Anônimo
+            </button>
+        </div>
+
+        <div id="recovery-section" class="hidden">
+            <div class="flex flex-col sm:flex-row gap-4">
+                <button id="scanBtn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg flex-1">
+                    <i class="fas fa-search mr-2"></i>Verificar Todos os Cards
+                </button>
+                <div class="flex-1 flex gap-2">
+                    <input type="text" id="specificSearchInput" placeholder="Nome da Empresa do Card Perdido" class="w-full bg-gray-700 border border-gray-600 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <button id="specificSearchBtn" title="Buscar" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div id="results" class="mt-6">
+                <h2 class="text-xl font-semibold mb-2">Resultados:</h2>
+                <div id="results-list" class="bg-gray-900 p-4 rounded-md max-h-96 overflow-y-auto">
+                    <p class="text-gray-500">Nenhum resultado ainda. Clique no botão acima para iniciar a verificação.</p>
+                </div>
+            </div>
+
+            <div id="fix-section" class="mt-6 hidden">
+                <button id="fixAllBtn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg">
+                    <i class="fas fa-wrench mr-2"></i>Corrigir Todos os Cards Listados
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { collection, getDocs, writeBatch, doc, query, where } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { db, appId, app } from './firebase-config.js';
+
+        const auth = getAuth(app);
+
+        const authSection = document.getElementById('auth-section');
+        const recoverySection = document.getElementById('recovery-section');
+        const loginBtn = document.getElementById('loginBtn');
+        const scanBtn = document.getElementById('scanBtn');
+        const specificSearchInput = document.getElementById('specificSearchInput');
+        const specificSearchBtn = document.getElementById('specificSearchBtn');
+        const resultsList = document.getElementById('results-list');
+        const fixSection = document.getElementById('fix-section');
+        const fixAllBtn = document.getElementById('fixAllBtn');
+
+        let lostCards = [];
+
+        onAuthStateChanged(auth, user => {
+            if (user) {
+                authSection.classList.add('hidden');
+                recoverySection.classList.remove('hidden');
+            } else {
+                authSection.classList.remove('hidden');
+                recoverySection.classList.add('hidden');
+            }
+        });
+
+        loginBtn.addEventListener('click', async () => {
+            try {
+                await signInAnonymously(auth);
+            } catch (error) {
+                console.error("Erro no login anônimo:", error);
+                alert("Não foi possível autenticar. Verifique o console para mais detalhes.");
+            }
+        });
+
+        specificSearchBtn.addEventListener('click', async () => {
+            const searchName = specificSearchInput.value.trim();
+            if (!searchName) {
+                alert("Por favor, digite o nome da empresa para buscar.");
+                return;
+            }
+            resultsList.innerHTML = `<p class="text-yellow-400">Buscando por "${searchName}"...</p>`;
+            fixSection.classList.add('hidden');
+            lostCards = [];
+
+            try {
+                const prospectsCollection = collection(db, 'artifacts', appId, 'public', 'data', 'prospects');
+                const q = query(prospectsCollection, where("empresa", "==", searchName));
+                const snapshot = await getDocs(q);
+
+                if (snapshot.empty) {
+                    resultsList.innerHTML = `<p class="text-red-500">Nenhum card encontrado com o nome "${searchName}".</p>`;
+                    return;
+                }
+
+                const prospectingStatuses = ['Pendente', 'Contactado', 'Reunião', 'Proposta', 'Fechado'];
+                const productionStatuses = ['Produção // V1', 'Aprovação', 'Produção // V2', 'Finalização', 'Entrega'];
+
+                snapshot.forEach(doc => {
+                    const card = { id: doc.id, ...doc.data() };
+                    let foundIssue = false;
+
+                    if (card.pagina === 'Produção' && prospectingStatuses.includes(card.status)) {
+                        lostCards.push({ ...card, fix: 'Atualizar status para "Produção // V1"' });
+                        foundIssue = true;
+                    }
+                    if ((card.pagina === 'Prospecção' || card.pagina === 'WhatsApp') && card.status && card.status.startsWith('Produção')) {
+                        lostCards.push({ ...card, fix: 'Atualizar página para "Produção"' });
+                        foundIssue = true;
+                    }
+                    if (card.status === 'Concluído' && card.pagina !== 'Produção') {
+                         lostCards.push({ ...card, fix: 'Atualizar página para "Produção"' });
+                         foundIssue = true;
+                    }
+                    if (card.pagina === 'Arquivo' && productionStatuses.includes(card.status)) {
+                        lostCards.push({ ...card, fix: 'Atualizar página para "Produção" (estava arquivado incorretamente)' });
+                        foundIssue = true;
+                    }
+                    if (typeof card.pagina === 'undefined' && card.status && card.status.startsWith('Produção')) {
+                        lostCards.push({ ...card, fix: 'Atualizar página para "Produção"' });
+                        foundIssue = true;
+                    }
+
+                    if (!foundIssue) {
+                        lostCards.push({ ...card, fix: 'Nenhum problema detectado pelas regras automáticas.' });
+                    }
+                });
+                renderResults();
+
+            } catch (error) {
+                console.error("Erro ao buscar card específico:", error);
+                resultsList.innerHTML = `<p class="text-red-500">Erro ao buscar: ${error.message}</p>`;
+            }
+        });
+
+        scanBtn.addEventListener('click', async () => {
+            resultsList.innerHTML = '<p class="text-yellow-400">Procurando...</p>';
+            fixSection.classList.add('hidden');
+            lostCards = [];
+
+            const prospectingStatuses = ['Pendente', 'Contactado', 'Reunião', 'Proposta', 'Fechado'];
+            const productionStatuses = ['Produção // V1', 'Aprovação', 'Produção // V2', 'Finalização', 'Entrega'];
+            
+            try {
+                const prospectsCollection = collection(db, 'artifacts', appId, 'public', 'data', 'prospects');
+                const snapshot = await getDocs(prospectsCollection);
+                
+                snapshot.forEach(doc => {
+                    const card = { id: doc.id, ...doc.data() };
+                    
+                    // Cenário 1: Card na Produção com status de prospecção.
+                    if (card.pagina === 'Produção' && prospectingStatuses.includes(card.status)) {
+                        lostCards.push({ ...card, fix: 'Atualizar status para "Produção // V1"' });
+                    }
+
+                    // Cenário 2: Card de produção na página de prospecção/whatsapp.
+                    if ((card.pagina === 'Prospecção' || card.pagina === 'WhatsApp') && card.status && card.status.startsWith('Produção')) {
+                        lostCards.push({ ...card, fix: 'Atualizar página para "Produção"' });
+                    }
+
+                    // Cenário 3: Cliente fechado ("Concluído") mas não está na página de Produção.
+                    if (card.status === 'Concluído' && card.pagina !== 'Produção') {
+                         lostCards.push({ ...card, fix: 'Atualizar página para "Produção"' });
+                    }
+
+                    // Cenário 4: Card arquivado com status de produção ativo.
+                    if (card.pagina === 'Arquivo' && productionStatuses.includes(card.status)) {
+                        lostCards.push({ ...card, fix: 'Atualizar página para "Produção" (estava arquivado incorretamente)' });
+                    }
+
+                    // Cenário 5: Card com página indefinida, mas com status de produção.
+                    if (typeof card.pagina === 'undefined' && card.status && card.status.startsWith('Produção')) {
+                        lostCards.push({ ...card, fix: 'Atualizar página para "Produção"' });
+                    }
+                });
+
+                renderResults();
+
+            } catch (error) {
+                console.error("Erro ao buscar cards:", error);
+                resultsList.innerHTML = `<p class="text-red-500">Erro ao buscar cards: ${error.message}</p>`;
+            }
+        });
+
+        function renderResults() {
+            if (lostCards.length === 0) {
+                resultsList.innerHTML = '<p class="text-green-400">Nenhum card perdido encontrado!</p>';
+                return;
+            }
+
+            resultsList.innerHTML = lostCards.map(card => `
+                <div class="p-3 bg-gray-700 rounded-md mb-2">
+                    <p class="font-bold">${card.empresa}</p>
+                    <p class="text-sm text-gray-400">ID: ${card.id}</p>
+                    <p class="text-sm">Página Atual: <span class="font-semibold">${card.pagina}</span></p>
+                    <p class="text-sm">Status Atual: <span class="font-semibold">${card.status}</span></p>
+                    <p class="text-yellow-400 text-sm mt-1">Correção Proposta: ${card.fix}</p>
+                </div>
+            `).join('');
+
+            fixSection.classList.remove('hidden');
+        }
+
+        fixAllBtn.addEventListener('click', async () => {
+            if (lostCards.length === 0) {
+                alert("Nenhum card para corrigir.");
+                return;
+            }
+
+            const batch = writeBatch(db);
+            
+            lostCards.forEach(card => {
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'prospects', card.id);
+
+                if (card.fix.includes('Nenhum problema detectado')) {
+                    return;
+                }
+
+                const updateData = {};
+                if (card.fix.includes('Atualizar status')) {
+                    updateData.status = 'Produção // V1';
+                } else if (card.fix.includes('Atualizar página')) {
+                    updateData.pagina = 'Produção';
+                }
+
+                if (Object.keys(updateData).length > 0) {
+                    batch.update(docRef, updateData);
+                }
+            });
+
+            try {
+                await batch.commit();
+                alert(`${lostCards.length} cards foram corrigidos com sucesso!`);
+                resultsList.innerHTML = '<p class="text-green-400">Todos os cards foram corrigidos. Você pode executar a busca novamente para confirmar.</p>';
+                fixSection.classList.add('hidden');
+                lostCards = [];
+            } catch (error) {
+                console.error("Erro ao corrigir cards:", error);
+                alert(`Ocorreu um erro ao corrigir os cards: ${error.message}`);
+            }
+        });
+
+    </script>
+</body>
+</html>

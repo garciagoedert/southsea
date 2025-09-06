@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>South Sea - Mapas Mentais</title>
+    <link rel="icon" href="https://www.southsea.com.br/newimag/Ellipse%209.svg">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="log.css">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200">
+
+    <div id="app-container" class="flex h-screen">
+        <div id="sidebar-container"></div>
+        
+        <div id="sidebar-backdrop" class="fixed inset-0 bg-black/50 z-30 hidden"></div>
+
+        <main id="main-content" class="flex-1 flex flex-col h-screen overflow-hidden transition-all duration-300 ease-in-out">
+            <div id="header-container" class="flex-shrink-0"></div>
+
+            <div class="p-4 md:p-6 lg:p-8 flex flex-col flex-1 min-h-0 overflow-y-auto">
+                <div class="flex justify-between items-center mb-6">
+                    <h1 class="text-2xl font-bold">Meus Mapas Mentais</h1>
+                    <button id="create-map-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2">
+                        <i class="fas fa-plus"></i>
+                        <span>Criar Novo Mapa</span>
+                    </button>
+                </div>
+
+                <div id="maps-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    <!-- Os cards dos mapas mentais serão inseridos aqui -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Firebase and App Logic -->
+    <script type="module" src="mapas-mentais.js"></script>
+</body>
+</html>

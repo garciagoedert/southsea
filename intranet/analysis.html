@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análise - South Sea Kanban</title>
+    <!-- Favicon -->
+    <link rel="icon" href="https://www.southsea.com.br/newimag/Ellipse%209.svg">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="log.css">
+
+    <style>
+        /* Custom Styles */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200">
+
+    <div class="flex h-screen">
+        <div id="sidebar-container"></div>
+        
+        <!-- Backdrop for mobile sidebar -->
+        <div id="sidebar-backdrop" class="fixed inset-0 bg-black/50 z-30 hidden"></div>
+
+        <!-- Main Content -->
+        <main id="main-content" class="flex-1 flex flex-col h-screen transition-all duration-300 ease-in-out">
+            <div id="header-container"></div>
+
+            <!-- Board Content -->
+            <div class="flex-grow p-4 md:p-6 lg:p-8 flex flex-col overflow-y-auto custom-scrollbar">
+                <h1 class="text-2xl font-bold mb-6">Página de Análise</h1>
+                
+                <!-- Stats -->
+                <div id="stats" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                    
+                    <div class="bg-gray-800 p-4 rounded-lg flex items-center gap-4 shadow-md">
+                        <div class="bg-gray-700 p-3 rounded-full">
+                            <i class="fas fa-dollar-sign fa-lg text-green-500"></i>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-bold">R$ 250.000</div>
+                            <div class="text-sm text-gray-400">Receita Total</div>
+                        </div>
+                    </div>
+                    <div class="bg-gray-800 p-4 rounded-lg flex items-center gap-4 shadow-md">
+                        <div class="bg-gray-700 p-3 rounded-full">
+                            <i class="fas fa-chart-pie fa-lg text-blue-500"></i>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-bold">R$ 1.667</div>
+                            <div class="text-sm text-gray-400">Ticket Médio</div>
+                        </div>
+                    </div>
+                    <div class="bg-gray-800 p-4 rounded-lg flex items-center gap-4 shadow-md">
+                        <div class="bg-gray-700 p-3 rounded-full">
+                            <i class="fas fa-star fa-lg text-yellow-400"></i>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-bold">25</div>
+                            <div class="text-sm text-gray-400">Novos Clientes (Mês)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+                    <div class="bg-gray-800 p-4 rounded-lg shadow-md lg:col-span-2">
+                        <h2 class="text-xl font-bold mb-4">Receita por Mês</h2>
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                    <div class="bg-gray-800 p-4 rounded-lg shadow-md">
+                        <h2 class="text-xl font-bold mb-4">Clientes por Setor</h2>
+                        <canvas id="sectorChart"></canvas>
+                    </div>
+                    <div class="bg-gray-800 p-4 rounded-lg shadow-md">
+                        <h2 class="text-xl font-bold mb-4">Clientes por Origem do Lead</h2>
+                        <canvas id="leadSourceChart"></canvas>
+                    </div>
+                    <div class="bg-gray-800 p-4 rounded-lg shadow-md lg:col-span-2">
+                        <h2 class="text-xl font-bold mb-4">Funil de Vendas</h2>
+                        <canvas id="salesFunnelChart"></canvas>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script type="module">
+        import { loadComponents, setupUIListeners } from './common-ui.js';
+        import './analysis.js'; // Import to execute the analysis script
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadComponents(() => {
+                // This function is called after components are loaded
+                document.getElementById('addProspectBtnHeader')?.remove();
+                setupUIListeners(); // Setup common listeners like the sidebar toggle
+            });
+        });
+    </script>
+</body>
+</html>

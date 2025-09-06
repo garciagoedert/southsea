@@ -1,0 +1,92 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Regra existente para prospects
+    match /artifacts/{appId}/public/data/prospects/{prospectId} {
+      // Permite que qualquer pessoa crie um novo lead (formulário público) e leia a lista de prospects
+      allow create, read: if true;
+      // Apenas usuários autenticados podem atualizar ou deletar
+      allow update, delete: if request.auth != null;
+    }
+
+    // Nova regra para tarefas
+    match /artifacts/{appId}/public/data/tasks/{taskId} {
+      // Permite que qualquer pessoa crie uma nova tarefa (demanda)
+      allow create: if true;
+      // Apenas usuários autenticados podem ler, atualizar e apagar tarefas.
+      allow read, update, delete: if request.auth != null;
+    }
+
+    // Nova regra para reuniões
+    // Permite que qualquer usuário autenticado crie, leia, atualize e apague reuniões.
+    match /artifacts/{appId}/public/data/meetings/{meetingId} {
+      allow read, write: if request.auth != null;
+    }
+
+    // Regra para Mensagens Rápidas
+    match /artifacts/{appId}/public/data/mensagens_rapidas/{messageId} {
+      allow create, read: if true;
+      allow update, delete: if request.auth != null;
+    }
+
+    // Regras para Mapas Mentais
+    match /artifacts/{appId}/public/data/mind-maps/{mapId} {
+      // Permite a um usuário autenticado criar um mapa mental.
+      allow create: if request.auth != null;
+      // Permite ler, atualizar e deletar apenas se o usuário for o dono do mapa.
+      allow read, update, delete: if request.auth != null && resource.data.owner == request.auth.uid;
+
+      // Regras para os nós dentro de um mapa mental
+      match /nodes/{nodeId} {
+        // Permite criar, ler, atualizar e deletar nós se o usuário for o dono do mapa pai.
+        allow read, write: if request.auth != null && get(/databases/$(database)/documents/artifacts/$(appId)/public/data/mind-maps/$(mapId)).data.owner == request.auth.uid;
+      }
+
+      // Regras para as conexões dentro de um mapa mental
+      match /connections/{connectionId} {
+        allow read, write: if request.auth != null && get(/databases/$(database)/documents/artifacts/$(appId)/public/data/mind-maps/$(mapId)).data.owner == request.auth.uid;
+      }
+    }
+
+    // Regras para o chat
+    match /chats/{chatId} {
+      allow read, write: if request.auth != null && request.auth.uid in resource.data.members;
+      
+      match /messages/{messageId} {
+        allow read, create: if request.auth != null && request.auth.uid in get(/databases/$(database)/documents/chats/$(chatId)).data.members;
+      }
+    }
+
+    match /users/{userId} {
+      allow read: if request.auth != null;
+    }
+
+    // --- REGRAS PARA O SISTEMA DE CURSOS ---
+
+    // As regras abaixo são temporárias para permitir o desenvolvimento.
+    // TODO: Implementar autenticação do Firebase e restringir o acesso de escrita
+    //       apenas para administradores (ex: if get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true).
+
+    // Permite a leitura pública das configurações de whitelabel
+    match /settings/whitelabel {
+      allow read: if true;
+      allow write: if request.auth != null; // Apenas usuários logados podem escrever (temporário)
+    }
+
+    // Permite a leitura pública de cursos, módulos e aulas
+    match /courses/{courseId} {
+      allow read: if true;
+      allow write: if request.auth != null; // Apenas usuários logados podem escrever (temporário)
+
+      match /modules/{moduleId} {
+        allow read: if true;
+        allow write: if request.auth != null; // Apenas usuários logados podem escrever (temporário)
+
+        match /lessons/{lessonId} {
+          allow read: if true;
+          allow write: if request.auth != null; // Apenas usuários logados podem escrever (temporário)
+        }
+      }
+    }
+  }
+}

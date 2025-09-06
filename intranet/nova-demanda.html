@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário de Nova Demanda</title>
+    <!-- Favicon -->
+    <link rel="icon" href="https://www.southsea.com.br/newimag/Ellipse%209.svg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="log.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200">
+
+    <header class="bg-gray-800/80 backdrop-blur-sm sticky top-0 z-20 flex items-center justify-center sm:justify-start p-4 border-b border-gray-700 flex-shrink-0">
+        <a href="https://www.southsea.com.br" target="_blank" rel="noopener noreferrer">
+            <img src="https://www.southsea.com.br/newimag/Vector.svg" alt="South Sea Logo" class="h-8">
+        </a>
+    </header>
+
+    <div class="max-w-xl mx-auto p-4 sm:p-6">
+        <h1 class="text-2xl font-bold mb-6 text-center">Nova Demanda de Desenvolvimento</h1>
+        <form id="demandaForm" class="bg-gray-800 p-6 rounded-lg shadow-md space-y-4">
+            <div>
+                <label for="solicitante" class="block text-sm font-medium text-gray-300 mb-1">Nome do Solicitante *</label>
+                <input type="text" id="solicitante" placeholder="Seu nome" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            </div>
+             <div class="relative">
+                <label for="cliente-search" class="block text-sm font-medium text-gray-300 mb-1">Cliente / Site *</label>
+                <input type="text" id="cliente-search" placeholder="Digite para buscar o cliente..." class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                <input type="hidden" id="cliente-id">
+                <div id="cliente-results" class="absolute z-10 w-full bg-gray-600 border border-gray-500 rounded-b-lg mt-1 max-h-48 overflow-y-auto hidden custom-scrollbar"></div>
+            </div>
+            <div>
+                <label for="titulo" class="block text-sm font-medium text-gray-300 mb-1">Título da Demanda *</label>
+                <input type="text" id="titulo" placeholder="Ex: Alterar texto da página inicial" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            </div>
+            <div>
+                <label for="descricao" class="block text-sm font-medium text-gray-300 mb-1">Descrição da Demanda *</label>
+                <textarea id="descricao" rows="4" placeholder="Detalhe a solicitação aqui..." class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required></textarea>
+            </div>
+            <div>
+                <label for="prioridade" class="block text-sm font-medium text-gray-300 mb-1">Prioridade</label>
+                <select id="prioridade" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="low">Baixa</option>
+                    <option value="normal" selected>Normal</option>
+                    <option value="high">Alta</option>
+                </select>
+            </div>
+            <button type="submit" id="submitBtn" class="w-full bg-primary hover:bg-primary-dark text-white font-bold py-3 px-4 rounded-lg transition-all duration-200">
+                Enviar Demanda
+            </button>
+            <div id="statusMessage" class="text-center mt-4"></div>
+        </form>
+    </div>
+
+    <script type="module" src="nova-demanda.js"></script>
+</body>
+</html>

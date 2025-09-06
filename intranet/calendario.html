@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendário de Tarefas - CRM</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="log.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FullCalendar CSS -->
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
+    <style>
+        /* Custom styles for FullCalendar */
+        :root {
+            --fc-border-color: rgba(128, 128, 128, 0.3); /* Lighter, less prominent grid lines */
+        }
+
+        #calendar-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        #calendar {
+            flex-grow: 1;
+            min-height: 0; /* Important for flex-grow to work in a flex column */
+        }
+
+        /* Custom scrollbar for FullCalendar's internal scroller (week/day view) */
+        .fc-scroller::-webkit-scrollbar { width: 8px; }
+        .fc-scroller::-webkit-scrollbar-track { background: #1e293b; }
+        .fc-scroller::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200">
+    <div id="app-container" class="flex h-screen">
+        <div id="sidebar-container"></div>
+        
+        <!-- Backdrop for mobile sidebar -->
+        <div id="sidebar-backdrop" class="fixed inset-0 bg-black/50 z-30 hidden"></div>
+
+        <!-- Main Content -->
+        <main id="main-content" class="flex-1 flex flex-col h-screen transition-all duration-300 ease-in-out">
+            <div id="header-container"></div>
+
+            <!-- Page Content -->
+            <div id="calendar-container" class="flex-grow p-6 flex flex-col custom-scrollbar">
+                <div class="flex justify-between items-center mb-6 flex-shrink-0">
+                    <h1 class="text-2xl font-semibold text-white">Calendário</h1>
+                    <div class="flex gap-4">
+                        <button id="create-meeting-btn-calendar" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow-md">Agendar Reunião</button>
+                        <button id="create-task-btn-calendar" class="bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-lg shadow-md">Nova Tarefa</button>
+                    </div>
+                </div>
+                <div id='calendar' class="bg-gray-800 p-4 rounded-lg"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal para Criar/Editar Tarefa (reutilizado de tarefas.html) -->
+    <div id="task-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 z-50 items-center justify-center p-4">
+        <div class="bg-gray-800 rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col">
+            <div class="flex justify-between items-center p-4 border-b border-gray-700">
+                <h2 id="modal-title" class="text-xl font-bold">Nova Tarefa</h2>
+                <button id="close-modal-btn" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+            </div>
+            <form id="task-form" class="p-6 overflow-y-auto space-y-4 custom-scrollbar">
+                <input type="hidden" id="task-id">
+                <div>
+                    <label for="task-title" class="block text-sm font-medium text-gray-300 mb-1">Título</label>
+                    <input type="text" id="task-title" required class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label for="task-description" class="block text-sm font-medium text-gray-300 mb-1">Descrição</label>
+                    <textarea id="task-description" rows="4" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                </div>
+                <div>
+                    <label for="task-assignee" class="block text-sm font-medium text-gray-300 mb-1">Responsável</label>
+                    <select id="task-assignee" required class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"></select>
+                </div>
+                <div>
+                    <label for="task-due-date" class="block text-sm font-medium text-gray-300 mb-1">Prazo</label>
+                    <input type="datetime-local" id="task-due-date" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label for="task-priority" class="block text-sm font-medium text-gray-300 mb-1">Prioridade</label>
+                    <select id="task-priority" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="low">Baixa</option>
+                        <option value="normal">Normal</option>
+                        <option value="high">Alta</option>
+                        <option value="urgent">Urgente</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="task-status" class="block text-sm font-medium text-gray-300 mb-1">Status</label>
+                    <select id="task-status" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="pending">Pendente</option>
+                        <option value="in_progress">Em Progresso</option>
+                        <option value="done">Concluída</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="task-color" class="block text-sm font-medium text-gray-300 mb-1">Cor</label>
+                    <input type="color" id="task-color" value="#3b82f6" class="w-full h-10 bg-gray-700 border border-gray-600 rounded-lg p-1 cursor-pointer">
+                </div>
+                <div>
+                    <label for="task-parent-entity" class="block text-sm font-medium text-gray-300 mb-1">Vincular a (Cliente, Negócio, etc.)</label>
+                    <input type="text" id="task-parent-entity" placeholder="Busque por um cliente ou negócio..." class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div class="relative">
+                    <label for="task-linked-card-search" class="block text-sm font-medium text-gray-300 mb-1">Vincular ao Card (Prospect/Produção)</label>
+                    <input type="text" id="task-linked-card-search" placeholder="Digite para buscar..." class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <input type="hidden" id="task-linked-card-id">
+                    <div id="task-linked-card-results" class="absolute z-10 w-full bg-gray-600 border border-gray-500 rounded-b-lg mt-1 max-h-48 overflow-y-auto hidden"></div>
+                </div>
+            </form>
+            <div class="flex justify-between items-center mt-auto p-4 border-t border-gray-700">
+                <button type="button" id="delete-task-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg hidden">Apagar</button>
+                <div class="flex justify-end gap-3 flex-grow">
+                    <button type="button" id="cancel-btn" class="bg-gray-600 hover:bg-gray-500 font-semibold py-2 px-4 rounded-lg">Cancelar</button>
+                    <button type="submit" form="task-form" class="bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-lg">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Criar/Editar Reunião -->
+    <div id="meeting-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 z-50 items-center justify-center p-4">
+        <div class="bg-gray-800 rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col">
+            <div class="flex justify-between items-center p-4 border-b border-gray-700">
+                <h2 id="meeting-modal-title" class="text-xl font-bold">Agendar Nova Reunião</h2>
+                <button id="close-meeting-modal-btn" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+            </div>
+            <form id="meeting-form" class="p-6 overflow-y-auto space-y-4 custom-scrollbar">
+                <input type="hidden" id="meeting-id">
+                <div>
+                    <label for="meeting-title" class="block text-sm font-medium text-gray-300 mb-1">Título</label>
+                    <input type="text" id="meeting-title" required class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label for="meeting-date" class="block text-sm font-medium text-gray-300 mb-1">Data e Hora de Início</label>
+                    <input type="datetime-local" id="meeting-date" required class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label for="meeting-end-date" class="block text-sm font-medium text-gray-300 mb-1">Data e Hora Final</label>
+                    <input type="datetime-local" id="meeting-end-date" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label for="meeting-meet-link" class="block text-sm font-medium text-gray-300 mb-1">Link da Reunião (Google Meet)</label>
+                    <input type="url" id="meeting-meet-link" placeholder="https://meet.google.com/..." class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label for="meeting-guests" class="block text-sm font-medium text-gray-300 mb-1">Convidados (e-mails separados por vírgula)</label>
+                    <input type="text" id="meeting-guests" placeholder="email1@exemplo.com, email2@exemplo.com" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label for="meeting-description" class="block text-sm font-medium text-gray-300 mb-1">Pauta / Descrição</label>
+                    <textarea id="meeting-description" rows="3" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                </div>
+                <div class="relative">
+                    <label for="meeting-linked-card-search" class="block text-sm font-medium text-gray-300 mb-1">Vincular ao Card (Prospect/Produção)</label>
+                    <input type="text" id="meeting-linked-card-search" placeholder="Digite para buscar..." class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <input type="hidden" id="meeting-linked-card-id">
+                    <div id="meeting-linked-card-results" class="absolute z-10 w-full bg-gray-600 border border-gray-500 rounded-b-lg mt-1 max-h-48 overflow-y-auto hidden"></div>
+                </div>
+                 <div>
+                    <label for="meeting-status" class="block text-sm font-medium text-gray-300 mb-1">Status</label>
+                    <select id="meeting-status" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="scheduled">Agendada</option>
+                        <option value="completed">Realizada</option>
+                        <option value="canceled">Cancelada</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="meeting-color" class="block text-sm font-medium text-gray-300 mb-1">Cor</label>
+                    <input type="color" id="meeting-color" value="#f97316" class="w-full h-10 bg-gray-700 border border-gray-600 rounded-lg p-1 cursor-pointer">
+                </div>
+            </form>
+            <div class="flex justify-between items-center mt-auto p-4 border-t border-gray-700">
+                <button type="button" id="delete-meeting-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg hidden">Apagar</button>
+                <div class="flex justify-end gap-3 flex-grow">
+                    <button type="button" id="cancel-meeting-btn" class="bg-gray-600 hover:bg-gray-500 font-semibold py-2 px-4 rounded-lg">Cancelar</button>
+                    <button type="submit" form="meeting-form" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg">Salvar Reunião</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script type="module" src="common-ui.js?v=1.1"></script>
+    
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeAppWithFirebase } from './calendario.js';
+        const firebaseConfig = {
+            apiKey: "AIzaSyAKTAVsJKQISRYamsX7SMmh9uCJ6d2bMEs",
+            authDomain: "kanban-652ba.firebaseapp.com",
+            projectId: "kanban-652ba",
+            storageBucket: "kanban-652ba.firebasestorage.app",
+            messagingSenderId: "476390177044",
+            appId: "1:476390177044:web:39e6597eb624006ee06a01",
+            measurementId: "G-KRW331FL5F"
+        };
+        initializeAppWithFirebase(firebaseConfig);
+    </script>
+</body>
+</html>

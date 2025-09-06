@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>South Sea - Admin</title>
+    <link rel="icon" href="https://www.southsea.com.br/newimag/Ellipse%209.svg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css?v=1">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="log.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200">
+    <div class="flex h-screen">
+        <div id="sidebar-container"></div>
+        
+        <!-- Backdrop for mobile sidebar -->
+        <div id="sidebar-backdrop" class="fixed inset-0 bg-black/50 z-30 hidden"></div>
+
+        <!-- Main Content -->
+        <main id="main-content" class="flex-1 flex flex-col h-screen transition-all duration-300 ease-in-out">
+            <div id="header-container"></div>
+
+            <div class="flex-grow p-4 md:p-6 lg:p-8 flex flex-col overflow-y-auto">
+                <h1 class="text-2xl font-bold mb-4">Painel de Administração</h1>
+
+                <!-- User Table -->
+                <div class="bg-gray-800 p-6 rounded-lg shadow-lg mb-6">
+                    <h2 class="text-xl font-semibold mb-4">Usuários</h2>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-gray-800">
+                            <thead>
+                                <tr>
+                                    <th class="py-2 px-4 border-b border-gray-700 text-left">Nome</th>
+                                    <th class="py-2 px-4 border-b border-gray-700 text-left">Email</th>
+                                    <th class="py-2 px-4 border-b border-gray-700 text-left">Admin</th>
+                                    <th class="py-2 px-4 border-b border-gray-700 text-left">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="user-table-body">
+                                <!-- User rows will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Add/Edit User Form -->
+                <div class="bg-gray-800 p-6 rounded-lg shadow-lg mb-6">
+                    <h2 id="form-title" class="text-xl font-semibold mb-4">Adicionar Novo Usuário</h2>
+                    <form id="user-form">
+                        <input type="hidden" id="user-email-hidden">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="name" class="block text-sm font-medium text-gray-300">Nome</label>
+                                <input type="text" id="name" required class="w-full px-3 py-2 mt-1 text-white bg-gray-700 border border-gray-600 rounded-md">
+                            </div>
+                            <div>
+                                <label for="email" class="block text-sm font-medium text-gray-300">Email</label>
+                                <input type="email" id="email" required class="w-full px-3 py-2 mt-1 text-white bg-gray-700 border border-gray-600 rounded-md">
+                            </div>
+                            <div>
+                                <label for="password" class="block text-sm font-medium text-gray-300">Senha</label>
+                                <input type="password" id="password" class="w-full px-3 py-2 mt-1 text-white bg-gray-700 border border-gray-600 rounded-md">
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="isAdmin" class="h-4 w-4 text-primary bg-gray-700 border-gray-600 rounded">
+                                <label for="isAdmin" class="ml-2 block text-sm text-gray-300">É Administrador?</label>
+                            </div>
+                        </div>
+                        <div class="mt-6 flex space-x-4">
+                            <button type="submit" class="px-4 py-2 font-bold text-white bg-primary rounded-md hover:bg-primary-dark">Salvar</button>
+                            <button type="button" id="cancel-edit" class="px-4 py-2 font-bold text-white bg-gray-600 rounded-md hover:bg-gray-700 hidden">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Whitelabel Settings -->
+                <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                    <h2 class="text-xl font-semibold mb-4">Personalização (Whitelabel)</h2>
+                    <form id="whitelabel-form">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="header-logo" class="block text-sm font-medium text-gray-300">URL do Logo (Header)</label>
+                                <input type="url" id="header-logo" class="w-full px-3 py-2 mt-1 text-white bg-gray-700 border border-gray-600 rounded-md" placeholder="https://exemplo.com/logo-header.png">
+                            </div>
+                            <div>
+                                <label for="sidebar-logo" class="block text-sm font-medium text-gray-300">URL do Ícone (Sidebar)</label>
+                                <input type="url" id="sidebar-logo" class="w-full px-3 py-2 mt-1 text-white bg-gray-700 border border-gray-600 rounded-md" placeholder="https://exemplo.com/logo-sidebar.svg">
+                            </div>
+                            <div>
+                                <label for="primary-color" class="block text-sm font-medium text-gray-300">Cor Principal do Tema</label>
+                                <input type="color" id="primary-color" class="w-full h-10 px-1 py-1 mt-1 bg-gray-700 border border-gray-600 rounded-md">
+                            </div>
+                        </div>
+                        <div class="mt-6">
+                            <button type="submit" class="px-4 py-2 font-bold text-white bg-primary rounded-md hover:bg-primary-dark">Salvar Personalização</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Course Management -->
+                <div class="bg-gray-800 p-6 rounded-lg shadow-lg mt-6">
+                    <h2 class="text-xl font-semibold mb-4">Gerenciamento de Cursos</h2>
+                    
+                    <!-- Add Course Form -->
+                    <form id="course-form" class="mb-6">
+                        <input type="hidden" id="course-id-hidden">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="course-title" class="block text-sm font-medium text-gray-300">Título do Curso</label>
+                                <input type="text" id="course-title" required class="w-full px-3 py-2 mt-1 text-white bg-gray-700 border border-gray-600 rounded-md">
+                            </div>
+                            <div>
+                                <label for="course-description" class="block text-sm font-medium text-gray-300">Descrição</label>
+                                <textarea id="course-description" rows="3" class="w-full px-3 py-2 mt-1 text-white bg-gray-700 border border-gray-600 rounded-md"></textarea>
+                            </div>
+                        </div>
+                        <div class="mt-6 flex space-x-4">
+                            <button type="submit" class="px-4 py-2 font-bold text-white bg-primary rounded-md hover:bg-primary-dark">Salvar Curso</button>
+                            <button type="button" id="cancel-course-edit" class="px-4 py-2 font-bold text-white bg-gray-600 rounded-md hover:bg-gray-700 hidden">Cancelar</button>
+                        </div>
+                    </form>
+
+                    <!-- Course List -->
+                    <h3 class="text-lg font-semibold mb-4">Cursos Existentes</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-gray-800">
+                            <thead>
+                                <tr>
+                                    <th class="py-2 px-4 border-b border-gray-700 text-left">Título</th>
+                                    <th class="py-2 px-4 border-b border-gray-700 text-left">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="course-table-body">
+                                <!-- Course rows will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script src="auth.js"></script>
+    <script type="module" src="admin.js"></script>
+</body>
+</html>

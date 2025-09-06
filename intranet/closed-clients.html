@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>South Sea - Clientes Fechados</title>
+    <!-- Favicon -->
+    <link rel="icon" href="https://www.southsea.com.br/newimag/Ellipse%209.svg">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="log.css">
+
+    <style>
+        /* Custom Styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-y: hidden; /* Prevent body scroll */
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200">
+
+    <div id="main-container" class="flex h-screen">
+        <div id="sidebar-container"></div>
+        
+        <!-- Backdrop for mobile sidebar -->
+        <div id="sidebar-backdrop" class="fixed inset-0 bg-black/50 z-30 hidden"></div>
+
+        <!-- Main Content -->
+        <main id="main-content" class="flex-1 flex flex-col h-screen transition-all duration-300 ease-in-out">
+            <div id="header-container"></div>
+
+            <!-- Board Content -->
+            <div class="flex-grow p-4 md:p-6 lg:p-8 flex flex-col overflow-hidden">
+                <h1 class="text-3xl font-bold mb-6">Clientes Fechados</h1>
+
+                <!-- Search Input -->
+                <div class="bg-gray-800 p-4 rounded-lg mb-6 flex items-center gap-4 shadow-md">
+                    <div class="relative flex-grow w-full">
+                        <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                        <input type="text" id="searchInput" placeholder="Buscar por empresa ou setor..." class="w-full bg-gray-700 border border-gray-600 rounded-lg py-2 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </div>
+                
+                <!-- Closed Clients Grid -->
+                <div id="closed-clients-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 flex-grow min-h-0 overflow-y-auto custom-scrollbar">
+                    <!-- Client cards will be injected here by JS -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="fixed inset-0 bg-black bg-opacity-70 z-50 hidden items-center justify-center p-4">
+        <div class="bg-gray-800 rounded-lg shadow-xl w-full max-w-sm p-6 text-center">
+            <h3 class="text-lg font-bold mb-2">Confirmar Ação</h3>
+            <p id="confirmMessage" class="text-gray-300 mb-6">Você tem certeza?</p>
+            <div class="flex justify-center gap-4">
+                <button id="cancelConfirmBtn" class="bg-gray-600 hover:bg-gray-500 font-semibold py-2 px-6 rounded-lg">Cancelar</button>
+                <button id="confirmActionBtn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Client Modal -->
+    <div id="editClientModal" class="fixed inset-0 bg-black bg-opacity-70 z-50 hidden items-center justify-center p-4">
+        <div class="bg-gray-800 rounded-xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col">
+            <div class="flex justify-between items-center p-4 border-b border-gray-700">
+                <h3 class="text-xl font-bold">Editar Cliente</h3>
+                <button id="cancelEditBtn" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+            </div>
+            <form id="editClientForm" class="p-6 overflow-y-auto custom-scrollbar">
+                <input type="hidden" id="editClientId">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="form-group">
+                        <label for="editClientEmpresa" class="block text-sm font-medium text-gray-300 mb-1">Empresa *</label>
+                        <input type="text" id="editClientEmpresa" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editClientSetor" class="block text-sm font-medium text-gray-300 mb-1">Setor *</label>
+                        <input type="text" id="editClientSetor" placeholder="Ex: Imobiliário" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editClientPrioridade" class="block text-sm font-medium text-gray-300 mb-1">Prioridade *</label>
+                        <select id="editClientPrioridade" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                            <option value="">Selecione</option>
+                            <option value="5">5 - Máxima 🚀</option>
+                            <option value="4">4 - Alta 🔥</option>
+                            <option value="3">3 - Média ⭐</option>
+                            <option value="2">2 - Baixa ❄️</option>
+                            <option value="1">1 - Mínima 💤</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editClientTicket" class="block text-sm font-medium text-gray-300 mb-1">Ticket Estimado (R$)</label>
+                        <input type="number" id="editClientTicket" placeholder="15000" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="form-group">
+                        <label for="editOrigemLead" class="block text-sm font-medium text-gray-300 mb-1">Origem do Lead</label>
+                        <input type="text" id="editOrigemLead" placeholder="Ex: Indicação, Google" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                     <div class="form-group">
+                        <label for="editClientTelefone" class="block text-sm font-medium text-gray-300 mb-1">Telefone</label>
+                        <input type="text" id="editClientTelefone" placeholder="(48) 99999-9999" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="form-group">
+                        <label for="editClientEmail" class="block text-sm font-medium text-gray-300 mb-1">Email</label>
+                        <input type="email" id="editClientEmail" placeholder="contato@empresa.com" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="form-group">
+                        <label for="editClientCpf" class="block text-sm font-medium text-gray-300 mb-1">CPF</label>
+                        <input type="text" id="editClientCpf" placeholder="000.000.000-00" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="form-group">
+                        <label for="editClientCnpj" class="block text-sm font-medium text-gray-300 mb-1">CNPJ</label>
+                        <input type="text" id="editClientCnpj" placeholder="00.000.000/0000-00" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="form-group md:col-span-2">
+                        <label for="editClientEndereco" class="block text-sm font-medium text-gray-300 mb-1">Endereço</label>
+                        <div class="flex items-center">
+                            <input type="text" id="editClientEndereco" placeholder="Rua, Número, Bairro, Cidade" class="w-full bg-gray-700 border border-gray-600 rounded-l-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <button type="button" id="openEditMapBtn" title="Abrir no Google Maps" class="bg-primary hover:bg-primary-dark text-white font-bold p-2 rounded-r-lg">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group md:col-span-2">
+                        <label for="editClientRedesSociais" class="block text-sm font-medium text-gray-300 mb-1">Redes Sociais</label>
+                        <textarea id="editClientRedesSociais" rows="2" placeholder="Links do Instagram, Facebook, etc." class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 custom-scrollbar"></textarea>
+                    </div>
+                    <div class="form-group md:col-span-2">
+                        <label for="editClientSiteAtual" class="block text-sm font-medium text-gray-300 mb-1">Site Atual</label>
+                        <input type="text" id="editClientSiteAtual" placeholder="empresa.com.br" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="form-group md:col-span-2">
+                        <label for="editClientObservacoes" class="block text-sm font-medium text-gray-300 mb-1">Follow-up / Observações</label>
+                        <textarea id="editClientObservacoes" rows="4" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 custom-scrollbar"></textarea>
+                    </div>
+                    <div class="form-group md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Log de Contatos</label>
+                        <div id="contactLogContainer" class="max-h-40 overflow-y-auto custom-scrollbar bg-gray-900/50 p-3 rounded-lg space-y-3 mb-3 border border-gray-700">
+                            <!-- Log entries will be injected here -->
+                        </div>
+                        <div class="flex gap-2">
+                            <textarea id="newContactLog" rows="2" placeholder="Adicionar novo contato..." class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 custom-scrollbar"></textarea>
+                            <button type="button" id="addContactLogBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg self-start">Adicionar</button>
+                        </div>
+                    </div>
+                    <div id="createdByContainer" class="form-group md:col-span-2 mt-4 hidden">
+                        <p class="text-sm text-gray-400">Criado por: <span id="createdByInfo" class="font-semibold"></span></p>
+                    </div>
+                </div>
+                <div class="flex justify-between items-center mt-6 pt-4 border-t border-gray-700">
+                    <div id="modalActionButtons" class="flex gap-3">
+                         <button type="button" id="unarchiveBtn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg">Desarquivar</button>
+                         <button type="button" id="archiveBtn" class="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-lg">Arquivar</button>
+                         <button type="button" id="deleteBtn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg">Excluir</button>
+                    </div>
+                    <div id="formControls" class="flex gap-3">
+                        <button type="button" id="cancelEditFormBtn" class="bg-gray-600 hover:bg-gray-500 font-semibold py-2 px-4 rounded-lg">Cancelar</button>
+                        <button type="submit" id="saveBtn" class="bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-lg">Salvar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module" src="closed-clients.js"></script>
+    <script type="module">
+        async function loadComponents() {
+            const headerContainer = document.getElementById('header-container');
+            const sidebarContainer = document.getElementById('sidebar-container');
+            const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+
+            try {
+                const [headerRes, sidebarRes] = await Promise.all([
+                    fetch('header.html'),
+                    fetch(`sidebar.html?v=${new Date().getTime()}`)
+                ]);
+
+                if (!headerRes.ok || !sidebarRes.ok) {
+                    throw new Error('Failed to fetch components');
+                }
+
+                headerContainer.innerHTML = await headerRes.text();
+                sidebarContainer.innerHTML = await sidebarRes.text();
+
+                // Set active link in sidebar
+                const sidebarLinks = sidebarContainer.querySelectorAll('nav a');
+                sidebarLinks.forEach(link => {
+                    const linkPage = link.getAttribute('href').split('/').pop();
+                    if (linkPage === currentPage) {
+                        link.classList.add('bg-blue-500', 'text-white');
+                        link.classList.remove('bg-gray-700', 'hover:bg-gray-600');
+                    }
+                });
+                
+                // Re-initialize UI listeners that depend on the loaded components in closed-clients.js
+                // This assumes a function `setupUIListeners` is exported or available globally
+                if (typeof window.setupUIListeners === 'function') {
+                    window.setupUIListeners();
+                }
+
+
+            } catch (error) {
+                console.error('Error loading components:', error);
+                headerContainer.innerHTML = '<p class="text-red-500 p-4">Error loading header.</p>';
+                sidebarContainer.innerHTML = '<p class="text-red-500 p-4">Error loading sidebar.</p>';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadComponents();
+        });
+    </script>
+</body>
+</html>

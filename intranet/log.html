@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>South Sea - Log do Sistema</title>
+    <link rel="icon" href="https://www.southsea.com.br/newimag/Ellipse%209.svg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="log.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; overflow-y: hidden; }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200">
+
+    <div class="flex h-screen">
+        <div id="sidebar-container"></div>
+        <div id="sidebar-backdrop" class="fixed inset-0 bg-black/50 z-30 hidden"></div>
+
+        <main id="main-content" class="flex-1 flex flex-col h-screen transition-all duration-300 ease-in-out">
+            <div id="header-container"></div>
+
+            <div class="flex-grow p-4 md:p-6 lg:p-8 flex flex-col overflow-hidden">
+                <h1 class="text-2xl font-bold mb-4 text-white flex-shrink-0">Log do Sistema</h1>
+                <div class="bg-gray-800 rounded-lg shadow-md flex-grow overflow-hidden">
+                    <div class="overflow-y-auto h-full custom-scrollbar">
+                        <table class="w-full">
+                            <thead class="bg-gray-700 sticky top-0">
+                                <tr>
+                                    <th class="p-3 text-left text-sm font-semibold text-gray-300 tracking-wide">Timestamp</th>
+                                    <th class="p-3 text-left text-sm font-semibold text-gray-300 tracking-wide">Usuário</th>
+                                    <th class="p-3 text-left text-sm font-semibold text-gray-300 tracking-wide">Ação</th>
+                                    <th class="p-3 text-left text-sm font-semibold text-gray-300 tracking-wide">Detalhes</th>
+                                </tr>
+                            </thead>
+                            <tbody id="log-table-body" class="divide-y divide-gray-700">
+                                <!-- Log rows will be injected here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="geral_log.js"></script>
+    <script type="module" src="log.js"></script>
+</body>
+</html>

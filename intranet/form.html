@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário de Captação de Leads</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200">
+
+    <header class="bg-gray-800/80 backdrop-blur-sm sticky top-0 z-20 flex items-center justify-center sm:justify-start p-4 border-b border-gray-700 flex-shrink-0">
+        <a href="https://www.southsea.com.br" target="_blank" rel="noopener noreferrer">
+            <img src="https://www.southsea.com.br/newimag/Vector.svg" alt="South Sea Logo" class="h-8">
+        </a>
+    </header>
+
+    <div class="max-w-xl mx-auto p-4 sm:p-6">
+        <h1 class="text-2xl font-bold mb-6 text-center">Torne-se nosso parceiro</h1>
+        <form id="leadForm" class="bg-gray-800 p-6 rounded-lg shadow-md space-y-4">
+            <div>
+                <label for="responsavel" class="block text-sm font-medium text-gray-300 mb-1">Nome do responsável</label>
+                <input type="text" id="responsavel" placeholder="Nome do responsável" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <div>
+                <label for="empresa" class="block text-sm font-medium text-gray-300 mb-1">Empresa *</label>
+                <input type="text" id="empresa" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            </div>
+            <div>
+                <label for="setor" class="block text-sm font-medium text-gray-300 mb-1">Setor *</label>
+                <input type="text" id="setor" placeholder="Ex: Imobiliário" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            </div>
+            <div>
+                <label for="telefone" class="block text-sm font-medium text-gray-300 mb-1">Telefone</label>
+                <input type="text" id="telefone" placeholder="(48) 99999-9999" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <div>
+                <label for="email" class="block text-sm font-medium text-gray-300 mb-1">Email</label>
+                <input type="email" id="email" placeholder="contato@empresa.com" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <button type="submit" id="submitBtn" class="w-full bg-primary hover:bg-primary-dark text-white font-bold py-3 px-4 rounded-lg transition-all duration-200">
+                Enviar
+            </button>
+            <div id="statusMessage" class="text-center mt-4"></div>
+        </form>
+    </div>
+
+    <script type="module">
+        // Importa as funções necessárias do SDK do Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Configuração do seu aplicativo da web do Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyAKTAVsJKQISRYamsX7SMmh9uCJ6d2bMEs",
+            authDomain: "kanban-652ba.firebaseapp.com",
+            projectId: "kanban-652ba",
+            storageBucket: "kanban-652ba.firebasestorage.app",
+            messagingSenderId: "476390177044",
+            appId: "1:476390177044:web:39e6597eb624006ee06a01",
+            measurementId: "G-KRW331FL5F"
+        };
+
+        // Inicializa o Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const appId = firebaseConfig.appId || 'default-kanban-app';
+
+        // --- Lógica do Formulário ---
+        const leadForm = document.getElementById('leadForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const statusMessage = document.getElementById('statusMessage');
+
+        leadForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Desabilita o botão para evitar envios múltiplos
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Enviando...';
+            submitBtn.classList.add('opacity-50');
+            statusMessage.textContent = '';
+
+            // Coleta os dados do formulário
+            const data = {
+                empresa: document.getElementById('empresa').value,
+                setor: document.getElementById('setor').value,
+                telefone: document.getElementById('telefone').value,
+                email: document.getElementById('email').value,
+                responsavel: document.getElementById('responsavel').value,
+                origemLead: 'Formulário',
+                // Define valores padrão para o Kanban
+                status: 'Pendente',
+                pagina: 'Prospecção',
+                prioridade: 3, // Prioridade Média como padrão
+                createdAt: serverTimestamp(),
+                updatedAt: serverTimestamp()
+            };
+
+            try {
+                const prospectsCollection = collection(db, 'artifacts', appId, 'public', 'data', 'prospects');
+                await addDoc(prospectsCollection, data);
+                
+                // Sucesso
+                statusMessage.textContent = 'Obrigado! Seus dados foram enviados. Redirecionando para o WhatsApp...';
+                statusMessage.className = 'text-green-400 text-center mt-4';
+                
+                // Aguarda 2 segundos e redireciona
+                setTimeout(() => {
+                    window.location.href = 'https://wa.me/5548988373993';
+                }, 2000);
+
+            } catch (error) {
+                console.error("Erro ao salvar o lead:", error);
+                statusMessage.textContent = 'Ocorreu um erro ao enviar seus dados. Tente novamente.';
+                statusMessage.className = 'text-red-400 text-center mt-4';
+            } finally {
+                // Reabilita o botão
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Enviar';
+                submitBtn.classList.remove('opacity-50');
+            }
+        });
+    </script>
+</body>
+</html>
