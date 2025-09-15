@@ -2,8 +2,9 @@ const users = [
     { name: 'Marketing', email: 'marketing@southsea.com.br', password: 'Southsea@!', isAdmin: false, profilePicture: 'default-profile.svg' },
     { name: 'Paulo', email: 'paulo@southsea.com.br', password: 'Pg1308@!', isAdmin: true, profilePicture: 'default-profile.svg' },
     { name: 'Alefy', email: 'alefy@southsea.com.br', password: 'Ams_1308@!', isAdmin: false, profilePicture: 'default-profile.svg' },
-    { name: 'Bruno', email: 'bruno@southsea.com.br', password: 'Bruno2025@!', isAdmin: false, profilePicture: 'default-profile.svg' }
-     { name: 'Bruno', email: 'bruno@southsea.com.br', password: 'Bruno2025@!', isAdmin: false, profilePicture: 'default-profile.svg' }
+    { name: 'Bruno', email: 'bruno@southsea.com.br', password: 'Bruno2025@!', isAdmin: false, profilePicture: 'default-profile.svg' },
+        { name: 'Antônio', email: 'acesso01@southsea.com.br', password: 'Southsea2025@!', isAdmin: false, profilePicture: 'default-profile.svg' },
+            { name: 'Leonardo', email: 'acesso02@southsea.com.br', password: 'Southsea.2025@!', isAdmin: false, profilePicture: 'default-profile.svg' },
 ];
 
 function findUser(email, password) {
