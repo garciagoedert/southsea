@@ -58,14 +58,16 @@ service cloud.firestore {
     }
 
     match /users/{userId} {
-      allow read: if request.auth != null;
+      // ATENÇÃO: Regra insegura para permitir login customizado.
+      // TODO: Implementar Firebase Authentication e restringir estas regras.
+      allow read, write: if true;
     }
 
     // --- REGRAS PARA O SISTEMA DE CURSOS ---
 
     // As regras abaixo são temporárias para permitir o desenvolvimento.
     // TODO: Implementar autenticação do Firebase e restringir o acesso de escrita
-    //       apenas para administradores (ex: if get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true).
+    //       apenas para administradores (ex: if get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin').
 
     // Permite a leitura pública das configurações de whitelabel
     match /settings/whitelabel {

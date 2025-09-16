@@ -38,7 +38,7 @@
                                 <tr>
                                     <th class="py-2 px-4 border-b border-gray-700 text-left">Nome</th>
                                     <th class="py-2 px-4 border-b border-gray-700 text-left">Email</th>
-                                    <th class="py-2 px-4 border-b border-gray-700 text-left">Admin</th>
+                                    <th class="py-2 px-4 border-b border-gray-700 text-left">Função</th>
                                     <th class="py-2 px-4 border-b border-gray-700 text-left">Ações</th>
                                 </tr>
                             </thead>
@@ -67,9 +67,15 @@
                                 <label for="password" class="block text-sm font-medium text-gray-300">Senha</label>
                                 <input type="password" id="password" class="w-full px-3 py-2 mt-1 text-white bg-gray-700 border border-gray-600 rounded-md">
                             </div>
-                            <div class="flex items-center">
-                                <input type="checkbox" id="isAdmin" class="h-4 w-4 text-primary bg-gray-700 border-gray-600 rounded">
-                                <label for="isAdmin" class="ml-2 block text-sm text-gray-300">É Administrador?</label>
+                            <div>
+                                <label for="role" class="block text-sm font-medium text-gray-300">Função</label>
+                                <select id="role" class="mt-1 block w-full pl-3 pr-10 py-2 text-base bg-gray-700 border-gray-600 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md">
+                                    <option>bdr</option>
+                                    <option>bdr_supervisor</option>
+                                    <option>closer</option>
+                                    <option>producao</option>
+                                    <option>admin</option>
+                                </select>
                             </div>
                         </div>
                         <div class="mt-6 flex space-x-4">

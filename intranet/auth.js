@@ -1,38 +1,59 @@
-const users = [
-    { name: 'Marketing', email: 'marketing@southsea.com.br', password: 'Southsea@!', isAdmin: false, profilePicture: 'default-profile.svg' },
-    { name: 'Paulo', email: 'paulo@southsea.com.br', password: 'Pg1308@!', isAdmin: true, profilePicture: 'default-profile.svg' },
-    { name: 'Alefy', email: 'alefy@southsea.com.br', password: 'Ams_1308@!', isAdmin: false, profilePicture: 'default-profile.svg' },
-    { name: 'Bruno', email: 'bruno@southsea.com.br', password: 'Bruno2025@!', isAdmin: false, profilePicture: 'default-profile.svg' },
-        { name: 'Antônio', email: 'acesso01@southsea.com.br', password: 'Southsea2025@!', isAdmin: false, profilePicture: 'default-profile.svg' },
-            { name: 'Leonardo', email: 'acesso02@southsea.com.br', password: 'Southsea.2025@!', isAdmin: false, profilePicture: 'default-profile.svg' },
-];
+import { db } from './firebase-config.js';
+import { 
+    doc, setDoc, getDoc, addDoc, collection, getDocs, deleteDoc, updateDoc, query, where
+} from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-function findUser(email, password) {
-    return users.find(user => user.email === email && user.password === password);
+export async function findUser(email, password) {
+    const usersRef = collection(db, "users");
+    const q = query(usersRef, where("email", "==", email), where("password", "==", password));
+    const querySnapshot = await getDocs(q);
+    if (querySnapshot.empty) {
+        return null;
+    }
+    return { id: querySnapshot.docs[0].id, ...querySnapshot.docs[0].data() };
 }
 
-window.getAllUsers = function() {
+export async function getAllUsers() {
+    const users = [];
+    try {
+        const querySnapshot = await getDocs(collection(db, 'users'));
+        querySnapshot.forEach((doc) => {
+            users.push({ id: doc.id, ...doc.data() });
+        });
+    } catch (error) {
+        console.error("Erro ao carregar usuários:", error);
+    }
     return users;
 }
 
-function addUser(user) {
-    users.push(user);
+export async function addUser(user) {
+    try {
+        // Use o email como ID do documento para evitar duplicatas
+        const userRef = doc(db, 'users', user.email);
+        await setDoc(userRef, user);
+    } catch (error) {
+        console.error("Erro ao adicionar usuário:", error);
+    }
 }
 
-function updateUser(email, updatedData) {
-    const userIndex = users.findIndex(user => user.email === email);
-    if (userIndex !== -1) {
-        users[userIndex] = { ...users[userIndex], ...updatedData };
+export async function updateUser(email, updatedData) {
+    try {
+        const userRef = doc(db, 'users', email);
+        await updateDoc(userRef, updatedData);
         return true;
+    } catch (error) {
+        console.error("Erro ao atualizar usuário:", error);
+        return false;
     }
-    return false;
 }
 
-function deleteUser(email) {
-    const userIndex = users.findIndex(user => user.email === email);
-    if (userIndex !== -1) {
-        users.splice(userIndex, 1);
+export async function deleteUser(email) {
+    try {
+        const userRef = doc(db, 'users', email);
+        await deleteDoc(userRef);
         return true;
+    } catch (error) {
+        console.error("Erro ao excluir usuário:", error);
+        return false;
     }
-    return false;
 }

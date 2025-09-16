@@ -242,9 +242,9 @@ async function loadComponents(pageSpecificSetup) {
         });
 
         // Show/hide elements based on page and user role
-        const isAdmin = sessionStorage.getItem('isAdmin') === 'true';
+        const userRole = sessionStorage.getItem('userRole');
         const adminLink = document.getElementById('admin-link');
-        if (isAdmin && adminLink) {
+        if (userRole === 'admin' && adminLink) {
             adminLink.classList.remove('hidden');
         }
 

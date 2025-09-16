@@ -3,6 +3,7 @@ import { db } from './firebase-config.js';
 import { 
     doc, setDoc, getDoc, addDoc, collection, getDocs, deleteDoc, updateDoc 
 } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+import { getAllUsers, addUser, updateUser, deleteUser } from './auth.js';
 
 // Course Management Functions
 async function saveCourse(courseData) {
@@ -80,8 +81,8 @@ async function loadWhitelabelSettings() {
 
 
 function setupAdminPage() {
-    const isAdmin = sessionStorage.getItem('isAdmin') === 'true';
-    if (!isAdmin) {
+    const userRole = sessionStorage.getItem('userRole');
+    if (userRole !== 'admin') {
         window.location.href = 'index.html';
         return;
     }
@@ -92,7 +93,7 @@ function setupAdminPage() {
     const nameInput = document.getElementById('name');
     const emailInput = document.getElementById('email');
     const passwordInput = document.getElementById('password');
-    const isAdminInput = document.getElementById('isAdmin');
+    const roleInput = document.getElementById('role');
     const hiddenEmailInput = document.getElementById('user-email-hidden');
     const cancelEditBtn = document.getElementById('cancel-edit');
 
@@ -134,15 +135,15 @@ function setupAdminPage() {
         saveWhitelabelSettings(settings);
     }
 
-    function renderUsers() {
+    async function renderUsers() {
         userTableBody.innerHTML = '';
-        const users = getAllUsers();
+        const users = await getAllUsers();
         users.forEach(user => {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td class="py-2 px-4 border-b border-gray-700">${user.name}</td>
                 <td class="py-2 px-4 border-b border-gray-700">${user.email}</td>
-                <td class="py-2 px-4 border-b border-gray-700">${user.isAdmin ? 'Sim' : 'Não'}</td>
+                <td class="py-2 px-4 border-b border-gray-700">${user.role}</td>
                 <td class="py-2 px-4 border-b border-gray-700">
                     <button class="text-primary hover:text-primary-dark mr-2 edit-btn" data-email="${user.email}">
                         <i class="fas fa-edit"></i>
@@ -156,24 +157,24 @@ function setupAdminPage() {
         });
     }
 
-    function handleFormSubmit(e) {
+    async function handleFormSubmit(e) {
         e.preventDefault();
         const name = nameInput.value;
         const email = emailInput.value;
         const password = passwordInput.value;
-        const isAdmin = isAdminInput.checked;
+        const role = roleInput.value;
         const originalEmail = hiddenEmailInput.value;
 
         if (originalEmail) {
             // Editing user
-            const updatedData = { name, email, isAdmin };
+            const updatedData = { name, email, role };
             if (password) {
                 updatedData.password = password;
             }
-            updateUser(originalEmail, updatedData);
+            await updateUser(originalEmail, updatedData);
         } else {
             // Adding new user
-            addUser({ name, email, password, isAdmin });
+            await addUser({ name, email, password, role });
         }
 
         resetForm();
@@ -188,16 +189,17 @@ function setupAdminPage() {
         cancelEditBtn.classList.add('hidden');
     }
 
-    userTableBody.addEventListener('click', function(e) {
+    userTableBody.addEventListener('click', async function(e) {
         if (e.target.closest('.edit-btn')) {
             const email = e.target.closest('.edit-btn').dataset.email;
-            const user = getAllUsers().find(u => u.email === email);
+            const users = await getAllUsers();
+            const user = users.find(u => u.email === email);
             if (user) {
                 formTitle.textContent = 'Editar Usuário';
                 nameInput.value = user.name;
                 emailInput.value = user.email;
                 emailInput.disabled = true;
-                isAdminInput.checked = user.isAdmin;
+                roleInput.value = user.role;
                 hiddenEmailInput.value = user.email;
                 passwordInput.placeholder = "Deixe em branco para não alterar";
                 cancelEditBtn.classList.remove('hidden');
@@ -207,7 +209,7 @@ function setupAdminPage() {
         if (e.target.closest('.delete-btn')) {
             const email = e.target.closest('.delete-btn').dataset.email;
             if (confirm(`Tem certeza que deseja excluir o usuário ${email}?`)) {
-                deleteUser(email);
+                await deleteUser(email);
                 renderUsers();
             }
         }

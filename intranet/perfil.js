@@ -1,6 +1,7 @@
 import { loadComponents, setupUIListeners } from './common-ui.js';
+import { getAllUsers, updateUser } from './auth.js';
 
-function setupProfilePage() {
+async function setupProfilePage() {
     const userNameDisplay = document.getElementById('user-name-display');
     const userEmailDisplay = document.getElementById('user-email-display');
     const userAvatar = document.getElementById('user-avatar');
@@ -10,30 +11,31 @@ function setupProfilePage() {
     const profilePictureInput = document.getElementById('profile-picture-input');
     const logoutBtn = document.getElementById('logout-btn');
 
-    const loggedInUserName = sessionStorage.getItem('userName');
-    const allUsers = getAllUsers();
-    let currentUser = allUsers.find(user => user.name === loggedInUserName);
-
-    if (currentUser) {
-        // Populate user info
-        userNameDisplay.textContent = currentUser.name;
-        userEmailDisplay.textContent = currentUser.email;
-        nameInput.value = currentUser.name;
-        // Load profile picture from localStorage or use default
-        const storedPic = localStorage.getItem(`profilePic_${currentUser.email}`);
-        if (storedPic) {
-            currentUser.profilePicture = storedPic;
-        }
-        userAvatar.src = currentUser.profilePicture;
-
-    } else {
-        // Redirect to login if no user is found in session
+    // Use o currentUser do sessionStorage que foi salvo no login
+    const currentUserJSON = sessionStorage.getItem('currentUser');
+    if (!currentUserJSON) {
         window.location.href = 'login.html';
-        return; // Stop execution if no user
+        return;
+    }
+    
+    const currentUser = JSON.parse(currentUserJSON);
+
+    // Populate user info
+    userNameDisplay.textContent = currentUser.name;
+    userEmailDisplay.textContent = currentUser.email;
+    nameInput.value = currentUser.name;
+    
+    const storedPic = localStorage.getItem(`profilePic_${currentUser.email}`);
+    if (storedPic) {
+        userAvatar.src = storedPic;
+    } else if (currentUser.profilePicture) {
+        userAvatar.src = currentUser.profilePicture;
+    } else {
+        userAvatar.src = 'default-profile.svg';
     }
 
     // Handle profile update
-    editProfileForm.addEventListener('submit', function(e) {
+    editProfileForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         
         const newName = nameInput.value;
@@ -45,9 +47,14 @@ function setupProfilePage() {
             updatedData.password = newPassword;
         }
 
-        const updateAndRefresh = () => {
-            if (updateUser(currentUser.email, updatedData)) {
+        const updateAndRefresh = async () => {
+            const success = await updateUser(currentUser.email, updatedData);
+            if (success) {
+                // Atualiza o objeto currentUser e o sessionStorage
+                currentUser.name = newName;
+                sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
                 sessionStorage.setItem('userName', newName);
+
                 userNameDisplay.textContent = newName;
                 if (updatedData.profilePicture) {
                     userAvatar.src = updatedData.profilePicture;
@@ -69,14 +76,13 @@ function setupProfilePage() {
             };
             reader.readAsDataURL(newPictureFile);
         } else {
-            updateAndRefresh();
+            await updateAndRefresh();
         }
     });
 
     // Handle logout
     logoutBtn.addEventListener('click', function() {
         sessionStorage.clear();
-        // Note: localStorage is not cleared on logout to persist profile pictures
         window.location.href = 'login.html';
     });
 

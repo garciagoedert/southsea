@@ -511,14 +511,14 @@
                 return;
             }
 
-            const isAdmin = sessionStorage.getItem('isAdmin') === 'true';
+            const userRole = sessionStorage.getItem('userRole');
 
             logContainer.innerHTML = logs
                 .sort((a, b) => (b.timestamp.toMillis ? b.timestamp.toMillis() : b.timestamp.getTime()) - (a.timestamp.toMillis ? a.timestamp.toMillis() : a.timestamp.getTime()))
                 .map((log, index) => {
                     const date = log.timestamp ? (log.timestamp.toDate ? log.timestamp.toDate().toLocaleString('pt-BR') : new Date(log.timestamp).toLocaleString('pt-BR')) : 'Data pendente';
                     const author = log.author || 'Sistema';
-                    const deleteButtonHTML = isAdmin ? `<button data-log-index="${index}" class="delete-log-btn text-red-500 hover:text-red-400 text-xs ml-2">&times;</button>` : '';
+                    const deleteButtonHTML = userRole === 'admin' ? `<button data-log-index="${index}" class="delete-log-btn text-red-500 hover:text-red-400 text-xs ml-2">&times;</button>` : '';
                     return `
                         <div class="bg-gray-700/50 p-2 rounded-md flex justify-between items-start">
                             <div>
@@ -530,7 +530,7 @@
                     `;
                 }).join('');
 
-            if (isAdmin) {
+            if (userRole === 'admin') {
                 logContainer.querySelectorAll('.delete-log-btn').forEach(button => {
                     button.addEventListener('click', async (e) => {
                         const logIndex = parseInt(e.target.dataset.logIndex, 10);
