@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preencher Formulário</title>
+    <link rel="icon" href="../imgs/favicon.svg" type="image/svg+xml">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f0f2f5;
+        }
+        .form-container {
+            max-width: 700px;
+            margin: 50px auto;
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .form-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .form-header img {
+            max-width: 150px;
+            margin-bottom: 20px;
+        }
+        .form-header h1 {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #1a202c;
+        }
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <div class="form-header">
+            <img src="../newimag/Sss.png" alt="Logo" class="mx-auto" style="max-width: 180px; margin-bottom: 20px;">
+            <h1 id="form-title">Carregando...</h1>
+        </div>
+        <form id="public-form">
+            <div id="sections-container" class="space-y-6">
+                <!-- As seções do formulário serão renderizadas aqui, uma de cada vez -->
+            </div>
+
+            <div class="navigation-buttons">
+                <button type="button" id="back-btn" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg transition duration-300">
+                    Voltar
+                </button>
+                <button type="button" id="next-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300">
+                    Continuar
+                </button>
+            </div>
+             <div class="mt-8">
+                <button type="submit" id="submit-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300 hidden">
+                    Assinar e Enviar
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script type="module" src="public-form.js"></script>
+</body>
+</html>

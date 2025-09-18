@@ -249,11 +249,17 @@ async function loadComponents(pageSpecificSetup) {
         }
 
         // Apenas mostra o botão de prospecção na página de prospecção
-        const addProspectBtn = document.getElementById('addProspectBtnHeader');
-        if (addProspectBtn && currentPage === 'index.html') {
-            addProspectBtn.classList.remove('hidden');
+        const mainHeaderBtn = document.getElementById('addProspectBtnHeader');
+        if (mainHeaderBtn) {
+            if (currentPage === 'index.html') {
+                mainHeaderBtn.classList.remove('hidden');
+            } else if (currentPage === 'formularios.html') {
+                mainHeaderBtn.innerHTML = `<i class="fas fa-plus mr-2"></i><span class="hidden md:inline">Criar Novo Formulário</span>`;
+                mainHeaderBtn.classList.remove('hidden');
+            } else {
+                mainHeaderBtn.classList.add('hidden');
+            }
         }
-
 
         if (pageSpecificSetup && typeof pageSpecificSetup === 'function') {
             pageSpecificSetup();

@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>South Sea - Perfil</title>
     <link rel="icon" href="https://www.southsea.com.br/newimag/Ellipse%209.svg">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css?v=1">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -24,55 +26,178 @@
         <main id="main-content" class="flex-1 flex flex-col h-screen transition-all duration-300 ease-in-out">
             <div id="header-container"></div>
 
-            <div class="flex-grow p-4 md:p-6 lg:p-8 flex flex-col overflow-hidden">
-                <h1 class="text-2xl font-bold mb-6">Meu Perfil</h1>
+            <div class="flex-grow p-4 md:p-6 lg:p-8 flex flex-col overflow-y-auto custom-scrollbar">
                 
-                <!-- Profile Info -->
-                <div class="bg-gray-800 p-6 rounded-lg shadow-lg mb-6">
-                    <div class="flex items-center space-x-6">
-                        <img id="user-avatar" src="default-profile.svg" alt="User Avatar" class="w-24 h-24 rounded-full">
-                        <div>
-                            <h2 id="user-name-display" class="text-2xl font-bold"></h2>
-                            <p id="user-email-display" class="text-gray-400"></p>
-                        </div>
+                <div class="flex justify-between items-center mb-6">
+                    <h1 id="page-title" class="text-2xl font-bold"></h1>
+                    <div id="action-buttons-container" class="hidden">
+                        <button id="edit-client-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg"><i class="fas fa-pencil-alt mr-2"></i>Editar</button>
+                        <button id="save-client-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg hidden"><i class="fas fa-save mr-2"></i>Salvar</button>
+                        <button id="cancel-edit-btn" class="bg-gray-600 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-lg hidden">Cancelar</button>
                     </div>
                 </div>
 
-                <!-- Edit Profile Form -->
-                <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
-                    <h2 class="text-xl font-semibold mb-4">Editar Informações</h2>
-                    <form id="edit-profile-form">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- User Profile Section (hidden by default) -->
+                <div id="user-profile-section" class="hidden">
+                    <!-- Profile Info -->
+                    <div class="bg-gray-800 p-6 rounded-lg shadow-lg mb-6">
+                        <div class="flex items-center space-x-6">
+                            <img id="user-avatar" src="default-profile.svg" alt="User Avatar" class="w-24 h-24 rounded-full">
                             <div>
-                                <label for="name" class="block text-sm font-medium text-gray-300">Nome</label>
-                                <input type="text" id="name" required class="w-full px-3 py-2 mt-1 text-white bg-gray-700 border border-gray-600 rounded-md">
-                            </div>
-                            <div>
-                                <label for="password" class="block text-sm font-medium text-gray-300">Nova Senha</label>
-                                <input type="password" id="password" placeholder="Deixe em branco para não alterar" class="w-full px-3 py-2 mt-1 text-white bg-gray-700 border border-gray-600 rounded-md">
-                            </div>
-                            <div class="md:col-span-2">
-                                <label for="profile-picture-input" class="block text-sm font-medium text-gray-300">Foto de Perfil</label>
-                                <input type="file" id="profile-picture-input" accept="image/*" class="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary-dark mt-1">
+                                <h2 id="user-name-display" class="text-2xl font-bold"></h2>
+                                <p id="user-email-display" class="text-gray-400"></p>
                             </div>
                         </div>
-                        <div class="mt-6">
-                            <button type="submit" class="px-4 py-2 font-bold text-white bg-primary rounded-md hover:bg-primary-dark">Salvar Alterações</button>
+                    </div>
+                    <!-- Edit Profile Form -->
+                    <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                        <h2 class="text-xl font-semibold mb-4">Editar Informações</h2>
+                        <form id="edit-profile-form">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="name" class="block text-sm font-medium text-gray-300">Nome</label>
+                                    <input type="text" id="name" required class="w-full px-3 py-2 mt-1 text-white bg-gray-700 border border-gray-600 rounded-md">
+                                </div>
+                                <div>
+                                    <label for="password" class="block text-sm font-medium text-gray-300">Nova Senha</label>
+                                    <input type="password" id="password" placeholder="Deixe em branco para não alterar" class="w-full px-3 py-2 mt-1 text-white bg-gray-700 border border-gray-600 rounded-md">
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label for="profile-picture-input" class="block text-sm font-medium text-gray-300">Foto de Perfil</label>
+                                    <input type="file" id="profile-picture-input" accept="image/*" class="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary-dark mt-1">
+                                </div>
+                            </div>
+                            <div class="mt-6">
+                                <button type="submit" class="px-4 py-2 font-bold text-white bg-primary rounded-md hover:bg-primary-dark">Salvar Alterações</button>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- Logout Button -->
+                    <div class="mt-auto pt-6 text-right">
+                        <button id="logout-btn" class="px-6 py-2 font-bold text-white bg-red-600 rounded-md hover:bg-red-700">
+                            <i class="fas fa-sign-out-alt mr-2"></i>Sair
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Client Details Section (hidden by default) -->
+                <div id="client-details-section" class="hidden">
+                    <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                        <!-- View Mode -->
+                        <div id="view-mode">
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                <div class="md:col-span-2 lg:col-span-3">
+                                    <h2 id="client-empresa-view" class="text-3xl font-bold text-white"></h2>
+                                </div>
+                                <div><label class="block text-sm font-medium text-gray-400">Setor</label><p id="client-setor-view" class="text-lg text-gray-200"></p></div>
+                                <div><label class="block text-sm font-medium text-gray-400">Prioridade</label><p id="client-prioridade-view" class="text-lg text-gray-200"></p></div>
+                                <div><label class="block text-sm font-medium text-gray-400">Ticket Estimado</label><p id="client-ticket-view" class="text-lg text-green-400 font-semibold"></p></div>
+                                <div><label class="block text-sm font-medium text-gray-400">Origem do Lead</label><p id="client-origem-view" class="text-lg text-gray-200"></p></div>
+                                <div><label class="block text-sm font-medium text-gray-400">Telefone</label><p id="client-telefone-view" class="text-lg text-gray-200"></p></div>
+                                <div><label class="block text-sm font-medium text-gray-400">Email</label><p id="client-email-view" class="text-lg text-gray-200"></p></div>
+                                <div><label class="block text-sm font-medium text-gray-400">CPF</label><p id="client-cpf-view" class="text-lg text-gray-200"></p></div>
+                                <div><label class="block text-sm font-medium text-gray-400">CNPJ</label><p id="client-cnpj-view" class="text-lg text-gray-200"></p></div>
+                                <div class="md:col-span-2"><label class="block text-sm font-medium text-gray-400">Endereço</label><p id="client-endereco-view" class="text-lg text-gray-200"></p></div>
+                                <div class="md:col-span-2"><label class="block text-sm font-medium text-gray-400">Redes Sociais</label><p id="client-redes-view" class="text-lg text-gray-200 whitespace-pre-wrap"></p></div>
+                                <div class="md:col-span-2 lg:col-span-3"><label class="block text-sm font-medium text-gray-400 mb-2">Links</label><div id="custom-links-view" class="flex flex-wrap gap-3"></div></div>
+                                <div class="md:col-span-2 lg:col-span-3"><label class="block text-sm font-medium text-gray-400">Observações / Follow-up</label><p id="client-observacoes-view" class="text-base text-gray-300 mt-1 p-3 bg-gray-900/50 rounded-md whitespace-pre-wrap"></p></div>
+                                <div class="md:col-span-2 lg:col-span-3"><label class="block text-sm font-medium text-gray-400 mb-2">Log de Contatos</label><div id="client-contact-log-view" class="space-y-3 max-h-60 overflow-y-auto custom-scrollbar bg-gray-900/50 p-3 rounded-lg border border-gray-700"></div></div>
+                            </div>
                         </div>
-                    </form>
-                </div>
+                        <!-- Edit Mode -->
+                        <form id="edit-mode" class="hidden">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="md:col-span-2"><label for="client-empresa-edit" class="block text-sm font-medium text-gray-300 mb-1">Empresa</label><input type="text" id="client-empresa-edit" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2"></div>
+                                <div><label for="client-setor-edit" class="block text-sm font-medium text-gray-300 mb-1">Setor</label><input type="text" id="client-setor-edit" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2"></div>
+                                <div><label for="client-prioridade-edit" class="block text-sm font-medium text-gray-300 mb-1">Prioridade</label><input type="number" id="client-prioridade-edit" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2"></div>
+                                <div><label for="client-ticket-edit" class="block text-sm font-medium text-gray-300 mb-1">Ticket Estimado</label><input type="number" id="client-ticket-edit" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2"></div>
+                                <div><label for="client-origem-edit" class="block text-sm font-medium text-gray-300 mb-1">Origem</label><input type="text" id="client-origem-edit" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2"></div>
+                                <div><label for="client-telefone-edit" class="block text-sm font-medium text-gray-300 mb-1">Telefone</label><input type="text" id="client-telefone-edit" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2"></div>
+                                <div><label for="client-email-edit" class="block text-sm font-medium text-gray-300 mb-1">Email</label><input type="email" id="client-email-edit" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2"></div>
+                                <div><label for="client-cpf-edit" class="block text-sm font-medium text-gray-300 mb-1">CPF</label><input type="text" id="client-cpf-edit" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2"></div>
+                                <div><label for="client-cnpj-edit" class="block text-sm font-medium text-gray-300 mb-1">CNPJ</label><input type="text" id="client-cnpj-edit" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2"></div>
+                                <div class="md:col-span-2"><label for="client-endereco-edit" class="block text-sm font-medium text-gray-300 mb-1">Endereço</label><input type="text" id="client-endereco-edit" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2"></div>
+                                <div class="md:col-span-2"><label for="client-redes-edit" class="block text-sm font-medium text-gray-300 mb-1">Redes Sociais</label><textarea id="client-redes-edit" rows="2" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2"></textarea></div>
+                                <div class="md:col-span-2"><label class="block text-sm font-medium text-gray-300 mb-1">Links</label><div id="custom-links-edit" class="space-y-2"></div><button type="button" id="add-link-btn" class="mt-2 text-sm bg-blue-600 hover:bg-blue-700 text-white font-semibold py-1 px-3 rounded-lg">Adicionar Link</button></div>
+                                <div class="md:col-span-2"><label for="client-observacoes-edit" class="block text-sm font-medium text-gray-300 mb-1">Observações</label><textarea id="client-observacoes-edit" rows="4" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2"></textarea></div>
+                            </div>
+                        </form>
+                    </div>
 
-                <!-- Logout Button -->
-                <div class="mt-auto pt-6 text-right">
-                     <button id="logout-btn" class="px-6 py-2 font-bold text-white bg-red-600 rounded-md hover:bg-red-700">
-                        <i class="fas fa-sign-out-alt mr-2"></i>Sair
-                    </button>
+                    <!-- Formulários e Contratos Section -->
+                    <div class="mt-6 bg-gray-800 p-6 rounded-lg shadow-lg">
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-xl font-bold text-white">Formulários e Contratos</h2>
+                            <button id="associate-form-btn" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-lg">
+                                <i class="fas fa-plus mr-2"></i>Associar Novo Formulário
+                            </button>
+                        </div>
+                        <div id="client-forms-list" class="space-y-4">
+                            <!-- Lista de formulários e submissões do cliente será carregada aqui -->
+                            <p class="text-gray-400">Nenhum formulário associado a este cliente.</p>
+                        </div>
+                    </div>
                 </div>
-
             </div>
         </main>
     </div>
 
     <script type="module" src="perfil.js"></script>
+
+    <!-- Modal para Associar Formulário -->
+    <div id="associateFormModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 hidden">
+        <div class="bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-lg">
+            <div class="flex justify-between items-center border-b border-gray-700 pb-3 mb-4">
+                <h3 class="text-xl font-semibold text-white">Associar Formulário ao Cliente</h3>
+                <button id="closeAssociateModalBtn" class="text-gray-400 hover:text-white">&times;</button>
+            </div>
+            <div>
+                <label for="form-selection" class="block text-sm font-medium text-gray-300 mb-2">Selecione um formulário:</label>
+                <select id="form-selection" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 text-white">
+                    <option>Carregando...</option>
+                </select>
+            </div>
+            <div class="mt-4">
+                <label for="payment-link-input" class="block text-sm font-medium text-gray-300 mb-2">Link de Pagamento (Obrigatório)</label>
+                <input type="url" id="payment-link-input" placeholder="https://seu-link-de-pagamento.com" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 text-white" required>
+            </div>
+            <div class="mt-6 flex justify-end">
+                <button id="generate-form-instance-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg">
+                    Adicionar Formulário
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Visualizar Submissão de Formulário -->
+    <div id="viewSubmissionModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 hidden">
+        <div class="bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-2xl max-h-[90vh] flex flex-col">
+            <div class="flex justify-between items-center border-b border-gray-700 pb-3 mb-4">
+                <h3 id="submission-modal-title" class="text-xl font-semibold text-white">Respostas do Formulário</h3>
+                <button id="closeSubmissionModalBtn" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+            </div>
+            <div id="submission-content" class="overflow-y-auto custom-scrollbar flex-grow">
+                <!-- Conteúdo da submissão será carregado aqui -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Visualizar Contrato Assinado -->
+    <div id="viewContractModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 hidden">
+        <div class="bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-4xl max-h-[90vh] flex flex-col">
+            <div class="flex justify-between items-center border-b border-gray-700 pb-3 mb-4">
+                <h3 id="contract-modal-title" class="text-xl font-semibold text-white">Visualização do Contrato</h3>
+                <button id="closeContractModalBtn" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+            </div>
+            <div id="contract-content-modal" class="overflow-y-auto custom-scrollbar flex-grow bg-white text-gray-900 p-8 rounded-md">
+                <!-- Conteúdo do contrato será carregado aqui -->
+            </div>
+            <div class="mt-4 pt-4 border-t border-gray-700 flex justify-end">
+                <button id="downloadContractPdfBtn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg">
+                    <i class="fas fa-download mr-2"></i>Baixar PDF
+                </button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

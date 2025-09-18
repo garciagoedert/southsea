@@ -94,7 +94,7 @@ function renderClosedClients() {
 
 function createClientCard(client) {
     const card = document.createElement('div');
-    card.className = `bg-gray-800 p-4 rounded-lg shadow-md border-l-4 flex flex-col cursor-pointer hover:bg-gray-700/50 transition-colors duration-200`;
+    card.className = `bg-gray-800 p-4 rounded-lg shadow-md border-l-4 flex flex-col cursor-pointer hover:bg-gray-700/50 transition-colors duration-200 aspect-square`;
     card.style.borderLeftColor = getPriorityColor(client.prioridade);
     card.dataset.clientId = client.id;
 
@@ -114,10 +114,7 @@ function createClientCard(client) {
     `;
 
     card.addEventListener('click', () => {
-        const clientToEdit = allClosedClients.find(c => c.id === client.id);
-        if (clientToEdit) {
-            openEditModal(clientToEdit);
-        }
+        window.location.href = `perfil.html?id=${client.id}`;
     });
     
     return card;

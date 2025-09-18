@@ -23,6 +23,28 @@ service cloud.firestore {
       allow read, write: if request.auth != null;
     }
 
+    // Regras para Formulários Dinâmicos
+    match /artifacts/{appId}/public/data/forms/{formId} {
+      // Qualquer pessoa pode ler os modelos de formulário
+      allow read: if true;
+      // Apenas usuários autenticados podem criar, atualizar ou deletar modelos
+      allow write: if request.auth != null;
+    }
+    match /artifacts/{appId}/public/data/form_submissions/{submissionId} {
+      // Qualquer pessoa pode criar (enviar) um formulário
+      allow create: if true;
+      // Apenas usuários autenticados podem ler e gerenciar as submissões
+      allow read, update, delete: if request.auth != null;
+    }
+
+    // Regras para Instâncias de Formulários (Contratos)
+    match /artifacts/{appId}/public/data/formInstances/{instanceId} {
+      // Qualquer pessoa com o link pode ler e atualizar (preencher) o formulário.
+      allow read, update: if true;
+      // Apenas usuários autenticados (admin) podem criar e deletar instâncias.
+      allow create, delete: if request.auth != null;
+    }
+
     // Regra para Mensagens Rápidas
     match /artifacts/{appId}/public/data/mensagens_rapidas/{messageId} {
       allow create, read: if true;

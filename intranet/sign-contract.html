@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assinatura de Contrato</title>
+    <link rel="icon" href="../imgs/favicon.svg" type="image/svg+xml">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Caveat&family=Dancing+Script&family=Marck+Script&family=Sacramento&family=Tangerine&display=swap');
+        body { background-color: #f0f2f5; }
+        .contract-container { max-width: 800px; margin: 50px auto; background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .font-tangerine { font-family: 'Tangerine', cursive; }
+        .font-caveat { font-family: 'Caveat', cursive; }
+        .font-dancing-script { font-family: 'Dancing Script', cursive; }
+        .font-marck-script { font-family: 'Marck Script', cursive; }
+        .font-sacramento { font-family: 'Sacramento', cursive; }
+    </style>
+</head>
+<body>
+    <div id="contract-container" class="contract-container">
+        <div class="text-center mb-8">
+            <img src="../newimag/Vector.svg" alt="Logo" class="mx-auto" style="max-width: 180px; margin-bottom: 20px; filter: invert(1);">
+            <h1 id="contract-title" class="text-3xl font-bold text-gray-800">Contrato</h1>
+        </div>
+
+        <div id="contract-content" class="prose max-w-none mb-8 p-4 border rounded">
+            <p>Carregando contrato...</p>
+        </div>
+
+        <div class="confirmation-section bg-gray-50 p-6 rounded-lg border">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Confirmação e Assinatura</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label for="signer-name" class="block text-sm font-medium text-gray-700">Nome Completo</label>
+                    <input type="text" id="signer-name" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" required>
+                </div>
+                <div>
+                    <label for="signer-doc" class="block text-sm font-medium text-gray-700">CPF/CNPJ</label>
+                    <input type="text" id="signer-doc" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" required>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div>
+                    <label for="font-select" class="block text-sm font-medium text-gray-700">Escolha um estilo de assinatura</label>
+                    <select id="font-select" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                        <option value="font-tangerine" class="font-tangerine">Estilo 1</option>
+                        <option value="font-caveat" class="font-caveat">Estilo 2</option>
+                        <option value="font-dancing-script" class="font-dancing-script">Estilo 3</option>
+                        <option value="font-marck-script" class="font-marck-script">Estilo 4</option>
+                        <option value="font-sacramento" class="font-sacramento">Estilo 5</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Digite seu nome para assinar</label>
+                    <input type="text" id="signature-input" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm text-3xl font-tangerine">
+                </div>
+            </div>
+
+            <div class="flex items-center mb-6">
+                <input id="terms-checkbox" type="checkbox" class="h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                <label for="terms-checkbox" class="ml-2 block text-sm text-gray-900">
+                    Confirmo que li e aceito os termos deste contrato e declaro que as informações fornecidas são verdadeiras.
+                </label>
+            </div>
+
+            <button id="sign-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300" disabled>
+                Assinar
+            </button>
+        </div>
+
+        <!-- Post-Signature View (Initially Hidden) -->
+        <div id="post-signature-view" class="hidden mt-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Left Column: Signed Contract Preview -->
+                <div id="signed-contract-preview" class="border rounded-lg p-4 h-96 overflow-y-auto bg-gray-50">
+                    <!-- PDF preview will be rendered here -->
+                    <p class="text-center text-gray-500">Gerando pré-visualização do contrato...</p>
+                </div>
+
+                <!-- Right Column: Payment Information -->
+                <div class="flex flex-col items-center justify-center text-center bg-gray-50 p-6 rounded-lg">
+                    <svg class="w-16 h-16 text-green-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">Contrato Assinado!</h2>
+                    <p class="text-gray-600 mb-6">Obrigado! O próximo passo é realizar o pagamento para oficializar nossa parceria.</p>
+                    <a id="payment-link-btn" href="#" target="_blank" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300">
+                        Prosseguir para o Pagamento
+                    </a>
+                     <button id="download-final-pdf-btn" class="w-full mt-4 bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300">
+                        Baixar PDF do Contrato
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script type="module" src="sign-contract.js"></script>
+</body>
+</html>

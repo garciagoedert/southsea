@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Contrato</title>
+    <style>
+        body { font-family: 'Times New Roman', serif; line-height: 1.5; font-size: 12pt; }
+        .container { width: 80%; margin: auto; }
+        h1, h2 { text-align: center; }
+        p { text-align: justify; margin-bottom: 1em; }
+        .signature-block { margin-top: 50px; }
+        .signature-line { border-bottom: 1px solid #000; width: 300px; margin: 40px auto 0 auto; text-align: center; }
+        .signature-img { max-width: 250px; max-height: 100px; display: block; margin: 10px auto; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>CONTRATO DE PRESTAÇÃO DE SERVIÇOS DE DESENVOLVIMENTO DE WEBSITE</h1>
+        
+        <h2>IDENTIFICAÇÃO DAS PARTES</h2>
+        <p>
+            <strong>CONTRATADA:</strong> SOUTH SEA AGÊNCIA DE MARKETING DIGITAL LTDA., pessoa jurídica de direito privado, inscrita no CNPJ/ME sob o nº 50.170.386/0001-58, doravante denominada simplesmente CONTRATADA.
+        </p>
+        <p>
+            <strong>CONTRATANTE:</strong> {{nome_contratante}}, {{nacionalidade}}, {{estado_civil}}, {{profissao}}, portador(a) da cédula de identidade RG nº {{rg}} e inscrito(a) no CPF/ME sob o nº {{cpf}}, ou pessoa jurídica de direito privado, inscrita no CNPJ/ME sob o nº {{cnpj}}, com sede em {{endereco_completo}}, doravante denominado(a) simplesmente CONTRATANTE.
+        </p>
+
+        <h2>CLÁUSULA PRIMEIRA - DO OBJETO</h2>
+        <p>1.1. O objeto deste contrato é a prestação de serviços de desenvolvimento de website pela CONTRATADA em favor da CONTRATANTE, conforme o escopo do pacote de serviços selecionado.</p>
+        
+        <!-- Outras cláusulas do contrato aqui -->
+
+        <div class="signature-block">
+            <p>E, por estarem assim justas e contratadas, assinam o presente instrumento.</p>
+            <p>Florianópolis, {{data_contrato}}.</p>
+
+            <div class="signature-line">
+                <img id="signature-image" src="{{assinatura_contratante}}" alt="Assinatura" class="signature-img">
+                <strong>{{nome_contratante}}</strong>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
