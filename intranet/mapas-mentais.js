@@ -1,7 +1,7 @@
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import { collection, addDoc, onSnapshot, serverTimestamp, query, where, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 import { db, app } from './firebase-config.js';
-import { loadComponents, setupUIListeners } from './common-ui.js';
+import { loadComponents, setupUIListeners, showConfirmationModal, showNotification } from './common-ui.js';
 
 // --- INITIALIZATION ---
 const auth = getAuth(app);
@@ -92,7 +92,7 @@ function createMapCard(map) {
 createMapBtn.addEventListener('click', async () => {
     const user = auth.currentUser;
     if (!user) {
-        alert("Você precisa estar logado para criar um mapa mental.");
+        showNotification("Você precisa estar logado para criar um mapa mental.", 'error');
         return;
     }
 
@@ -111,7 +111,7 @@ createMapBtn.addEventListener('click', async () => {
             window.location.href = `mapa-mental-editor.html?mapId=${docRef.id}`;
         } catch (error) {
             console.error("Error creating new mind map:", error);
-            alert("Não foi possível criar o novo mapa mental.");
+            showNotification("Não foi possível criar o novo mapa mental.", 'error');
         }
     }
 });
@@ -128,13 +128,13 @@ async function editMapName(mapId, currentName) {
             });
         } catch (error) {
             console.error("Error updating map name:", error);
-            alert("Não foi possível atualizar o nome do mapa.");
+            showNotification("Não foi possível atualizar o nome do mapa.", 'error');
         }
     }
 }
 
 async function archiveMap(mapId) {
-    if (!confirm("Tem certeza que deseja arquivar este mapa mental?")) return;
+    if (!await showConfirmationModal("Tem certeza que deseja arquivar este mapa mental?", "Arquivar")) return;
     try {
         const mapRef = doc(db, 'artifacts', db.app.options.appId, 'public', 'data', 'mind-maps', mapId);
         await updateDoc(mapRef, {
@@ -143,12 +143,12 @@ async function archiveMap(mapId) {
         });
     } catch (error) {
         console.error("Error archiving map:", error);
-        alert("Não foi possível arquivar o mapa.");
+        showNotification("Não foi possível arquivar o mapa.", 'error');
     }
 }
 
 async function deleteMap(mapId, mapName) {
-    if (!confirm(`Tem certeza que deseja EXCLUIR PERMANENTEMENTE o mapa "${mapName}"? Esta ação não pode ser desfeita.`)) return;
+    if (!await showConfirmationModal(`Tem certeza que deseja EXCLUIR PERMANENTEMENTE o mapa "${mapName}"? Esta ação não pode ser desfeita.`, 'Excluir Permanentemente')) return;
     try {
         // Note: Deleting subcollections (nodes, connections) should be handled by a Cloud Function for robustness.
         // This client-side deletion is a simplification.
@@ -156,7 +156,7 @@ async function deleteMap(mapId, mapName) {
         await deleteDoc(mapRef);
     } catch (error) {
         console.error("Error deleting map:", error);
-        alert("Não foi possível excluir o mapa.");
+        showNotification("Não foi possível excluir o mapa.", 'error');
     }
 }
 

@@ -209,9 +209,11 @@ async function loadComponents(pageSpecificSetup) {
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
 
     try {
-        const [headerRes, sidebarRes] = await Promise.all([
+        const [headerRes, sidebarRes, modalRes, notificationRes] = await Promise.all([
             fetch(`header.html?v=${new Date().getTime()}`),
-            fetch(`sidebar.html?v=${new Date().getTime()}`)
+            fetch(`sidebar.html?v=${new Date().getTime()}`),
+            fetch(`confirm-modal.html?v=${new Date().getTime()}`),
+            fetch(`notification-container.html?v=${new Date().getTime()}`)
         ]);
 
         if (!headerRes.ok || !sidebarRes.ok) {
@@ -220,6 +222,20 @@ async function loadComponents(pageSpecificSetup) {
 
         headerContainer.innerHTML = await headerRes.text();
         sidebarContainer.innerHTML = await sidebarRes.text();
+
+        if (modalRes.ok) {
+            const modalHtml = await modalRes.text();
+            const modalContainer = document.createElement('div');
+            modalContainer.innerHTML = modalHtml;
+            document.body.appendChild(modalContainer);
+        }
+
+        if (notificationRes.ok) {
+            const notificationHtml = await notificationRes.text();
+            const notificationContainer = document.createElement('div');
+            notificationContainer.innerHTML = notificationHtml;
+            document.body.appendChild(notificationContainer);
+        }
 
         await applyWhitelabelSettings();
 
@@ -248,6 +264,16 @@ async function loadComponents(pageSpecificSetup) {
             adminLink.classList.remove('hidden');
         }
 
+        if (userRole === 'cs') {
+            const allowedPages = ['producao.html', 'closed-clients.html', 'arquivo.html', 'perfil.html'];
+            sidebarLinks.forEach(link => {
+                const linkPage = link.getAttribute('href').split('/').pop();
+                if (!allowedPages.includes(linkPage) && link.id !== 'admin-link') {
+                    link.style.display = 'none';
+                }
+            });
+        }
+
         // Apenas mostra o botão de prospecção na página de prospecção
         const mainHeaderBtn = document.getElementById('addProspectBtnHeader');
         if (mainHeaderBtn) {
@@ -272,4 +298,87 @@ async function loadComponents(pageSpecificSetup) {
     }
 }
 
-export { setupUIListeners, loadComponents };
+function showConfirmationModal(message, confirmText = 'Confirmar', cancelText = 'Cancelar') {
+    return new Promise((resolve) => {
+        const modal = document.getElementById('confirmModal');
+        const messageEl = document.getElementById('confirmMessage');
+        const confirmBtn = document.getElementById('confirmActionBtn');
+        const cancelBtn = document.getElementById('cancelConfirmBtn');
+
+        if (!modal || !messageEl || !confirmBtn || !cancelBtn) {
+            console.error('Confirmation modal elements not found!');
+            resolve(false); // Fallback to prevent blocking
+            return;
+        }
+
+        messageEl.textContent = message;
+        confirmBtn.textContent = confirmText;
+        cancelBtn.textContent = cancelText;
+
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+
+        const cleanup = () => {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            confirmBtn.removeEventListener('click', onConfirm);
+            cancelBtn.removeEventListener('click', onCancel);
+            modal.removeEventListener('click', onBackdropClick);
+        };
+
+        const onConfirm = () => {
+            cleanup();
+            resolve(true);
+        };
+
+        const onCancel = () => {
+            cleanup();
+            resolve(false);
+        };
+        
+        const onBackdropClick = (event) => {
+            if (event.target === modal) {
+                onCancel();
+            }
+        };
+
+        confirmBtn.addEventListener('click', onConfirm);
+        cancelBtn.addEventListener('click', onCancel);
+        modal.addEventListener('click', onBackdropClick);
+    });
+}
+
+function showNotification(message, type = 'success') {
+    const container = document.getElementById('notification-container');
+    if (!container) {
+        console.error('Notification container not found!');
+        return;
+    }
+
+    const colors = {
+        success: 'bg-green-500',
+        error: 'bg-red-500',
+        info: 'bg-blue-500'
+    };
+
+    const notification = document.createElement('div');
+    notification.className = `p-4 rounded-lg shadow-lg text-white text-sm transition-all duration-300 transform translate-x-full opacity-0 ${colors[type] || 'bg-gray-700'}`;
+    notification.textContent = message;
+
+    container.appendChild(notification);
+
+    // Animate in
+    setTimeout(() => {
+        notification.classList.remove('translate-x-full', 'opacity-0');
+    }, 10);
+
+    // Animate out and remove
+    setTimeout(() => {
+        notification.classList.add('opacity-0');
+        notification.addEventListener('transitionend', () => {
+            notification.remove();
+        });
+    }, 4000);
+}
+
+export { setupUIListeners, loadComponents, showConfirmationModal, showNotification };

@@ -158,8 +158,12 @@
                 </select>
             </div>
             <div class="mt-4">
-                <label for="payment-link-input" class="block text-sm font-medium text-gray-300 mb-2">Link de Pagamento (Obrigatório)</label>
-                <input type="url" id="payment-link-input" placeholder="https://seu-link-de-pagamento.com" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 text-white" required>
+                <label for="payment-link-input" class="block text-sm font-medium text-gray-300 mb-2">Link de Pagamento</label>
+                <input type="url" id="payment-link-input" placeholder="https://seu-link-de-pagamento.com" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 text-white">
+            </div>
+            <div class="mt-4 flex items-center">
+                <input type="checkbox" id="no-payment-link-checkbox" class="h-4 w-4 bg-gray-700 border-gray-600 text-teal-600 focus:ring-teal-500 rounded">
+                <label for="no-payment-link-checkbox" class="ml-2 block text-sm text-gray-300">Confirmar que este formulário não possui link de pagamento</label>
             </div>
             <div class="mt-6 flex justify-end">
                 <button id="generate-form-instance-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg">
@@ -174,7 +178,12 @@
         <div class="bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-2xl max-h-[90vh] flex flex-col">
             <div class="flex justify-between items-center border-b border-gray-700 pb-3 mb-4">
                 <h3 id="submission-modal-title" class="text-xl font-semibold text-white">Respostas do Formulário</h3>
-                <button id="closeSubmissionModalBtn" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+                <div class="flex items-center gap-4">
+                    <button id="copySubmissionBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded-lg text-sm" title="Copiar Respostas">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                    <button id="closeSubmissionModalBtn" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+                </div>
             </div>
             <div id="submission-content" class="overflow-y-auto custom-scrollbar flex-grow">
                 <!-- Conteúdo da submissão será carregado aqui -->
@@ -196,6 +205,25 @@
                 <button id="downloadContractPdfBtn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg">
                     <i class="fas fa-download mr-2"></i>Baixar PDF
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Validar Pagamento -->
+    <div id="validatePaymentModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 hidden">
+        <div class="bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md">
+            <div class="flex justify-between items-center border-b border-gray-700 pb-3 mb-4">
+                <h3 class="text-xl font-semibold text-white">Validar Pagamento</h3>
+                <button id="closePaymentModalBtn" class="text-gray-400 hover:text-white">&times;</button>
+            </div>
+            <p class="text-gray-300 mb-4">Confirme a data e hora em que o pagamento foi efetuado para concluir o formulário.</p>
+            <div>
+                <label for="payment-datetime-input" class="block text-sm font-medium text-gray-300 mb-2">Data e Hora do Pagamento</label>
+                <input type="datetime-local" id="payment-datetime-input" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 text-white">
+            </div>
+            <div class="mt-6 flex justify-end gap-4">
+                <button id="cancelPaymentValidationBtn" class="bg-gray-600 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-lg">Cancelar</button>
+                <button id="confirmPaymentBtn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg">Confirmar Pagamento</button>
             </div>
         </div>
     </div>

@@ -1,5 +1,6 @@
 import { doc, getDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 import { db, appId } from './firebase-config.js';
+import { showNotification } from './common-ui.js';
 
 const { jsPDF } = window.jspdf;
 
@@ -32,6 +33,53 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const escapeRegex = (string) => {
         return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    };
+
+    const showFinalView = (signatureData, populatedContract) => {
+        confirmationSection.classList.add('hidden');
+        postSignatureView.classList.remove('hidden');
+
+        const printableContent = document.createElement('div');
+        printableContent.innerHTML = populatedContract;
+
+        const signatureDate = signatureData.signedDate?.toDate ? signatureData.signedDate.toDate() : new Date(signatureData.signedDate);
+        const signatureDateString = signatureDate.toLocaleDateString('pt-BR');
+        
+        const signaturesContainer = document.createElement('div');
+        signaturesContainer.className = 'mt-16 pt-8';
+        signaturesContainer.innerHTML = `
+            <div style="display: flex; justify-content: space-around; align-items: flex-start;">
+                <div style="width: 45%; text-align: center;">
+                    <p class="${signatureData.font}" style="font-size: 2.5rem; margin-bottom: 0.5rem;">${signatureData.signature}</p>
+                    <hr style="border-top: 1px solid black; margin: 0 auto; width: 80%;">
+                    <p style="margin-top: 0.5rem;">${signatureData.name}</p>
+                    <p style="font-size: 0.875rem;">${signatureData.document}</p>
+                    <p style="font-size: 0.875rem;">Assinado em: ${signatureDateString}</p>
+                </div>
+                <div style="width: 45%; text-align: center;">
+                    <p class="font-tangerine" style="font-size: 2rem; margin-bottom: 0.5rem;">Alefy Mikael dos Santos</p>
+                    <hr style="border-top: 1px solid black; margin: 0 auto; width: 80%;">
+                    <p style="margin-top: 0.5rem;">Alefy Mikael dos Santos</p>
+                    <p style="font-size: 0.875rem;">52.783.717/0001-50</p>
+                    <p style="font-size: 0.875rem;">Assinado em: ${signatureDateString}</p>
+                </div>
+            </div>
+        `;
+        printableContent.appendChild(signaturesContainer);
+        
+        signedContractPreview.innerHTML = '';
+        signedContractPreview.appendChild(printableContent);
+
+        const hasPayment = instanceData && instanceData.paymentLink && instanceData.paymentLink.trim() !== '';
+        if (hasPayment) {
+            paymentLinkBtn.href = instanceData.paymentLink;
+        } else {
+            paymentLinkBtn.style.display = 'none';
+            const title = postSignatureView.querySelector('h2');
+            const paragraph = postSignatureView.querySelector('p');
+            if (title) title.textContent = 'Processo Concluído!';
+            if (paragraph) paragraph.textContent = 'Obrigado! O contrato foi assinado e o processo está finalizado. Você pode baixar uma cópia do documento abaixo.';
+        }
     };
 
     try {
@@ -76,6 +124,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
 
         contractContent.innerHTML = populatedContract;
+
+        if (instanceData.status === 'Assinado' || instanceData.status === 'Concluído') {
+            if (instanceData.signatureData) {
+                showFinalView(instanceData.signatureData, populatedContract);
+            } else {
+                // Handle case where status is signed but no signature data is present
+                confirmationSection.innerHTML = '<p class="text-center text-red-500">Erro: O contrato está marcado como assinado, mas os dados da assinatura não foram encontrados.</p>';
+            }
+            return; // Stop further execution
+        }
 
     } catch (error) {
         console.error("Erro ao carregar o contrato:", error);
@@ -224,7 +282,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         } catch (error) {
             console.error("Erro ao gerar PDF:", error);
-            alert("Ocorreu um erro ao gerar o PDF. Tente novamente.");
+            showNotification("Ocorreu um erro ao gerar o PDF. Tente novamente.", 'error');
         } finally {
             document.body.removeChild(pdfContainer);
             downloadFinalPdfBtn.disabled = false;
@@ -251,61 +309,37 @@ document.addEventListener('DOMContentLoaded', async () => {
         signBtn.disabled = true;
         signBtn.textContent = 'Processando...';
 
-        confirmationSection.classList.add('hidden');
-        postSignatureView.classList.remove('hidden');
-
-        const printableContent = contractContent.cloneNode(true);
         const signatureDate = new Date();
-        const signatureDateString = signatureDate.toLocaleDateString('pt-BR');
-        const signaturesContainer = document.createElement('div');
-        signaturesContainer.className = 'mt-16 pt-8';
-        signaturesContainer.innerHTML = `
-            <div style="display: flex; justify-content: space-around; align-items: flex-start;">
-                <div style="width: 45%; text-align: center;">
-                    <p class="${fontSelect.value}" style="font-size: 2.5rem; margin-bottom: 0.5rem;">${signatureInput.value}</p>
-                    <hr style="border-top: 1px solid black; margin: 0 auto; width: 80%;">
-                    <p style="margin-top: 0.5rem;">${signerName.value}</p>
-                    <p style="font-size: 0.875rem;">${signerDoc.value}</p>
-                    <p style="font-size: 0.875rem;">Assinado em: ${signatureDateString}</p>
-                </div>
-                <div style="width: 45%; text-align: center;">
-                    <p class="font-tangerine" style="font-size: 2rem; margin-bottom: 0.5rem;">Alefy Mikael dos Santos</p>
-                    <hr style="border-top: 1px solid black; margin: 0 auto; width: 80%;">
-                    <p style="margin-top: 0.5rem;">Alefy Mikael dos Santos</p>
-                    <p style="font-size: 0.875rem;">52.783.717/0001-50</p>
-                    <p style="font-size: 0.875rem;">Assinado em: ${signatureDateString}</p>
-                </div>
-            </div>
-        `;
-        printableContent.appendChild(signaturesContainer);
-        
-        signedContractPreview.innerHTML = '';
-        signedContractPreview.appendChild(printableContent);
+        const signatureData = {
+            name: signerName.value,
+            document: signerDoc.value,
+            signature: signatureInput.value,
+            font: fontSelect.value,
+            signedDate: signatureDate,
+        };
+
+        const hasPayment = instanceData && instanceData.paymentLink && instanceData.paymentLink.trim() !== '';
+        const finalStatus = hasPayment ? 'Assinado' : 'Concluído';
 
         try {
             const formInstanceRef = doc(db, 'artifacts', appId, 'public', 'data', 'formInstances', instanceId);
             await updateDoc(formInstanceRef, {
-                status: 'Assinado',
+                status: finalStatus,
                 signedAt: serverTimestamp(),
-                signatureData: {
-                    name: signerName.value,
-                    document: signerDoc.value,
-                    signature: signatureInput.value,
-                    font: fontSelect.value,
-                    signedDate: signatureDate,
-                }
+                signatureData: signatureData
             });
+            
+            // Update local instance data for immediate UI update
+            instanceData.status = finalStatus;
+            instanceData.signatureData = signatureData;
+
+            showFinalView(signatureData, contractContent.innerHTML);
+
         } catch (error) {
             console.error("Erro ao salvar assinatura:", error);
-            alert("Ocorreu um erro ao salvar sua assinatura. Por favor, tente baixar o PDF e entre em contato conosco.");
-        }
-
-        if (instanceData && instanceData.paymentLink) {
-            paymentLinkBtn.href = instanceData.paymentLink;
-        } else {
-            paymentLinkBtn.href = '#';
-            paymentLinkBtn.textContent = 'Link de Pagamento Indisponível';
-            paymentLinkBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            showNotification("Ocorreu um erro ao salvar sua assinatura. Por favor, tente baixar o PDF e entre em contato conosco.", 'error');
+            signBtn.disabled = false;
+            signBtn.textContent = 'Assinar';
         }
     });
 

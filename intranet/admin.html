@@ -74,9 +74,16 @@
                                     <option>bdr_supervisor</option>
                                     <option>closer</option>
                                     <option>producao</option>
+                                    <option value="cs">CS</option>
                                     <option>admin</option>
                                 </select>
                             </div>
+                        </div>
+                        <div id="cs-client-association-section" class="hidden mt-4 md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-300">Clientes Associados</label>
+                            <input type="text" id="client-search-input" placeholder="Buscar cliente para associar..." class="w-full px-3 py-2 mt-1 text-white bg-gray-700 border border-gray-600 rounded-md">
+                            <div id="client-search-results" class="mt-1 border border-gray-600 rounded-md bg-gray-800 max-h-40 overflow-y-auto"></div>
+                            <div id="associated-clients-list" class="mt-2 space-y-2"></div>
                         </div>
                         <div class="mt-6 flex space-x-4">
                             <button type="submit" class="px-4 py-2 font-bold text-white bg-primary rounded-md hover:bg-primary-dark">Salvar</button>

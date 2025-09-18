@@ -301,8 +301,24 @@
             if (prospectsListener) prospectsListener();
 
             const prospectsCollection = collection(db, 'artifacts', appId, 'public', 'data', 'prospects');
-            prospectsListener = onSnapshot(prospectsCollection, (snapshot) => {
-                prospects = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })).filter(p => p.pagina === 'Produção');
+            const userRole = sessionStorage.getItem('userRole');
+            const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+
+            let q = query(prospectsCollection, where("pagina", "==", "Produção"));
+
+            if (userRole === 'cs') {
+                const clientIds = currentUser.associatedClients || [];
+                if (clientIds.length > 0) {
+                    q = query(prospectsCollection, where("pagina", "==", "Produção"), where('__name__', 'in', clientIds));
+                } else {
+                    prospects = [];
+                    applyFilters();
+                    return; 
+                }
+            }
+
+            prospectsListener = onSnapshot(q, (snapshot) => {
+                prospects = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 applyFilters();
             }, (error) => {
                 console.error("Error fetching prospects:", error);

@@ -1,4 +1,4 @@
-import { loadComponents, setupUIListeners } from './common-ui.js';
+import { loadComponents, setupUIListeners, showConfirmationModal, showNotification } from './common-ui.js';
 import { db } from './firebase-config.js';
 import { 
     doc, setDoc, getDoc, addDoc, collection, getDocs, deleteDoc, updateDoc 
@@ -14,17 +14,17 @@ async function saveCourse(courseData) {
                 title: courseData.title,
                 description: courseData.description
             });
-            alert('Curso atualizado com sucesso!');
+            showNotification('Curso atualizado com sucesso!');
         } else {
             await addDoc(collection(db, 'courses'), {
                 title: courseData.title,
                 description: courseData.description
             });
-            alert('Curso salvo com sucesso!');
+            showNotification('Curso salvo com sucesso!');
         }
     } catch (error) {
         console.error("Erro ao salvar curso:", error);
-        alert('Erro ao salvar curso.');
+        showNotification('Erro ao salvar curso.', 'error');
     }
 }
 
@@ -44,10 +44,10 @@ async function loadCourses() {
 async function deleteCourse(courseId) {
     try {
         await deleteDoc(doc(db, 'courses', courseId));
-        alert('Curso excluído com sucesso!');
+        showNotification('Curso excluído com sucesso!');
     } catch (error) {
         console.error("Erro ao excluir curso:", error);
-        alert('Erro ao excluir curso.');
+        showNotification('Erro ao excluir curso.', 'error');
     }
 }
 
@@ -56,10 +56,10 @@ async function saveWhitelabelSettings(settings) {
     try {
         const settingsRef = doc(db, 'settings', 'whitelabel');
         await setDoc(settingsRef, settings, { merge: true });
-        alert('Configurações salvas com sucesso!');
+        showNotification('Configurações salvas com sucesso!');
     } catch (error) {
         console.error("Erro ao salvar configurações:", error);
-        alert('Erro ao salvar configurações.');
+        showNotification('Erro ao salvar configurações.', 'error');
     }
 }
 
@@ -96,6 +96,13 @@ function setupAdminPage() {
     const roleInput = document.getElementById('role');
     const hiddenEmailInput = document.getElementById('user-email-hidden');
     const cancelEditBtn = document.getElementById('cancel-edit');
+    const csSection = document.getElementById('cs-client-association-section');
+    const clientSearchInput = document.getElementById('client-search-input');
+    const clientSearchResults = document.getElementById('client-search-results');
+    const associatedClientsList = document.getElementById('associated-clients-list');
+
+    let allProspects = [];
+    let associatedClientIds = new Set();
 
     // Whitelabel form elements
     const whitelabelForm = document.getElementById('whitelabel-form');
@@ -111,6 +118,17 @@ function setupAdminPage() {
     const cancelCourseEditBtn = document.getElementById('cancel-course-edit');
     const courseTableBody = document.getElementById('course-table-body');
 
+
+    async function fetchAllProspects() {
+        if (allProspects.length > 0) return;
+        try {
+            const prospectsRef = collection(db, 'artifacts', db.app.options.appId, 'public', 'data', 'prospects');
+            const snapshot = await getDocs(prospectsRef);
+            allProspects = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        } catch (error) {
+            console.error("Erro ao buscar prospects:", error);
+        }
+    }
 
     async function populateWhitelabelForm() {
         const settings = await loadWhitelabelSettings();
@@ -165,16 +183,19 @@ function setupAdminPage() {
         const role = roleInput.value;
         const originalEmail = hiddenEmailInput.value;
 
+        const data = { name, email, role };
+        if (password) data.password = password;
+
+        if (role === 'cs') {
+            data.associatedClients = Array.from(associatedClientIds);
+        }
+
         if (originalEmail) {
             // Editing user
-            const updatedData = { name, email, role };
-            if (password) {
-                updatedData.password = password;
-            }
-            await updateUser(originalEmail, updatedData);
+            await updateUser(originalEmail, data);
         } else {
             // Adding new user
-            await addUser({ name, email, password, role });
+            await addUser(data);
         }
 
         resetForm();
@@ -187,6 +208,9 @@ function setupAdminPage() {
         hiddenEmailInput.value = '';
         emailInput.disabled = false;
         cancelEditBtn.classList.add('hidden');
+        csSection.classList.add('hidden');
+        associatedClientsList.innerHTML = '';
+        associatedClientIds.clear();
     }
 
     userTableBody.addEventListener('click', async function(e) {
@@ -203,12 +227,19 @@ function setupAdminPage() {
                 hiddenEmailInput.value = user.email;
                 passwordInput.placeholder = "Deixe em branco para não alterar";
                 cancelEditBtn.classList.remove('hidden');
+                
+                roleInput.dispatchEvent(new Event('change')); // Trigger change to show/hide CS section
+                
+                if (user.role === 'cs' && user.associatedClients) {
+                    associatedClientIds = new Set(user.associatedClients);
+                    renderAssociatedClients();
+                }
             }
         }
 
         if (e.target.closest('.delete-btn')) {
             const email = e.target.closest('.delete-btn').dataset.email;
-            if (confirm(`Tem certeza que deseja excluir o usuário ${email}?`)) {
+            if (await showConfirmationModal(`Tem certeza que deseja excluir o usuário ${email}?`, 'Excluir')) {
                 await deleteUser(email);
                 renderUsers();
             }
@@ -218,6 +249,55 @@ function setupAdminPage() {
     cancelEditBtn.addEventListener('click', resetForm);
     userForm.addEventListener('submit', handleFormSubmit);
     whitelabelForm.addEventListener('submit', handleWhitelabelFormSubmit);
+
+    roleInput.addEventListener('change', () => {
+        if (roleInput.value === 'cs') {
+            csSection.classList.remove('hidden');
+            fetchAllProspects();
+        } else {
+            csSection.classList.add('hidden');
+        }
+    });
+
+    clientSearchInput.addEventListener('keyup', () => {
+        const searchTerm = clientSearchInput.value.toLowerCase();
+        if (searchTerm.length < 2) {
+            clientSearchResults.innerHTML = '';
+            return;
+        }
+        const results = allProspects.filter(p => p.empresa.toLowerCase().includes(searchTerm) && !associatedClientIds.has(p.id));
+        
+        clientSearchResults.innerHTML = '';
+        results.slice(0, 5).forEach(prospect => {
+            const div = document.createElement('div');
+            div.className = 'p-2 hover:bg-gray-600 cursor-pointer';
+            div.textContent = prospect.empresa;
+            div.onclick = () => {
+                associatedClientIds.add(prospect.id);
+                renderAssociatedClients();
+                clientSearchInput.value = '';
+                clientSearchResults.innerHTML = '';
+            };
+            clientSearchResults.appendChild(div);
+        });
+    });
+
+    function renderAssociatedClients() {
+        associatedClientsList.innerHTML = '';
+        associatedClientIds.forEach(id => {
+            const prospect = allProspects.find(p => p.id === id);
+            if (prospect) {
+                const div = document.createElement('div');
+                div.className = 'flex justify-between items-center bg-gray-600 p-2 rounded';
+                div.innerHTML = `<span>${prospect.empresa}</span><button type="button" class="text-red-400">&times;</button>`;
+                div.querySelector('button').onclick = () => {
+                    associatedClientIds.delete(id);
+                    renderAssociatedClients();
+                };
+                associatedClientsList.appendChild(div);
+            }
+        });
+    }
 
     // Course Management Logic
     async function renderCourses() {
@@ -277,7 +357,7 @@ function setupAdminPage() {
 
         if (e.target.closest('.delete-course-btn')) {
             const courseId = e.target.closest('.delete-course-btn').dataset.id;
-            if (confirm('Tem certeza que deseja excluir este curso?')) {
+            if (await showConfirmationModal('Tem certeza que deseja excluir este curso?', 'Excluir')) {
                 deleteCourse(courseId).then(() => {
                     renderCourses();
                 });

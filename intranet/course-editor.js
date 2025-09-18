@@ -1,4 +1,4 @@
-import { loadComponents, setupUIListeners } from './common-ui.js';
+import { loadComponents, setupUIListeners, showConfirmationModal, showNotification } from './common-ui.js';
 import { db } from './firebase-config.js';
 import { 
     doc, getDoc, collection, addDoc, getDocs, updateDoc, deleteDoc 
@@ -136,7 +136,7 @@ function setupEventListeners() {
         // Delete Module
         if (e.target.closest('.delete-module-btn')) {
             const btn = e.target.closest('.delete-module-btn');
-            if (confirm('Tem certeza que deseja excluir este módulo e todas as suas aulas?')) {
+            if (await showConfirmationModal('Tem certeza que deseja excluir este módulo e todas as suas aulas?', 'Excluir')) {
                 await deleteModule(courseId, btn.dataset.id);
                 renderModulesAndLessons();
             }
@@ -145,7 +145,7 @@ function setupEventListeners() {
         // Delete Lesson
         if (e.target.closest('.delete-lesson-btn')) {
             const btn = e.target.closest('.delete-lesson-btn');
-            if (confirm('Tem certeza que deseja excluir esta aula?')) {
+            if (await showConfirmationModal('Tem certeza que deseja excluir esta aula?', 'Excluir')) {
                 await deleteLesson(courseId, btn.dataset.moduleId, btn.dataset.lessonId);
                 renderModulesAndLessons();
             }

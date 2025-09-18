@@ -2,6 +2,8 @@ import { loadComponents, setupUIListeners } from './common-ui.js';
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import { getFirestore, collection, doc, addDoc, onSnapshot, updateDoc, deleteDoc, serverTimestamp, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+import { showConfirmationModal, showNotification } from './common-ui.js';
+import { getAllUsers } from './auth.js';
 
 // Função principal que será exportada e chamada pelo HTML
 export function initializeAppWithFirebase(firebaseConfig) {
@@ -27,8 +29,8 @@ export function initializeAppWithFirebase(firebaseConfig) {
     });
 }
 
-function initializeCalendarPage(tasksCollectionRef, meetingsCollectionRef, prospectsCollectionRef) {
-    const systemUsers = getAllUsers();
+async function initializeCalendarPage(tasksCollectionRef, meetingsCollectionRef, prospectsCollectionRef) {
+    const systemUsers = await getAllUsers();
     let tasks = [];
     let meetings = [];
     let prospects = [];
@@ -184,7 +186,7 @@ function initializeCalendarPage(tasksCollectionRef, meetingsCollectionRef, prosp
             closeTaskModal();
         } catch (error) {
             console.error("Erro ao salvar tarefa:", error);
-            alert("Não foi possível salvar a tarefa.");
+            showNotification("Não foi possível salvar a tarefa.", 'error');
         }
     };
 
@@ -192,14 +194,14 @@ function initializeCalendarPage(tasksCollectionRef, meetingsCollectionRef, prosp
         const taskId = document.getElementById('task-id').value;
         if (!taskId) return;
 
-        if (confirm('Você tem certeza que deseja apagar esta tarefa?')) {
+        if (await showConfirmationModal('Você tem certeza que deseja apagar esta tarefa?', 'Apagar')) {
             try {
                 const taskRef = doc(tasksCollectionRef, taskId);
                 await deleteDoc(taskRef);
                 closeTaskModal();
             } catch (error) {
                 console.error("Erro ao apagar tarefa:", error);
-                alert("Não foi possível apagar a tarefa.");
+                showNotification("Não foi possível apagar a tarefa.", 'error');
             }
         }
     };
@@ -252,7 +254,7 @@ function initializeCalendarPage(tasksCollectionRef, meetingsCollectionRef, prosp
             closeMeetingModal();
         } catch (error) {
             console.error("Erro ao salvar reunião:", error);
-            alert("Não foi possível salvar a reunião.");
+            showNotification("Não foi possível salvar a reunião.", 'error');
         }
     };
 
@@ -260,14 +262,14 @@ function initializeCalendarPage(tasksCollectionRef, meetingsCollectionRef, prosp
         const meetingId = document.getElementById('meeting-id').value;
         if (!meetingId) return;
 
-        if (confirm('Você tem certeza que deseja apagar esta reunião?')) {
+        if (await showConfirmationModal('Você tem certeza que deseja apagar esta reunião?', 'Apagar')) {
             try {
                 const meetingRef = doc(meetingsCollectionRef, meetingId);
                 await deleteDoc(meetingRef);
                 closeMeetingModal();
             } catch (error) {
                 console.error("Erro ao apagar reunião:", error);
-                alert("Não foi possível apagar a reunião.");
+                showNotification("Não foi possível apagar a reunião.", 'error');
             }
         }
     };

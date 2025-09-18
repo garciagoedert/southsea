@@ -1,5 +1,6 @@
 import { doc, getDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 import { db, appId } from './firebase-config.js';
+import { showNotification } from './common-ui.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     // DOM Elements
@@ -113,7 +114,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (!response.ok) throw new Error('CEP não encontrado.');
             const data = await response.json();
             if (data.erro) {
-                alert('CEP não encontrado.');
+                showNotification('CEP não encontrado.', 'error');
                 return;
             }
             
@@ -125,7 +126,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         } catch (error) {
             console.error("Erro ao buscar CEP:", error);
-            alert("Não foi possível buscar o endereço para este CEP.");
+            showNotification("Não foi possível buscar o endereço para este CEP.", 'error');
         }
     };
 
@@ -321,7 +322,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             window.location.href = `sign-contract.html?instanceId=${instanceId}`;
         } catch (error) {
             console.error("Erro ao enviar respostas: ", error);
-            alert('Ocorreu um erro ao enviar suas respostas. Tente novamente.');
+            showNotification('Ocorreu um erro ao enviar suas respostas. Tente novamente.', 'error');
             submitBtn.disabled = false;
             submitBtn.textContent = 'Assinar e Enviar';
         }
@@ -335,6 +336,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const instanceData = instanceDoc.data();
         const status = instanceData.status;
+        const hasPayment = instanceData.paymentLink && instanceData.paymentLink.trim() !== '';
 
         if (status === 'Preenchido') {
             formTitle.textContent = 'Este formulário já foi respondido.';
@@ -353,6 +355,27 @@ document.addEventListener('DOMContentLoaded', async () => {
             
             return;
         } else if (status === 'Assinado') {
+            formTitle.textContent = 'Pagamento Pendente';
+            publicForm.style.display = 'none';
+
+            const message = document.createElement('p');
+            message.className = 'text-center text-gray-600 mb-6';
+            message.textContent = 'Este formulário já foi assinado. Para concluir o processo, por favor, realize o pagamento.';
+            formTitle.insertAdjacentElement('afterend', message);
+
+            const buttonContainer = document.createElement('div');
+            buttonContainer.className = 'text-center mt-6';
+            
+            const paymentButton = document.createElement('a');
+            paymentButton.href = `sign-contract.html?instanceId=${instanceId}`;
+            paymentButton.className = 'bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 inline-block';
+            paymentButton.textContent = 'Ir para a Página de Pagamento';
+            
+            buttonContainer.appendChild(paymentButton);
+            message.insertAdjacentElement('afterend', buttonContainer);
+
+            return;
+        } else if (status === 'Concluído') {
             formTitle.textContent = 'Este formulário já foi concluído.';
             publicForm.style.display = 'none';
             return;

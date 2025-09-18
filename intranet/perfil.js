@@ -3,6 +3,7 @@ import { updateUser } from './auth.js';
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import { doc, getDoc, updateDoc, Timestamp, collection, query, where, orderBy, getDocs, addDoc, serverTimestamp, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 import { db, appId, app } from './firebase-config.js';
+import { showConfirmationModal, showNotification } from './common-ui.js';
 
 // --- INITIALIZATION ---
 const auth = getAuth(app);
@@ -33,7 +34,14 @@ async function setupPage() {
         pageTitle.textContent = 'Detalhes do Cliente';
         clientDetailsSection.classList.remove('hidden');
         userProfileSection.classList.add('hidden');
-        actionButtonsContainer.classList.remove('hidden');
+        
+        const userRole = sessionStorage.getItem('userRole');
+        const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+
+        if (userRole === 'admin' || (userRole === 'cs' && currentUser.associatedClients?.includes(currentClientId))) {
+            actionButtonsContainer.classList.remove('hidden');
+        }
+        
         await loadClientData(currentClientId);
         setupClientEventListeners();
     } else {
@@ -114,6 +122,7 @@ async function loadClientForms(clientId) {
             const creationDate = formatDate(instance.createdAt);
             const submittedDate = formatDate(instance.submittedAt);
             const signedDate = formatDate(instance.signedAt);
+            const paidDate = formatDate(instance.paidAt);
 
             const publicLink = `${window.location.origin}/intranet/public-form.html?instanceId=${instanceId}`;
 
@@ -135,6 +144,16 @@ async function loadClientForms(clientId) {
                         <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded-lg text-sm" onclick="viewFormSubmission('${instanceId}')">Formulário</button>
                         <button class="bg-green-600 hover:bg-green-700 text-white font-bold py-1 px-3 rounded-lg text-sm" onclick="viewSignedContract('${instanceId}')">Contrato</button>
                     `;
+                    if (instance.paymentLink) {
+                        actionButtons += `<button class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-3 rounded-lg text-sm" onclick="openValidatePaymentModal('${instanceId}')">Validar Pagamento</button>`;
+                    }
+                    break;
+                case 'Concluído':
+                    statusBadge = '<span class="bg-purple-500 text-white text-xs font-semibold px-2 py-1 rounded-full">Concluído</span>';
+                     actionButtons = `
+                        <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded-lg text-sm" onclick="viewFormSubmission('${instanceId}')">Formulário</button>
+                        <button class="bg-green-600 hover:bg-green-700 text-white font-bold py-1 px-3 rounded-lg text-sm" onclick="viewSignedContract('${instanceId}')">Contrato</button>
+                    `;
                     break;
                 default:
                     statusBadge = `<span class="bg-gray-500 text-white text-xs font-semibold px-2 py-1 rounded-full">${instance.status}</span>`;
@@ -149,6 +168,7 @@ async function loadClientForms(clientId) {
                                 <p><strong>Associado em:</strong> ${creationDate}</p>
                                 ${submittedDate ? `<p><strong>Preenchido em:</strong> ${submittedDate}</p>` : ''}
                                 ${signedDate ? `<p><strong>Assinado em:</strong> ${signedDate}</p>` : ''}
+                                ${paidDate ? `<p><strong>Pagamento Validado em:</strong> ${paidDate}</p>` : ''}
                             </div>
                         </div>
                         <div class="flex-shrink-0 ml-4">
@@ -180,11 +200,62 @@ async function loadClientForms(clientId) {
     }
 }
 
+window.openValidatePaymentModal = (instanceId) => {
+    const modal = document.getElementById('validatePaymentModal');
+    const confirmBtn = document.getElementById('confirmPaymentBtn');
+    const cancelBtn = document.getElementById('cancelPaymentValidationBtn');
+    const closeBtn = document.getElementById('closePaymentModalBtn');
+    const datetimeInput = document.getElementById('payment-datetime-input');
+
+    // Set default value to now
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    datetimeInput.value = now.toISOString().slice(0, 16);
+
+    modal.classList.remove('hidden');
+
+    const closeModal = () => modal.classList.add('hidden');
+
+    confirmBtn.onclick = async () => {
+        const paymentDate = datetimeInput.value;
+        if (!paymentDate) {
+            showNotification('Por favor, insira a data e hora do pagamento.', 'info');
+            return;
+        }
+
+        try {
+            confirmBtn.disabled = true;
+            confirmBtn.textContent = 'Salvando...';
+            
+            const instanceRef = doc(db, 'artifacts', appId, 'public', 'data', 'formInstances', instanceId);
+            await updateDoc(instanceRef, {
+                status: 'Concluído',
+                paidAt: Timestamp.fromDate(new Date(paymentDate))
+            });
+
+            showNotification('Pagamento validado e formulário concluído com sucesso!');
+            closeModal();
+            loadClientForms(currentClientId);
+
+        } catch (error) {
+            console.error('Erro ao validar pagamento:', error);
+            showNotification('Ocorreu um erro ao validar o pagamento.', 'error');
+        } finally {
+            confirmBtn.disabled = false;
+            confirmBtn.textContent = 'Confirmar Pagamento';
+        }
+    };
+
+    cancelBtn.onclick = closeModal;
+    closeBtn.onclick = closeModal;
+};
+
 window.viewFormSubmission = async (instanceId) => {
     const modal = document.getElementById('viewSubmissionModal');
     const modalTitle = document.getElementById('submission-modal-title');
     const modalContent = document.getElementById('submission-content');
     const closeModalBtn = document.getElementById('closeSubmissionModalBtn');
+    const copyBtn = document.getElementById('copySubmissionBtn');
 
     modalContent.innerHTML = '<p class="text-gray-400">Carregando respostas...</p>';
     modal.classList.remove('hidden');
@@ -207,23 +278,65 @@ window.viewFormSubmission = async (instanceId) => {
         modalTitle.textContent = `Respostas de: ${formTemplate.name}`;
 
         let contentHtml = '<div class="space-y-4">';
+        let clipboardText = '';
+
         formTemplate.sections.forEach(section => {
             contentHtml += `<h3 class="text-lg font-semibold text-white border-b border-gray-600 pb-2 mb-2">${section.title}</h3>`;
+            clipboardText += `\n--- ${section.title} ---\n`;
+
             section.fields.forEach(field => {
                 if (field.type === 'question') {
                     const fieldName = (field.tag ? field.tag.replace(/##/g, '') : field.questionText);
-                    const answer = formData[fieldName] || '<i class="text-gray-500">Não respondido</i>';
+                    const answer = formData[fieldName] || 'Não respondido';
                     contentHtml += `
                         <div class="grid grid-cols-3 gap-4">
                             <p class="text-gray-400 col-span-1">${field.questionText}</p>
                             <p class="text-white col-span-2 bg-gray-700 p-2 rounded-md">${answer}</p>
                         </div>
                     `;
+                    clipboardText += `${field.questionText}: ${answer}\n`;
+                } else if (field.type === 'address') {
+                    const baseName = (field.tag ? field.tag.replace(/##/g, '') : field.questionText);
+                    const addressParts = {
+                        rua: formData[`${baseName}-rua`],
+                        numero: formData[`${baseName}-numero`],
+                        complemento: formData[`${baseName}-complemento`],
+                        bairro: formData[`${baseName}-bairro`],
+                        cidade: formData[`${baseName}-cidade`],
+                        estado: formData[`${baseName}-estado`],
+                        cep: formData[`${baseName}-cep`],
+                    };
+                    
+                    const formattedAddressHtml = `${addressParts.rua || ''}, ${addressParts.numero || ''} ${addressParts.complemento ? `- ${addressParts.complemento}` : ''}<br>
+                                                ${addressParts.bairro || ''} - ${addressParts.cidade || ''}/${addressParts.estado || ''}<br>
+                                                CEP: ${addressParts.cep || ''}`;
+                    
+                    const formattedAddressText = `${addressParts.rua || ''}, ${addressParts.numero || ''}${addressParts.complemento ? ` - ${addressParts.complemento}` : ''}, ${addressParts.bairro || ''}, ${addressParts.cidade || ''}/${addressParts.estado || ''}, CEP: ${addressParts.cep || ''}`;
+
+                    const answerHtml = Object.values(addressParts).some(part => part) ? formattedAddressHtml : '<i class="text-gray-500">Não respondido</i>';
+                    const answerText = Object.values(addressParts).some(part => part) ? formattedAddressText : 'Não respondido';
+
+                    contentHtml += `
+                        <div class="grid grid-cols-3 gap-4">
+                            <p class="text-gray-400 col-span-1">${field.questionText}</p>
+                            <p class="text-white col-span-2 bg-gray-700 p-2 rounded-md">${answerHtml}</p>
+                        </div>
+                    `;
+                    clipboardText += `${field.questionText}: ${answerText}\n`;
                 }
             });
         });
         contentHtml += '</div>';
         modalContent.innerHTML = contentHtml;
+
+        copyBtn.onclick = () => {
+            navigator.clipboard.writeText(clipboardText.trim()).then(() => {
+                showNotification('Respostas copiadas para a área de transferência!');
+            }).catch(err => {
+                console.error('Erro ao copiar texto: ', err);
+                showNotification('Não foi possível copiar as respostas.', 'error');
+            });
+        };
 
     } catch (error) {
         console.error("Erro ao carregar respostas do formulário:", error);
@@ -314,7 +427,7 @@ window.viewSignedContract = async (instanceId) => {
                 pdf.save(`contrato_${formTemplate.name.replace(/\s+/g, '_')}.pdf`);
             } catch (err) {
                 console.error("Erro ao gerar PDF:", err);
-                alert("Não foi possível gerar o PDF. Tente novamente.");
+                showNotification("Não foi possível gerar o PDF. Tente novamente.", 'error');
             } finally {
                 downloadBtn.disabled = false;
                 downloadBtn.innerHTML = '<i class="fas fa-download mr-2"></i>Baixar PDF';
@@ -328,18 +441,18 @@ window.viewSignedContract = async (instanceId) => {
 };
 
 window.deleteFormInstance = async (instanceId) => {
-    if (!confirm('Tem certeza de que deseja excluir este formulário? Esta ação não pode ser desfeita.')) {
+    if (!await showConfirmationModal('Tem certeza de que deseja excluir este formulário? Esta ação não pode ser desfeita.', 'Excluir')) {
         return;
     }
 
     try {
         const instanceRef = doc(db, 'artifacts', appId, 'public', 'data', 'formInstances', instanceId);
         await deleteDoc(instanceRef);
-        alert('Formulário excluído com sucesso!');
+        showNotification('Formulário excluído com sucesso!');
         loadClientForms(currentClientId); // Recarrega a lista para refletir a exclusão
     } catch (error) {
         console.error("Erro ao excluir formulário:", error);
-        alert('Ocorreu um erro ao excluir o formulário. Tente novamente.');
+        showNotification('Ocorreu um erro ao excluir o formulário. Tente novamente.', 'error');
     }
 };
 
@@ -351,7 +464,7 @@ window.downloadContract = async (submissionId) => {
         const submissionRef = doc(db, 'artifacts', appId, 'public', 'data', 'form_submissions', submissionId);
         const submissionDoc = await getDoc(submissionRef);
         if (!submissionDoc.exists()) {
-            alert('Submissão não encontrada.');
+            showNotification('Submissão não encontrada.', 'error');
             return;
         }
         const submissionData = submissionDoc.data();
@@ -360,7 +473,7 @@ window.downloadContract = async (submissionId) => {
         const formRef = doc(db, 'artifacts', appId, 'public', 'data', 'forms', submissionData.formId);
         const formDoc = await getDoc(formRef);
         if (!formDoc.exists()) {
-            alert('Definição do formulário original não encontrada.');
+            showNotification('Definição do formulário original não encontrada.', 'error');
             return;
         }
         const formDefinition = formDoc.data();
@@ -404,7 +517,7 @@ window.downloadContract = async (submissionId) => {
 
     } catch (error) {
         console.error("Erro ao gerar PDF do contrato:", error);
-        alert('Ocorreu um erro ao gerar o PDF.');
+        showNotification('Ocorreu um erro ao gerar o PDF.', 'error');
     }
 };
 
@@ -473,9 +586,24 @@ function setupClientEventListeners() {
     const generateBtn = document.getElementById('generate-form-instance-btn');
     const formSelection = document.getElementById('form-selection');
     const paymentLinkInput = document.getElementById('payment-link-input');
+    const noPaymentLinkCheckbox = document.getElementById('no-payment-link-checkbox');
+
+    noPaymentLinkCheckbox.addEventListener('change', () => {
+        if (noPaymentLinkCheckbox.checked) {
+            paymentLinkInput.disabled = true;
+            paymentLinkInput.value = '';
+            paymentLinkInput.required = false;
+        } else {
+            paymentLinkInput.disabled = false;
+            paymentLinkInput.required = true;
+        }
+    });
 
     const openAssociateModal = async () => {
-        paymentLinkInput.value = ''; // Limpa o campo
+        paymentLinkInput.value = '';
+        paymentLinkInput.disabled = false;
+        paymentLinkInput.required = true;
+        noPaymentLinkCheckbox.checked = false;
         formSelection.innerHTML = '<option>Carregando...</option>';
         associateFormModal.classList.remove('hidden');
         
@@ -506,14 +634,15 @@ function setupClientEventListeners() {
 
     generateBtn.addEventListener('click', async () => {
         const selectedFormId = formSelection.value;
-        const paymentLink = paymentLinkInput.value.trim();
+        const noPayment = noPaymentLinkCheckbox.checked;
+        const paymentLink = noPayment ? '' : paymentLinkInput.value.trim();
 
         if (!selectedFormId) {
-            alert('Por favor, selecione um modelo de formulário.');
+            showNotification('Por favor, selecione um modelo de formulário.', 'info');
             return;
         }
-        if (!paymentLink) {
-            alert('Por favor, insira o link de pagamento.');
+        if (!noPayment && !paymentLink) {
+            showNotification('Por favor, insira o link de pagamento ou confirme que não há um.', 'info');
             return;
         }
 
@@ -538,7 +667,7 @@ function setupClientEventListeners() {
             const publicLink = `${window.location.origin}/intranet/public-form.html?instanceId=${docRef.id}`;
             
             navigator.clipboard.writeText(publicLink).then(() => {
-                alert('Link gerado e copiado para a área de transferência!');
+                showNotification('Link gerado e copiado para a área de transferência!');
             });
 
             closeAssociateModal();
@@ -546,7 +675,7 @@ function setupClientEventListeners() {
 
         } catch (error) {
             console.error("Erro ao criar instância de formulário:", error);
-            alert('Ocorreu um erro ao gerar o link. Tente novamente.');
+            showNotification('Ocorreu um erro ao gerar o link. Tente novamente.', 'error');
         } finally {
             generateBtn.disabled = false;
             generateBtn.textContent = 'Gerar Link';
@@ -612,10 +741,10 @@ function setupClientEventListeners() {
             saveClientBtn.classList.add('hidden');
             cancelEditBtn.classList.add('hidden');
 
-            alert('Cliente atualizado com sucesso!');
+            showNotification('Cliente atualizado com sucesso!');
         } catch (error) {
             console.error("Error updating client:", error);
-            alert('Erro ao atualizar o cliente.');
+            showNotification('Erro ao atualizar o cliente.', 'error');
         }
     });
 }
@@ -695,11 +824,11 @@ function setupUserProfile() {
                     userAvatar.src = updatedData.profilePicture;
                     localStorage.setItem(`profilePic_${currentUser.email}`, updatedData.profilePicture);
                 }
-                alert('Perfil atualizado com sucesso!');
+                showNotification('Perfil atualizado com sucesso!');
                 passwordInput.value = '';
                 profilePictureInput.value = '';
             } else {
-                alert('Erro ao atualizar o perfil.');
+                showNotification('Erro ao atualizar o perfil.', 'error');
             }
         };
 

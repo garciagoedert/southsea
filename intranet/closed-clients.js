@@ -2,6 +2,7 @@
 import { getAuth, onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import { collection, onSnapshot, query, where, doc, deleteDoc, updateDoc, Timestamp, arrayUnion } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 import { db, appId, app } from './firebase-config.js';
+import { showNotification, showConfirmationModal } from './common-ui.js';
 
 // --- INITIALIZATION ---
 const auth = getAuth(app);
@@ -45,7 +46,21 @@ function setupClosedClientsListener() {
     if (closedClientsListener) closedClientsListener();
 
     const prospectsCollection = collection(db, 'artifacts', appId, 'public', 'data', 'prospects');
-    const q = query(prospectsCollection, where("status", "==", "Concluído"));
+    const userRole = sessionStorage.getItem('userRole');
+    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+
+    let q = query(prospectsCollection, where("status", "==", "Concluído"));
+
+    if (userRole === 'cs') {
+        const clientIds = currentUser.associatedClients || [];
+        if (clientIds.length > 0) {
+            q = query(prospectsCollection, where("status", "==", "Concluído"), where('__name__', 'in', clientIds));
+        } else {
+            allClosedClients = [];
+            applyFilters();
+            return;
+        }
+    }
     
     closedClientsListener = onSnapshot(q, (snapshot) => {
         allClosedClients = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -192,7 +207,7 @@ function openEditModal(client) {
     addContactLogBtn.parentNode.replaceChild(newAddContactBtn, addContactLogBtn);
     newAddContactBtn.addEventListener('click', async () => {
         const description = newContactLogTextarea.value.trim();
-        if (!description) return alert('Por favor, adicione uma descrição para o contato.');
+        if (!description) return showNotification('Por favor, adicione uma descrição para o contato.', 'info');
         
         try {
             const clientRef = doc(db, 'artifacts', appId, 'public', 'data', 'prospects', client.id);
@@ -206,7 +221,7 @@ function openEditModal(client) {
             newContactLogTextarea.value = '';
         } catch (error) {
             console.error("Error adding contact log:", error);
-            alert("Erro ao adicionar o registro de contato.");
+            showNotification("Erro ao adicionar o registro de contato.", 'error');
         }
     });
 
@@ -259,7 +274,7 @@ async function handleUpdateClient(e) {
         closeEditModal();
     } catch (error) {
         console.error("Error updating client:", error);
-        alert("Erro ao atualizar o cliente. Tente novamente.");
+        showNotification("Erro ao atualizar o cliente. Tente novamente.", 'error');
     }
 }
 
@@ -271,7 +286,7 @@ async function deleteClient(clientId) {
         // The onSnapshot listener will automatically update the UI
     } catch (error) {
         console.error("Error deleting client:", error);
-        alert("Erro ao excluir o cliente. Tente novamente.");
+        showNotification("Erro ao excluir o cliente. Tente novamente.", 'error');
     }
 }
 
@@ -284,7 +299,7 @@ async function archiveClient(clientId) {
         });
     } catch (error) {
         console.error("Error archiving client:", error);
-        alert("Erro ao arquivar o cliente. Tente novamente.");
+        showNotification("Erro ao arquivar o cliente. Tente novamente.", 'error');
     }
 }
 
@@ -373,7 +388,7 @@ window.setupUIListeners = function() {
             const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`;
             window.open(mapUrl, '_blank');
         } else {
-            alert('Por favor, insira um endereço.');
+            showNotification('Por favor, insira um endereço.', 'info');
         }
     });
 

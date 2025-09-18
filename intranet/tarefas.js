@@ -2,6 +2,7 @@ import { loadComponents, setupUIListeners } from './common-ui.js';
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import { getFirestore, collection, doc, addDoc, onSnapshot, updateDoc, deleteDoc, serverTimestamp, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+import { showConfirmationModal, showNotification } from './common-ui.js';
 
 // Função principal que será exportada e chamada pelo HTML
 export function initializeAppWithFirebase(firebaseConfig) {
@@ -288,7 +289,7 @@ function initializeTasksPage(tasksCollectionRef, prospectsCollectionRef) {
             closeModal();
         } catch (error) {
             console.error("Erro ao salvar tarefa:", error);
-            alert("Não foi possível salvar a tarefa. Verifique o console para mais detalhes.");
+            showNotification("Não foi possível salvar a tarefa. Verifique o console para mais detalhes.", 'error');
         }
     };
 
@@ -296,14 +297,14 @@ function initializeTasksPage(tasksCollectionRef, prospectsCollectionRef) {
         const taskId = document.getElementById('task-id').value;
         if (!taskId) return;
 
-        if (confirm('Você tem certeza que deseja apagar esta tarefa?')) {
+        if (await showConfirmationModal('Você tem certeza que deseja apagar esta tarefa?', 'Apagar')) {
             try {
                 const taskRef = doc(tasksCollectionRef, taskId);
                 await deleteDoc(taskRef);
                 closeModal();
             } catch (error) {
                 console.error("Erro ao apagar tarefa:", error);
-                alert("Não foi possível apagar a tarefa. Verifique o console para mais detalhes.");
+                showNotification("Não foi possível apagar a tarefa. Verifique o console para mais detalhes.", 'error');
             }
         }
     };

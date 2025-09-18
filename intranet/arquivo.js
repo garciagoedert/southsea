@@ -1,7 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
 import { getFirestore, collection, getDocs, query, where, doc, updateDoc, arrayUnion, Timestamp, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
 import { getAuth, onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
-import { loadComponents, setupUIListeners } from './common-ui.js';
+import { loadComponents, setupUIListeners, showConfirmationModal, showNotification } from './common-ui.js';
 
 let db;
 let auth;
@@ -31,7 +31,7 @@ export function initializeAppWithFirebase(firebaseConfig) {
                             const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`;
                             window.open(mapUrl, '_blank');
                         } else {
-                            alert('Por favor, insira um endereço.');
+                            showNotification('Por favor, insira um endereço.', 'info');
                         }
                     });
                 });
@@ -56,7 +56,21 @@ async function loadArchivedLeads(searchTerm = '') {
 
     try {
         const leadsRef = collection(db, 'artifacts', '1:476390177044:web:39e6597eb624006ee06a01', 'public', 'data', 'prospects');
-        const q = query(leadsRef, where('pagina', '==', 'Arquivo'));
+        const userRole = sessionStorage.getItem('userRole');
+        const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+
+        let q = query(leadsRef, where('pagina', '==', 'Arquivo'));
+
+        if (userRole === 'cs') {
+            const clientIds = currentUser.associatedClients || [];
+            if (clientIds.length > 0) {
+                q = query(leadsRef, where('pagina', '==', 'Arquivo'), where('__name__', 'in', clientIds));
+            } else {
+                container.innerHTML = '<p class="text-gray-400">Nenhum lead arquivado encontrado.</p>';
+                return;
+            }
+        }
+        
         const querySnapshot = await getDocs(q);
 
         let leads = [];
@@ -190,7 +204,7 @@ function openEditModal(lead) {
     addContactLogBtn.parentNode.replaceChild(newAddContactBtn, addContactLogBtn);
     newAddContactBtn.addEventListener('click', async () => {
         const description = newContactLogTextarea.value.trim();
-        if (!description) return alert('Por favor, adicione uma descrição para o contato.');
+        if (!description) return showNotification('Por favor, adicione uma descrição para o contato.', 'info');
         
         try {
             const clientRef = doc(db, 'artifacts', '1:476390177044:web:39e6597eb624006ee06a01', 'public', 'data', 'prospects', lead.id);
@@ -204,7 +218,7 @@ function openEditModal(lead) {
             newContactLogTextarea.value = '';
         } catch (error) {
             console.error("Error adding contact log:", error);
-            alert("Erro ao adicionar o registro de contato.");
+            showNotification("Erro ao adicionar o registro de contato.", 'error');
         }
     });
 
@@ -226,7 +240,7 @@ function closeEditModal() {
 }
 
 async function unarchiveLead(leadId) {
-    if (!confirm('Tem certeza que deseja desarquivar este lead?')) return;
+    if (!await showConfirmationModal('Tem certeza que deseja desarquivar este lead?', 'Desarquivar')) return;
 
     try {
         const leadRef = doc(db, 'artifacts', '1:476390177044:web:39e6597eb624006ee06a01', 'public', 'data', 'prospects', leadId);
@@ -238,12 +252,12 @@ async function unarchiveLead(leadId) {
         loadArchivedLeads(document.getElementById('search-input').value);
     } catch (error) {
         console.error("Error unarchiving lead:", error);
-        alert("Erro ao desarquivar o lead.");
+        showNotification("Erro ao desarquivar o lead.", 'error');
     }
 }
 
 async function deleteLead(leadId) {
-    if (!confirm('Tem certeza que deseja excluir este lead permanentemente? Esta ação não pode ser desfeita.')) return;
+    if (!await showConfirmationModal('Tem certeza que deseja excluir este lead permanentemente? Esta ação não pode ser desfeita.', 'Excluir Permanentemente')) return;
 
     try {
         const leadRef = doc(db, 'artifacts', '1:476390177044:web:39e6597eb624006ee06a01', 'public', 'data', 'prospects', leadId);
@@ -252,7 +266,7 @@ async function deleteLead(leadId) {
         loadArchivedLeads(document.getElementById('search-input').value);
     } catch (error) {
         console.error("Error deleting lead:", error);
-        alert("Erro ao excluir o lead.");
+        showNotification("Erro ao excluir o lead.", 'error');
     }
 }
 
@@ -284,6 +298,6 @@ async function saveLeadChanges(e) {
         loadArchivedLeads(document.getElementById('search-input').value);
     } catch (error) {
         console.error("Error updating lead:", error);
-        alert("Erro ao salvar as alterações.");
+        showNotification("Erro ao salvar as alterações.", 'error');
     }
 }

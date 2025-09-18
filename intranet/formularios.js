@@ -1,7 +1,7 @@
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import { collection, addDoc, getDocs, query, orderBy, serverTimestamp, doc, setDoc, deleteDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 import { db, app, appId } from './firebase-config.js';
-import { loadComponents } from './common-ui.js';
+import { loadComponents, showConfirmationModal, showNotification } from './common-ui.js';
 
 const auth = getAuth(app);
 
@@ -331,11 +331,11 @@ const setupEventListeners = () => {
         }
     });
 
-    sectionsContainer.addEventListener('click', (e) => {
+    sectionsContainer.addEventListener('click', async (e) => {
         const fieldItem = e.target.closest('.field-item');
         if (e.target.closest('.remove-section-btn')) {
             const sectionId = e.target.closest('.remove-section-btn').dataset.sectionId;
-            if (confirm('Tem certeza que deseja remover esta seção?')) removeSection(sectionId);
+            if (await showConfirmationModal('Tem certeza que deseja remover esta seção?', 'Remover')) removeSection(sectionId);
         }
         if (e.target.closest('.add-field-btn')) {
             const btn = e.target.closest('.add-field-btn');
@@ -480,7 +480,7 @@ const filterTags = () => {
 // --- DATA ---
 async function saveForm() {
     if (!formState.name) {
-        alert('Por favor, dê um nome ao formulário.');
+        showNotification('Por favor, dê um nome ao formulário.', 'info');
         return;
     }
     try {
@@ -496,18 +496,18 @@ async function saveForm() {
         if (formState.id) {
             const formRef = doc(db, formsCollectionPath.path, formState.id);
             await setDoc(formRef, formData, { merge: true });
-            alert('Formulário atualizado com sucesso!');
+            showNotification('Formulário atualizado com sucesso!');
         } else {
             formData.createdAt = serverTimestamp();
             const docRef = await addDoc(formsCollectionPath, formData);
             formState.id = docRef.id;
-            alert('Formulário salvo com sucesso!');
+            showNotification('Formulário salvo com sucesso!');
         }
         showList();
         loadForms();
     } catch (error) {
         console.error("Erro ao salvar formulário: ", error);
-        alert('Ocorreu um erro ao salvar o formulário.');
+        showNotification('Ocorreu um erro ao salvar o formulário.', 'error');
     }
 }
 
@@ -530,24 +530,24 @@ async function editForm(formId) {
             renderBuilder();
             showBuilder();
         } else {
-            alert('Formulário não encontrado.');
+            showNotification('Formulário não encontrado.', 'error');
         }
     } catch (error) {
         console.error('Erro ao carregar formulário para edição:', error);
-        alert('Não foi possível carregar o formulário para edição.');
+        showNotification('Não foi possível carregar o formulário para edição.', 'error');
     }
 }
 
 async function deleteForm(formId, formName) {
-    if (confirm(`Tem certeza que deseja excluir o formulário "${formName}"?`)) {
+    if (await showConfirmationModal(`Tem certeza que deseja excluir o formulário "${formName}"?`, 'Excluir')) {
         try {
             const formRef = doc(db, 'artifacts', appId, 'public', 'data', 'forms', formId);
             await deleteDoc(formRef);
-            alert('Formulário excluído com sucesso!');
+            showNotification('Formulário excluído com sucesso!');
             loadForms();
         } catch (error) {
             console.error('Erro ao excluir formulário:', error);
-            alert('Ocorreu um erro ao excluir o formulário.');
+            showNotification('Ocorreu um erro ao excluir o formulário.', 'error');
         }
     }
 }
