@@ -129,7 +129,10 @@
         <div class="bg-gray-800 rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col">
             <div class="flex justify-between items-center p-4 border-b border-gray-700">
                 <h2 id="meeting-modal-title" class="text-xl font-bold">Agendar Nova Reunião</h2>
-                <button id="close-meeting-modal-btn" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+                <div>
+                    <button id="edit-meeting-btn" class="text-gray-400 hover:text-white text-xl hidden mr-2"><i class="fas fa-pencil-alt"></i></button>
+                    <button id="close-meeting-modal-btn" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+                </div>
             </div>
             <form id="meeting-form" class="p-6 overflow-y-auto space-y-4 custom-scrollbar">
                 <input type="hidden" id="meeting-id">
@@ -194,6 +197,9 @@
                         </div>
                     </div>
                     <div class="flex items-center gap-3">
+                        </div>
+                    <butt>
+                    <div id="meeting-action-buttons" class="flex items-center gap-3">
                         <button type="button" id="delete-meeting-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg hidden">Apagar</button>
                         <button type="button" id="cancel-meeting-btn" class="bg-gray-600 hover:bg-gray-500 font-semibold py-2 px-4 rounded-lg">Cancelar</button>
                         <button type="submit" form="meeting-form" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg">Salvar Reunião</button>
@@ -202,7 +208,7 @@
         </div>
     </div>
 
-    <script src="auth.js"></script>
+    <script type="module" src="auth.js"></script>
     <script type="module" src="common-ui.js?v=1.1"></script>
     
     <!-- Firebase SDK -->

@@ -38,32 +38,34 @@ async function initializeCalendarPage(tasksCollectionRef, meetingsCollectionRef,
 
     // --- Elementos do DOM para o Modal de Tarefas ---
     const taskModal = document.getElementById('task-modal');
-    const closeTaskModalBtn = document.getElementById('close-modal-btn');
-    const cancelTaskBtn = document.getElementById('cancel-btn');
-    const deleteTaskBtn = document.getElementById('delete-task-btn');
-    const taskForm = document.getElementById('task-form');
-    const taskModalTitle = document.getElementById('modal-title');
-    const taskAssigneeSelect = document.getElementById('task-assignee');
-    const taskLinkedCardSearch = document.getElementById('task-linked-card-search');
-    const taskLinkedCardId = document.getElementById('task-linked-card-id');
-    const taskLinkedCardResults = document.getElementById('task-linked-card-results');
+    const closeTaskModalBtn = taskModal.querySelector('#close-modal-btn');
+    const cancelTaskBtn = taskModal.querySelector('#cancel-btn');
+    const deleteTaskBtn = taskModal.querySelector('#delete-task-btn');
+    const taskForm = taskModal.querySelector('#task-form');
+    const taskModalTitle = taskModal.querySelector('#modal-title');
+    const taskAssigneeSelect = taskModal.querySelector('#task-assignee');
+    const taskLinkedCardSearch = taskModal.querySelector('#task-linked-card-search');
+    const taskLinkedCardId = taskModal.querySelector('#task-linked-card-id');
+    const taskLinkedCardResults = taskModal.querySelector('#task-linked-card-results');
     const createTaskBtnCalendar = document.getElementById('create-task-btn-calendar');
     
     // --- Elementos do DOM para o Modal de Reuniões ---
     const meetingModal = document.getElementById('meeting-modal');
-    const closeMeetingModalBtn = document.getElementById('close-meeting-modal-btn');
-    const cancelMeetingBtn = document.getElementById('cancel-meeting-btn');
-    const deleteMeetingBtn = document.getElementById('delete-meeting-btn');
-    const meetingForm = document.getElementById('meeting-form');
-    const meetingModalTitle = document.getElementById('meeting-modal-title');
-    const meetingLinkedCardSearch = document.getElementById('meeting-linked-card-search');
-    const meetingLinkedCardId = document.getElementById('meeting-linked-card-id');
-    const meetingLinkedCardResults = document.getElementById('meeting-linked-card-results');
+    const closeMeetingModalBtn = meetingModal.querySelector('#close-meeting-modal-btn');
+    const cancelMeetingBtn = meetingModal.querySelector('#cancel-meeting-btn');
+    const deleteMeetingBtn = meetingModal.querySelector('#delete-meeting-btn');
+    const meetingForm = meetingModal.querySelector('#meeting-form');
+    const meetingModalTitle = meetingModal.querySelector('#meeting-modal-title');
+    const meetingLinkedCardSearch = meetingModal.querySelector('#meeting-linked-card-search');
+    const meetingLinkedCardId = meetingModal.querySelector('#meeting-linked-card-id');
+    const meetingLinkedCardResults = meetingModal.querySelector('#meeting-linked-card-results');
     const createMeetingBtnCalendar = document.getElementById('create-meeting-btn-calendar');
-    const viewLeadBtn = document.getElementById('view-lead-btn');
-    const meetingStatusControls = document.getElementById('meeting-status-controls');
-    const meetingRealizadaBtn = document.getElementById('meeting-realizada-btn');
-    const meetingStatusOptions = document.getElementById('meeting-status-options');
+    const viewLeadBtn = meetingModal.querySelector('#view-lead-btn');
+    const meetingStatusControls = meetingModal.querySelector('#meeting-status-controls');
+    const meetingRealizadaBtn = meetingModal.querySelector('#meeting-realizada-btn');
+    const meetingStatusOptions = meetingModal.querySelector('#meeting-status-options');
+    const editMeetingBtn = meetingModal.querySelector('#edit-meeting-btn');
+    const meetingActionButtons = meetingModal.querySelector('#meeting-action-buttons');
 
     const addProspectBtnHeader = document.getElementById('addProspectBtnHeader');
 
@@ -93,6 +95,20 @@ async function initializeCalendarPage(tasksCollectionRef, meetingsCollectionRef,
         meetingModal.classList.add('flex');
     };
 
+    const setMeetingModalMode = (isEdit) => {
+        const formElements = meetingForm.elements;
+        for (let i = 0; i < formElements.length; i++) {
+            formElements[i].disabled = !isEdit;
+        }
+        if (isEdit) {
+            meetingActionButtons.classList.remove('hidden');
+            editMeetingBtn.classList.add('hidden');
+        } else {
+            meetingActionButtons.classList.add('hidden');
+            editMeetingBtn.classList.remove('hidden');
+        }
+    };
+
     const closeMeetingModal = () => {
         meetingModal.classList.add('hidden');
         meetingModal.classList.remove('flex');
@@ -103,6 +119,8 @@ async function initializeCalendarPage(tasksCollectionRef, meetingsCollectionRef,
         viewLeadBtn.classList.add('hidden'); // Garante que o botão seja escondido ao fechar
         meetingStatusControls.classList.add('hidden');
         meetingStatusOptions.classList.add('hidden');
+        editMeetingBtn.classList.add('hidden');
+        meetingActionButtons.classList.remove('hidden'); // Garante que os botões de ação apareçam ao criar nova reunião
     };
 
     const populateUsers = () => {
@@ -243,8 +261,9 @@ async function initializeCalendarPage(tasksCollectionRef, meetingsCollectionRef,
             meetingStatusControls.classList.add('hidden');
         }
         
-        meetingModalTitle.textContent = 'Editar Reunião';
-        deleteMeetingBtn.classList.remove('hidden');
+        meetingModalTitle.textContent = 'Detalhes da Reunião';
+        deleteMeetingBtn.classList.remove('hidden'); // O botão apagar fica no mesmo container dos outros
+        setMeetingModalMode(false); // Inicia em modo de visualização
         openMeetingModal();
     };
 
@@ -379,12 +398,14 @@ async function initializeCalendarPage(tasksCollectionRef, meetingsCollectionRef,
         document.getElementById('meeting-id').value = '';
         meetingModalTitle.textContent = 'Agendar Nova Reunião';
         deleteMeetingBtn.classList.add('hidden');
+        setMeetingModalMode(true); // Abre em modo de edição ao criar
         openMeetingModal();
     });
     closeMeetingModalBtn.addEventListener('click', closeMeetingModal);
     cancelMeetingBtn.addEventListener('click', closeMeetingModal);
     deleteMeetingBtn.addEventListener('click', handleDeleteMeeting);
     meetingForm.addEventListener('submit', handleMeetingFormSubmit);
+    editMeetingBtn.addEventListener('click', () => setMeetingModalMode(true));
 
     meetingRealizadaBtn.addEventListener('click', () => {
         meetingStatusOptions.classList.toggle('hidden');
