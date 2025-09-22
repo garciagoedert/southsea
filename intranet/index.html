@@ -15,7 +15,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="./log.css">
 
     <style>
         /* Custom Styles */
@@ -32,6 +31,15 @@
             @apply border-dashed border-2 border-blue-500 bg-blue-500/10;
         }
     </style>
+    <script>
+        // Redirect 'producao' user away from this page
+        (function() {
+            const userRole = sessionStorage.getItem('userRole');
+            if (userRole === 'producao') {
+                window.location.href = 'producao.html';
+            }
+        })();
+    </script>
 </head>
 <body class="bg-gray-900 text-gray-200">
 
@@ -69,6 +77,9 @@
                         </select>
                         <select id="tagFilter" class="w-full sm:w-auto bg-gray-700 border border-gray-600 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-label="Filter by tag">
                             <option value="">Todas as Tags</option>
+                        </select>
+                        <select id="userFilter" class="w-full sm:w-auto bg-gray-700 border border-gray-600 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-label="Filter by user">
+                            <option value="">Todos os Usuários</option>
                         </select>
                         <button id="resetFiltersBtn" class="w-full sm:w-auto bg-teal-600 hover:bg-teal-500 font-semibold py-2 px-4 rounded-lg transition-all duration-200 flex-shrink-0">Limpar</button>
                     </div>
@@ -228,14 +239,35 @@
         </div>
     </div>
 
+    <!-- Edit Kanban Modal -->
+    <div id="editKanbanModal" class="fixed inset-0 bg-black bg-opacity-70 z-50 hidden items-center justify-center sm:p-4">
+        <div class="bg-gray-800 w-full h-full sm:h-auto sm:rounded-xl shadow-2xl sm:max-w-2xl sm:max-h-[90vh] flex flex-col">
+            <div class="flex justify-between items-center p-4 border-b border-gray-700">
+                <h2 class="text-xl font-bold">Editar Colunas do Kanban</h2>
+                <button id="closeEditModalBtn" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+            </div>
+            <div class="p-6 overflow-y-auto">
+                <div id="kanbanColumnsContainer" class="space-y-3">
+                    <!-- Column inputs will be injected here -->
+                </div>
+                <button id="addColumnBtn" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg w-full">Adicionar Coluna</button>
+            </div>
+            <div class="flex justify-end gap-3 p-6 border-t border-gray-700">
+                <button type="button" id="cancelEditModalBtn" class="bg-gray-600 hover:bg-gray-500 font-semibold py-2 px-4 rounded-lg">Cancelar</button>
+                <button type="button" id="saveKanbanConfigBtn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg">Salvar Alterações</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Firebase SDK -->
     <script type="module">
         // Firebase Imports
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { collection, doc, addDoc, onSnapshot, updateDoc, deleteDoc, serverTimestamp, writeBatch, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { collection, doc, addDoc, onSnapshot, updateDoc, deleteDoc, serverTimestamp, writeBatch, arrayUnion, arrayRemove, getDoc, setDoc, query, where } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { db, appId, app } from './firebase-config.js';
         import { duplicateCardToProduction } from './production.js';
-        import { setupUIListeners, loadComponents } from './common-ui.js';
+        import { setupUIListeners, loadComponents, showConfirmationModal } from './common-ui.js';
+        import { loadKanbanConfig, setupEditKanbanModalListeners } from './kanban-config.js';
         
         // --- INITIALIZATION ---
         const auth = getAuth(app);
@@ -244,12 +276,9 @@
         let prospects = [];
         let filteredProspects = [];
         let prospectsListener = null;
+        let COLUMNS = {};
+        let COLUMN_NAMES = [];
 
-        const COLUMNS = {
-            'Pendente': 'pendente', 'Contactado': 'contactado', 'Reunião': 'reuniao',
-            'Proposta': 'proposta', 'Fechado': 'fechado'
-        };
-        const COLUMN_NAMES = Object.keys(COLUMNS);
         const TAGS = ['Whatsapp', 'Ligação', 'Email', 'Follow-up', 'Urgente'];
 
         // --- UI ELEMENTS ---
@@ -266,6 +295,7 @@
             if (user) {
                 if (sessionStorage.getItem('isLoggedIn') === 'true') {
                     document.getElementById('kanban-container').classList.remove('hidden');
+                    await initializeKanban();
                     setupProspectsListener();
                 } else {
                     window.location.href = 'login.html';
@@ -279,6 +309,27 @@
                 }
             }
         });
+
+        // --- KANBAN INITIALIZATION ---
+        async function initializeKanban() {
+            const defaultConfig = {
+                columnOrder: ['Pendente', 'Contactado', 'Reunião', 'Proposta', 'Fechado'],
+                columns: {
+                    'Pendente': 'pendente', 'Contactado': 'contactado', 'Reunião': 'reuniao',
+                    'Proposta': 'proposta', 'Fechado': 'fechado'
+                }
+            };
+            const config = await loadKanbanConfig('prospects', defaultConfig);
+            COLUMNS = config.columns;
+            COLUMN_NAMES = config.columnOrder;
+            
+            renderBoard(); // Initial render
+            
+            // Setup modal listeners after the first render
+            setupEditKanbanModalListeners('prospects', COLUMN_NAMES, async () => {
+                await initializeKanban(); // Re-initialize to get the latest config and re-render
+            });
+        }
 
         // --- DATA HANDLING (FIRESTORE) ---
         function setupProspectsListener() {
@@ -303,7 +354,20 @@
 
             prospectsListener = onSnapshot(q, (snapshot) => {
                 prospects = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })).filter(p => !p.pagina || p.pagina === 'Prospecção');
+                populateUserFilter();
                 applyFilters();
+
+                // Handle opening a card from URL after prospects are loaded
+                const urlParams = new URLSearchParams(window.location.search);
+                const cardIdToOpen = urlParams.get('cardId');
+                if (cardIdToOpen) {
+                    const prospectToOpen = prospects.find(p => p.id === cardIdToOpen);
+                    if (prospectToOpen) {
+                        openFormModal(prospectToOpen);
+                        // Remove the parameter from the URL to avoid re-opening on refresh
+                        history.replaceState(null, '', window.location.pathname);
+                    }
+                }
             }, (error) => {
                 console.error("Error fetching prospects:", error);
                 kanbanBoard.innerHTML = `<p class="text-red-500 text-center col-span-full">Não foi possível carregar os prospects. Verifique sua conexão e as regras do Firestore.</p>`;
@@ -354,7 +418,16 @@
                     contentArea.innerHTML = `<div class="text-center text-gray-500 p-4 text-sm flex-shrink-0 w-full">Nenhum card aqui</div>`;
                 } else {
                     columnProspects
-                        .sort((a, b) => b.prioridade - a.prioridade)
+                        .sort((a, b) => {
+                            if (status === 'Reunião') {
+                                const aHasMeeting = !!a.reuniaoId;
+                                const bHasMeeting = !!b.reuniaoId;
+                                if (aHasMeeting !== bHasMeeting) {
+                                    return aHasMeeting ? 1 : -1; // Cards sem reunião primeiro
+                                }
+                            }
+                            return b.prioridade - a.prioridade; // Ordenação padrão por prioridade
+                        })
                         .forEach(prospect => {
                             contentArea.appendChild(createProspectCard(prospect, isMobile));
                         });
@@ -376,6 +449,12 @@
 
             const tagsHTML = (prospect.tags || []).map(tag => `<span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-sky-900/50 text-sky-200">${tag}</span>`).join('');
 
+            const closedButtonHTML = prospect.status === 'Fechado'
+                ? `<button data-prospect-id="${prospect.id}" class="move-to-closed-btn mt-3 w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded-lg text-sm items-center justify-center gap-2 flex transition-all">
+                       <i class="fas fa-archive"></i> Mover para Clientes Fechados
+                   </button>`
+                : '';
+
             card.innerHTML = `
                 <div class="flex justify-between items-start">
                     <h4 class="font-bold mb-2 flex-grow pr-2">${prospect.empresa}</h4>
@@ -390,13 +469,47 @@
                 ${prospect.origemLead ? `<p class="text-xs text-gray-400 mb-2"><i class="fas fa-sign-in-alt mr-1"></i> ${prospect.origemLead}</p>` : ''}
                 <p class="text-sm text-green-400 font-semibold mb-2">R$ ${prospect.ticketEstimado?.toLocaleString('pt-BR') || 'N/A'}</p>
                 ${prospect.createdBy ? `<p class="text-xs text-gray-500 mt-2 pt-2 border-t border-gray-700"><i class="fas fa-user-plus mr-1"></i> ${prospect.createdBy}</p>` : ''}
+                ${getMeetingButtonHTML(prospect)}
+                ${closedButtonHTML}
             `;
             
-            card.addEventListener('click', () => {
+            card.addEventListener('click', async (e) => {
+                if (e.target.closest('.schedule-meeting-btn')) {
+                    e.stopPropagation(); // Impede que o modal do card abra
+                    const prospectId = e.target.closest('.schedule-meeting-btn').dataset.prospectId;
+                    window.location.href = `calendario.html?prospectId=${prospectId}`;
+                    return;
+                }
+                if (e.target.closest('.move-to-closed-btn')) {
+                    e.stopPropagation();
+                    const prospectId = e.target.closest('.move-to-closed-btn').dataset.prospectId;
+                    const confirmed = await showConfirmationModal(`Deseja mover "${prospect.empresa}" para Clientes Fechados? Esta ação não pode ser desfeita.`);
+                    if (confirmed) {
+                        await moveProspectToClosed(prospectId);
+                    }
+                    return;
+                }
                 openFormModal(prospect);
             });
 
             return card;
+        }
+
+        function getMeetingButtonHTML(prospect) {
+            if (prospect.status !== 'Reunião') {
+                return '';
+            }
+
+            if (prospect.reuniaoId) {
+                // Alterado para ser um link que leva ao calendário com o ID da reunião
+                return `<a href="calendario.html?reuniaoId=${prospect.reuniaoId}" class="mt-3 w-full text-center bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-3 rounded-lg text-sm items-center justify-center gap-2 flex transition-all">
+                           <i class="fas fa-eye"></i> Ver Reunião
+                        </a>`;
+            } else {
+                return `<button data-prospect-id="${prospect.id}" class="schedule-meeting-btn mt-3 w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded-lg text-sm items-center justify-center gap-2 flex transition-all">
+                           <i class="fas fa-calendar-plus"></i> Marcar Reunião
+                        </button>`;
+            }
         }
 
         function updateStats() {
@@ -472,14 +585,33 @@
                     updatedAt: serverTimestamp()
                 });
                 generalLog.add(user, 'Move Card', `Card "${prospect.empresa}" moved from ${oldStatus} to ${newStatus}`);
-                if (newStatus === 'Fechado') {
-                    if (prospect) {
-                        await duplicateCardToProduction(prospect);
-                        await archiveProspect(prospectId); // Arquiva o card original
-                    }
-                }
             } catch (error) {
                 console.error("Error updating status:", error);
+            }
+        }
+
+        async function moveProspectToClosed(prospectId) {
+            const user = auth.currentUser ? auth.currentUser.email || 'anonymous' : 'anonymous';
+            const prospect = prospects.find(p => p.id === prospectId);
+            try {
+                const prospectRef = doc(db, 'artifacts', appId, 'public', 'data', 'prospects', prospectId);
+                await updateDoc(prospectRef, {
+                    status: 'Concluído',
+                    pagina: 'Clientes Fechados', // This will remove it from the Kanban view
+                    updatedAt: serverTimestamp()
+                });
+
+                // Immediately remove the card from the UI for instant feedback
+                const cardElement = document.querySelector(`.prospect-card[data-id="${prospectId}"]`);
+                if (cardElement) {
+                    cardElement.remove();
+                }
+
+                if (prospect) {
+                    generalLog.add(user, 'Move Card to Closed', `Card "${prospect.empresa}" moved to Closed Clients`);
+                }
+            } catch (error) {
+                console.error("Error moving prospect to closed:", error);
             }
         }
 
@@ -488,6 +620,7 @@
             const search = document.getElementById('searchInput').value.toLowerCase();
             const priority = document.getElementById('priorityFilter').value;
             const tag = document.getElementById('tagFilter').value;
+            const user = document.getElementById('userFilter').value;
             const prospectingStatuses = Object.keys(COLUMNS);
 
 
@@ -498,7 +631,8 @@
                 const matchSearch = !search || p.empresa.toLowerCase().includes(search) || (p.setor && p.setor.toLowerCase().includes(search));
                 const matchPriority = !priority || p.prioridade.toString() === priority;
                 const matchTag = !tag || (p.tags && p.tags.includes(tag));
-                return matchSearch && matchPriority && matchTag;
+                const matchUser = !user || p.createdBy === user;
+                return matchSearch && matchPriority && matchTag && matchUser;
             });
             renderBoard();
         }
@@ -898,6 +1032,26 @@
         }
 
         // --- TAGS UTILITY ---
+        function populateUserFilter() {
+            const userFilter = document.getElementById('userFilter');
+            const selectedValue = userFilter.value; 
+            const users = [...new Set(prospects.map(p => p.createdBy).filter(Boolean))];
+            
+            // Clear existing options except the first one
+            while (userFilter.options.length > 1) {
+                userFilter.remove(1);
+            }
+
+            users.sort().forEach(user => {
+                const option = document.createElement('option');
+                option.value = user;
+                option.textContent = user;
+                userFilter.appendChild(option);
+            });
+
+            userFilter.value = selectedValue;
+        }
+
         function populateTags() {
             const tagFilter = document.getElementById('tagFilter');
             TAGS.forEach(tag => {
@@ -1027,17 +1181,18 @@
                     closeConfirmModal
                 });
 
-                const urlParams = new URLSearchParams(window.location.search);
-                const cardIdToOpen = urlParams.get('cardId');
-                if (cardIdToOpen) {
-                    const unsubscribe = onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'prospects'), (snapshot) => {
-                        const prospect = prospects.find(p => p.id === cardIdToOpen);
-                        if (prospect) {
-                            openFormModal(prospect);
-                            unsubscribe();
-                        }
-                    });
-                }
+                // Listener for the new user filter
+                document.getElementById('userFilter').addEventListener('change', applyFilters);
+
+                // Update reset button functionality
+                document.getElementById('resetFiltersBtn').addEventListener('click', () => {
+                    document.getElementById('searchInput').value = '';
+                    document.getElementById('priorityFilter').value = '';
+                    document.getElementById('tagFilter').value = '';
+                    document.getElementById('userFilter').value = '';
+                    applyFilters();
+                });
+
             });
         });
     </script>

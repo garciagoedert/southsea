@@ -1,7 +1,22 @@
-import { db } from './firebase-config.js';
+import { db, app } from './firebase-config.js';
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import { 
     doc, setDoc, getDoc, addDoc, collection, getDocs, deleteDoc, updateDoc, query, where
 } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+const auth = getAuth(app);
+
+export function onAuthReady(callback) {
+    onAuthStateChanged(auth, (user) => {
+        if (user && sessionStorage.getItem('isLoggedIn') === 'true') {
+            callback(user);
+        } else {
+            // Se não estiver logado, redireciona para a página de login
+            console.log("Usuário não autenticado, redirecionando...");
+            window.location.href = 'login.html';
+        }
+    });
+}
 
 export async function findUser(email, password) {
     const usersRef = collection(db, "users");

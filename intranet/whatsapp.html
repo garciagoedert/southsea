@@ -78,6 +78,9 @@
                         <select id="tagFilter" class="w-full sm:w-auto bg-gray-700 border border-gray-600 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-label="Filter by tag">
                             <option value="">Todas as Tags</option>
                         </select>
+                        <select id="userFilter" class="w-full sm:w-auto bg-gray-700 border border-gray-600 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-label="Filter by user">
+                            <option value="">Todos os Usuários</option>
+                        </select>
                         <button id="quickMessagesBtn" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-500 font-semibold py-2 px-3 rounded-lg transition-all duration-200 flex-shrink-0">Mensagens Rápidas</button>
                         <button id="resetFiltersBtn" class="w-full sm:w-auto bg-teal-600 hover:bg-teal-500 font-semibold py-2 px-3 rounded-lg transition-all duration-200 flex-shrink-0">Limpar</button>
                     </div>
@@ -245,6 +248,26 @@
         </div>
     </div>
 
+    <!-- Edit Kanban Modal -->
+    <div id="editKanbanModal" class="fixed inset-0 bg-black bg-opacity-70 z-50 hidden items-center justify-center sm:p-4">
+        <div class="bg-gray-800 w-full h-full sm:h-auto sm:rounded-xl shadow-2xl sm:max-w-2xl sm:max-h-[90vh] flex flex-col">
+            <div class="flex justify-between items-center p-4 border-b border-gray-700">
+                <h2 class="text-xl font-bold">Editar Colunas do Kanban</h2>
+                <button id="closeEditModalBtn" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+            </div>
+            <div class="p-6 overflow-y-auto">
+                <div id="kanbanColumnsContainer" class="space-y-3">
+                    <!-- Column inputs will be injected here -->
+                </div>
+                <button id="addColumnBtn" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg w-full">Adicionar Coluna</button>
+            </div>
+            <div class="flex justify-end gap-3 p-6 border-t border-gray-700">
+                <button type="button" id="cancelEditModalBtn" class="bg-gray-600 hover:bg-gray-500 font-semibold py-2 px-4 rounded-lg">Cancelar</button>
+                <button type="button" id="saveKanbanConfigBtn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg">Salvar Alterações</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Quick Messages Modal -->
     <div id="quickMessagesModal" class="fixed inset-0 bg-black bg-opacity-70 z-50 hidden items-center justify-center p-4">
         <div class="bg-gray-800 rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col">
@@ -306,7 +329,7 @@
     <script type="module">
         // Firebase Imports
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { collection, doc, addDoc, onSnapshot, updateDoc, deleteDoc, serverTimestamp, writeBatch, arrayUnion } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { collection, doc, addDoc, onSnapshot, updateDoc, deleteDoc, serverTimestamp, writeBatch, arrayUnion, getDoc, setDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { db, appId, app } from './firebase-config.js';
         import { duplicateCardToProduction } from './production.js';
         import { setupUIListeners, loadComponents } from './common-ui.js';
@@ -318,12 +341,9 @@
         let prospects = [];
         let filteredProspects = [];
         let prospectsListener = null;
+        let COLUMNS = {};
+        let COLUMN_NAMES = [];
 
-        const COLUMNS = {
-            'Base': 'pendente', 'Back': 'contactado', 'M1': 'reuniao',
-            'M2': 'proposta', 'M3': 'fechado'
-        };
-        const COLUMN_NAMES = Object.keys(COLUMNS);
         const TAGS = ['Whatsapp', 'Ligação', 'Email', 'Follow-up', 'Urgente'];
 
         // --- UI ELEMENTS ---
@@ -351,6 +371,7 @@
             if (user) {
                 if (sessionStorage.getItem('isLoggedIn') === 'true') {
                     document.getElementById('kanban-container').classList.remove('hidden');
+                    await loadKanbanConfig();
                     setupProspectsListener();
                     setupQuickMessagesListener(); // Start listening for quick messages
                 } else {
@@ -366,6 +387,156 @@
             }
         });
 
+        // --- KANBAN CONFIG HANDLING ---
+        async function loadKanbanConfig() {
+            const configRef = doc(db, 'artifacts', appId, 'public', 'data', 'kanban_configs', 'whatsapp');
+            const desiredOrder = ['Base', 'Back', 'M1', 'M2', 'M3'];
+            try {
+                const docSnap = await getDoc(configRef);
+                if (docSnap.exists()) {
+                    COLUMNS = docSnap.data().columns;
+                } else {
+                    // Create default config if it doesn't exist
+                    COLUMNS = {
+                        'Base': 'base', 'Back': 'back', 'M1': 'm1',
+                        'M2': 'm2', 'M3': 'm3'
+                    };
+                    await setDoc(configRef, { columns: COLUMNS });
+                }
+                
+                const allColumnNames = Object.keys(COLUMNS);
+                const lowerCaseDesiredOrder = desiredOrder.map(name => name.toLowerCase());
+
+                COLUMN_NAMES = allColumnNames.sort((a, b) => {
+                    const indexA = lowerCaseDesiredOrder.indexOf(a.toLowerCase());
+                    const indexB = lowerCaseDesiredOrder.indexOf(b.toLowerCase());
+
+                    if (indexA !== -1 && indexB !== -1) return indexA - indexB; // Both are in the desired order list
+                    if (indexA !== -1) return -1; // Only A is in the list, so A comes first
+                    if (indexB !== -1) return 1;  // Only B is in the list, so B comes first
+                    return a.localeCompare(b); // Neither are in the list, sort them alphabetically
+                });
+
+            } catch (error) {
+                console.error("Error loading Kanban config:", error);
+                // Fallback to default if there's an error
+                COLUMNS = {
+                    'Base': 'base', 'Back': 'back', 'M1': 'm1',
+                    'M2': 'm2', 'M3': 'm3'
+                };
+                COLUMN_NAMES = desiredOrder;
+            }
+        }
+
+        function setupEditKanbanModalListeners() {
+            const editKanbanModal = document.getElementById('editKanbanModal');
+            const editKanbanBtn = document.getElementById('editKanbanBtn');
+            const closeEditModalBtn = document.getElementById('closeEditModalBtn');
+            const cancelEditModalBtn = document.getElementById('cancelEditModalBtn');
+            const addColumnBtn = document.getElementById('addColumnBtn');
+            const saveKanbanConfigBtn = document.getElementById('saveKanbanConfigBtn');
+            const kanbanColumnsContainer = document.getElementById('kanbanColumnsContainer');
+            const userRole = sessionStorage.getItem('userRole');
+
+            if (userRole !== 'admin' && editKanbanBtn) {
+                editKanbanBtn.classList.add('hidden');
+                return;
+            } else if (editKanbanBtn) {
+                editKanbanBtn.classList.remove('hidden');
+            }
+
+            const openModal = () => {
+                kanbanColumnsContainer.innerHTML = ''; // Clear previous inputs
+                COLUMN_NAMES.forEach(name => {
+                    kanbanColumnsContainer.appendChild(createColumnInput(name));
+                });
+                editKanbanModal.classList.remove('hidden');
+                editKanbanModal.classList.add('flex');
+            };
+
+            const closeModal = () => {
+                editKanbanModal.classList.add('hidden');
+                editKanbanModal.classList.remove('flex');
+            };
+
+            const createColumnInput = (name = '') => {
+                const div = document.createElement('div');
+                div.className = 'flex items-center gap-2';
+                div.innerHTML = `
+                    <input type="text" value="${name}" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 column-name-input" placeholder="Nome da Coluna">
+                    <button class="remove-column-btn bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-3 rounded-lg">&times;</button>
+                `;
+                div.querySelector('.remove-column-btn').addEventListener('click', () => div.remove());
+                return div;
+            };
+
+            if (editKanbanBtn) {
+                editKanbanBtn.addEventListener('click', openModal);
+            }
+            closeEditModalBtn.addEventListener('click', closeModal);
+            cancelEditModalBtn.addEventListener('click', closeModal);
+            addColumnBtn.addEventListener('click', () => {
+                kanbanColumnsContainer.appendChild(createColumnInput());
+            });
+
+            saveKanbanConfigBtn.addEventListener('click', async () => {
+                const newColumnInputs = Array.from(kanbanColumnsContainer.querySelectorAll('.column-name-input'));
+                const newColumnNames = newColumnInputs.map(input => input.value.trim());
+                
+                // Basic validation: Check for duplicate names
+                if (new Set(newColumnNames).size !== newColumnNames.length) {
+                    alert("Os nomes das colunas devem ser únicos.");
+                    return;
+                }
+
+                // Find renamed columns
+                const renameMap = new Map();
+                COLUMN_NAMES.forEach((oldName, index) => {
+                    if (newColumnNames[index] && oldName !== newColumnNames[index]) {
+                        renameMap.set(oldName, newColumnNames[index]);
+                    }
+                });
+
+                const newColumns = {};
+                newColumnNames.forEach(name => {
+                    if (name) {
+                        const id = name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+                        newColumns[name] = id;
+                    }
+                });
+
+                const configRef = doc(db, 'artifacts', appId, 'public', 'data', 'kanban_configs', 'whatsapp');
+                try {
+                    // If there are renames, update prospects first
+                    if (renameMap.size > 0) {
+                        const batch = writeBatch(db);
+                        const prospectsRef = collection(db, 'artifacts', appId, 'public', 'data', 'prospects');
+                        
+                        for (const [oldName, newName] of renameMap.entries()) {
+                            const q = query(prospectsRef, where("status", "==", oldName));
+                            const querySnapshot = await getDocs(q);
+                            querySnapshot.forEach((prospectDoc) => {
+                                const prospectRef = doc(db, 'artifacts', appId, 'public', 'data', 'prospects', prospectDoc.id);
+                                batch.update(prospectRef, { status: newName });
+                            });
+                        }
+                        await batch.commit();
+                    }
+
+                    // Now, save the new column configuration
+                    await setDoc(configRef, { columns: newColumns });
+                    
+                    await loadKanbanConfig(); // Reload config
+                    renderBoard(); // Re-render the board with new columns
+                    closeModal();
+
+                } catch (error) {
+                    console.error("Error saving Kanban config:", error);
+                    alert("Erro ao salvar a configuração do Kanban.");
+                }
+            });
+        }
+
         // --- DATA HANDLING (FIRESTORE) ---
         function setupProspectsListener() {
             if (prospectsListener) prospectsListener();
@@ -373,6 +544,7 @@
             const prospectsCollection = collection(db, 'artifacts', appId, 'public', 'data', 'prospects');
             prospectsListener = onSnapshot(prospectsCollection, (snapshot) => {
                 prospects = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })).filter(p => p.pagina === 'WhatsApp');
+                populateUserFilter();
                 applyFilters();
             }, (error) => {
                 console.error("Error fetching prospects:", error);
@@ -501,22 +673,13 @@
         }
 
         // --- RENDERING ---
-        const statusEquivalence = {
-            'Base': ['Base', 'Pendente'],
-            'Back': ['Back', 'Contactado'],
-            'M1': ['M1', 'Reunião'],
-            'M2': ['M2', 'Proposta'],
-            'M3': ['M3', 'Fechado']
-        };
-
         function renderBoard() {
             kanbanBoard.innerHTML = ''; 
             const isMobile = window.innerWidth < 768;
 
             COLUMN_NAMES.forEach(status => {
                 const columnId = COLUMNS[status];
-                const equivalentStatuses = statusEquivalence[status] || [status];
-                const columnProspects = filteredProspects.filter(p => equivalentStatuses.includes(p.status));
+                const columnProspects = filteredProspects.filter(p => p.status === status);
                 
                 const columnEl = document.createElement('div');
                 
@@ -682,17 +845,14 @@
             const search = document.getElementById('searchInput').value.toLowerCase();
             const priority = document.getElementById('priorityFilter').value;
             const tag = document.getElementById('tagFilter').value;
-            const allValidStatuses = ['Base', 'Pendente', 'Back', 'Contactado', 'M1', 'Reunião', 'M2', 'Proposta', 'M3', 'Fechado'];
-
-
+            const user = document.getElementById('userFilter').value;
+            
             filteredProspects = prospects.filter(p => {
-                const isValidStatus = allValidStatuses.includes(p.status);
-                if (!isValidStatus) return false;
-
                 const matchSearch = !search || p.empresa.toLowerCase().includes(search) || (p.setor && p.setor.toLowerCase().includes(search));
                 const matchPriority = !priority || p.prioridade.toString() === priority;
                 const matchTag = !tag || (p.tags && p.tags.includes(tag));
-                return matchSearch && matchPriority && matchTag;
+                const matchUser = !user || p.createdBy === user;
+                return matchSearch && matchPriority && matchTag && matchUser;
             });
             renderBoard();
         }
@@ -1043,6 +1203,25 @@
         }
 
         // --- TAGS UTILITY ---
+        function populateUserFilter() {
+            const userFilter = document.getElementById('userFilter');
+            const selectedValue = userFilter.value;
+            const users = [...new Set(prospects.map(p => p.createdBy).filter(Boolean))];
+            
+            while (userFilter.options.length > 1) {
+                userFilter.remove(1);
+            }
+
+            users.sort().forEach(user => {
+                const option = document.createElement('option');
+                option.value = user;
+                option.textContent = user;
+                userFilter.appendChild(option);
+            });
+
+            userFilter.value = selectedValue;
+        }
+        
         function populateTags() {
             const tagFilter = document.getElementById('tagFilter');
             TAGS.forEach(tag => {
@@ -1173,6 +1352,8 @@
                     applyFilters,
                     openQuickMessagesModal // Add new function to listeners
                 });
+                
+                setupEditKanbanModalListeners();
 
                 // --- QUICK MESSAGES EVENT LISTENERS ---
                 document.getElementById('closeQuickMessagesModalBtn').addEventListener('click', closeQuickMessagesModal);

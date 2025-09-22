@@ -1,3 +1,4 @@
+import { duplicateCardToProduction } from './production.js';
 import { loadComponents, setupUIListeners } from './common-ui.js';
 import { updateUser } from './auth.js';
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -11,6 +12,7 @@ const auth = getAuth(app);
 // --- GLOBAL STATE ---
 let currentClientData = null;
 let currentClientId = null;
+let allUsers = []; // Cache for user search
 
 // --- DOM ELEMENTS ---
 const pageTitle = document.getElementById('page-title');
@@ -23,6 +25,26 @@ const cancelEditBtn = document.getElementById('cancel-edit-btn');
 const viewMode = document.getElementById('view-mode');
 const editMode = document.getElementById('edit-mode');
 const addLinkBtn = document.getElementById('add-link-btn');
+
+// Team Association Elements
+const associateCsBtn = document.getElementById('associate-cs-btn');
+const associateProductionBtn = document.getElementById('associate-production-btn');
+const csResponsibleContainer = document.getElementById('cs-responsible-container');
+const productionTeamContainer = document.getElementById('production-team-container');
+const associateCsModal = document.getElementById('associateCsModal');
+const closeCsModalBtn = document.getElementById('closeCsModalBtn');
+const csSearchInput = document.getElementById('cs-search-input');
+const csSearchResults = document.getElementById('cs-search-results');
+const associateProductionModal = document.getElementById('associateProductionModal');
+const closeProductionModalBtn = document.getElementById('closeProductionModalBtn');
+const productionSearchInput = document.getElementById('production-search-input');
+const productionSearchResults = document.getElementById('production-search-results');
+const productionSubroleSelection = document.getElementById('production-subrole-selection');
+const selectedProductionUserName = document.getElementById('selected-production-user-name');
+const subroleSelect = document.getElementById('subrole-select');
+const cancelProductionAssociationBtn = document.getElementById('cancel-production-association-btn');
+const confirmProductionAssociationBtn = document.getElementById('confirm-production-association-btn');
+
 
 // --- INITIALIZATION ---
 async function setupPage() {
@@ -41,9 +63,22 @@ async function setupPage() {
         if (userRole === 'admin' || (userRole === 'cs' && currentUser.associatedClients?.includes(currentClientId))) {
             actionButtonsContainer.classList.remove('hidden');
         }
+
+        // Lógica de segurança do lado do cliente
+        const allowedRoles = ['admin', 'cs', 'closer'];
+        if (allowedRoles.includes(userRole)) {
+            document.getElementById('associate-cs-btn').classList.remove('hidden');
+            document.getElementById('associate-production-btn').classList.remove('hidden');
+            document.getElementById('manage-services-btn').classList.remove('hidden');
+        } else {
+            document.getElementById('associate-cs-btn').classList.add('hidden');
+            document.getElementById('associate-production-btn').classList.add('hidden');
+            document.getElementById('manage-services-btn').classList.add('hidden');
+        }
         
         await loadClientData(currentClientId);
         setupClientEventListeners();
+        setupTeamAssociationListeners();
     } else {
         // --- USER PROFILE MODE ---
         pageTitle.textContent = 'Meu Perfil';
@@ -57,6 +92,7 @@ async function setupPage() {
 // --- CLIENT MODE FUNCTIONS ---
 async function loadClientData(clientId) {
     try {
+        await fetchAllUsers(); // Fetch users before rendering client data
         const clientRef = doc(db, 'artifacts', appId, 'public', 'data', 'prospects', clientId);
         const clientSnap = await getDoc(clientRef);
 
@@ -64,6 +100,9 @@ async function loadClientData(clientId) {
             currentClientData = clientSnap.data();
             renderViewMode();
             loadClientForms(clientId); // Carrega os formulários do cliente
+            renderResponsibleTeam();
+            renderContractedServices(); // Renderiza os serviços contratados
+            setupServicesManagementListeners(); // Configura os listeners para o modal de serviços
         } else {
             handleClientError("Cliente não encontrado.");
         }
@@ -109,9 +148,13 @@ async function loadClientForms(clientId) {
         }
 
         formsListContainer.innerHTML = ''; // Limpa o container
+        let hasCompletedForm = false;
 
         for (const instanceDoc of snapshot.docs) {
             const instance = instanceDoc.data();
+            if (instance.status === 'Concluído') {
+                hasCompletedForm = true;
+            }
             const instanceId = instanceDoc.id;
             const formRef = doc(db, 'artifacts', appId, 'public', 'data', 'forms', instance.formTemplateId);
             const formDoc = await getDoc(formRef);
@@ -194,6 +237,16 @@ async function loadClientForms(clientId) {
             `;
             formsListContainer.innerHTML += cardHtml;
         }
+
+        // Habilita o botão de associar produção se houver formulário concluído
+        if (hasCompletedForm) {
+            associateProductionBtn.disabled = false;
+            associateProductionBtn.title = 'Adicionar membro da equipe de produção';
+        } else {
+            associateProductionBtn.disabled = true;
+            associateProductionBtn.title = 'Associe e conclua um formulário para habilitar';
+        }
+
     } catch (error) {
         console.error("Erro ao carregar instâncias de formulários:", error);
         formsListContainer.innerHTML = '<p class="text-red-500">Erro ao carregar formulários.</p>';
@@ -773,6 +826,7 @@ function setupUserProfile() {
     const userNameDisplay = document.getElementById('user-name-display');
     const userEmailDisplay = document.getElementById('user-email-display');
     const userAvatar = document.getElementById('user-avatar');
+    const userAvatarIcon = userAvatar ? userAvatar.nextElementSibling : null;
     const editProfileForm = document.getElementById('edit-profile-form');
     const nameInput = document.getElementById('name');
     const passwordInput = document.getElementById('password');
@@ -792,12 +846,15 @@ function setupUserProfile() {
     nameInput.value = currentUser.name;
     
     const storedPic = localStorage.getItem(`profilePic_${currentUser.email}`);
-    if (storedPic) {
-        userAvatar.src = storedPic;
-    } else if (currentUser.profilePicture) {
-        userAvatar.src = currentUser.profilePicture;
+    const profilePicture = storedPic || currentUser.profilePicture;
+
+    if (profilePicture) {
+        userAvatar.src = profilePicture;
+        userAvatar.classList.remove('hidden');
+        if (userAvatarIcon) userAvatarIcon.classList.add('hidden');
     } else {
-        userAvatar.src = 'default-profile.svg';
+        userAvatar.classList.add('hidden');
+        if (userAvatarIcon) userAvatarIcon.classList.remove('hidden');
     }
 
     editProfileForm.addEventListener('submit', async function(e) {
@@ -816,12 +873,17 @@ function setupUserProfile() {
             const success = await updateUser(currentUser.email, updatedData);
             if (success) {
                 currentUser.name = newName;
+                if (updatedData.profilePicture) {
+                    currentUser.profilePicture = updatedData.profilePicture;
+                }
                 sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
                 sessionStorage.setItem('userName', newName);
 
                 userNameDisplay.textContent = newName;
                 if (updatedData.profilePicture) {
                     userAvatar.src = updatedData.profilePicture;
+                    userAvatar.classList.remove('hidden');
+                    if (userAvatarIcon) userAvatarIcon.classList.add('hidden');
                     localStorage.setItem(`profilePic_${currentUser.email}`, updatedData.profilePicture);
                 }
                 showNotification('Perfil atualizado com sucesso!');
@@ -850,6 +912,131 @@ function setupUserProfile() {
     });
 }
 
+// --- SERVICES MANAGEMENT FUNCTIONS ---
+
+function renderContractedServices() {
+    const container = document.getElementById('contracted-services-list');
+    const services = currentClientData.contractedServices || [];
+
+    if (services.length === 0) {
+        container.innerHTML = '<p class="text-gray-400">Nenhum serviço contratado.</p>';
+        return;
+    }
+
+    container.innerHTML = '';
+    services.sort((a, b) => a.area.localeCompare(b.area) || a.serviceName.localeCompare(b.serviceName));
+    
+    services.forEach(service => {
+        const servicePill = document.createElement('div');
+        servicePill.className = 'inline-block bg-gray-700 text-gray-200 text-sm font-medium mr-2 px-3 py-1 rounded-full';
+        servicePill.textContent = `${service.area} - ${service.serviceName}`;
+        container.appendChild(servicePill);
+    });
+}
+
+async function loadAllServices() {
+    try {
+        const servicesRef = collection(db, 'artifacts', appId, 'public', 'data', 'services');
+        const q = query(servicesRef, orderBy('name'));
+        const snapshot = await getDocs(q);
+        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    } catch (error) {
+        console.error("Erro ao carregar todos os serviços:", error);
+        showNotification("Erro ao carregar a lista de serviços.", "error");
+        return [];
+    }
+}
+
+function setupServicesManagementListeners() {
+    const manageBtn = document.getElementById('manage-services-btn');
+    const modal = document.getElementById('manageServicesModal');
+    const closeModalBtn = document.getElementById('closeServicesModalBtn');
+    const saveBtn = document.getElementById('save-services-btn');
+    const modalContent = document.getElementById('services-modal-content');
+
+    manageBtn.addEventListener('click', async () => {
+        modalContent.innerHTML = '<p class="text-gray-400">Carregando serviços...</p>';
+        modal.classList.remove('hidden');
+
+        const allServices = await loadAllServices();
+        const contractedServiceIds = new Set((currentClientData.contractedServices || []).map(s => s.serviceId));
+
+        if (allServices.length === 0) {
+            modalContent.innerHTML = '<p class="text-gray-400">Nenhum serviço cadastrado no sistema.</p>';
+            return;
+        }
+
+        const servicesByArea = allServices.reduce((acc, service) => {
+            const area = (service.area || 'Outros').replace(/\s+/g, '');
+            if (!acc[area]) {
+                acc[area] = [];
+            }
+            acc[area].push(service);
+            return acc;
+        }, {});
+
+        let html = '';
+        for (const area in servicesByArea) {
+            html += `<h3 class="text-lg font-semibold text-white mt-4 mb-2 border-b border-gray-600 pb-2">${area}</h3>`;
+            servicesByArea[area].forEach(service => {
+                const isChecked = contractedServiceIds.has(service.id);
+                html += `
+                    <div class="flex items-center my-2">
+                        <input id="service-${service.id}" type="checkbox" value="${service.id}" data-name="${service.name}" data-area="${service.area}" 
+                               class="h-4 w-4 text-indigo-600 bg-gray-700 border-gray-600 rounded focus:ring-indigo-500" ${isChecked ? 'checked' : ''}>
+                        <label for="service-${service.id}" class="ml-3 block text-sm font-medium text-gray-300">${service.name}</label>
+                    </div>
+                `;
+            });
+        }
+        modalContent.innerHTML = html;
+    });
+
+    closeModalBtn.addEventListener('click', () => modal.classList.add('hidden'));
+
+    saveBtn.addEventListener('click', async () => {
+        const selectedServicesMap = new Map();
+        const checkboxes = modalContent.querySelectorAll('input[type="checkbox"]:checked');
+        const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+
+        checkboxes.forEach(cb => {
+            if (!selectedServicesMap.has(cb.value)) {
+                selectedServicesMap.set(cb.value, {
+                    serviceId: cb.value,
+                    serviceName: cb.dataset.name,
+                    area: cb.dataset.area,
+                    associatedAt: Timestamp.now(),
+                    associatedBy: currentUser.email
+                });
+            }
+        });
+
+        const selectedServices = Array.from(selectedServicesMap.values());
+
+        try {
+            saveBtn.disabled = true;
+            saveBtn.textContent = 'Salvando...';
+            const clientRef = doc(db, 'artifacts', appId, 'public', 'data', 'prospects', currentClientId);
+            await updateDoc(clientRef, {
+                contractedServices: selectedServices
+            });
+
+            currentClientData.contractedServices = selectedServices;
+            renderContractedServices();
+            modal.classList.add('hidden');
+            showNotification('Serviços atualizados com sucesso!');
+
+        } catch (error) {
+            console.error("Erro ao salvar serviços:", error);
+            showNotification("Erro ao salvar serviços.", "error");
+        } finally {
+            saveBtn.disabled = false;
+            saveBtn.textContent = 'Salvar Alterações';
+        }
+    });
+}
+
+
 // --- AUTHENTICATION & LOAD ---
 onAuthStateChanged(auth, (user) => {
     if (user && sessionStorage.getItem('isLoggedIn') === 'true') {
@@ -862,3 +1049,305 @@ onAuthStateChanged(auth, (user) => {
         window.location.href = 'login.html';
     }
 });
+
+// --- TEAM ASSOCIATION FUNCTIONS ---
+
+async function fetchAllUsers() {
+    if (allUsers.length > 0) return;
+    try {
+        const usersRef = collection(db, 'users');
+        const snapshot = await getDocs(usersRef);
+        allUsers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    } catch (error) {
+        console.error("Erro ao buscar todos os usuários:", error);
+        showNotification("Erro ao carregar lista de usuários.", "error");
+    }
+}
+
+function renderResponsibleTeam() {
+    renderCsResponsible();
+    renderProductionTeam();
+}
+
+function renderCsResponsible() {
+    csResponsibleContainer.innerHTML = '<p class="text-gray-400">Nenhum CS associado.</p>';
+    if (currentClientData && currentClientData.csResponsibleId) {
+        const csUser = allUsers.find(u => u.id === currentClientData.csResponsibleId);
+        if (csUser) {
+            const avatarHtml = csUser.profilePicture
+                ? `<img src="${csUser.profilePicture}" class="w-10 h-10 rounded-full">`
+                : `<i class="fas fa-user-circle text-gray-500 text-4xl w-10 h-10 flex items-center justify-center"></i>`;
+
+            csResponsibleContainer.innerHTML = `
+                <div class="flex items-center gap-3">
+                    ${avatarHtml}
+                    <div>
+                        <p class="font-semibold text-white">${csUser.name}</p>
+                        <p class="text-sm text-gray-400">${csUser.email}</p>
+                    </div>
+                </div>
+            `;
+        }
+    }
+}
+
+function getRoleColor(role) {
+    const lowerCaseRole = role ? role.toLowerCase() : '';
+    switch (lowerCaseRole) {
+        case 'designer':
+            return { bg: 'bg-blue-900/50', text: 'text-blue-200' };
+        case 'dev':
+            return { bg: 'bg-green-900/50', text: 'text-green-200' };
+        case 'gestor':
+            return { bg: 'bg-purple-900/50', text: 'text-purple-200' };
+        default:
+            return { bg: 'bg-gray-700', text: 'text-gray-200' };
+    }
+}
+
+function renderProductionTeam() {
+    productionTeamContainer.innerHTML = '<p class="text-gray-400">Nenhum membro de produção associado.</p>';
+    if (currentClientData && currentClientData.productionTeam && currentClientData.productionTeam.length > 0) {
+        productionTeamContainer.innerHTML = ''; // Limpa o container
+        
+        currentClientData.productionTeam.forEach(member => {
+            const user = allUsers.find(u => u.id === member.userId);
+            if (user) {
+                const roleColor = getRoleColor(member.subRole);
+                const avatarHtml = user.profilePicture
+                    ? `<img src="${user.profilePicture}" class="w-10 h-10 rounded-full">`
+                    : `<i class="fas fa-user-circle text-gray-500 text-4xl w-10 h-10 flex items-center justify-center"></i>`;
+
+                const memberCard = document.createElement('div');
+                memberCard.className = 'flex items-center justify-between bg-gray-700 p-3 rounded-lg mb-2';
+                
+                memberCard.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        ${avatarHtml}
+                        <div>
+                            <p class="font-semibold text-white">${user.name}</p>
+                            <p class="text-sm text-gray-400">${user.email}</p>
+                            <p class="text-xs font-bold ${roleColor.text} mt-1 capitalize">${member.subRole}</p>
+                        </div>
+                    </div>
+                    <button class="text-gray-400 hover:text-red-500 remove-production-member-btn p-2" data-user-id="${user.id}" title="Remover ${user.name}">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                `;
+                productionTeamContainer.appendChild(memberCard);
+            }
+        });
+    }
+}
+
+function setupTeamAssociationListeners() {
+    // CS Association
+    associateCsBtn.addEventListener('click', () => {
+        csSearchInput.value = '';
+        renderCsSearchResults('');
+        associateCsModal.classList.remove('hidden');
+    });
+    closeCsModalBtn.addEventListener('click', () => associateCsModal.classList.add('hidden'));
+    csSearchInput.addEventListener('keyup', () => renderCsSearchResults(csSearchInput.value));
+
+    // Production Association
+    associateProductionBtn.addEventListener('click', () => {
+        productionSearchInput.value = '';
+        productionSubroleSelection.classList.add('hidden');
+        renderProductionSearchResults('');
+        associateProductionModal.classList.remove('hidden');
+    });
+    closeProductionModalBtn.addEventListener('click', () => associateProductionModal.classList.add('hidden'));
+    productionSearchInput.addEventListener('keyup', () => renderProductionSearchResults(productionSearchInput.value));
+    cancelProductionAssociationBtn.addEventListener('click', () => {
+        productionSubroleSelection.classList.add('hidden');
+        productionSearchInput.value = '';
+    });
+
+    productionTeamContainer.addEventListener('click', async (e) => {
+        const removeButton = e.target.closest('.remove-production-member-btn');
+        if (removeButton) {
+            const userIdToRemove = removeButton.dataset.userId;
+            if (await showConfirmationModal('Tem certeza que deseja remover este membro da equipe?', 'Remover')) {
+                removeProductionMember(userIdToRemove);
+            }
+        }
+    });
+}
+
+function renderCsSearchResults(searchTerm) {
+    csSearchResults.innerHTML = '';
+    const lowerCaseSearchTerm = searchTerm.toLowerCase();
+    const results = allUsers.filter(user =>
+        (user.role === 'cs' || user.role === 'admin') &&
+        (user.name.toLowerCase().includes(lowerCaseSearchTerm) || user.email.toLowerCase().includes(lowerCaseSearchTerm))
+    );
+
+    if (results.length === 0) {
+        csSearchResults.innerHTML = '<p class="text-gray-400 p-2">Nenhum usuário encontrado.</p>';
+        return;
+    }
+
+    results.forEach(user => {
+        const avatarHtml = user.profilePicture
+            ? `<img src="${user.profilePicture}" class="w-8 h-8 rounded-full">`
+            : `<i class="fas fa-user-circle text-gray-500 text-2xl w-8 h-8 flex items-center justify-center"></i>`;
+
+        const userDiv = document.createElement('div');
+        userDiv.className = 'p-2 hover:bg-gray-600 cursor-pointer flex items-center gap-3';
+        userDiv.innerHTML = `
+            ${avatarHtml}
+            <div>
+                <p class="font-semibold text-white">${user.name}</p>
+                <p class="text-sm text-gray-400">${user.email}</p>
+            </div>
+        `;
+        userDiv.addEventListener('click', () => associateCs(user.id));
+        csSearchResults.appendChild(userDiv);
+    });
+}
+
+function renderProductionSearchResults(searchTerm) {
+    productionSearchResults.innerHTML = '';
+    const lowerCaseSearchTerm = searchTerm.toLowerCase();
+    const currentTeamIds = currentClientData.productionTeam?.map(m => m.userId) || [];
+
+    const results = allUsers.filter(user => {
+        const isProducitonWithSubroles = user.role === 'producao' && user.subRoles && user.subRoles.length > 0;
+        const isAdmin = user.role === 'admin';
+        const isEligible = isProducitonWithSubroles || isAdmin;
+
+        return isEligible &&
+            !currentTeamIds.includes(user.id) &&
+            (user.name.toLowerCase().includes(lowerCaseSearchTerm) || user.email.toLowerCase().includes(lowerCaseSearchTerm));
+    });
+
+    if (results.length === 0) {
+        productionSearchResults.innerHTML = '<p class="text-gray-400 p-2">Nenhum usuário encontrado ou todos já estão na equipe.</p>';
+        return;
+    }
+
+    results.forEach(user => {
+        const avatarHtml = user.profilePicture
+            ? `<img src="${user.profilePicture}" class="w-8 h-8 rounded-full">`
+            : `<i class="fas fa-user-circle text-gray-500 text-2xl w-8 h-8 flex items-center justify-center"></i>`;
+
+        const userDiv = document.createElement('div');
+        userDiv.className = 'p-2 hover:bg-gray-600 cursor-pointer flex items-center gap-3';
+        userDiv.innerHTML = `
+            ${avatarHtml}
+            <div>
+                <p class="font-semibold text-white">${user.name}</p>
+                <p class="text-sm text-gray-400">${user.email}</p>
+            </div>
+        `;
+        userDiv.addEventListener('click', () => selectProductionMember(user));
+        productionSearchResults.appendChild(userDiv);
+    });
+}
+
+function selectProductionMember(user) {
+    selectedProductionUserName.textContent = user.name;
+    
+    const assignedRoles = currentClientData.productionTeam?.map(m => m.subRole.toLowerCase()) || [];
+    let availableRoles = [];
+
+    if (user.role === 'admin') {
+        availableRoles = ['designer', 'dev', 'gestor'];
+    } else {
+        availableRoles = user.subRoles || [];
+    }
+
+    const filteredRoles = availableRoles.filter(role => !assignedRoles.includes(role.toLowerCase()));
+
+    subroleSelect.innerHTML = '';
+    if (filteredRoles.length > 0) {
+        filteredRoles.forEach(role => {
+            const option = document.createElement('option');
+            option.value = role;
+            option.textContent = role.charAt(0).toUpperCase() + role.slice(1);
+            subroleSelect.appendChild(option);
+        });
+        confirmProductionAssociationBtn.disabled = false;
+    } else {
+        subroleSelect.innerHTML = '<option value="">Nenhuma função disponível</option>';
+        confirmProductionAssociationBtn.disabled = true;
+    }
+
+    productionSubroleSelection.classList.remove('hidden');
+    confirmProductionAssociationBtn.onclick = () => {
+        if (subroleSelect.value) {
+            associateProductionMember(user.id, subroleSelect.value);
+        } else {
+            showNotification('Nenhuma função disponível para este usuário.', 'info');
+        }
+    };
+}
+
+async function associateCs(userId) {
+    try {
+        const clientRef = doc(db, 'artifacts', appId, 'public', 'data', 'prospects', currentClientId);
+        await updateDoc(clientRef, { csResponsibleId: userId });
+
+        // Reativando a atualização do documento do usuário
+        const userRef = doc(db, 'users', userId);
+        const userDoc = await getDoc(userRef);
+        if (userDoc.exists()) {
+            const userData = userDoc.data();
+            const associatedClients = new Set(userData.associatedClients || []);
+            associatedClients.add(currentClientId);
+            await updateDoc(userRef, { associatedClients: Array.from(associatedClients) });
+        }
+
+        currentClientData.csResponsibleId = userId;
+        renderCsResponsible();
+        associateCsModal.classList.add('hidden');
+        showNotification('CS associado com sucesso!', 'success');
+    } catch (error) {
+        console.error("Erro ao associar CS:", error);
+        showNotification('Erro ao associar CS.', 'error');
+    }
+}
+
+async function associateProductionMember(userId, subRole) {
+    const newMember = { userId, subRole };
+    const currentTeam = currentClientData.productionTeam || [];
+
+    // Check for duplicate sub-role
+    const roleExists = currentTeam.some(member => member.subRole.toLowerCase() === subRole.toLowerCase());
+    if (roleExists) {
+        showNotification(`Um(a) ${subRole} já está associado(a) a este cliente.`, 'error');
+        return;
+    }
+
+    const updatedTeam = [...currentTeam, newMember];
+
+    try {
+        const clientRef = doc(db, 'artifacts', appId, 'public', 'data', 'prospects', currentClientId);
+        await updateDoc(clientRef, { productionTeam: updatedTeam });
+
+        currentClientData.productionTeam = updatedTeam;
+        renderProductionTeam();
+        associateProductionModal.classList.add('hidden');
+        showNotification('Membro da produção adicionado com sucesso!', 'success');
+        await duplicateCardToProduction(currentClientData);
+    } catch (error) {
+        console.error("Erro ao adicionar membro da produção:", error);
+        showNotification('Erro ao adicionar membro.', 'error');
+    }
+}
+
+async function removeProductionMember(userId) {
+    const updatedTeam = currentClientData.productionTeam.filter(member => member.userId !== userId);
+    try {
+        const clientRef = doc(db, 'artifacts', appId, 'public', 'data', 'prospects', currentClientId);
+        await updateDoc(clientRef, { productionTeam: updatedTeam });
+
+        currentClientData.productionTeam = updatedTeam;
+        renderProductionTeam();
+        showNotification('Membro da produção removido com sucesso!', 'success');
+    } catch (error) {
+        console.error("Erro ao remover membro da produção:", error);
+        showNotification('Erro ao remover membro.', 'error');
+    }
+}

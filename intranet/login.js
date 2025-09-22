@@ -18,7 +18,11 @@ async function handleLogin(e) {
         // generalLog might not be available or might need to be adapted for async
         // generalLog.add(foundUser.name, 'Login', 'User logged in successfully');
         errorEl.classList.add('hidden');
-        window.location.href = 'index.html';
+        if (foundUser.role === 'producao') {
+            window.location.href = 'producao.html';
+        } else {
+            window.location.href = 'index.html';
+        }
     } else {
         errorEl.textContent = 'Email ou senha inválidos.';
         errorEl.classList.remove('hidden');

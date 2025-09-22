@@ -42,7 +42,10 @@
                     <!-- Profile Info -->
                     <div class="bg-gray-800 p-6 rounded-lg shadow-lg mb-6">
                         <div class="flex items-center space-x-6">
-                            <img id="user-avatar" src="default-profile.svg" alt="User Avatar" class="w-24 h-24 rounded-full">
+                            <div class="relative w-24 h-24">
+                                <img id="user-avatar" alt="User Avatar" class="w-24 h-24 rounded-full hidden">
+                                <i class="fas fa-user-circle text-gray-500 text-8xl absolute top-0 left-0 w-24 h-24 flex items-center justify-center"></i>
+                            </div>
                             <div>
                                 <h2 id="user-name-display" class="text-2xl font-bold"></h2>
                                 <p id="user-email-display" class="text-gray-400"></p>
@@ -124,6 +127,43 @@
                         </form>
                     </div>
 
+                    <!-- Equipe Responsável Section -->
+                    <div class="mt-6 bg-gray-800 p-6 rounded-lg shadow-lg">
+                        <h2 class="text-xl font-bold text-white mb-4">Equipe Responsável</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- CS Responsável -->
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-300 mb-2">CS Responsável</h3>
+                                <div id="cs-responsible-container" class="bg-gray-700 p-4 rounded-lg flex items-center justify-between min-h-[80px]">
+                                    <!-- O nome do CS será inserido aqui pelo JS -->
+                                </div>
+                                <button id="associate-cs-btn" class="mt-2 text-sm bg-blue-600 hover:bg-blue-700 text-white font-semibold py-1 px-3 rounded-lg">Associar/Alterar CS</button>
+                            </div>
+                            <!-- Equipe de Produção -->
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-300 mb-2">Equipe de Produção</h3>
+                                <div id="production-team-container" class="space-y-2">
+                                    <!-- A lista da equipe de produção será inserida aqui pelo JS -->
+                                </div>
+                                <button id="associate-production-btn" class="mt-2 text-sm bg-purple-600 hover:bg-purple-700 text-white font-semibold py-1 px-3 rounded-lg" disabled title="Associe e conclua um formulário para habilitar">Adicionar Membro</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Serviços Contratados Section -->
+                    <div class="mt-6 bg-gray-800 p-6 rounded-lg shadow-lg">
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-xl font-bold text-white">Serviços Contratados</h2>
+                            <button id="manage-services-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg">
+                                <i class="fas fa-plus mr-2"></i>Adicionar/Gerenciar Serviços
+                            </button>
+                        </div>
+                        <div id="contracted-services-list" class="space-y-3">
+                            <!-- Lista de serviços contratados será carregada aqui -->
+                            <p class="text-gray-400">Nenhum serviço contratado.</p>
+                        </div>
+                    </div>
+
                     <!-- Formulários e Contratos Section -->
                     <div class="mt-6 bg-gray-800 p-6 rounded-lg shadow-lg">
                         <div class="flex justify-between items-center mb-4">
@@ -143,6 +183,24 @@
     </div>
 
     <script type="module" src="perfil.js"></script>
+
+    <!-- Modal para Gerenciar Serviços -->
+    <div id="manageServicesModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 hidden">
+        <div class="bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-2xl max-h-[80vh] flex flex-col">
+            <div class="flex justify-between items-center border-b border-gray-700 pb-3 mb-4">
+                <h3 class="text-xl font-semibold text-white">Gerenciar Serviços do Cliente</h3>
+                <button id="closeServicesModalBtn" class="text-gray-400 hover:text-white">&times;</button>
+            </div>
+            <div id="services-modal-content" class="overflow-y-auto custom-scrollbar flex-grow">
+                <!-- Conteúdo do modal de serviços será carregado aqui -->
+            </div>
+            <div class="mt-6 flex justify-end">
+                <button id="save-services-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg">
+                    Salvar Alterações
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- Modal para Associar Formulário -->
     <div id="associateFormModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 hidden">
@@ -224,6 +282,47 @@
             <div class="mt-6 flex justify-end gap-4">
                 <button id="cancelPaymentValidationBtn" class="bg-gray-600 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-lg">Cancelar</button>
                 <button id="confirmPaymentBtn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg">Confirmar Pagamento</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Associar CS -->
+    <div id="associateCsModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 hidden">
+        <div class="bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md">
+            <div class="flex justify-between items-center border-b border-gray-700 pb-3 mb-4">
+                <h3 class="text-xl font-semibold text-white">Associar CS Responsável</h3>
+                <button id="closeCsModalBtn" class="text-gray-400 hover:text-white">&times;</button>
+            </div>
+            <input type="text" id="cs-search-input" placeholder="Pesquisar por nome ou email..." class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 text-white mb-4">
+            <div id="cs-search-results" class="max-h-60 overflow-y-auto custom-scrollbar">
+                <!-- Resultados da busca de usuários CS e Admin -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Associar Membro da Produção -->
+    <div id="associateProductionModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 hidden">
+        <div class="bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md">
+            <div class="flex justify-between items-center border-b border-gray-700 pb-3 mb-4">
+                <h3 class="text-xl font-semibold text-white">Adicionar Membro à Produção</h3>
+                <button id="closeProductionModalBtn" class="text-gray-400 hover:text-white">&times;</button>
+            </div>
+            <input type="text" id="production-search-input" placeholder="Pesquisar por nome ou email..." class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 text-white mb-4">
+            <div id="production-search-results" class="max-h-60 overflow-y-auto custom-scrollbar">
+                <!-- Resultados da busca de usuários Produção e Admin -->
+            </div>
+            <div id="production-subrole-selection" class="mt-4 hidden">
+                <p class="text-white mb-2">Associando: <span id="selected-production-user-name" class="font-bold"></span></p>
+                <label for="subrole-select" class="block text-sm font-medium text-gray-300 mb-2">Definir função para este cliente:</label>
+                <select id="subrole-select" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 text-white">
+                    <option value="Designer">Designer</option>
+                    <option value="Dev">Dev</option>
+                    <option value="Gestor de Trafego">Gestor de Tráfego</option>
+                </select>
+                <div class="mt-6 flex justify-end gap-4">
+                    <button id="cancel-production-association-btn" class="bg-gray-600 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-lg">Cancelar</button>
+                    <button id="confirm-production-association-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg">Confirmar</button>
+                </div>
             </div>
         </div>
     </div>

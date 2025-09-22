@@ -45,10 +45,25 @@ service cloud.firestore {
       allow create, delete: if request.auth != null;
     }
 
+    // Regras para a coleção de Serviços
+    match /artifacts/{appId}/public/data/services/{serviceId} {
+      // Qualquer usuário autenticado pode ler os serviços
+      allow read: if request.auth != null;
+      // Apenas usuários autenticados podem criar, atualizar e deletar serviços.
+      // TODO: Restringir a escrita apenas para administradores.
+      allow write: if request.auth != null;
+    }
+
     // Regra para Mensagens Rápidas
     match /artifacts/{appId}/public/data/mensagens_rapidas/{messageId} {
       allow create, read: if true;
       allow update, delete: if request.auth != null;
+    }
+
+    // Regra para Configurações do Kanban
+    match /artifacts/{appId}/public/data/kanban_configs/{configId} {
+      // Permite a leitura e escrita para qualquer usuário autenticado (temporário)
+      allow read, write: if request.auth != null;
     }
 
     // Regras para Mapas Mentais

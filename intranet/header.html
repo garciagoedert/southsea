@@ -8,8 +8,18 @@
         </a>
     </div>
     <div id="header-actions-container" class="flex items-center gap-2">
+        <div id="kanban-subrole-buttons" class="hidden items-center gap-2">
+            <button id="btn-kanban-dev" data-subrole="dev" class="subrole-btn bg-gray-600 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-lg">Dev</button>
+            <button id="btn-kanban-designer" data-subrole="designer" class="subrole-btn bg-gray-600 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-lg">Designer</button>
+            <button id="btn-kanban-gestor" data-subrole="gestor" class="subrole-btn bg-gray-600 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-lg">Gestor</button>
+        </div>
+        <button id="editKanbanBtn" class="hidden bg-gray-600 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-all duration-200 flex items-center gap-2 justify-center">
+            <i class="fas fa-edit"></i>
+            <span class="hidden md:inline">Editar Kanban</span>
+        </button>
         <button id="addProspectBtnHeader" class="bg-primary-light hover:bg-primary text-white font-bold py-2 px-4 rounded-lg shadow-md transition-all duration-200 flex items-center gap-2 justify-center">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
             <span class="hidden md:inline">Novo Prospect</span>
         </button>
     </div>
+</header>

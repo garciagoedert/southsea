@@ -60,6 +60,10 @@ async function initializeCalendarPage(tasksCollectionRef, meetingsCollectionRef,
     const meetingLinkedCardId = document.getElementById('meeting-linked-card-id');
     const meetingLinkedCardResults = document.getElementById('meeting-linked-card-results');
     const createMeetingBtnCalendar = document.getElementById('create-meeting-btn-calendar');
+    const viewLeadBtn = document.getElementById('view-lead-btn');
+    const meetingStatusControls = document.getElementById('meeting-status-controls');
+    const meetingRealizadaBtn = document.getElementById('meeting-realizada-btn');
+    const meetingStatusOptions = document.getElementById('meeting-status-options');
 
     const addProspectBtnHeader = document.getElementById('addProspectBtnHeader');
 
@@ -96,6 +100,9 @@ async function initializeCalendarPage(tasksCollectionRef, meetingsCollectionRef,
         document.getElementById('meeting-id').value = '';
         meetingModalTitle.textContent = 'Agendar Nova Reunião';
         deleteMeetingBtn.classList.add('hidden');
+        viewLeadBtn.classList.add('hidden'); // Garante que o botão seja escondido ao fechar
+        meetingStatusControls.classList.add('hidden');
+        meetingStatusOptions.classList.add('hidden');
     };
 
     const populateUsers = () => {
@@ -220,6 +227,21 @@ async function initializeCalendarPage(tasksCollectionRef, meetingsCollectionRef,
         meetingLinkedCardId.value = meeting.linked_card_id || '';
         const linkedCard = prospects.find(p => p.id === meeting.linked_card_id);
         meetingLinkedCardSearch.value = linkedCard ? linkedCard.empresa : '';
+
+        // Controla a visibilidade do botão "Ver Detalhes do Lead"
+        if (linkedCard) {
+            viewLeadBtn.classList.remove('hidden');
+            meetingStatusControls.classList.remove('hidden');
+            // Remove listener antigo para evitar duplicação e adiciona o novo
+            const newViewLeadBtn = viewLeadBtn.cloneNode(true);
+            viewLeadBtn.parentNode.replaceChild(newViewLeadBtn, viewLeadBtn);
+            newViewLeadBtn.addEventListener('click', () => {
+                window.location.href = `index.html?cardId=${linkedCard.id}`;
+            });
+        } else {
+            viewLeadBtn.classList.add('hidden');
+            meetingStatusControls.classList.add('hidden');
+        }
         
         meetingModalTitle.textContent = 'Editar Reunião';
         deleteMeetingBtn.classList.remove('hidden');
@@ -244,13 +266,31 @@ async function initializeCalendarPage(tasksCollectionRef, meetingsCollectionRef,
         };
 
         try {
+            let savedMeetingId = meetingId;
             if (meetingId) {
                 const meetingRef = doc(meetingsCollectionRef, meetingId);
                 await updateDoc(meetingRef, meetingData);
             } else {
                 meetingData.createdAt = serverTimestamp();
-                await addDoc(meetingsCollectionRef, meetingData);
+                const newMeetingRef = await addDoc(meetingsCollectionRef, meetingData);
+                savedMeetingId = newMeetingRef.id;
             }
+
+            // Se um card foi vinculado, atualiza o documento do prospect
+            if (meetingData.linked_card_id && savedMeetingId) {
+                try {
+                    const prospectRef = doc(prospectsCollectionRef, meetingData.linked_card_id);
+                    await updateDoc(prospectRef, {
+                        reuniaoId: savedMeetingId,
+                        prioridade: 1 // Reduz a prioridade conforme solicitado
+                    });
+                    showNotification('Reunião salva e card atualizado!', 'success');
+                } catch (prospectError) {
+                    console.error("Erro ao atualizar o card do prospect:", prospectError);
+                    showNotification("Reunião salva, mas houve um erro ao atualizar o card.", 'warning');
+                }
+            }
+
             closeMeetingModal();
         } catch (error) {
             console.error("Erro ao salvar reunião:", error);
@@ -345,6 +385,46 @@ async function initializeCalendarPage(tasksCollectionRef, meetingsCollectionRef,
     cancelMeetingBtn.addEventListener('click', closeMeetingModal);
     deleteMeetingBtn.addEventListener('click', handleDeleteMeeting);
     meetingForm.addEventListener('submit', handleMeetingFormSubmit);
+
+    meetingRealizadaBtn.addEventListener('click', () => {
+        meetingStatusOptions.classList.toggle('hidden');
+    });
+
+    meetingStatusOptions.addEventListener('click', async (e) => {
+        if (e.target.tagName === 'BUTTON') {
+            const newStatus = e.target.dataset.status;
+            const meetingId = document.getElementById('meeting-id').value;
+            const cardId = meetingLinkedCardId.value;
+
+            if (!meetingId || !cardId) {
+                showNotification('ID da reunião ou do card não encontrado.', 'error');
+                return;
+            }
+
+            const meetingUpdateData = {
+                meetingResult: newStatus,
+                status: 'completed', 
+            };
+            const prospectUpdateData = {
+                meetingResultStatus: newStatus
+            };
+
+            try {
+                const meetingRef = doc(meetingsCollectionRef, meetingId);
+                await updateDoc(meetingRef, meetingUpdateData);
+
+                const prospectRef = doc(prospectsCollectionRef, cardId);
+                await updateDoc(prospectRef, prospectUpdateData);
+                
+                showNotification(`Status da reunião atualizado para: ${e.target.textContent}`, 'success');
+                closeMeetingModal();
+            } catch (error) {
+                console.error("Erro ao atualizar status da reunião:", error);
+                showNotification("Não foi possível atualizar o status.", 'error');
+            }
+        }
+    });
+
     meetingLinkedCardSearch.addEventListener('keyup', () => {
         const searchTerm = meetingLinkedCardSearch.value.toLowerCase();
         if (searchTerm.length < 2) {
@@ -377,7 +457,27 @@ async function initializeCalendarPage(tasksCollectionRef, meetingsCollectionRef,
 
     // Inicialização
     populateUsers();
-    fetchProspects();
+    await fetchProspects();
+
+    // Verifica se há um prospectId na URL para pré-agendar uma reunião
+    const urlParams = new URLSearchParams(window.location.search);
+    const prospectIdFromUrl = urlParams.get('prospectId');
+    if (prospectIdFromUrl) {
+        const linkedProspect = prospects.find(p => p.id === prospectIdFromUrl);
+        if (linkedProspect) {
+            // Abre o modal de reunião e preenche os dados
+            meetingForm.reset();
+            document.getElementById('meeting-id').value = '';
+            meetingModalTitle.textContent = 'Agendar Nova Reunião';
+            deleteMeetingBtn.classList.add('hidden');
+            
+            meetingLinkedCardSearch.value = linkedProspect.empresa;
+            meetingLinkedCardId.value = linkedProspect.id;
+            document.getElementById('meeting-title').value = `Reunião com ${linkedProspect.empresa}`;
+
+            openMeetingModal();
+        }
+    }
 
     const updateCalendarEvents = () => {
         const taskEvents = tasks.filter(task => task.due_date).map(task => {
@@ -402,7 +502,15 @@ async function initializeCalendarPage(tasksCollectionRef, meetingsCollectionRef,
 
         const meetingEvents = meetings.filter(m => m.date).map(meeting => {
             let color = meeting.color;
-            if (!color) {
+            if (meeting.meetingResult) {
+                switch (meeting.meetingResult) {
+                    case 'closed_won': color = '#10b981'; break; // Green
+                    case 'thinking': color = '#3b82f6'; break; // Blue
+                    case 'closed_lost': color = '#eab308'; break; // Yellow
+                    case 'no_show': color = '#ef4444'; break; // Red
+                    default: color = '#f97316'; // Orange for scheduled
+                }
+            } else if (!color) {
                 switch (meeting.status) {
                     case 'completed': color = '#10b981'; break; // Green
                     case 'canceled': color = '#a9a9a9'; break;  // Gray
@@ -436,6 +544,18 @@ async function initializeCalendarPage(tasksCollectionRef, meetingsCollectionRef,
     onSnapshot(meetingsCollectionRef, (snapshot) => {
         meetings = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         updateCalendarEvents();
+
+        // Adicionado para abrir uma reunião específica via URL
+        const urlParamsMeeting = new URLSearchParams(window.location.search);
+        const meetingIdFromUrl = urlParamsMeeting.get('reuniaoId');
+        if (meetingIdFromUrl) {
+            const meetingToOpen = meetings.find(m => m.id === meetingIdFromUrl);
+            if (meetingToOpen) {
+                openModalForMeetingEdit(meetingToOpen);
+                // Remove o parâmetro da URL para evitar reabrir ao atualizar
+                history.replaceState(null, '', window.location.pathname);
+            }
+        }
     }, (error) => {
         console.error("Erro ao buscar reuniões:", error);
     });

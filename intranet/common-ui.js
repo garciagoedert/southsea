@@ -65,11 +65,24 @@ function setupUIListeners(handlers = {}) {
     if (applyFilters) {
         document.getElementById('searchInput')?.addEventListener('keyup', applyFilters);
         document.getElementById('priorityFilter')?.addEventListener('change', applyFilters);
-        document.getElementById('resetFiltersBtn')?.addEventListener('click', () => {
-            document.getElementById('searchInput').value = '';
-            document.getElementById('priorityFilter').value = '';
-            applyFilters();
-        });
+        document.getElementById('tagFilter')?.addEventListener('change', applyFilters); // Added for consistency
+        document.getElementById('userFilter')?.addEventListener('change', applyFilters); // Added for new filter
+
+        const resetFiltersBtn = document.getElementById('resetFiltersBtn');
+        if (resetFiltersBtn) {
+            resetFiltersBtn.addEventListener('click', () => {
+                document.getElementById('searchInput').value = '';
+                document.getElementById('priorityFilter').value = '';
+                
+                const tagFilter = document.getElementById('tagFilter');
+                if (tagFilter) tagFilter.value = '';
+
+                const userFilter = document.getElementById('userFilter');
+                if (userFilter) userFilter.value = '';
+
+                applyFilters();
+            });
+        }
     }
     
     // Add modal close listeners
@@ -239,6 +252,16 @@ async function loadComponents(pageSpecificSetup) {
 
         await applyWhitelabelSettings();
 
+        const userRole = sessionStorage.getItem('userRole');
+
+        // Adjust logo link based on user role
+        if (userRole === 'producao') {
+            const logoLink = headerContainer.querySelector('a');
+            if (logoLink) {
+                logoLink.href = 'producao.html';
+            }
+        }
+
         // Set active link in sidebar
         const sidebarLinks = sidebarContainer.querySelectorAll('nav a');
         sidebarLinks.forEach(link => {
@@ -258,18 +281,56 @@ async function loadComponents(pageSpecificSetup) {
         });
 
         // Show/hide elements based on page and user role
-        const userRole = sessionStorage.getItem('userRole');
-        const adminLink = document.getElementById('admin-link');
-        if (userRole === 'admin' && adminLink) {
-            adminLink.classList.remove('hidden');
-        }
+        if (userRole) {
+            const normalizeString = (str) => {
+                if (!str) return '';
+                return str
+                    .toLowerCase()
+                    .normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, "")
+                    .replace(/[\s_-]/g, "");
+            };
 
-        if (userRole === 'cs') {
-            const allowedPages = ['producao.html', 'closed-clients.html', 'arquivo.html', 'perfil.html'];
-            sidebarLinks.forEach(link => {
-                const linkPage = link.getAttribute('href').split('/').pop();
-                if (!allowedPages.includes(linkPage) && link.id !== 'admin-link') {
-                    link.style.display = 'none';
+            const normalizedUserRole = normalizeString(userRole);
+
+            const menuPermissions = {
+                'prospeccao-link': ['BDR', 'BDR Líder', 'bdr_supervisor', 'Closer', 'CS', 'Admin'],
+                'whatsapp-link': ['BDR', 'BDR Líder', 'bdr_supervisor', 'CS', 'Admin'],
+                'closed-clients-link': ['BDR', 'BDR Líder', 'bdr_supervisor', 'Closer', 'CS', 'Admin'],
+                'producao-link': ['Produção', 'CS', 'Admin'],
+                'arquivo-link': ['BDR', 'BDR Líder', 'bdr_supervisor', 'Closer', 'CS', 'Admin'],
+                'analysis-link': ['BDR', 'BDR Líder', 'bdr_supervisor', 'Closer', 'Produção', 'CS', 'Admin'],
+                'marketing-link': ['BDR', 'BDR Líder', 'bdr_supervisor', 'Admin'],
+                'log-link': ['BDR', 'BDR Líder', 'bdr_supervisor', 'Closer', 'Produção', 'CS', 'Admin'],
+                'tarefas-link': ['BDR', 'BDR Líder', 'bdr_supervisor', 'Closer', 'Produção', 'CS', 'Admin'],
+                'calendario-link': ['BDR', 'BDR Líder', 'bdr_supervisor', 'Closer', 'Produção', 'CS', 'Admin'],
+                'chat-link': ['BDR', 'BDR Líder', 'bdr_supervisor', 'Closer', 'Produção', 'CS', 'Admin'],
+                'mapas-mentais-link': ['BDR', 'BDR Líder', 'bdr_supervisor', 'Closer', 'Produção', 'CS', 'Admin'],
+                'links-internos-link': ['BDR', 'BDR Líder', 'bdr_supervisor', 'Closer', 'CS', 'Admin'],
+                'perfil-link': ['BDR', 'BDR Líder', 'bdr_supervisor', 'Closer', 'Produção', 'CS', 'Admin'],
+                'formularios-link': ['Admin'],
+                'admin-link': ['Admin']
+            };
+
+            for (const [linkId, allowedRoles] of Object.entries(menuPermissions)) {
+                const linkElement = document.getElementById(linkId);
+                if (linkElement) {
+                    const normalizedAllowedRoles = allowedRoles.map(normalizeString);
+                    if (!normalizedAllowedRoles.includes(normalizedUserRole)) {
+                        linkElement.style.display = 'none';
+                    } else if (linkId === 'admin-link') {
+                        // The admin-link logic was to remove the 'hidden' class
+                        linkElement.classList.remove('hidden');
+                    }
+                }
+            }
+        } else {
+            // Hide all managed links if no role is found, for a secure default state.
+            const allManagedLinks = ['prospeccao-link', 'whatsapp-link', 'closed-clients-link', 'producao-link', 'arquivo-link', 'analysis-link', 'marketing-link', 'log-link', 'tarefas-link', 'calendario-link', 'chat-link', 'mapas-mentais-link', 'links-internos-link', 'perfil-link', 'formularios-link', 'admin-link'];
+            allManagedLinks.forEach(linkId => {
+                const linkElement = document.getElementById(linkId);
+                if (linkElement) {
+                    linkElement.style.display = 'none';
                 }
             });
         }
@@ -287,9 +348,51 @@ async function loadComponents(pageSpecificSetup) {
             }
         }
 
+        // Mostra o botão de editar Kanban para admins nas páginas de prospecção e produção
+        const editKanbanBtn = document.getElementById('editKanbanBtn');
+        if (editKanbanBtn && (currentPage === 'index.html' || currentPage === 'producao.html') && userRole && userRole.toLowerCase() === 'admin') {
+            editKanbanBtn.classList.remove('hidden');
+        }
+
+        // Mostra os botões de sub-role do Kanban na página de produção
+        if (currentPage === 'producao.html') {
+            const subroleButtonsContainer = document.getElementById('kanban-subrole-buttons');
+            const currentUserStr = sessionStorage.getItem('currentUser');
+
+            if (subroleButtonsContainer && currentUserStr) {
+                const currentUser = JSON.parse(currentUserStr);
+                let hasVisibleButton = false;
+
+                // Garante que todos os botões estejam ocultos por padrão antes de verificar as permissões
+                document.querySelectorAll('.subrole-btn').forEach(btn => btn.classList.add('hidden'));
+
+                if (userRole === 'admin' || userRole === 'cs' || userRole === 'producao') {
+                    // Mostra todos os botões para admin, CS e Produção
+                    document.querySelectorAll('.subrole-btn').forEach(btn => btn.classList.remove('hidden'));
+                    hasVisibleButton = true;
+                } else if (Array.isArray(currentUser.subRoles) && currentUser.subRoles.length > 0) {
+                    // Mostra botões baseados nas subRoles do usuário
+                    currentUser.subRoles.forEach(subRole => {
+                        const btn = document.getElementById(`btn-kanban-${subRole}`);
+                        if (btn) {
+                            btn.classList.remove('hidden');
+                            hasVisibleButton = true;
+                        }
+                    });
+                }
+
+                if (hasVisibleButton) {
+                    subroleButtonsContainer.classList.remove('hidden');
+                    subroleButtonsContainer.classList.add('flex');
+                }
+            }
+        }
+
         if (pageSpecificSetup && typeof pageSpecificSetup === 'function') {
             pageSpecificSetup();
         }
+
+        updateUserProfilePicture();
 
     } catch (error) {
         console.error('Error loading components:', error);
@@ -346,6 +449,29 @@ function showConfirmationModal(message, confirmText = 'Confirmar', cancelText = 
         cancelBtn.addEventListener('click', onCancel);
         modal.addEventListener('click', onBackdropClick);
     });
+}
+
+function updateUserProfilePicture() {
+    const currentUserStr = sessionStorage.getItem('currentUser');
+    if (!currentUserStr) return;
+
+    const currentUser = JSON.parse(currentUserStr);
+    const sidebarUserAvatar = document.getElementById('sidebar-user-avatar');
+    const sidebarUserIcon = sidebarUserAvatar ? sidebarUserAvatar.previousElementSibling : null;
+
+    if (sidebarUserAvatar && sidebarUserIcon) {
+        const storedPic = localStorage.getItem(`profilePic_${currentUser.email}`);
+        const profilePicture = storedPic || currentUser.profilePicture;
+
+        if (profilePicture) {
+            sidebarUserAvatar.src = profilePicture;
+            sidebarUserAvatar.classList.remove('hidden');
+            sidebarUserIcon.classList.add('hidden');
+        } else {
+            sidebarUserAvatar.classList.add('hidden');
+            sidebarUserIcon.classList.remove('hidden');
+        }
+    }
 }
 
 function showNotification(message, type = 'success') {

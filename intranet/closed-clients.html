@@ -23,6 +23,26 @@
             font-family: 'Inter', sans-serif;
             overflow-y: hidden; /* Prevent body scroll */
         }
+        .user-filter-tags {
+            @apply flex flex-wrap gap-1;
+        }
+        .user-filter-tag {
+            display: inline-flex;
+            align-items: center;
+            vertical-align: middle;
+            @apply bg-blue-600 text-white text-xs font-semibold px-2 py-1 rounded-full gap-2;
+        }
+        .user-tag-avatar {
+            width: 1rem; /* 16px */
+            height: 1rem; /* 16px */
+            border-radius: 9999px; /* full */
+        }
+        .user-filter-tag .remove-tag-btn {
+            @apply ml-3 text-red-400 hover:text-red-300;
+        }
+        .user-filter-placeholder {
+            @apply text-gray-400 ml-1;
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-200">
@@ -34,24 +54,109 @@
         <div id="sidebar-backdrop" class="fixed inset-0 bg-black/50 z-30 hidden"></div>
 
         <!-- Main Content -->
-        <main id="main-content" class="flex-1 flex flex-col h-screen transition-all duration-300 ease-in-out">
-            <div id="header-container"></div>
+        <main id="main-content" class="flex-1 flex flex-col h-screen overflow-hidden transition-all duration-300 ease-in-out">
+            <div id="header-container" class="flex-shrink-0"></div>
 
-            <!-- Board Content -->
-            <div class="flex-grow p-4 md:p-6 lg:p-8 flex flex-col overflow-hidden">
-                <h1 class="text-3xl font-bold mb-6">Clientes Fechados</h1>
+                <!-- Board Content -->
+            <div class="p-4 md:p-6 lg:p-8 flex flex-col flex-1 min-h-0">
+                <h1 class="text-3xl font-bold mb-6 flex-shrink-0">Clientes Fechados</h1>
 
-                <!-- Search Input -->
-                <div class="bg-gray-800 p-4 rounded-lg mb-6 flex items-center gap-4 shadow-md">
-                    <div class="relative flex-grow w-full">
-                        <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                        <input type="text" id="searchInput" placeholder="Buscar por empresa ou setor..." class="w-full bg-gray-700 border border-gray-600 rounded-lg py-2 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <!-- Filters and Search -->
+                <div class="bg-gray-800 p-4 rounded-lg mb-6 shadow-md flex-shrink-0">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <!-- Search Input -->
+                        <div class="relative flex-grow">
+                            <label for="searchInput" class="block text-sm font-medium text-gray-300 mb-1">Buscar</label>
+                            <i class="fas fa-search absolute left-3 bottom-2.5 text-gray-400"></i>
+                            <input type="text" id="searchInput" placeholder="Empresa ou setor..." class="w-full bg-gray-700 border border-gray-600 rounded-lg py-2 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <!-- CS Filter -->
+                        <div>
+                            <label for="csFilterContainer" class="block text-sm font-medium text-gray-300 mb-1">CS Responsável</label>
+                            <button id="csFilterContainer" class="relative w-full bg-gray-700 border border-gray-600 rounded-lg flex items-center justify-between p-2 min-h-[42px] cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500" tabindex="0">
+                                <div class="flex items-center gap-1 overflow-hidden">
+                                    <div id="csFilterTags" class="user-filter-tags"></div>
+                                    <span id="csFilterPlaceholder" class="user-filter-placeholder truncate">Todos</span>
+                                </div>
+                                <i class="fas fa-chevron-down text-gray-400"></i>
+                            </button>
+                        </div>
+                        <!-- Production User Filter -->
+                        <div>
+                            <label for="prodFilterContainer" class="block text-sm font-medium text-gray-300 mb-1">Usuário Produção</label>
+                            <button id="prodFilterContainer" class="relative w-full bg-gray-700 border border-gray-600 rounded-lg flex items-center justify-between p-2 min-h-[42px] cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500" tabindex="0">
+                                <div class="flex items-center gap-1 overflow-hidden">
+                                    <div id="prodFilterTags" class="user-filter-tags"></div>
+                                    <span id="prodFilterPlaceholder" class="user-filter-placeholder truncate">Todos</span>
+                                </div>
+                                <i class="fas fa-chevron-down text-gray-400"></i>
+                            </button>
+                        </div>
+                        <!-- Service Area Filter -->
+                        <div>
+                            <label for="serviceAreaFilter" class="block text-sm font-medium text-gray-300 mb-1">Área de Serviço</label>
+                            <select id="serviceAreaFilter" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="">Todas</option>
+                                <!-- Options will be populated by JS -->
+                            </select>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+                        <!-- Service Filter -->
+                        <div>
+                            <label for="serviceFilter" class="block text-sm font-medium text-gray-300 mb-1">Serviço</label>
+                            <div id="serviceFilterContainer" class="relative w-full bg-gray-700 border border-gray-600 rounded-lg flex items-center justify-between p-2 min-h-[42px] cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500" data-enabled="false" tabindex="0">
+                                <div class="flex items-center gap-1 overflow-hidden">
+                                    <div id="serviceFilterTags" class="user-filter-tags"></div>
+                                    <span id="serviceFilterPlaceholder" class="user-filter-placeholder truncate">Selecione uma área</span>
+                                </div>
+                                <i class="fas fa-chevron-down text-gray-400"></i>
+                            </div>
+                        </div>
+                        <!-- Column Visibility Filter -->
+                        <div class="lg:col-span-2 flex flex-col">
+                            <label for="columnVisibilityContainer" class="block text-sm font-medium text-gray-300 mb-1">Exibir Seções</label>
+                            <div id="columnVisibilityContainer" class="relative w-full bg-gray-700 border border-gray-600 rounded-lg flex items-center justify-between p-2 min-h-[42px] cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500" tabindex="0">
+                                <div class="flex items-center gap-1 overflow-hidden">
+                                    <div id="columnFilterTags" class="user-filter-tags"></div>
+                                    <span id="columnFilterPlaceholder" class="user-filter-placeholder truncate">Todas</span>
+                                </div>
+                                <i class="fas fa-chevron-down text-gray-400"></i>
+                            </div>
+                        </div>
+                        <!-- Action Buttons -->
+                        <div class="flex items-end gap-2">
+                            <button id="applyFiltersBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg h-full">Aplicar</button>
+                            <button id="clearFiltersBtn" class="w-full bg-gray-600 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-lg h-full">Limpar</button>
+                        </div>
                     </div>
                 </div>
                 
-                <!-- Closed Clients Grid -->
-                <div id="closed-clients-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 flex-grow min-h-0 overflow-y-auto custom-scrollbar">
-                    <!-- Client cards will be injected here by JS -->
+                <!-- Board Columns -->
+                <div id="board-columns-container" class="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1 min-h-0">
+                    <!-- New Column -->
+                    <div id="new-column" class="flex flex-col bg-gray-800/50 rounded-lg overflow-hidden">
+                        <h2 class="text-lg font-bold p-4 border-b border-gray-700 flex-shrink-0">Novos</h2>
+                        <div id="new-clients-grid" class="p-4 flex-grow min-h-0 overflow-y-auto custom-scrollbar space-y-4">
+                            <!-- New client cards will be injected here -->
+                        </div>
+                    </div>
+
+                    <!-- In Production Column -->
+                    <div id="production-column" class="flex flex-col bg-gray-800/50 rounded-lg overflow-hidden">
+                        <h2 class="text-lg font-bold p-4 border-b border-gray-700 flex-shrink-0">Em Produção</h2>
+                        <div id="production-clients-grid" class="p-4 flex-grow min-h-0 overflow-y-auto custom-scrollbar space-y-4">
+                            <!-- In production client cards will be injected here -->
+                        </div>
+                    </div>
+
+                    <!-- Completed Column -->
+                    <div id="completed-column" class="flex flex-col bg-gray-800/50 rounded-lg overflow-hidden">
+                        <h2 class="text-lg font-bold p-4 border-b border-gray-700 flex-shrink-0">Concluídos</h2>
+                        <div id="completed-clients-grid" class="p-4 flex-grow min-h-0 overflow-y-auto custom-scrollbar space-y-4">
+                            <!-- Completed client cards will be injected here -->
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
@@ -174,52 +279,50 @@
 
     <!-- Firebase SDK -->
     <script type="module" src="closed-clients.js"></script>
-    <script type="module">
-        async function loadComponents() {
-            const headerContainer = document.getElementById('header-container');
-            const sidebarContainer = document.getElementById('sidebar-container');
-            const currentPage = window.location.pathname.split('/').pop() || 'index.html';
 
-            try {
-                const [headerRes, sidebarRes] = await Promise.all([
-                    fetch('header.html'),
-                    fetch(`sidebar.html?v=${new Date().getTime()}`)
-                ]);
+    <!-- User Select Modals -->
+    <div id="csSelectModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 hidden">
+        <div class="bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md">
+            <div class="flex justify-between items-center border-b border-gray-700 pb-3 mb-4">
+                <h3 class="text-xl font-semibold text-white">Selecionar CS Responsável</h3>
+                <button id="closeCsModalBtn" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+            </div>
+            <input type="text" id="csSearchInput" placeholder="Pesquisar por nome ou email..." class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 text-white mb-4">
+            <div id="csSelectList" class="user-select-list"></div>
+        </div>
+    </div>
 
-                if (!headerRes.ok || !sidebarRes.ok) {
-                    throw new Error('Failed to fetch components');
-                }
+    <div id="prodSelectModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 hidden">
+        <div class="bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md">
+            <div class="flex justify-between items-center border-b border-gray-700 pb-3 mb-4">
+                <h3 class="text-xl font-semibold text-white">Selecionar Usuário de Produção</h3>
+                <button id="closeProdModalBtn" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+            </div>
+            <input type="text" id="prodSearchInput" placeholder="Pesquisar por nome ou email..." class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 text-white mb-4">
+            <div id="prodSelectList" class="user-select-list"></div>
+        </div>
+    </div>
 
-                headerContainer.innerHTML = await headerRes.text();
-                sidebarContainer.innerHTML = await sidebarRes.text();
+    <div id="serviceSelectModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 hidden">
+        <div class="bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md">
+            <div class="flex justify-between items-center border-b border-gray-700 pb-3 mb-4">
+                <h3 class="text-xl font-semibold text-white">Selecionar Serviço</h3>
+                <button id="closeServiceModalBtn" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+            </div>
+            <input type="text" id="serviceSearchInput" placeholder="Pesquisar serviço..." class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 text-white mb-4">
+            <div id="serviceSelectList" class="user-select-list"></div>
+        </div>
+    </div>
 
-                // Set active link in sidebar
-                const sidebarLinks = sidebarContainer.querySelectorAll('nav a');
-                sidebarLinks.forEach(link => {
-                    const linkPage = link.getAttribute('href').split('/').pop();
-                    if (linkPage === currentPage) {
-                        link.classList.add('bg-blue-500', 'text-white');
-                        link.classList.remove('bg-gray-700', 'hover:bg-gray-600');
-                    }
-                });
-                
-                // Re-initialize UI listeners that depend on the loaded components in closed-clients.js
-                // This assumes a function `setupUIListeners` is exported or available globally
-                if (typeof window.setupUIListeners === 'function') {
-                    window.setupUIListeners();
-                }
+    <div id="columnSelectModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 hidden">
+        <div class="bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md">
+            <div class="flex justify-between items-center border-b border-gray-700 pb-3 mb-4">
+                <h3 class="text-xl font-semibold text-white">Selecionar Seções Visíveis</h3>
+                <button id="closeColumnModalBtn" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+            </div>
+            <div id="columnSelectList" class="user-select-list"></div>
+        </div>
+    </div>
 
-
-            } catch (error) {
-                console.error('Error loading components:', error);
-                headerContainer.innerHTML = '<p class="text-red-500 p-4">Error loading header.</p>';
-                sidebarContainer.innerHTML = '<p class="text-red-500 p-4">Error loading sidebar.</p>';
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            loadComponents();
-        });
-    </script>
 </body>
 </html>

@@ -226,13 +226,34 @@
         </div>
     </div>
 
+    <!-- Edit Kanban Modal -->
+    <div id="editKanbanModal" class="fixed inset-0 bg-black bg-opacity-70 z-50 hidden items-center justify-center sm:p-4">
+        <div class="bg-gray-800 w-full h-full sm:h-auto sm:rounded-xl shadow-2xl sm:max-w-2xl sm:max-h-[90vh] flex flex-col">
+            <div class="flex justify-between items-center p-4 border-b border-gray-700">
+                <h2 class="text-xl font-bold">Editar Colunas do Kanban</h2>
+                <button id="closeEditModalBtn" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+            </div>
+            <div class="p-6 overflow-y-auto">
+                <div id="kanbanColumnsContainer" class="space-y-3">
+                    <!-- Column inputs will be injected here -->
+                </div>
+                <button id="addColumnBtn" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg w-full">Adicionar Coluna</button>
+            </div>
+            <div class="flex justify-end gap-3 p-6 border-t border-gray-700">
+                <button type="button" id="cancelEditModalBtn" class="bg-gray-600 hover:bg-gray-500 font-semibold py-2 px-4 rounded-lg">Cancelar</button>
+                <button type="button" id="saveKanbanConfigBtn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg">Salvar Alterações</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Firebase SDK -->
     <script type="module">
         // Firebase Imports
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { collection, doc, addDoc, onSnapshot, updateDoc, deleteDoc, serverTimestamp, writeBatch, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { collection, doc, addDoc, onSnapshot, updateDoc, deleteDoc, serverTimestamp, writeBatch, arrayUnion, arrayRemove, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { db, appId, app } from './firebase-config.js';
         import { setupUIListeners, loadComponents } from './common-ui.js';
+        import { loadKanbanConfig, setupEditKanbanModalListeners } from './kanban-config.js';
 
         // --- INITIALIZATION ---
         const auth = getAuth(app);
@@ -241,16 +262,10 @@
         let prospects = [];
         let filteredProspects = [];
         let prospectsListener = null;
-
-        const COLUMNS = {
-            'Produção // V1': 'criacao',
-            'Aprovação': 'aprovacao',
-            'Produção // V2': 'producao_v2',
-            'Finalização': 'finalizacao',
-            'Entrega': 'entrega',
-            'Concluído': 'concluido'
-        };
-        const COLUMN_NAMES = Object.keys(COLUMNS);
+        let COLUMNS = {};
+        let COLUMN_NAMES = [];
+        let activeSubrole = 'dev'; // 'dev', 'designer', 'gestor'
+        let allUsers = []; // Cache for user data
 
         // --- UI ELEMENTS ---
         const kanbanBoard = document.getElementById('kanban-board');
@@ -267,6 +282,8 @@
             if (user) {
                 if (sessionStorage.getItem('isLoggedIn') === 'true') {
                     document.getElementById('kanban-container').classList.remove('hidden');
+                    await fetchAllUsers();
+                    await initializeKanban();
                     setupProspectsListener();
                 } else {
                     window.location.href = 'login.html';
@@ -280,6 +297,43 @@
                 }
             }
         });
+
+        async function fetchAllUsers() {
+            if (allUsers.length > 0) return;
+            try {
+                const usersRef = collection(db, 'users');
+                const snapshot = await getDocs(usersRef);
+                allUsers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            } catch (error) {
+                console.error("Erro ao buscar todos os usuários:", error);
+            }
+        }
+
+        // --- KANBAN INITIALIZATION ---
+        async function initializeKanban() {
+            const configKey = `production_${activeSubrole}`;
+            const defaultConfig = {
+                columnOrder: ['Produção // V1', 'Aprovação', 'Produção // V2', 'Finalização', 'Entrega', 'Concluído'],
+                columns: {
+                    'Produção // V1': 'criacao',
+                    'Aprovação': 'aprovacao',
+                    'Produção // V2': 'producao_v2',
+                    'Finalização': 'finalizacao',
+                    'Entrega': 'entrega',
+                    'Concluído': 'concluido'
+                }
+            };
+            const config = await loadKanbanConfig(configKey, defaultConfig);
+            COLUMNS = config.columns;
+            COLUMN_NAMES = config.columnOrder;
+            
+            renderBoard(); // Initial render
+            
+            // Setup modal listeners after the first render
+            setupEditKanbanModalListeners(configKey, COLUMN_NAMES, async () => {
+                await initializeKanban(); // Re-initialize to get the latest config and re-render
+            });
+        }
 
         function handleLogin(e) {
             e.preventDefault();
@@ -301,24 +355,35 @@
             if (prospectsListener) prospectsListener();
 
             const prospectsCollection = collection(db, 'artifacts', appId, 'public', 'data', 'prospects');
-            const userRole = sessionStorage.getItem('userRole');
-            const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
-
-            let q = query(prospectsCollection, where("pagina", "==", "Produção"));
-
-            if (userRole === 'cs') {
-                const clientIds = currentUser.associatedClients || [];
-                if (clientIds.length > 0) {
-                    q = query(prospectsCollection, where("pagina", "==", "Produção"), where('__name__', 'in', clientIds));
-                } else {
-                    prospects = [];
-                    applyFilters();
-                    return; 
-                }
-            }
+            
+            // Query for clients that could be on the production board.
+            // This includes those with a production status OR the sales "Concluído" status.
+            let q = query(prospectsCollection, where("status", "in", [...COLUMN_NAMES, "Concluído"]));
 
             prospectsListener = onSnapshot(q, (snapshot) => {
-                prospects = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                const firstColumnName = COLUMN_NAMES[0];
+                const rawProspects = snapshot.docs
+                    .map(doc => ({ id: doc.id, ...doc.data() }))
+                    .filter(client => client.productionTeam && client.productionTeam.length > 0) // Must have a production team
+                    .map(client => {
+                        // If status is "Concluído" but productionStatus is not, it's a new client for the board.
+                        // We'll remap its status on the client-side to put it in the first column.
+                        if (client.status === 'Concluído' && client.productionStatus !== 'Concluído') {
+                            return { ...client, status: firstColumnName };
+                        }
+                        return client;
+                    })
+                    .filter(client => client.productionStatus !== 'Concluído'); // Filter out fully completed
+                
+                // De-duplicate prospects based on company name, prioritizing the one in production.
+                const prospectsByCompany = rawProspects.reduce((acc, prospect) => {
+                    if (!acc[prospect.empresa] || acc[prospect.empresa].status === 'Concluído') {
+                        acc[prospect.empresa] = prospect;
+                    }
+                    return acc;
+                }, {});
+                prospects = Object.values(prospectsByCompany);
+
                 applyFilters();
             }, (error) => {
                 console.error("Error fetching prospects:", error);
@@ -377,22 +442,37 @@
                 }
             });
             addDragAndDropHandlers();
+            addDeleteButtonHandlers();
+            addConcludeButtonHandlers();
             updateStats();
         }
 
         function createProspectCard(prospect, isMobile = false) {
             const card = document.createElement('div');
             const mobileClasses = isMobile ? 'w-72 flex-shrink-0' : '';
-            card.className = `prospect-card bg-gray-900 p-3 rounded-lg shadow-md cursor-pointer border-l-4 transition-all duration-200 hover:shadow-xl hover:bg-gray-700 ${mobileClasses}`;
+            card.className = `prospect-card relative bg-gray-900 p-3 rounded-lg shadow-md cursor-pointer border-l-4 transition-all duration-200 hover:shadow-xl hover:bg-gray-700 ${mobileClasses}`;
             card.style.borderLeftColor = getPriorityColor(prospect.prioridade);
             card.draggable = true;
             card.dataset.id = prospect.id;
+            card.dataset.empresa = prospect.empresa; // Add empresa for querying
 
             const sectorColor = getSectorColor(prospect.setor);
+            const isAdmin = sessionStorage.getItem('userRole') === 'admin';
+            const isLastColumn = prospect.status === COLUMN_NAMES[COLUMN_NAMES.length - 1];
+
+            let actionButtonsHTML = '';
+            if (isAdmin) {
+                actionButtonsHTML += `<button class="delete-card-btn absolute top-2 right-2 text-gray-500 hover:text-red-400 text-xl leading-none z-10" data-id="${prospect.id}" data-empresa="${prospect.empresa}" title="Excluir Card">&times;</button>`;
+            }
+            if (isLastColumn) {
+                actionButtonsHTML += `<button class="conclude-card-btn absolute bottom-2 right-2 bg-green-600 hover:bg-green-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs z-10" data-id="${prospect.id}" data-empresa="${prospect.empresa}" title="Concluir Tarefa"><i class="fas fa-check"></i></button>`;
+            }
+
 
             card.innerHTML = `
+                ${actionButtonsHTML}
                 <div class="flex justify-between items-start">
-                    <h4 class="font-bold mb-2 flex-grow pr-2">${prospect.empresa}</h4>
+                    <h4 class="font-bold mb-2 flex-grow pr-4">${prospect.empresa}</h4>
                 </div>
                 <div class="flex items-center gap-2 mb-2 flex-wrap">
                     <span class="text-xs font-semibold px-2 py-0.5 rounded-full ${sectorColor.bg} ${sectorColor.text}">${prospect.setor}</span>
@@ -403,8 +483,10 @@
                 ${prospect.createdBy ? `<p class="text-xs text-gray-500 mt-2 pt-2 border-t border-gray-700"><i class="fas fa-user-plus mr-1"></i> ${prospect.createdBy}</p>` : ''}
             `;
             
-            card.addEventListener('click', () => {
-                openFormModal(prospect);
+            // 4. Redirect to client's profile page on click.
+            card.addEventListener('click', (e) => {
+                if (e.target.closest('.delete-card-btn')) return;
+                window.location.href = `perfil.html?id=${prospect.id}`;
             });
 
             return card;
@@ -439,6 +521,32 @@
         }
 
         // --- DRAG & DROP ---
+        function addConcludeButtonHandlers() {
+            document.querySelectorAll('.conclude-card-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const prospectId = e.currentTarget.dataset.id;
+                    const empresa = e.currentTarget.dataset.empresa;
+                    showConfirmModal(`Deseja realmente concluir esta tarefa para "${empresa}"?`, () => {
+                        handleConcludeCard(prospectId, empresa);
+                    });
+                });
+            });
+        }
+
+        function addDeleteButtonHandlers() {
+            document.querySelectorAll('.delete-card-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.stopPropagation(); // Prevent card click event
+                    const prospectId = e.currentTarget.dataset.id;
+                    const prospectEmpresa = e.currentTarget.dataset.empresa;
+                    showConfirmModal(`Deseja realmente excluir o card "${prospectEmpresa}"? Esta ação não pode ser desfeita.`, () => {
+                        deleteProspect(prospectId);
+                    });
+                });
+            });
+        }
+
         function addDragAndDropHandlers() {
             const cards = document.querySelectorAll('.prospect-card');
             const columns = document.querySelectorAll('.column-content');
@@ -470,12 +578,67 @@
         async function updateProspectStatus(prospectId, newStatus) {
             try {
                 const prospectRef = doc(db, 'artifacts', appId, 'public', 'data', 'prospects', prospectId);
-                await updateDoc(prospectRef, { 
+                const dataToUpdate = { 
                     status: newStatus,
                     updatedAt: serverTimestamp()
-                });
+                };
+                // If moved to the last column, explicitly mark production as completed.
+                if (newStatus === COLUMN_NAMES[COLUMN_NAMES.length - 1]) {
+                    dataToUpdate.productionStatus = 'Pendente'; // It's pending until the button is clicked
+                }
+                await updateDoc(prospectRef, dataToUpdate);
             } catch (error) {
                 console.error("Error updating status:", error);
+            }
+        }
+
+        async function handleConcludeCard(prospectId, empresa) {
+            try {
+                const prospectsCollection = collection(db, 'artifacts', appId, 'public', 'data', 'prospects');
+                const q = query(prospectsCollection, where("empresa", "==", empresa));
+                const querySnapshot = await getDocs(q);
+                
+                let remainingProductionCards = 0;
+                let clientDocId = null;
+
+                querySnapshot.forEach(doc => {
+                    const prospect = doc.data();
+                    // Find the original client document (the one from sales)
+                    if (prospect.status === 'Concluído' && prospect.productionStatus !== 'Concluído') {
+                        clientDocId = doc.id;
+                    }
+                    // Count other cards for the same company that are still in a production state
+                    if (doc.id !== prospectId && COLUMN_NAMES.includes(prospect.status) && prospect.status !== COLUMN_NAMES[COLUMN_NAMES.length - 1]) {
+                        remainingProductionCards++;
+                    }
+                });
+
+                // First, update the current card that is being concluded
+                const cardRef = doc(db, 'artifacts', appId, 'public', 'data', 'prospects', prospectId);
+                await updateDoc(cardRef, {
+                    productionStatus: 'Concluído',
+                    status: 'Concluído',
+                    updatedAt: serverTimestamp()
+                });
+
+                // Always update the main client document to 'Concluded'
+                if (clientDocId) {
+                    const clientRef = doc(db, 'artifacts', appId, 'public', 'data', 'prospects', clientDocId);
+                    await updateDoc(clientRef, {
+                        productionStatus: 'Concluído',
+                        updatedAt: serverTimestamp()
+                    });
+                }
+
+                // Immediately remove the card from the UI for instant feedback
+                const cardElement = document.querySelector(`.prospect-card[data-id="${prospectId}"]`);
+                if (cardElement) {
+                    cardElement.remove();
+                }
+
+            } catch (error) {
+                console.error("Error concluding card:", error);
+                alert("Erro ao concluir a tarefa.");
             }
         }
 
@@ -483,15 +646,16 @@
         function applyFilters() {
             const search = document.getElementById('searchInput').value.toLowerCase();
             const priority = document.getElementById('priorityFilter').value;
-            const productionStatuses = Object.keys(COLUMNS);
-
+            
             filteredProspects = prospects.filter(p => {
-                const isInProduction = productionStatuses.includes(p.status) && p.status !== 'Concluído';
-                if (!isInProduction) return false;
-
+                // Basic filters
                 const matchSearch = !search || p.empresa.toLowerCase().includes(search) || (p.setor && p.setor.toLowerCase().includes(search));
                 const matchPriority = !priority || p.prioridade.toString() === priority;
-                return matchSearch && matchPriority;
+                
+                // 3. Sub-role filter: Check if any member in productionTeam has the active subrole.
+                const matchSubrole = p.productionTeam && p.productionTeam.some(member => member.subRole === activeSubrole);
+
+                return matchSearch && matchPriority && matchSubrole;
             });
             renderBoard();
         }
@@ -909,7 +1073,7 @@
                 setor: 'Produção',
                 prioridade: 3, // Média
                 ticketEstimado: 0,
-                status: 'Produção // V1',
+                status: COLUMN_NAMES[0],
                 pagina: 'Produção',
                 createdAt: serverTimestamp(),
                 updatedAt: serverTimestamp()
@@ -924,6 +1088,31 @@
             }
         }
         
+        // --- KANBAN SWITCHING ---
+        function setupSubroleButtons() {
+            const buttons = document.querySelectorAll('.subrole-btn');
+            buttons.forEach(button => {
+                button.addEventListener('click', async () => {
+                    activeSubrole = button.dataset.subrole;
+                    
+                    // Update button styles
+                    buttons.forEach(btn => {
+                        btn.classList.remove('bg-primary-light');
+                        btn.classList.add('bg-gray-600', 'hover:bg-gray-500');
+                    });
+                    button.classList.add('bg-primary-light');
+                    button.classList.remove('bg-gray-600', 'hover:bg-gray-500');
+
+                    await initializeKanban();
+                    applyFilters();
+                });
+            });
+            // Set initial active style
+            document.getElementById(`btn-kanban-${activeSubrole}`)?.classList.add('bg-primary-light');
+             document.getElementById(`btn-kanban-${activeSubrole}`)?.classList.remove('bg-gray-600', 'hover:bg-gray-500');
+        }
+
+
         // --- INITIALIZE APP ---
         document.addEventListener('DOMContentLoaded', () => {
             let resizeTimer;
@@ -945,7 +1134,7 @@
                 }
             });
 
-            loadComponents(() => {
+            loadComponents(async () => {
                 // Page-specific setup
                 setupUIListeners({
                     // Omit openFormModal for the header button on this page
@@ -957,6 +1146,8 @@
                     handleImport,
                     applyFilters
                 });
+
+                setupSubroleButtons();
 
                 const addProductionBtn = document.getElementById('addProspectBtnHeader');
                 if (addProductionBtn) {
@@ -988,3 +1179,170 @@
     <script type="module" src="production.js"></script>
 </body>
 </html>
+<environment_details>
+# VSCode Visible Files
+intranet/producao.html
+
+# VSCode Open Tabs
+intranet/.vscode/settings.json
+intranet/standardize_users.js
+intranet/contract-template.html
+intranet/formularios.html
+intranet/sign-contract.html
+intranet/public-form.html
+intranet/confirm-modal.html
+intranet/notification-container.html
+intranet/course-editor.js
+intranet/mapas-mentais.js
+intranet/public-form.js
+intranet/sign-contract.js
+intranet/arquivo.js
+intranet/login.html
+intranet/calendario.html
+intranet/tarefas.html
+intranet/chat.html
+intranet/migration.js
+intranet/firebase-config.js
+intranet/whatsapp.html
+intranet/firestore.rules
+intranet/common-ui.js
+intranet/perfil.js
+intranet/producao.html
+intranet/auth.js
+intranet/admin.html
+intranet/admin.js
+intranet/formularios.js
+intranet/closed-clients.js
+intranet/closed-clients.html
+intranet/index.html
+intranet/login.js
+intranet/header.html
+intranet/kanban-config.js
+intranet/perfil.html
+intranet/sidebar.html
+intranet/calendario.js
+intranet/tarefas.js
+intranet/chat.js
+
+# Current Time
+9/21/2025, 3:19:47 PM (America/Sao_Paulo, UTC-3:00)
+
+# Context Window Usage
+219,385 / 1,048.576K tokens used (21%)
+
+# Current Mode
+ACT MODE
+</environment_details>
+<environment_details>
+# VSCode Visible Files
+intranet/producao.html
+
+# VSCode Open Tabs
+intranet/.vscode/settings.json
+intranet/standardize_users.js
+intranet/contract-template.html
+intranet/formularios.html
+intranet/sign-contract.html
+intranet/public-form.html
+intranet/confirm-modal.html
+intranet/notification-container.html
+intranet/course-editor.js
+intranet/mapas-mentais.js
+intranet/public-form.js
+intranet/sign-contract.js
+intranet/arquivo.js
+intranet/login.html
+intranet/calendario.html
+intranet/tarefas.html
+intranet/chat.html
+intranet/migration.js
+intranet/firebase-config.js
+intranet/whatsapp.html
+intranet/firestore.rules
+intranet/common-ui.js
+intranet/perfil.js
+intranet/producao.html
+intranet/auth.js
+intranet/admin.html
+intranet/admin.js
+intranet/formularios.js
+intranet/closed-clients.js
+intranet/closed-clients.html
+intranet/index.html
+intranet/login.js
+intranet/header.html
+intranet/kanban-config.js
+intranet/perfil.html
+intranet/sidebar.html
+intranet/calendario.js
+intranet/tarefas.js
+intranet/chat.js
+
+# Current Time
+9/21/2025, 3:46:35 PM (America/Sao_Paulo, UTC-3:00)
+
+# Context Window Usage
+212,505 / 1,048.576K tokens used (20%)
+
+# Current Mode
+ACT MODE
+</environment_details>
+
+</final_file_content>
+
+IMPORTANT: For any future changes to this file, use the final_file_content shown above as your reference. This content reflects the current state of the file, including any auto-formatting (e.g., if you used single quotes but the formatter converted them to double quotes). Always base your SEARCH/REPLACE operations on this final version to ensure accuracy.
+
+<environment_details>
+# VSCode Visible Files
+intranet/producao.html
+
+# VSCode Open Tabs
+intranet/.vscode/settings.json
+intranet/standardize_users.js
+intranet/contract-template.html
+intranet/formularios.html
+intranet/sign-contract.html
+intranet/public-form.html
+intranet/confirm-modal.html
+intranet/notification-container.html
+intranet/course-editor.js
+intranet/mapas-mentais.js
+intranet/public-form.js
+intranet/sign-contract.js
+intranet/arquivo.js
+intranet/login.html
+intranet/calendario.html
+intranet/tarefas.html
+intranet/chat.html
+intranet/migration.js
+intranet/firebase-config.js
+intranet/whatsapp.html
+intranet/firestore.rules
+intranet/common-ui.js
+intranet/perfil.js
+intranet/producao.html
+intranet/auth.js
+intranet/admin.html
+intranet/admin.js
+intranet/formularios.js
+intranet/closed-clients.js
+intranet/closed-clients.html
+intranet/index.html
+intranet/login.js
+intranet/header.html
+intranet/kanban-config.js
+intranet/perfil.html
+intranet/sidebar.html
+intranet/calendario.js
+intranet/tarefas.js
+intranet/chat.js
+
+# Current Time
+9/21/2025, 4:33:58 PM (America/Sao_Paulo, UTC-3:00)
+
+# Context Window Usage
+563,382 / 1,048.576K tokens used (54%)
+
+# Current Mode
+ACT MODE
+</environment_details>

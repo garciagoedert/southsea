@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calendário de Tarefas - CRM</title>
+    <link rel="icon" href="https://www.southsea.com.br/newimag/Ellipse%209.svg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="log.css">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -175,13 +176,29 @@
                     <input type="color" id="meeting-color" value="#f97316" class="w-full h-10 bg-gray-700 border border-gray-600 rounded-lg p-1 cursor-pointer">
                 </div>
             </form>
-            <div class="flex justify-between items-center mt-auto p-4 border-t border-gray-700">
-                <button type="button" id="delete-meeting-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg hidden">Apagar</button>
-                <div class="flex justify-end gap-3 flex-grow">
-                    <button type="button" id="cancel-meeting-btn" class="bg-gray-600 hover:bg-gray-500 font-semibold py-2 px-4 rounded-lg">Cancelar</button>
-                    <button type="submit" form="meeting-form" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg">Salvar Reunião</button>
+                <div class="flex justify-between items-center mt-auto p-4 border-t border-gray-700">
+                    <div class="flex gap-3">
+                        <button type="button" id="view-lead-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg hidden">
+                            <i class="fas fa-eye mr-2"></i>Ver Detalhes do Lead
+                        </button>
+                        <div id="meeting-status-controls" class="relative hidden">
+                            <button type="button" id="meeting-realizada-btn" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg">
+                                <i class="fas fa-check-circle mr-2"></i>Reunião Realizada
+                            </button>
+                            <div id="meeting-status-options" class="absolute bottom-full mb-2 w-max bg-gray-700 border border-gray-600 rounded-lg shadow-lg hidden flex flex-col items-start">
+                                <button type="button" data-status="closed_won" class="w-full text-left px-4 py-2 hover:bg-gray-600 text-green-400">Fechou na hora</button>
+                                <button type="button" data-status="thinking" class="w-full text-left px-4 py-2 hover:bg-gray-600 text-blue-400">Vai pensar</button>
+                                <button type="button" data-status="closed_lost" class="w-full text-left px-4 py-2 hover:bg-gray-600 text-yellow-400">Compareceu, não fechou</button>
+                                <button type="button" data-status="no_show" class="w-full text-left px-4 py-2 hover:bg-gray-600 text-red-400">Não Compareceu</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button type="button" id="delete-meeting-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg hidden">Apagar</button>
+                        <button type="button" id="cancel-meeting-btn" class="bg-gray-600 hover:bg-gray-500 font-semibold py-2 px-4 rounded-lg">Cancelar</button>
+                        <button type="submit" form="meeting-form" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg">Salvar Reunião</button>
+                    </div>
                 </div>
-            </div>
         </div>
     </div>
 
