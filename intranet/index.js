@@ -23,7 +23,6 @@ const kanbanBoard = document.getElementById('kanban-board');
 const statsContainer = document.getElementById('stats');
 const formModal = document.getElementById('formModal');
 const prospectForm = document.getElementById('prospectForm');
-const confirmModal = document.getElementById('confirmModal');
 const kanbanContainer = document.getElementById('kanban-container');
 const importModal = document.getElementById('importModal');
 
@@ -171,15 +170,66 @@ function createProspectCard(prospect, isMobile = false) {
 
     const tagsHTML = (prospect.tags || []).map(tag => `<span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-sky-900/50 text-sky-200">${tag}</span>`).join('');
 
-    const closedButtonHTML = prospect.status === 'Fechado'
-        ? `<button data-prospect-id="${prospect.id}" class="move-to-closed-btn mt-3 w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded-lg text-sm items-center justify-center gap-2 flex transition-all">
-               <i class="fas fa-archive"></i> Mover para Clientes Fechados
-           </button>`
-        : `
-        <button data-prospect-id="${prospect.id}" class="schedule-meeting-btn mt-3 w-full text-center bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-3 rounded-lg text-sm items-center justify-center gap-2 flex transition-all">
-            <i class="fas fa-calendar-alt"></i> Marcar Reunião
-        </button>
+    let actionButtonHTML = ''; // Default to no button
+
+    if (prospect.status === 'Reunião') {
+        const noShowCount = prospect.noShowCount || 0;
+        const nthMeeting = noShowCount + 1;
+        const nthOrdinal = nthMeeting === 1 ? '1ª' : nthMeeting === 2 ? '2ª' : '3ª';
+
+        if (prospect.meetingResultStatus === 'no_show') {
+            actionButtonHTML = `
+                <div class="mt-3 flex gap-2">
+                    <div class="w-2/3 text-center bg-red-600 text-white font-bold py-2 px-3 rounded-lg text-sm flex items-center justify-center gap-2">
+                        <i class="fas fa-calendar-times"></i> ${nthOrdinal} Não Compareceu
+                    </div>
+                    <button data-prospect-id="${prospect.id}" class="schedule-meeting-btn w-1/3 text-center bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-2 rounded-lg text-sm flex items-center justify-center gap-1">
+                        <i class="fas fa-redo"></i> Remarcar
+                    </button>
+                </div>
+            `;
+        } else if (prospect.meetingResultStatus && prospect.meetingButtonText) {
+            const buttonText = prospect.meetingButtonText;
+            const buttonColor = prospect.meetingButtonColor || '#6b7280';
+            actionButtonHTML = `
+                <button data-reuniao-id="${prospect.reuniaoId}" class="view-meeting-btn mt-3 w-full text-center text-white font-bold py-2 px-3 rounded-lg text-sm items-center justify-center gap-2 flex transition-all" style="background-color: ${buttonColor};">
+                    <i class="fas fa-info-circle"></i> ${buttonText}
+                </button>
+            `;
+            if (buttonText === 'Fechou na hora' || buttonText === 'Vai pensar') {
+                actionButtonHTML += `
+                    <button data-prospect-id="${prospect.id}" class="convert-to-client-btn mt-2 w-full text-center bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-3 rounded-lg text-sm items-center justify-center gap-2 flex transition-all">
+                       <i class="fas fa-user-check"></i> Converter em Cliente
+                    </button>
+                `;
+            }
+        } else if (prospect.reuniaoId) {
+            actionButtonHTML = `
+                <button data-reuniao-id="${prospect.reuniaoId}" class="view-meeting-btn mt-3 w-full text-center bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-3 rounded-lg text-sm items-center justify-center gap-2 flex transition-all">
+                    <i class="fas fa-calendar-alt"></i> Ver ${nthOrdinal} Reunião
+                </button>
+            `;
+        } else {
+            actionButtonHTML = `
+                <button data-prospect-id="${prospect.id}" class="schedule-meeting-btn mt-3 w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded-lg text-sm items-center justify-center gap-2 flex transition-all">
+                    <i class="fas fa-calendar-plus"></i> Marcar ${nthOrdinal} Reunião
+                </button>
+            `;
+        }
+    } else if (prospect.status === 'Proposta' && prospect.proposalStatus) {
+        actionButtonHTML = `
+            <div class="mt-3 w-full text-center bg-gray-700 text-gray-300 font-semibold py-2 px-3 rounded-lg text-sm items-center justify-center gap-2 flex">
+                <i class="fas fa-info-circle"></i>
+                <span>${prospect.proposalStatus}</span>
+            </div>
         `;
+    } else if (prospect.status === 'Fechado') {
+        actionButtonHTML = `
+            <button data-prospect-id="${prospect.id}" class="move-to-closed-btn mt-3 w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded-lg text-sm items-center justify-center gap-2 flex transition-all">
+               <i class="fas fa-archive"></i> Mover para Clientes Fechados
+            </button>
+        `;
+    }
 
     card.innerHTML = `
         <div class="flex justify-between items-start">
@@ -195,10 +245,20 @@ function createProspectCard(prospect, isMobile = false) {
         ${prospect.origemLead ? `<p class="text-xs text-gray-400 mb-2"><i class="fas fa-sign-in-alt mr-1"></i> ${prospect.origemLead}</p>` : ''}
         <p class="text-sm text-green-400 font-semibold mb-2">R$ ${prospect.ticketEstimado?.toLocaleString('pt-BR') || 'N/A'}</p>
         ${prospect.createdBy ? `<p class="text-xs text-gray-500 mt-2 pt-2 border-t border-gray-700"><i class="fas fa-user-plus mr-1"></i> ${prospect.createdBy}</p>` : ''}
-        ${closedButtonHTML}
+        ${actionButtonHTML}
     `;
     
     card.addEventListener('click', async (e) => {
+        if (e.target.closest('.convert-to-client-btn')) {
+            e.stopPropagation();
+            const prospectId = e.target.closest('.convert-to-client-btn').dataset.prospectId;
+            const prospect = prospects.find(p => p.id === prospectId);
+            const confirmed = await showConfirmationModal(`Deseja converter "${prospect.empresa}" em cliente e mover o card para Proposta?`);
+            if (confirmed) {
+                await convertToClosedClientAndMove(prospect);
+            }
+            return;
+        }
         if (e.target.closest('.move-to-closed-btn')) {
             e.stopPropagation();
             const prospectId = e.target.closest('.move-to-closed-btn').dataset.prospectId;
@@ -212,6 +272,12 @@ function createProspectCard(prospect, isMobile = false) {
             e.stopPropagation();
             const prospectId = e.target.closest('.schedule-meeting-btn').dataset.prospectId;
             window.location.href = `calendario.html?prospectId=${prospectId}`;
+            return;
+        }
+        if (e.target.closest('.view-meeting-btn')) {
+            e.stopPropagation();
+            const reuniaoId = e.target.closest('.view-meeting-btn').dataset.reuniaoId;
+            window.location.href = `calendario.html?reuniaoId=${reuniaoId}`;
             return;
         }
         openFormModal(prospect);
@@ -304,7 +370,6 @@ async function moveProspectToClosed(prospectId) {
     try {
         const prospectRef = doc(db, 'artifacts', appId, 'public', 'data', 'prospects', prospectId);
         await updateDoc(prospectRef, {
-            status: 'Concluído',
             pagina: 'Clientes Fechados', // This will remove it from the Kanban view
             updatedAt: serverTimestamp()
         });
@@ -320,6 +385,40 @@ async function moveProspectToClosed(prospectId) {
         }
     } catch (error) {
         console.error("Error moving prospect to closed:", error);
+    }
+}
+
+async function convertToClosedClientAndMove(prospect) {
+    if (!prospect) {
+        console.error("Prospect data is missing.");
+        return;
+    }
+    const user = auth.currentUser ? auth.currentUser.email || 'anonymous' : 'anonymous';
+    
+    // 1. Create a copy for the "closed-clients" page
+    const newClientData = { ...prospect };
+    delete newClientData.id; // Firestore will generate a new ID
+    newClientData.status = 'Concluído'; // This is the key for the closed-clients page
+    newClientData.pagina = 'Clientes Fechados'; // Also set page for clarity
+    newClientData.updatedAt = serverTimestamp();
+    newClientData.closedAt = serverTimestamp(); // Add a specific closing timestamp
+
+    try {
+        const prospectsCollection = collection(db, 'artifacts', appId, 'public', 'data', 'prospects');
+        await addDoc(prospectsCollection, newClientData);
+
+        // 2. Update the original prospect to move it to the "Proposta" column
+        const originalProspectRef = doc(db, 'artifacts', appId, 'public', 'data', 'prospects', prospect.id);
+        await updateDoc(originalProspectRef, {
+            status: 'Proposta',
+            updatedAt: serverTimestamp()
+        });
+
+        generalLog.add(user, 'Convert to Client', `Card "${prospect.empresa}" converted to client and moved to Fechado`);
+
+    } catch (error) {
+        console.error("Error converting prospect to client:", error);
+        alert("Ocorreu um erro ao converter o cliente.");
     }
 }
 
@@ -505,6 +604,16 @@ function openFormModal(prospect = null) {
         document.getElementById('siteAtual').value = prospect.siteAtual || '';
         document.getElementById('observacoes').value = prospect.observacoes || '';
         document.getElementById('pagina').value = prospect.pagina || 'Prospecção';
+        
+        // Handle proposal status field
+        const proposalStatusGroup = document.getElementById('proposalStatusGroup');
+        const proposalStatusInput = document.getElementById('proposalStatus');
+        if (prospect.status === 'Proposta') {
+            proposalStatusGroup.classList.remove('hidden');
+            proposalStatusInput.value = prospect.proposalStatus || '';
+        } else {
+            proposalStatusGroup.classList.add('hidden');
+        }
 
         (prospect.tags || []).forEach(tag => {
             const checkbox = document.getElementById(`tag-${tag}`);
@@ -550,6 +659,11 @@ function closeImportModal() {
 }
 
 function showConfirmModal(message, onConfirm) {
+    const confirmModal = document.getElementById('confirmModal');
+    if (!confirmModal) {
+        console.error("Confirmation modal not found in DOM");
+        return;
+    }
     document.getElementById('confirmMessage').textContent = message;
     confirmModal.classList.remove('hidden');
     confirmModal.classList.add('flex');
@@ -578,8 +692,11 @@ function showConfirmModal(message, onConfirm) {
 }
 
 function closeConfirmModal() {
-    confirmModal.classList.add('hidden');
-    confirmModal.classList.remove('flex');
+    const confirmModal = document.getElementById('confirmModal');
+    if (confirmModal) {
+        confirmModal.classList.add('hidden');
+        confirmModal.classList.remove('flex');
+    }
 }
 
 // --- CRUD OPERATIONS ---
@@ -607,6 +724,7 @@ async function handleFormSubmit(e) {
     });
 
     const data = {
+        proposalStatus: document.getElementById('proposalStatus').value, // Always grab the value
         empresa: document.getElementById('empresa').value,
         setor: document.getElementById('setor').value,
         prioridade: parseInt(document.getElementById('prioridade').value),

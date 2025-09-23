@@ -238,9 +238,15 @@ async function loadComponents(pageSpecificSetup) {
 
         if (modalRes.ok) {
             const modalHtml = await modalRes.text();
-            const modalContainer = document.createElement('div');
-            modalContainer.innerHTML = modalHtml;
-            document.body.appendChild(modalContainer);
+            const modalContainer = document.getElementById('modal-container');
+            if (modalContainer) {
+                modalContainer.innerHTML = modalHtml;
+            } else {
+                // Fallback for pages that might not have the container
+                const tempContainer = document.createElement('div');
+                tempContainer.innerHTML = modalHtml;
+                document.body.appendChild(tempContainer.firstChild);
+            }
         }
 
         if (notificationRes.ok) {

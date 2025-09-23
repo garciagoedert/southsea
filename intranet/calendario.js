@@ -1,7 +1,7 @@
 import { loadComponents, setupUIListeners } from './common-ui.js';
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-import { getFirestore, collection, doc, addDoc, onSnapshot, updateDoc, deleteDoc, serverTimestamp, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+import { getFirestore, collection, doc, addDoc, onSnapshot, updateDoc, deleteDoc, serverTimestamp, getDocs, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 import { showConfirmationModal, showNotification } from './common-ui.js';
 import { getAllUsers } from './auth.js';
 
@@ -299,10 +299,19 @@ async function initializeCalendarPage(tasksCollectionRef, meetingsCollectionRef,
             if (meetingData.linked_card_id && savedMeetingId) {
                 try {
                     const prospectRef = doc(prospectsCollectionRef, meetingData.linked_card_id);
-                    await updateDoc(prospectRef, {
+                    const prospectDoc = await getDoc(prospectRef);
+                    const prospectData = prospectDoc.data();
+
+                    // Preserve the noShowCount, but reset everything else related to the meeting
+                    const updateData = {
                         reuniaoId: savedMeetingId,
-                        prioridade: 1 // Reduz a prioridade conforme solicitado
-                    });
+                        meetingResultStatus: null,
+                        meetingButtonText: null,
+                        meetingButtonColor: null,
+                        noShowCount: prospectData.noShowCount || 0 // Keep the count
+                    };
+
+                    await updateDoc(prospectRef, updateData);
                     showNotification('Reunião salva e card atualizado!', 'success');
                 } catch (prospectError) {
                     console.error("Erro ao atualizar o card do prospect:", prospectError);
@@ -422,21 +431,57 @@ async function initializeCalendarPage(tasksCollectionRef, meetingsCollectionRef,
                 return;
             }
 
+            // Configuration for button text and color based on status
+            const statusConfig = {
+                closed_won: { text: 'Fechou na hora', color: '#10b981' }, // Green
+                thinking: { text: 'Vai pensar', color: '#3b82f6' }, // Blue
+                closed_lost: { text: 'Compareceu, não fechou', color: '#eab308' }, // Yellow
+                no_show: { text: 'Não Compareceu', color: '#ef4444' } // Red
+            };
+
+            const config = statusConfig[newStatus];
+            if (!config) {
+                showNotification('Configuração de status inválida.', 'error');
+                return;
+            }
+
             const meetingUpdateData = {
                 meetingResult: newStatus,
-                status: 'completed', 
+                status: 'completed',
             };
+
+            // Get the current prospect data to update the no-show count
+            const prospectRef = doc(prospectsCollectionRef, cardId);
+            const prospectDoc = await getDoc(prospectRef);
+            const prospectData = prospectDoc.data();
+            
+            let noShowCount = prospectData.noShowCount || 0;
+            if (newStatus === 'no_show') {
+                noShowCount++;
+            }
+
             const prospectUpdateData = {
-                meetingResultStatus: newStatus
+                meetingResultStatus: newStatus,
+                prioridade: 5,
+                meetingButtonText: config.text,
+                meetingButtonColor: config.color,
+                noShowCount: noShowCount,
+                // Reset meetingId so a new one can be scheduled
+                reuniaoId: newStatus === 'no_show' ? null : document.getElementById('meeting-id').value
             };
+
+            if (noShowCount >= 3) {
+                prospectUpdateData.pagina = 'Arquivo';
+                showNotification('Cliente arquivado após 3 não comparecimentos.', 'warning');
+            }
+
 
             try {
                 const meetingRef = doc(meetingsCollectionRef, meetingId);
                 await updateDoc(meetingRef, meetingUpdateData);
 
-                const prospectRef = doc(prospectsCollectionRef, cardId);
                 await updateDoc(prospectRef, prospectUpdateData);
-                
+
                 showNotification(`Status da reunião atualizado para: ${e.target.textContent}`, 'success');
                 closeMeetingModal();
             } catch (error) {
