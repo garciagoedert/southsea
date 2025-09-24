@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>South Sea - Kanban</title>
     <!-- Favicon -->
-    <link rel="icon" href="https://www.southsea.com.br/newimag/Ellipse%209.svg">
+    <link rel="icon" type="image/svg+xml" href="../imgs/favicon.svg">
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -83,7 +83,7 @@
                         <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
                         <input type="text" id="searchInput" placeholder="Buscar por empresa ou setor..." class="w-full bg-gray-700 border border-gray-600 rounded-lg py-2 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
-                    <div class="flex flex-col sm:flex-row w-full xl:w-auto gap-4">
+                    <div class="flex flex-col sm:flex-row w-full xl:w-auto gap-4 sm:items-center">
                         <select id="priorityFilter" class="w-full sm:w-auto bg-gray-700 border border-gray-600 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-label="Filter by priority">
                             <option value="">Todas as Prioridades</option>
                             <option value="5">Máxima (5)</option>
@@ -95,9 +95,15 @@
                         <select id="tagFilter" class="w-full sm:w-auto bg-gray-700 border border-gray-600 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-label="Filter by tag">
                             <option value="">Todas as Tags</option>
                         </select>
-                        <select id="userFilter" class="w-full sm:w-auto bg-gray-700 border border-gray-600 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-label="Filter by user">
-                            <option value="">Todos os Usuários</option>
-                        </select>
+                        <div id="userFilterContainer" class="relative w-full sm:w-auto">
+                            <button id="userFilterBtn" class="w-full min-w-[150px] bg-gray-700 border border-gray-600 rounded-lg py-2 px-4 flex justify-between items-center focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <span id="userFilterBtnText" class="whitespace-nowrap">Todos os Usuários</span>
+                                <i class="fas fa-chevron-down ml-2"></i>
+                            </button>
+                            <div id="userFilterDropdown" class="absolute z-10 mt-2 w-full bg-gray-700 border border-gray-600 rounded-lg shadow-lg hidden max-h-60 overflow-y-auto">
+                                <!-- User checkboxes will be injected here -->
+                            </div>
+                        </div>
                         <button id="resetFiltersBtn" class="w-full sm:w-auto bg-teal-600 hover:bg-teal-500 font-semibold py-2 px-4 rounded-lg transition-all duration-200 flex-shrink-0">Limpar</button>
                     </div>
                 </div>
@@ -277,6 +283,34 @@
                 <button type="button" id="cancelEditModalBtn" class="bg-gray-600 hover:bg-gray-500 font-semibold py-2 px-4 rounded-lg">Cancelar</button>
                 <button type="button" id="saveKanbanConfigBtn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg">Salvar Alterações</button>
             </div>
+        </div>
+    </div>
+
+    <!-- Archive Reason Modal -->
+    <div id="archiveReasonModal" class="fixed inset-0 bg-black bg-opacity-70 z-50 hidden items-center justify-center p-4">
+        <div class="bg-gray-800 rounded-xl shadow-2xl w-full max-w-md">
+            <div class="flex justify-between items-center p-4 border-b border-gray-700">
+                <h2 class="text-xl font-bold">Motivo do Arquivamento</h2>
+                <button id="closeArchiveReasonModalBtn" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+            </div>
+            <form id="archiveReasonForm" class="p-6">
+                <input type="hidden" id="archiveProspectId">
+                <div class="form-group">
+                    <label for="archiveReason" class="block text-sm font-medium text-gray-300 mb-2">Selecione o motivo pelo qual este lead está sendo arquivado:</label>
+                    <select id="archiveReason" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        <option value="">-- Selecione um motivo --</option>
+                        <option value="reuniao_realizada_sem_fechamento">Reunião realizada, mas sem fechamento</option>
+                        <option value="nao_compareceu">Não compareceu à reunião</option>
+                        <option value="sem_fit">Lead sem fit com a empresa</option>
+                        <option value="contato_futuro">Solicitou contato futuro</option>
+                        <option value="outros">Outros</option>
+                    </select>
+                </div>
+                <div class="flex justify-end gap-3 mt-6">
+                    <button type="button" id="cancelArchiveReasonBtn" class="bg-gray-600 hover:bg-gray-500 font-semibold py-2 px-4 rounded-lg">Cancelar</button>
+                    <button type="submit" class="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-lg">Arquivar Lead</button>
+                </div>
+            </form>
         </div>
     </div>
 

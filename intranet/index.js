@@ -427,9 +427,11 @@ function applyFilters() {
     const search = document.getElementById('searchInput').value.toLowerCase();
     const priority = document.getElementById('priorityFilter').value;
     const tag = document.getElementById('tagFilter').value;
-    const user = document.getElementById('userFilter').value;
-    const prospectingStatuses = Object.keys(COLUMNS);
+    
+    const selectedUsers = Array.from(document.querySelectorAll('#userFilterDropdown input[type="checkbox"]:checked'))
+                               .map(cb => cb.value);
 
+    const prospectingStatuses = Object.keys(COLUMNS);
 
     filteredProspects = prospects.filter(p => {
         const isProspecting = prospectingStatuses.includes(p.status);
@@ -438,7 +440,8 @@ function applyFilters() {
         const matchSearch = !search || p.empresa.toLowerCase().includes(search) || (p.setor && p.setor.toLowerCase().includes(search));
         const matchPriority = !priority || p.prioridade.toString() === priority;
         const matchTag = !tag || (p.tags && p.tags.includes(tag));
-        const matchUser = !user || p.createdBy === user;
+        const matchUser = selectedUsers.length === 0 || selectedUsers.includes(p.createdBy);
+        
         return matchSearch && matchPriority && matchTag && matchUser;
     });
     renderBoard();
@@ -622,7 +625,7 @@ function openFormModal(prospect = null) {
 
         renderContactLog(prospect);
 
-        archiveBtn.onclick = () => showConfirmModal(`Deseja arquivar "${prospect.empresa}"?`, () => { archiveProspect(prospect.id); closeFormModal(); });
+        archiveBtn.onclick = () => openArchiveReasonModal(prospect.id);
         deleteBtn.onclick = () => showConfirmModal(`Deseja realmente excluir "${prospect.empresa}"?`, () => { deleteProspect(prospect.id); closeFormModal(); });
 
         setFormEditable(false);
@@ -697,6 +700,20 @@ function closeConfirmModal() {
         confirmModal.classList.add('hidden');
         confirmModal.classList.remove('flex');
     }
+}
+
+function openArchiveReasonModal(prospectId) {
+    const modal = document.getElementById('archiveReasonModal');
+    document.getElementById('archiveProspectId').value = prospectId;
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+}
+
+function closeArchiveReasonModal() {
+    const modal = document.getElementById('archiveReasonModal');
+    document.getElementById('archiveReasonForm').reset();
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
 }
 
 // --- CRUD OPERATIONS ---
@@ -784,17 +801,19 @@ async function deleteProspect(prospectId) {
     }
 }
 
-async function archiveProspect(prospectId) {
+async function archiveProspect(prospectId, reason) {
     const user = auth.currentUser ? auth.currentUser.email || 'anonymous' : 'anonymous';
     const prospect = prospects.find(p => p.id === prospectId);
     try {
         const prospectRef = doc(db, 'artifacts', appId, 'public', 'data', 'prospects', prospectId);
         await updateDoc(prospectRef, {
             pagina: 'Arquivo',
+            archiveReason: reason,
+            archivedAt: serverTimestamp(),
             updatedAt: serverTimestamp()
         });
         if(prospect) {
-            generalLog.add(user, 'Archive Card', `Card "${prospect.empresa}" archived`);
+            generalLog.add(user, 'Archive Card', `Card "${prospect.empresa}" archived with reason: ${reason}`);
         }
     } catch (error) {
         console.error("Error archiving prospect:", error);
@@ -859,23 +878,86 @@ async function handleImport() {
 
 // --- TAGS UTILITY ---
 function populateUserFilter() {
-    const userFilter = document.getElementById('userFilter');
-    const selectedValue = userFilter.value; 
-    const users = [...new Set(prospects.map(p => p.createdBy).filter(Boolean))];
+    const userFilterDropdown = document.getElementById('userFilterDropdown');
+    const userFilterBtnText = document.getElementById('userFilterBtnText');
     
-    // Clear existing options except the first one
-    while (userFilter.options.length > 1) {
-        userFilter.remove(1);
-    }
+    const users = [...new Set(prospects.map(p => p.createdBy).filter(Boolean))].sort();
 
-    users.sort().forEach(user => {
-        const option = document.createElement('option');
-        option.value = user;
-        option.textContent = user;
-        userFilter.appendChild(option);
+    // Preserve checked state
+    const currentlyChecked = Array.from(userFilterDropdown.querySelectorAll('input[type="checkbox"]:checked:not(#user-filter-all)')).map(input => input.value);
+
+    userFilterDropdown.innerHTML = ''; // Clear previous options
+
+    // --- "Select All" Option ---
+    const allContainer = document.createElement('label');
+    allContainer.className = 'flex items-center p-2 hover:bg-gray-600 cursor-pointer font-bold border-b border-gray-600';
+    const allCheckbox = document.createElement('input');
+    allCheckbox.type = 'checkbox';
+    allCheckbox.id = 'user-filter-all';
+    allCheckbox.className = 'h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 bg-gray-700 mr-3';
+    const allText = document.createElement('span');
+    allText.textContent = 'Todos';
+    allContainer.appendChild(allCheckbox);
+    allContainer.appendChild(allText);
+    userFilterDropdown.appendChild(allContainer);
+
+    // --- Individual User Options ---
+    users.forEach(user => {
+        const container = document.createElement('label');
+        container.className = 'flex items-center p-2 hover:bg-gray-600 cursor-pointer';
+        
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.value = user;
+        checkbox.className = 'user-checkbox h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 bg-gray-700 mr-3';
+        if (currentlyChecked.includes(user)) {
+            checkbox.checked = true;
+        }
+        
+        const text = document.createElement('span');
+        text.textContent = user;
+        
+        container.appendChild(checkbox);
+        container.appendChild(text);
+        userFilterDropdown.appendChild(container);
     });
 
-    userFilter.value = selectedValue;
+    const userCheckboxes = userFilterDropdown.querySelectorAll('.user-checkbox');
+
+    const updateAllCheckboxState = () => {
+        const allChecked = userCheckboxes.length > 0 && Array.from(userCheckboxes).every(cb => cb.checked);
+        allCheckbox.checked = allChecked;
+    };
+
+    // --- Event Listeners ---
+    allCheckbox.addEventListener('change', () => {
+        userCheckboxes.forEach(cb => cb.checked = allCheckbox.checked);
+        updateButtonText();
+        applyFilters();
+    });
+
+    userCheckboxes.forEach(cb => {
+        cb.addEventListener('change', () => {
+            updateAllCheckboxState();
+            updateButtonText();
+            applyFilters();
+        });
+    });
+
+    const updateButtonText = () => {
+        const selectedCount = userFilterDropdown.querySelectorAll('.user-checkbox:checked').length;
+        if (selectedCount === 0 || selectedCount === userCheckboxes.length) {
+            userFilterBtnText.textContent = 'Todos os Usuários';
+        } else if (selectedCount === 1) {
+            userFilterBtnText.textContent = userFilterDropdown.querySelector('.user-checkbox:checked').value;
+        } else {
+            userFilterBtnText.textContent = `${selectedCount} Usuários Selecionados`;
+        }
+    };
+
+    // --- Initial State ---
+    updateAllCheckboxState();
+    updateButtonText();
 }
 
 function populateTags() {
@@ -972,7 +1054,23 @@ function exportData() {
 }
 
 // --- INITIALIZE APP ---
-document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', () => {
+    // --- Archive Reason Modal Listeners ---
+    document.getElementById('archiveReasonForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const prospectId = document.getElementById('archiveProspectId').value;
+        const reason = document.getElementById('archiveReason').value;
+        if (!reason) {
+            alert('Por favor, selecione um motivo para o arquivamento.');
+            return;
+        }
+        await archiveProspect(prospectId, reason);
+        closeArchiveReasonModal();
+        closeFormModal();
+    });
+    document.getElementById('closeArchiveReasonModalBtn').addEventListener('click', closeArchiveReasonModal);
+    document.getElementById('cancelArchiveReasonBtn').addEventListener('click', closeArchiveReasonModal);
+
     let resizeTimer;
     window.addEventListener('resize', () => {
         clearTimeout(resizeTimer);
@@ -1007,15 +1105,30 @@ document.addEventListener('DOMContentLoaded', () => {
             closeConfirmModal
         });
 
-        // Listener for the new user filter
-        document.getElementById('userFilter').addEventListener('change', applyFilters);
+        // --- User Filter Dropdown Logic ---
+        const userFilterBtn = document.getElementById('userFilterBtn');
+        const userFilterDropdown = document.getElementById('userFilterDropdown');
+
+        userFilterBtn.addEventListener('click', () => {
+            userFilterDropdown.classList.toggle('hidden');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!userFilterBtn.contains(e.target) && !userFilterDropdown.contains(e.target)) {
+                userFilterDropdown.classList.add('hidden');
+            }
+        });
 
         // Update reset button functionality
         document.getElementById('resetFiltersBtn').addEventListener('click', () => {
             document.getElementById('searchInput').value = '';
             document.getElementById('priorityFilter').value = '';
             document.getElementById('tagFilter').value = '';
-            document.getElementById('userFilter').value = '';
+            
+            // Uncheck all user filter checkboxes
+            document.querySelectorAll('#userFilterDropdown input:checked').forEach(cb => cb.checked = false);
+            document.getElementById('userFilterBtnText').textContent = 'Todos os Usuários';
+
             applyFilters();
         });
 

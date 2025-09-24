@@ -32,6 +32,33 @@
         .drag-over {
             @apply border-dashed border-2 border-blue-500 bg-blue-500/10;
         }
+
+        /* Styles for the multi-select dropdown */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #2d3748; /* bg-gray-800 */
+            min-width: 200px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 10;
+            border-radius: 0.5rem;
+            border: 1px solid #4a5568; /* border-gray-600 */
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .dropdown-content label {
+            color: white;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            cursor: pointer;
+        }
+        .dropdown-content label:hover {
+            background-color: #4a5568; /* bg-gray-600 */
+        }
+        .dropdown-content input {
+            margin-right: 10px;
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-200">
@@ -68,6 +95,16 @@
                             <option value="2">Baixa (2)</option>
                             <option value="1">Mínima (1)</option>
                         </select>
+                        <!-- User Filter Dropdown -->
+                        <div class="relative">
+                            <button id="userFilterBtn" class="w-full sm:w-auto bg-gray-700 border border-gray-600 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 flex items-center justify-between min-w-[180px]">
+                                <span class="truncate">Todos os Usuários</span>
+                                <i class="fas fa-chevron-down ml-2 text-xs"></i>
+                            </button>
+                            <div id="userFilterDropdown" class="dropdown-content right-0 mt-2">
+                                <!-- User checkboxes will be injected here -->
+                            </div>
+                        </div>
                         <button id="resetFiltersBtn" class="w-full sm:w-auto bg-teal-600 hover:bg-teal-500 font-semibold py-2 px-4 rounded-lg transition-all duration-200 flex-shrink-0">Limpar</button>
                     </div>
                 </div>
@@ -283,6 +320,7 @@
                 if (sessionStorage.getItem('isLoggedIn') === 'true') {
                     document.getElementById('kanban-container').classList.remove('hidden');
                     await fetchAllUsers();
+                    populateUserFilter(); // Populate the new filter
                     await initializeKanban();
                     setupProspectsListener();
                 } else {
@@ -307,6 +345,46 @@
             } catch (error) {
                 console.error("Erro ao buscar todos os usuários:", error);
             }
+        }
+
+        // --- USER FILTER ---
+        function populateUserFilter() {
+            const dropdown = document.getElementById('userFilterDropdown');
+            dropdown.innerHTML = ''; // Clear existing options
+
+            const productionUsers = allUsers.filter(u => u.role === 'producao');
+
+            productionUsers.forEach(user => {
+                const label = document.createElement('label');
+                label.className = 'flex items-center';
+                label.innerHTML = `
+                    <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 bg-gray-700 border-gray-500 rounded focus:ring-blue-500" value="${user.id}">
+                    <span class="ml-2 text-gray-200">${user.name}</span>
+                `;
+                dropdown.appendChild(label);
+            });
+
+            // Add event listeners to checkboxes to re-apply filters on change
+            dropdown.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                checkbox.addEventListener('change', applyFilters);
+            });
+        }
+
+        function setupUserFilterDropdown() {
+            const btn = document.getElementById('userFilterBtn');
+            const dropdown = document.getElementById('userFilterDropdown');
+
+            btn.addEventListener('click', (event) => {
+                event.stopPropagation();
+                dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+            });
+
+            // Close dropdown if clicking outside
+            window.addEventListener('click', (event) => {
+                if (!btn.contains(event.target) && !dropdown.contains(event.target)) {
+                    dropdown.style.display = 'none';
+                }
+            });
         }
 
         // --- KANBAN INITIALIZATION ---
@@ -468,6 +546,9 @@
                 actionButtonsHTML += `<button class="conclude-card-btn absolute bottom-2 right-2 bg-green-600 hover:bg-green-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs z-10" data-id="${prospect.id}" data-empresa="${prospect.empresa}" title="Concluir Tarefa"><i class="fas fa-check"></i></button>`;
             }
 
+            const assignedMember = prospect.productionTeam?.find(member => member.subRole === activeSubrole);
+            const assignedUser = assignedMember ? allUsers.find(u => u.id === assignedMember.userId) : null;
+            const assignedUserName = assignedUser ? assignedUser.name : 'Não atribuído';
 
             card.innerHTML = `
                 ${actionButtonsHTML}
@@ -480,7 +561,7 @@
                 </div>
                 ${prospect.origemLead ? `<p class="text-xs text-gray-400 mb-2"><i class="fas fa-sign-in-alt mr-1"></i> ${prospect.origemLead}</p>` : ''}
                 <p class="text-sm text-green-400 font-semibold mb-2">R$ ${prospect.ticketEstimado?.toLocaleString('pt-BR') || 'N/A'}</p>
-                ${prospect.createdBy ? `<p class="text-xs text-gray-500 mt-2 pt-2 border-t border-gray-700"><i class="fas fa-user-plus mr-1"></i> ${prospect.createdBy}</p>` : ''}
+                <p class="text-xs text-gray-500 mt-2 pt-2 border-t border-gray-700"><i class="fas fa-user-plus mr-1"></i> ${assignedUserName}</p>
             `;
             
             // 4. Redirect to client's profile page on click.
@@ -647,16 +728,35 @@
             const search = document.getElementById('searchInput').value.toLowerCase();
             const priority = document.getElementById('priorityFilter').value;
             
+            // Get selected users
+            const selectedUserIds = Array.from(document.querySelectorAll('#userFilterDropdown input:checked')).map(input => input.value);
+
             filteredProspects = prospects.filter(p => {
                 // Basic filters
                 const matchSearch = !search || p.empresa.toLowerCase().includes(search) || (p.setor && p.setor.toLowerCase().includes(search));
                 const matchPriority = !priority || p.prioridade.toString() === priority;
                 
-                // 3. Sub-role filter: Check if any member in productionTeam has the active subrole.
+                // Sub-role filter
                 const matchSubrole = p.productionTeam && p.productionTeam.some(member => member.subRole === activeSubrole);
 
-                return matchSearch && matchPriority && matchSubrole;
+                // New User filter
+                const assignedMember = p.productionTeam?.find(member => member.subRole === activeSubrole);
+                const matchUser = selectedUserIds.length === 0 || (assignedMember && selectedUserIds.includes(assignedMember.userId));
+
+                return matchSearch && matchPriority && matchSubrole && matchUser;
             });
+
+            // Update filter button text
+            const userFilterBtn = document.getElementById('userFilterBtn').querySelector('span');
+            if (selectedUserIds.length === 0) {
+                userFilterBtn.textContent = 'Todos os Usuários';
+            } else if (selectedUserIds.length === 1) {
+                const selectedUserName = allUsers.find(u => u.id === selectedUserIds[0])?.name || '1 usuário';
+                userFilterBtn.textContent = selectedUserName;
+            } else {
+                userFilterBtn.textContent = `${selectedUserIds.length} usuários selecionados`;
+            }
+
             renderBoard();
         }
 
@@ -1144,9 +1244,16 @@
                     handleFormSubmit,
                     closeImportModal,
                     handleImport,
-                    applyFilters
+                    applyFilters,
+                    resetFilters: () => {
+                        document.getElementById('searchInput').value = '';
+                        document.getElementById('priorityFilter').value = '';
+                        document.querySelectorAll('#userFilterDropdown input:checked').forEach(input => input.checked = false);
+                        applyFilters();
+                    }
                 });
-
+                
+                setupUserFilterDropdown();
                 setupSubroleButtons();
 
                 const addProductionBtn = document.getElementById('addProspectBtnHeader');

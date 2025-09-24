@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arquivo de Leads - CRM</title>
+    <link rel="icon" type="image/svg+xml" href="../imgs/favicon.svg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="log.css">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -24,8 +25,13 @@
                 <div class="flex items-center gap-4 mb-6">
                     <input type="text" id="search-input" placeholder="Buscar por nome, empresa ou contato..." class="flex-grow p-2 border border-gray-700 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
-                <div id="archived-leads-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <!-- Cards dos leads arquivados serão inseridos aqui -->
+                <div class="border-b border-gray-700 mb-6">
+                    <nav id="archive-tabs" class="flex space-x-4" aria-label="Tabs">
+                        <!-- As abas serão geradas dinamicamente aqui -->
+                    </nav>
+                </div>
+                <div id="archive-tab-panels">
+                    <!-- Os painéis com os leads serão inseridos aqui -->
                 </div>
             </div>
         </main>

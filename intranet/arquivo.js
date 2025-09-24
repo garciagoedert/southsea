@@ -17,6 +17,7 @@ export function initializeAppWithFirebase(firebaseConfig) {
             if (sessionStorage.getItem('isLoggedIn') === 'true') {
                 loadComponents(() => {
                     setupUIListeners({}); // Setup sidebar interactivity
+                    setupTabs(); // Adiciona a criação das abas
                     loadArchivedLeads();
                     const searchInput = document.getElementById('search-input');
                     searchInput.addEventListener('input', () => loadArchivedLeads(searchInput.value));
@@ -49,85 +50,184 @@ export function initializeAppWithFirebase(firebaseConfig) {
     });
 }
 
-// Função para carregar os leads arquivados
+const archiveReasons = {
+    'reuniao_realizada_sem_fechamento': 'Reunião (Sem Fechamento)',
+    'nao_compareceu': 'Não Compareceram',
+    'sem_fit': 'Sem Fit',
+    'contato_futuro': 'Contato Futuro',
+    'outros': 'Outros',
+    'nao_categorizado': 'Não Categorizado'
+};
+
+const TABS_CONFIG = {
+    'remarketing': {
+        label: '🚀 Prontos para Remarketing',
+        id: 'remarketing'
+    },
+    ...Object.fromEntries(
+        Object.entries(archiveReasons).map(([key, value]) => [key, { label: value, id: key }])
+    )
+};
+
+let allLeads = []; // Cache para todos os leads carregados
+
+function setupTabs() {
+    const tabsContainer = document.getElementById('archive-tabs');
+    const panelsContainer = document.getElementById('archive-tab-panels');
+    tabsContainer.innerHTML = '';
+    panelsContainer.innerHTML = '';
+
+    Object.values(TABS_CONFIG).forEach((tab, index) => {
+        const tabButton = document.createElement('a');
+        tabButton.href = '#';
+        tabButton.id = `tab-${tab.id}`;
+        tabButton.className = `tab-link py-2 px-4 text-sm font-medium rounded-t-lg whitespace-nowrap ${index === 0 ? 'border-b-2 border-blue-500 text-blue-500' : 'text-gray-400 hover:text-gray-200 hover:border-gray-500'}`;
+        tabButton.textContent = tab.label;
+        tabButton.dataset.tab = tab.id;
+        tabsContainer.appendChild(tabButton);
+
+        const panel = document.createElement('div');
+        panel.id = `panel-${tab.id}`;
+        panel.className = `tab-panel grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ${index !== 0 ? 'hidden' : ''}`;
+        panelsContainer.appendChild(panel);
+    });
+
+    tabsContainer.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetTab = e.target.closest('.tab-link');
+        if (!targetTab) return;
+
+        document.querySelectorAll('.tab-link').forEach(tab => {
+            tab.classList.remove('border-blue-500', 'text-blue-500');
+            tab.classList.add('text-gray-400', 'hover:text-gray-200', 'hover:border-gray-500');
+        });
+        targetTab.classList.add('border-blue-500', 'text-blue-500');
+        targetTab.classList.remove('text-gray-400', 'hover:text-gray-200', 'hover:border-gray-500');
+
+        document.querySelectorAll('.tab-panel').forEach(panel => {
+            panel.classList.add('hidden');
+        });
+        document.getElementById(`panel-${targetTab.dataset.tab}`).classList.remove('hidden');
+    });
+}
+
+function renderLeads(leadsToRender, searchTerm = '') {
+    // Limpa todos os painéis
+    document.querySelectorAll('.tab-panel').forEach(panel => panel.innerHTML = '');
+
+    // Filtra os leads com base no termo de busca
+    const filteredLeads = searchTerm
+        ? leadsToRender.filter(lead =>
+            (lead.empresa?.toLowerCase().includes(searchTerm) ||
+             lead.setor?.toLowerCase().includes(searchTerm) ||
+             lead.telefone?.toLowerCase().includes(searchTerm) ||
+             lead.email?.toLowerCase().includes(searchTerm))
+          )
+        : leadsToRender;
+
+    const leadsByReason = {};
+    const remarketingLeads = [];
+    const ninetyDaysAgo = new Date();
+    ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
+
+    filteredLeads.forEach(lead => {
+        const reason = lead.archiveReason || 'nao_categorizado';
+        if (!leadsByReason[reason]) {
+            leadsByReason[reason] = [];
+        }
+        leadsByReason[reason].push(lead);
+
+        if (lead.archivedAt && lead.archivedAt.toDate() < ninetyDaysAgo) {
+            remarketingLeads.push(lead);
+        }
+    });
+
+    // Renderiza leads em suas respectivas abas
+    for (const reason in leadsByReason) {
+        const panel = document.getElementById(`panel-${reason}`);
+        if (panel) {
+            renderCardsInPanel(leadsByReason[reason], panel);
+        }
+    }
+
+    // Renderiza leads na aba de remarketing
+    const remarketingPanel = document.getElementById('panel-remarketing');
+    if (remarketingPanel) {
+        renderCardsInPanel(remarketingLeads, remarketingPanel);
+    }
+
+    // Adiciona listeners aos botões de edição
+    document.querySelectorAll('.edit-btn').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const leadId = e.target.dataset.id;
+            const leadData = allLeads.find(l => l.id === leadId);
+            if (leadData) openEditModal(leadData);
+        });
+    });
+}
+
+function renderCardsInPanel(leads, panel) {
+    if (leads.length === 0) {
+        panel.innerHTML = '<p class="text-gray-400 col-span-full">Nenhum lead encontrado nesta categoria.</p>';
+        return;
+    }
+
+    panel.innerHTML = leads.map(lead => {
+        const archivedDate = lead.archivedAt ? lead.archivedAt.toDate() : null;
+        const timeAgo = archivedDate ? `${Math.floor((new Date() - archivedDate) / (1000 * 60 * 60 * 24))} dias atrás` : 'Data indisponível';
+
+        return `
+        <div class="bg-gray-800 p-4 rounded-lg shadow-lg flex flex-col">
+            <div>
+                <h3 class="text-lg font-bold text-white">${lead.empresa || 'Empresa não informada'}</h3>
+                <p class="text-sm text-gray-400">${lead.setor || 'Setor não informado'}</p>
+                <div class="mt-2">
+                    ${lead.telefone ? `<p class="text-sm text-gray-300"><i class="fas fa-phone-alt mr-2"></i>${lead.telefone}</p>` : ''}
+                    ${lead.email ? `<p class="text-sm text-gray-300"><i class="fas fa-envelope mr-2"></i>${lead.email}</p>` : ''}
+                </div>
+                <p class="text-xs text-gray-500 mt-2"><i class="fas fa-calendar-alt mr-1"></i> Arquivado: ${timeAgo}</p>
+                ${lead.createdBy ? `<p class="text-xs text-gray-500 mt-2 pt-2 border-t border-gray-700"><i class="fas fa-user-plus mr-1"></i> ${lead.createdBy}</p>` : ''}
+            </div>
+            <div class="mt-4 pt-4 border-t border-gray-700 text-right">
+                <button data-id="${lead.id}" class="edit-btn bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-lg">Detalhes</button>
+            </div>
+        </div>
+        `;
+    }).join('');
+}
+
 async function loadArchivedLeads(searchTerm = '') {
-    const container = document.getElementById('archived-leads-container');
-    container.innerHTML = ''; // Limpa o container
-
     try {
-        const leadsRef = collection(db, 'artifacts', '1:476390177044:web:39e6597eb624006ee06a01', 'public', 'data', 'prospects');
-        const userRole = sessionStorage.getItem('userRole');
-        const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+        if (allLeads.length === 0) { // Carrega apenas na primeira vez
+            const leadsRef = collection(db, 'artifacts', '1:476390177044:web:39e6597eb624006ee06a01', 'public', 'data', 'prospects');
+            const userRole = sessionStorage.getItem('userRole');
+            const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
 
-        let q = query(leadsRef, where('pagina', '==', 'Arquivo'));
+            let q = query(leadsRef, where('pagina', '==', 'Arquivo'));
 
-        if (userRole === 'cs') {
-            const clientIds = currentUser.associatedClients || [];
-            if (clientIds.length > 0) {
-                q = query(leadsRef, where('pagina', '==', 'Arquivo'), where('__name__', 'in', clientIds));
-            } else {
-                container.innerHTML = '<p class="text-gray-400">Nenhum lead arquivado encontrado.</p>';
-                return;
+            if (userRole === 'cs') {
+                const clientIds = currentUser.associatedClients || [];
+                if (clientIds.length > 0) {
+                    q = query(leadsRef, where('pagina', '==', 'Arquivo'), where('__name__', 'in', clientIds));
+                } else {
+                    allLeads = [];
+                }
+            }
+            
+            if (userRole !== 'cs' || (currentUser.associatedClients && currentUser.associatedClients.length > 0)) {
+                const querySnapshot = await getDocs(q);
+                querySnapshot.forEach(doc => {
+                    allLeads.push({ id: doc.id, ...doc.data() });
+                });
             }
         }
         
-        const querySnapshot = await getDocs(q);
-
-        let leads = [];
-        querySnapshot.forEach(doc => {
-            leads.push({ id: doc.id, ...doc.data() });
-        });
-
-        // Filtra os leads com base no termo de busca
-        if (searchTerm) {
-            const lowercasedFilter = searchTerm.toLowerCase();
-            leads = leads.filter(lead => {
-                return (
-                    lead.empresa?.toLowerCase().includes(lowercasedFilter) ||
-                    lead.setor?.toLowerCase().includes(lowercasedFilter) ||
-                    lead.telefone?.toLowerCase().includes(lowercasedFilter) ||
-                    lead.email?.toLowerCase().includes(lowercasedFilter)
-                );
-            });
-        }
-
-        if (leads.length === 0) {
-            container.innerHTML = '<p class="text-gray-400">Nenhum lead arquivado encontrado.</p>';
-            return;
-        }
-
-        // Renderiza os cards dos leads
-        leads.forEach(lead => {
-            const card = document.createElement('div');
-            card.className = 'bg-gray-800 p-4 rounded-lg shadow-lg flex flex-col';
-            card.innerHTML = `
-                <div>
-                    <h3 class="text-lg font-bold text-white">${lead.empresa || 'Empresa não informada'}</h3>
-                    <p class="text-sm text-gray-400">${lead.setor || 'Setor não informado'}</p>
-                    <div class="mt-2">
-                        ${lead.telefone ? `<p class="text-sm text-gray-300"><i class="fas fa-phone-alt mr-2"></i>${lead.telefone}</p>` : ''}
-                        ${lead.email ? `<p class="text-sm text-gray-300"><i class="fas fa-envelope mr-2"></i>${lead.email}</p>` : ''}
-                    </div>
-                    ${lead.createdBy ? `<p class="text-xs text-gray-500 mt-2 pt-2 border-t border-gray-700"><i class="fas fa-user-plus mr-1"></i> ${lead.createdBy}</p>` : ''}
-                </div>
-                <div class="mt-4 pt-4 border-t border-gray-700 text-right">
-                    <button data-id="${lead.id}" class="edit-btn bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-lg">Editar</button>
-                </div>
-            `;
-            container.appendChild(card);
-        });
-
-        document.querySelectorAll('.edit-btn').forEach(button => {
-            button.addEventListener('click', (e) => {
-                const leadId = e.target.dataset.id;
-                const leadData = leads.find(l => l.id === leadId);
-                openEditModal(leadData);
-            });
-        });
+        renderLeads(allLeads, searchTerm);
 
     } catch (error) {
         console.error("Erro ao carregar leads arquivados: ", error);
-        container.innerHTML = '<p class="text-red-500">Erro ao carregar os leads. Tente novamente mais tarde.</p>';
+        const panelsContainer = document.getElementById('archive-tab-panels');
+        panelsContainer.innerHTML = '<p class="text-red-500">Erro ao carregar os leads. Tente novamente mais tarde.</p>';
     }
 }
 

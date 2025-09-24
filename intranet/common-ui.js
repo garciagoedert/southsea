@@ -8,6 +8,7 @@ function setupUIListeners(handlers = {}) {
         closeImportModal,
         handleImport,
         applyFilters,
+        resetFilters, // Add resetFilters to destructuring
         openQuickMessagesModal
     } = handlers;
 
@@ -70,18 +71,23 @@ function setupUIListeners(handlers = {}) {
 
         const resetFiltersBtn = document.getElementById('resetFiltersBtn');
         if (resetFiltersBtn) {
-            resetFiltersBtn.addEventListener('click', () => {
-                document.getElementById('searchInput').value = '';
-                document.getElementById('priorityFilter').value = '';
-                
-                const tagFilter = document.getElementById('tagFilter');
-                if (tagFilter) tagFilter.value = '';
+            // If a custom reset function is provided, use it. Otherwise, use the default.
+            if (resetFilters) {
+                resetFiltersBtn.addEventListener('click', resetFilters);
+            } else {
+                resetFiltersBtn.addEventListener('click', () => {
+                    document.getElementById('searchInput').value = '';
+                    document.getElementById('priorityFilter').value = '';
+                    
+                    const tagFilter = document.getElementById('tagFilter');
+                    if (tagFilter) tagFilter.value = '';
 
-                const userFilter = document.getElementById('userFilter');
-                if (userFilter) userFilter.value = '';
+                    const userFilter = document.getElementById('userFilter');
+                    if (userFilter) userFilter.value = '';
 
-                applyFilters();
-            });
+                    applyFilters();
+                });
+            }
         }
     }
     
@@ -513,4 +519,159 @@ function showNotification(message, type = 'success') {
     }, 4000);
 }
 
-export { setupUIListeners, loadComponents, showConfirmationModal, showNotification };
+// Floating Stopwatch Logic
+let floatingStopwatchInterval = null;
+
+function createFloatingStopwatch() {
+    const stopwatchHTML = `
+        <div id="floating-stopwatch" class="hidden fixed bottom-4 left-4 bg-gray-800 border border-gray-700 rounded-lg p-3 shadow-lg select-none z-50 cursor-move" style="will-change: transform;">
+            <div class="flex items-center gap-3" style="pointer-events: none;">
+                <i class="fas fa-clock text-primary text-lg"></i>
+                <div>
+                    <span id="floating-time" class="font-mono text-xl text-white">00:00:00</span>
+                    <p id="floating-task-title" class="text-xs text-gray-400 truncate max-w-[150px]">Nenhuma tarefa ativa</p>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', stopwatchHTML);
+
+    const stopwatchElement = document.getElementById('floating-stopwatch');
+    makeElementDraggable(stopwatchElement);
+
+    // Restore state on page load
+    restoreStopwatchState();
+}
+
+function makeElementDraggable(elmnt) {
+    let startX = 0, startY = 0, currentX = 0, currentY = 0, initialX = 0, initialY = 0;
+    let isDragging = false;
+    const dragThreshold = 5;
+
+    elmnt.onmousedown = dragMouseDown;
+
+    function dragMouseDown(e) {
+        e = e || window.event;
+        e.preventDefault();
+
+        startX = e.clientX;
+        startY = e.clientY;
+        
+        const style = window.getComputedStyle(elmnt);
+        const matrix = new DOMMatrix(style.transform);
+        initialX = matrix.m41;
+        initialY = matrix.m42;
+
+        document.onmouseup = closeDragElement;
+        document.onmousemove = elementDrag;
+    }
+
+    function elementDrag(e) {
+        e = e || window.event;
+        e.preventDefault();
+        isDragging = true;
+
+        currentX = e.clientX - startX;
+        currentY = e.clientY - startY;
+
+        const newX = initialX + currentX;
+        const newY = initialY + currentY;
+
+        elmnt.style.transform = `translate3d(${newX}px, ${newY}px, 0)`;
+    }
+
+    function closeDragElement(e) {
+        document.onmouseup = null;
+        document.onmousemove = null;
+
+        const moveX = Math.abs(e.clientX - startX);
+        const moveY = Math.abs(e.clientY - startY);
+
+        if (moveX < dragThreshold && moveY < dragThreshold) {
+            const activeTaskJSON = localStorage.getItem('activeStopwatchTask');
+            if (activeTaskJSON) {
+                const activeTask = JSON.parse(activeTaskJSON);
+                if (activeTask && activeTask.id) {
+                    window.location.href = `tarefas.html?taskId=${activeTask.id}`;
+                }
+            }
+        }
+        isDragging = false;
+    }
+}
+
+function formatStopwatchTime(seconds) {
+    const h = Math.floor(seconds / 3600).toString().padStart(2, '0');
+    const m = Math.floor((seconds % 3600) / 60).toString().padStart(2, '0');
+    const s = Math.floor(seconds % 60).toString().padStart(2, '0');
+    return `${h}:${m}:${s}`;
+}
+
+function updateFloatingStopwatch() {
+    const activeTask = JSON.parse(localStorage.getItem('activeStopwatchTask'));
+    if (!activeTask || !activeTask.startTime) return;
+
+    const elapsedSeconds = Math.floor((Date.now() - activeTask.startTime) / 1000);
+    document.getElementById('floating-time').textContent = formatStopwatchTime(elapsedSeconds);
+}
+
+function restoreStopwatchState() {
+    const activeTaskJSON = localStorage.getItem('activeStopwatchTask');
+    if (!activeTaskJSON) return;
+
+    const activeTask = JSON.parse(activeTaskJSON);
+
+    // Handle legacy stopwatch data that doesn't have userId
+    if (!activeTask.hasOwnProperty('userId')) {
+        localStorage.removeItem('activeStopwatchTask');
+        return;
+    }
+
+    const currentUserStr = sessionStorage.getItem('currentUser');
+    if (!currentUserStr) return;
+    
+    const currentUser = JSON.parse(currentUserStr);
+
+    // Only restore if the active task belongs to the current user
+    if (activeTask && activeTask.id && activeTask.userId === currentUser.id) {
+        document.getElementById('floating-task-title').textContent = activeTask.title;
+        document.getElementById('floating-stopwatch').classList.remove('hidden');
+        if (floatingStopwatchInterval) clearInterval(floatingStopwatchInterval);
+        floatingStopwatchInterval = setInterval(updateFloatingStopwatch, 1000);
+    }
+}
+
+function startFloatingStopwatch(task) {
+    const currentUserStr = sessionStorage.getItem('currentUser');
+    if (!currentUserStr) {
+        console.error("Current user not found in sessionStorage. Cannot start stopwatch.");
+        return;
+    }
+    const currentUser = JSON.parse(currentUserStr);
+
+    if (!task || !task.id) {
+        console.error("Invalid task object passed to startFloatingStopwatch:", task);
+        return;
+    }
+
+    const activeTask = {
+        id: task.id,
+        title: task.title,
+        startTime: Date.now(),
+        userId: currentUser.id // FIX: Use .id instead of .uid
+    };
+    localStorage.setItem('activeStopwatchTask', JSON.stringify(activeTask));
+    restoreStopwatchState();
+}
+
+function stopFloatingStopwatch() {
+    localStorage.removeItem('activeStopwatchTask');
+    if (floatingStopwatchInterval) clearInterval(floatingStopwatchInterval);
+    floatingStopwatchInterval = null;
+    document.getElementById('floating-stopwatch').classList.add('hidden');
+}
+
+document.addEventListener('DOMContentLoaded', createFloatingStopwatch);
+
+
+export { setupUIListeners, loadComponents, showConfirmationModal, showNotification, startFloatingStopwatch, stopFloatingStopwatch };
