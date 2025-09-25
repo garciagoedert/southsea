@@ -51,17 +51,54 @@ async function initializeKanban() {
     const defaultConfig = {
         columnOrder: ['Pendente', 'Contactado', 'Reunião', 'Proposta', 'Fechado'],
         columns: {
-            'Pendente': 'pendente', 'Contactado': 'contactado', 'Reunião': 'reuniao',
-            'Proposta': 'proposta', 'Fechado': 'fechado'
+            'Pendente': { id: 'pendente', todoTemplate: '' },
+            'Contactado': { id: 'contactado', todoTemplate: '' },
+            'Reunião': { id: 'reuniao', todoTemplate: '' },
+            'Proposta': { id: 'proposta', todoTemplate: '' },
+            'Fechado': { id: 'fechado', todoTemplate: '' }
         }
     };
     const config = await loadKanbanConfig('prospects', defaultConfig);
     COLUMNS = config.columns;
     COLUMN_NAMES = config.columnOrder;
-    
-    renderBoard(); // Initial render
-    
-    // Setup modal listeners after the first render
+
+    // If prospects are already loaded, re-process them with the new config
+    if (prospects.length > 0) {
+        const batch = writeBatch(db);
+        let shouldCommit = false;
+
+        prospects.forEach(prospect => {
+            const columnConfig = COLUMNS[prospect.status];
+            // Apply template if the column has one, overwriting the existing to-do list.
+            if (columnConfig && columnConfig.todoTemplate) {
+                const templateTasks = columnConfig.todoTemplate.split('\n').filter(t => t.trim() !== '');
+                const newTodoList = templateTasks.map(taskText => ({
+                    text: taskText.trim(),
+                    completed: false
+                }));
+
+                // Check if the new list is different from the old one to avoid unnecessary writes
+                if (JSON.stringify(prospect.todoList) !== JSON.stringify(newTodoList)) {
+                    prospect.todoList = newTodoList;
+                    const prospectRef = doc(db, 'artifacts', appId, 'public', 'data', 'prospects', prospect.id);
+                    batch.update(prospectRef, { todoList: prospect.todoList });
+                    shouldCommit = true;
+                }
+            }
+        });
+
+        if (shouldCommit) {
+            // The onSnapshot listener will automatically pick up these changes and re-render.
+            await batch.commit().catch(err => console.error("Error applying templates on re-init:", err));
+        } else {
+            // If no templates were applied, we still need to re-render with new column names/order.
+            renderBoard();
+        }
+    } else {
+        renderBoard(); // Initial render when prospects are not yet loaded.
+    }
+
+    // Setup modal listeners after the config is loaded/re-loaded
     const fullConfig = { columnOrder: COLUMN_NAMES, columns: COLUMNS };
     setupEditKanbanModalListeners('prospects', fullConfig, async () => {
         await initializeKanban(); // Re-initialize to get the latest config and re-render
