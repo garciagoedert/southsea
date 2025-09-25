@@ -59,6 +59,7 @@ async function initializeCalendarPage(tasksCollectionRef, meetingsCollectionRef,
     const meetingLinkedCardSearch = meetingModal.querySelector('#meeting-linked-card-search');
     const meetingLinkedCardId = meetingModal.querySelector('#meeting-linked-card-id');
     const meetingLinkedCardResults = meetingModal.querySelector('#meeting-linked-card-results');
+    const meetingCloserSelect = meetingModal.querySelector('#meeting-closer');
     const createMeetingBtnCalendar = document.getElementById('create-meeting-btn-calendar');
     const viewLeadBtn = meetingModal.querySelector('#view-lead-btn');
     const meetingStatusControls = meetingModal.querySelector('#meeting-status-controls');
@@ -130,6 +131,19 @@ async function initializeCalendarPage(tasksCollectionRef, meetingsCollectionRef,
             option.value = user.email;
             option.textContent = user.name;
             taskAssigneeSelect.appendChild(option);
+        });
+    };
+
+    const populateClosers = () => {
+        meetingCloserSelect.innerHTML = '<option value="">Nenhum</option>'; // Default option
+        const allowedRoles = ['closer', 'cs', 'admin'];
+        const closers = systemUsers.filter(user => user.role && allowedRoles.includes(user.role));
+        
+        closers.forEach(user => {
+            const option = document.createElement('option');
+            option.value = user.email; // Saving email as the ID
+            option.textContent = user.name;
+            meetingCloserSelect.appendChild(option);
         });
     };
 
@@ -242,6 +256,7 @@ async function initializeCalendarPage(tasksCollectionRef, meetingsCollectionRef,
         document.getElementById('meeting-description').value = meeting.description || '';
         document.getElementById('meeting-status').value = meeting.status || 'scheduled';
         document.getElementById('meeting-color').value = meeting.color || '#f97316';
+        document.getElementById('meeting-closer').value = meeting.closerId || '';
         meetingLinkedCardId.value = meeting.linked_card_id || '';
         const linkedCard = prospects.find(p => p.id === meeting.linked_card_id);
         meetingLinkedCardSearch.value = linkedCard ? linkedCard.empresa : '';
@@ -280,6 +295,7 @@ async function initializeCalendarPage(tasksCollectionRef, meetingsCollectionRef,
             description: document.getElementById('meeting-description').value,
             status: document.getElementById('meeting-status').value,
             color: document.getElementById('meeting-color').value,
+            closerId: document.getElementById('meeting-closer').value,
             linked_card_id: meetingLinkedCardId.value,
             updatedAt: serverTimestamp()
         };
@@ -523,6 +539,7 @@ async function initializeCalendarPage(tasksCollectionRef, meetingsCollectionRef,
 
     // Inicialização
     populateUsers();
+    populateClosers();
     await fetchProspects();
 
     // Verifica se há um prospectId na URL para pré-agendar uma reunião

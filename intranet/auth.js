@@ -7,15 +7,16 @@ import {
 const auth = getAuth(app);
 
 export function onAuthReady(callback) {
-    onAuthStateChanged(auth, (user) => {
-        if (user && sessionStorage.getItem('isLoggedIn') === 'true') {
-            callback(user);
-        } else {
-            // Se não estiver logado, redireciona para a página de login
-            console.log("Usuário não autenticado, redirecionando...");
-            window.location.href = 'login.html';
-        }
-    });
+    const userJSON = sessionStorage.getItem('currentUser');
+    if (userJSON) {
+        // Se temos um usuário na sessão, podemos prosseguir.
+        const user = JSON.parse(userJSON);
+        callback(user);
+    } else {
+        // Se não há usuário na sessão, redirecione para o login.
+        console.log("Nenhum usuário na sessão, redirecionando para o login...");
+        window.location.href = 'login.html';
+    }
 }
 
 export async function findUser(email, password) {

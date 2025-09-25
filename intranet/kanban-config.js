@@ -12,7 +12,14 @@ async function loadKanbanConfig(configId, defaultConfig) {
     try {
         const docSnap = await getDoc(configRef);
         if (docSnap.exists() && docSnap.data().columnOrder) {
-            const { columns, columnOrder } = docSnap.data();
+            let { columns, columnOrder } = docSnap.data();
+            // --- Backwards compatibility check ---
+            // If a column is just a string, convert it to the new object format.
+            columnOrder.forEach(name => {
+                if (typeof columns[name] === 'string') {
+                    columns[name] = { id: columns[name], todoTemplate: '' };
+                }
+            });
             return { columns, columnOrder };
         } else {
             // Create default config if it doesn't exist or is malformed
@@ -29,10 +36,10 @@ async function loadKanbanConfig(configId, defaultConfig) {
 /**
  * Sets up the listeners and functionality for the Edit Kanban modal.
  * @param {string} configId - The ID for the Kanban configuration to edit.
- * @param {string[]} initialColumnOrder - The initial order of columns to display in the modal.
+ * @param {object} initialConfig - The initial config object containing columnOrder and columns.
  * @param {function} onSave - A callback function to execute after saving, typically to reload and re-render the board.
  */
-function setupEditKanbanModalListeners(configId, initialColumnOrder, onSave) {
+function setupEditKanbanModalListeners(configId, initialConfig, onSave) {
     const editKanbanModal = document.getElementById('editKanbanModal');
     const editKanbanBtn = document.getElementById('editKanbanBtn');
     const closeEditModalBtn = document.getElementById('closeEditModalBtn');
@@ -48,8 +55,10 @@ function setupEditKanbanModalListeners(configId, initialColumnOrder, onSave) {
 
     const openModal = () => {
         kanbanColumnsContainer.innerHTML = ''; // Clear previous inputs
-        initialColumnOrder.forEach(name => {
-            kanbanColumnsContainer.appendChild(createColumnInput(name));
+        const { columnOrder, columns } = initialConfig;
+        columnOrder.forEach(name => {
+            const columnData = columns[name] || {};
+            kanbanColumnsContainer.appendChild(createColumnInput(name, columnData.todoTemplate));
         });
         editKanbanModal.classList.remove('hidden');
         editKanbanModal.classList.add('flex');
@@ -60,12 +69,15 @@ function setupEditKanbanModalListeners(configId, initialColumnOrder, onSave) {
         editKanbanModal.classList.remove('flex');
     };
 
-    const createColumnInput = (name = '') => {
+    const createColumnInput = (name = '', todoTemplate = '') => {
         const div = document.createElement('div');
-        div.className = 'flex items-center gap-2';
+        div.className = 'flex flex-col gap-2 p-3 bg-gray-900/50 rounded-lg';
         div.innerHTML = `
-            <input type="text" value="${name}" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 column-name-input" placeholder="Nome da Coluna">
-            <button class="remove-column-btn bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-3 rounded-lg">&times;</button>
+            <div class="flex items-center gap-2">
+                <input type="text" value="${name}" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 column-name-input" placeholder="Nome da Coluna">
+                <button class="remove-column-btn bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-3 rounded-lg self-start">&times;</button>
+            </div>
+            <textarea class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 column-todo-template" rows="3" placeholder="Template de To-Do (uma tarefa por linha)...">${todoTemplate}</textarea>
         `;
         div.querySelector('.remove-column-btn').addEventListener('click', () => div.remove());
         return div;
@@ -88,14 +100,18 @@ function setupEditKanbanModalListeners(configId, initialColumnOrder, onSave) {
     newSaveKanbanConfigBtn.addEventListener('click', async () => {
         const newColumnOrder = [];
         const newColumns = {};
-        const inputs = kanbanColumnsContainer.querySelectorAll('.column-name-input');
+        const columnDivs = kanbanColumnsContainer.querySelectorAll('.flex.flex-col.gap-2');
         
-        inputs.forEach(input => {
-            const name = input.value.trim();
+        columnDivs.forEach(div => {
+            const nameInput = div.querySelector('.column-name-input');
+            const todoTextarea = div.querySelector('.column-todo-template');
+            const name = nameInput.value.trim();
+            
             if (name) {
                 newColumnOrder.push(name);
                 const id = name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
-                newColumns[name] = id;
+                const todoTemplate = todoTextarea.value.trim();
+                newColumns[name] = { id, todoTemplate };
             }
         });
 

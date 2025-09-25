@@ -508,6 +508,47 @@ function setupAdminPage() {
     renderServices();
     setupServiceManagement();
     setupUIListeners();
+
+    // --- SYSTEM ACTIONS ---
+    const seedRolesBtn = document.getElementById('seed-roles-btn');
+    seedRolesBtn.addEventListener('click', async () => {
+        showConfirmationModal(
+            'Tem certeza que deseja criar as roles padrão? Esta ação só deve ser executada uma vez.',
+            async () => {
+                await seedRoles();
+            },
+            'Sim, criar roles'
+        );
+    });
+
+    async function seedRoles() {
+        const rolesCollection = collection(db, 'roles');
+        const rolesSnapshot = await getDocs(rolesCollection);
+
+        if (!rolesSnapshot.empty) {
+            showNotification("A coleção 'roles' já contém dados. Nenhuma ação foi executada.", "info");
+            return;
+        }
+
+        const rolesToAdd = [
+            { name: 'Admin' },
+            { name: 'BDR' },
+            { name: 'BDR Líder' },
+            { name: 'Closer' },
+            { name: 'CS' },
+            { name: 'Produção' }
+        ];
+
+        try {
+            for (const role of rolesToAdd) {
+                await addDoc(rolesCollection, role);
+            }
+            showNotification("Roles padrão criadas com sucesso!", "success");
+        } catch (error) {
+            console.error("Erro ao adicionar roles:", error);
+            showNotification("Ocorreu um erro ao criar as roles.", "error");
+        }
+    }
 }
 
 loadComponents(() => {

@@ -413,54 +413,57 @@ async function loadComponents(pageSpecificSetup) {
     }
 }
 
-function showConfirmationModal(message, confirmText = 'Confirmar', cancelText = 'Cancelar') {
-    return new Promise((resolve) => {
-        const modal = document.getElementById('confirmModal');
-        const messageEl = document.getElementById('confirmMessage');
-        const confirmBtn = document.getElementById('confirmActionBtn');
-        const cancelBtn = document.getElementById('cancelConfirmBtn');
+function showConfirmationModal(message, onConfirmCallback, confirmText = 'Confirmar', cancelText = 'Cancelar') {
+    const modal = document.getElementById('confirmModal');
+    const messageEl = document.getElementById('confirmMessage');
+    const confirmBtn = document.getElementById('confirmActionBtn');
+    const cancelBtn = document.getElementById('cancelConfirmBtn');
 
-        if (!modal || !messageEl || !confirmBtn || !cancelBtn) {
-            console.error('Confirmation modal elements not found!');
-            resolve(false); // Fallback to prevent blocking
-            return;
+    if (!modal || !messageEl || !confirmBtn || !cancelBtn) {
+        console.error('Confirmation modal elements not found!');
+        return;
+    }
+
+    messageEl.textContent = message;
+    confirmBtn.textContent = confirmText;
+    cancelBtn.textContent = cancelText;
+
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+
+    // Clone and replace buttons to remove old event listeners
+    const newConfirmBtn = confirmBtn.cloneNode(true);
+    confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+    
+    const newCancelBtn = cancelBtn.cloneNode(true);
+    cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
+
+    const cleanup = () => {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        // No need to remove listeners from cloned nodes if they are replaced
+    };
+
+    const onConfirm = () => {
+        cleanup();
+        if (typeof onConfirmCallback === 'function') {
+            onConfirmCallback();
         }
+    };
 
-        messageEl.textContent = message;
-        confirmBtn.textContent = confirmText;
-        cancelBtn.textContent = cancelText;
+    const onCancel = () => {
+        cleanup();
+    };
+    
+    const onBackdropClick = (event) => {
+        if (event.target === modal) {
+            onCancel();
+        }
+    };
 
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
-
-        const cleanup = () => {
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-            confirmBtn.removeEventListener('click', onConfirm);
-            cancelBtn.removeEventListener('click', onCancel);
-            modal.removeEventListener('click', onBackdropClick);
-        };
-
-        const onConfirm = () => {
-            cleanup();
-            resolve(true);
-        };
-
-        const onCancel = () => {
-            cleanup();
-            resolve(false);
-        };
-        
-        const onBackdropClick = (event) => {
-            if (event.target === modal) {
-                onCancel();
-            }
-        };
-
-        confirmBtn.addEventListener('click', onConfirm);
-        cancelBtn.addEventListener('click', onCancel);
-        modal.addEventListener('click', onBackdropClick);
-    });
+    newConfirmBtn.addEventListener('click', onConfirm);
+    newCancelBtn.addEventListener('click', onCancel);
+    modal.addEventListener('click', onBackdropClick);
 }
 
 function updateUserProfilePicture() {

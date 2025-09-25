@@ -3,20 +3,14 @@ service cloud.firestore {
   match /databases/{database}/documents {
     // Regra existente para prospects
     match /artifacts/{appId}/public/data/prospects/{prospectId} {
-      // Permite que qualquer pessoa crie um novo lead (formulário público) e leia a lista de prospects
       allow create, read: if true;
-      // Apenas usuários autenticados podem atualizar ou deletar
       allow update, delete: if request.auth != null;
     }
 
     // Nova regra para tarefas
     match /artifacts/{appId}/public/data/tasks/{taskId} {
-      // Permite que qualquer pessoa crie uma nova tarefa (demanda)
       allow create: if true;
-      // Apenas usuários autenticados podem ler, atualizar e apagar tarefas.
       allow read, update, delete: if request.auth != null;
-
-      // Permite que usuários autenticados leiam e escrevam nas subcoleções
       match /{subcollection}/{documentId} {
         allow read, write: if request.auth != null;
       }
@@ -24,46 +18,34 @@ service cloud.firestore {
 
     // Regra para Tarefas Padrão
     match /artifacts/{appId}/public/data/standard_tasks/{standardTaskId} {
-      // Apenas usuários autenticados podem ler
       allow read: if request.auth != null;
-      // Apenas admins podem escrever (criar, atualizar, deletar) - Regra flexibilizada temporariamente
       allow write: if true;
     }
 
     // Nova regra para reuniões
-    // Permite que qualquer usuário autenticado crie, leia, atualize e apague reuniões.
     match /artifacts/{appId}/public/data/meetings/{meetingId} {
       allow read, write: if request.auth != null;
     }
 
     // Regras para Formulários Dinâmicos
     match /artifacts/{appId}/public/data/forms/{formId} {
-      // Qualquer pessoa pode ler os modelos de formulário
       allow read: if true;
-      // Apenas usuários autenticados podem criar, atualizar ou deletar modelos
       allow write: if request.auth != null;
     }
     match /artifacts/{appId}/public/data/form_submissions/{submissionId} {
-      // Qualquer pessoa pode criar (enviar) um formulário
       allow create: if true;
-      // Apenas usuários autenticados podem ler e gerenciar as submissões
       allow read, update, delete: if request.auth != null;
     }
 
     // Regras para Instâncias de Formulários (Contratos)
     match /artifacts/{appId}/public/data/formInstances/{instanceId} {
-      // Qualquer pessoa com o link pode ler e atualizar (preencher) o formulário.
       allow read, update: if true;
-      // Apenas usuários autenticados (admin) podem criar e deletar instâncias.
       allow create, delete: if request.auth != null;
     }
 
     // Regras para a coleção de Serviços
     match /artifacts/{appId}/public/data/services/{serviceId} {
-      // Qualquer usuário autenticado pode ler os serviços
       allow read: if request.auth != null;
-      // Apenas usuários autenticados podem criar, atualizar e deletar serviços.
-      // TODO: Restringir a escrita apenas para administradores.
       allow write: if request.auth != null;
     }
 
@@ -75,24 +57,16 @@ service cloud.firestore {
 
     // Regra para Configurações do Kanban
     match /artifacts/{appId}/public/data/kanban_configs/{configId} {
-      // Permite a leitura e escrita para qualquer usuário autenticado (temporário)
       allow read, write: if request.auth != null;
     }
 
     // Regras para Mapas Mentais
     match /artifacts/{appId}/public/data/mind-maps/{mapId} {
-      // Permite a um usuário autenticado criar um mapa mental.
       allow create: if request.auth != null;
-      // Permite ler, atualizar e deletar apenas se o usuário for o dono do mapa.
       allow read, update, delete: if request.auth != null && resource.data.owner == request.auth.uid;
-
-      // Regras para os nós dentro de um mapa mental
       match /nodes/{nodeId} {
-        // Permite criar, ler, atualizar e deletar nós se o usuário for o dono do mapa pai.
         allow read, write: if request.auth != null && get(/databases/$(database)/documents/artifacts/$(appId)/public/data/mind-maps/$(mapId)).data.owner == request.auth.uid;
       }
-
-      // Regras para as conexões dentro de um mapa mental
       match /connections/{connectionId} {
         allow read, write: if request.auth != null && get(/databases/$(database)/documents/artifacts/$(appId)/public/data/mind-maps/$(mapId)).data.owner == request.auth.uid;
       }
@@ -101,42 +75,42 @@ service cloud.firestore {
     // Regras para o chat
     match /chats/{chatId} {
       allow read, write: if request.auth != null && request.auth.uid in resource.data.members;
-      
       match /messages/{messageId} {
-        allow read, create: if request.auth != null && request.auth.uid in get(/databases/$(database)/documents/chats/$(chatId)).data.members;
+        allow read, create: if request.auth != null && get(/databases/$(database)/documents/chats/$(chatId)).data.members;
       }
     }
 
     match /users/{userId} {
-      // ATENÇÃO: Regra insegura para permitir login customizado.
-      // TODO: Implementar Firebase Authentication e restringir estas regras.
       allow read, write: if true;
     }
 
-    // --- REGRAS PARA O SISTEMA DE CURSOS ---
-
-    // As regras abaixo são temporárias para permitir o desenvolvimento.
-    // TODO: Implementar autenticação do Firebase e restringir o acesso de escrita
-    //       apenas para administradores (ex: if get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin').
-
-    // Permite a leitura pública das configurações de whitelabel
-    match /settings/whitelabel {
-      allow read: if true;
-      allow write: if request.auth != null; // Apenas usuários logados podem escrever (temporário)
+    // Regra para a coleção de Roles
+    match /roles/{roleId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null;
     }
 
-    // Permite a leitura pública de cursos, módulos e aulas
+    // Regras para a coleção de Metas (Goals)
+    match /goals/{goalId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null;
+    }
+
+    // --- REGRAS PARA O SISTEMA DE CURSOS ---
+    match /settings/whitelabel {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
     match /courses/{courseId} {
       allow read: if true;
-      allow write: if request.auth != null; // Apenas usuários logados podem escrever (temporário)
-
+      allow write: if request.auth != null;
       match /modules/{moduleId} {
         allow read: if true;
-        allow write: if request.auth != null; // Apenas usuários logados podem escrever (temporário)
-
+        allow write: if request.auth != null;
         match /lessons/{lessonId} {
           allow read: if true;
-          allow write: if request.auth != null; // Apenas usuários logados podem escrever (temporário)
+          allow write: if request.auth != null;
         }
       }
     }

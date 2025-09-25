@@ -1,7 +1,7 @@
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import { collection, addDoc, getDocs, query, orderBy, serverTimestamp, doc, setDoc, deleteDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 import { db, app, appId } from './firebase-config.js';
-import { loadComponents, showConfirmationModal, showNotification } from './common-ui.js';
+import { loadComponents, showConfirmationModal, showNotification, setupUIListeners } from './common-ui.js';
 
 const auth = getAuth(app);
 
@@ -594,6 +594,7 @@ async function loadForms() {
 
 // --- INITIALIZATION ---
 function pageInit() {
+    setupUIListeners();
     // Define DOM elements now that the page is loaded
     listView = document.getElementById('form-list-view');
     builderView = document.getElementById('form-builder-view');

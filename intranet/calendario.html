@@ -160,6 +160,12 @@
                     <label for="meeting-description" class="block text-sm font-medium text-gray-300 mb-1">Pauta / Descrição</label>
                     <textarea id="meeting-description" rows="3" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
                 </div>
+                <div>
+                    <label for="meeting-closer" class="block text-sm font-medium text-gray-300 mb-1">Closer Responsável</label>
+                    <select id="meeting-closer" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <!-- Options will be populated by JavaScript -->
+                    </select>
+                </div>
                 <div class="relative">
                     <label for="meeting-linked-card-search" class="block text-sm font-medium text-gray-300 mb-1">Vincular ao Card (Prospect/Produção)</label>
                     <input type="text" id="meeting-linked-card-search" placeholder="Digite para buscar..." class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -208,6 +214,7 @@
         </div>
     </div>
 
+    <div id="modal-container"></div>
     <script type="module" src="auth.js"></script>
     <script type="module" src="common-ui.js?v=1.1"></script>
     

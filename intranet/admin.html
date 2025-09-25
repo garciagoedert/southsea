@@ -109,6 +109,19 @@
                     </form>
                 </div>
 
+                <!-- System Actions -->
+                <div class="bg-gray-800 p-6 rounded-lg shadow-lg mb-6">
+                    <h2 class="text-xl font-semibold mb-4">Ações do Sistema</h2>
+                    <div class="flex flex-col md:flex-row gap-4 items-center">
+                        <button id="seed-roles-btn" class="px-4 py-2 font-bold text-white bg-teal-600 rounded-md hover:bg-teal-700">
+                            <i class="fas fa-users-cog mr-2"></i>Criar Roles Padrão
+                        </button>
+                        <p class="text-sm text-gray-400 md:w-2/3">
+                            Clique aqui se a lista de "funções" estiver vazia em outras partes do sistema (como na criação de cursos). Isso criará as roles padrão (Admin, BDR, CS, etc.) no banco de dados. Execute apenas uma vez.
+                        </p>
+                    </div>
+                </div>
+
                 <!-- Service Management -->
                 <div class="bg-gray-800 p-6 rounded-lg shadow-lg mb-6">
                     <h2 class="text-xl font-semibold mb-4">Gerenciamento de Serviços</h2>
@@ -224,6 +237,7 @@
         </main>
     </div>
 
+    <div id="modal-container"></div>
     <script type="module" src="auth.js"></script>
     <script type="module" src="admin.js"></script>
 </body>

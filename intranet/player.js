@@ -1,121 +1,90 @@
-import { loadComponents, setupUIListeners } from './common-ui.js';
 import { db } from './firebase-config.js';
-import { doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+import { doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-function getCourseIdFromURL() {
-    const params = new URLSearchParams(window.location.search);
-    return params.get('courseId');
-}
+const auth = getAuth();
 
-async function loadCourseDetails(courseId) {
-    try {
-        const courseRef = doc(db, 'courses', courseId);
-        const docSnap = await getDoc(courseRef);
-        if (docSnap.exists()) {
-            return { id: docSnap.id, ...docSnap.data() };
-        } else {
-            console.error("Course not found!");
-            return null;
-        }
-    } catch (error) {
-        console.error("Error loading course details:", error);
-        return null;
-    }
-}
+const courseTitlePlayer = document.getElementById('course-title-player');
+const videoPlayer = document.getElementById('video-player');
+const lessonTitle = document.getElementById('lesson-title');
+const playlistList = document.getElementById('playlist-list');
 
-async function loadModulesAndLessons(courseId) {
-    const modules = [];
-    try {
-        const modulesRef = collection(db, 'courses', courseId, 'modules');
-        const modulesSnapshot = await getDocs(modulesRef);
+const urlParams = new URLSearchParams(window.location.search);
+const courseId = urlParams.get('courseId');
+
+let courseData = null;
+
+onAuthStateChanged(auth, async (user) => {
+    if (user && courseId) {
+        const userDocRef = doc(db, 'users', user.uid);
+        const courseDocRef = doc(db, 'courses', courseId);
         
-        for (const moduleDoc of modulesSnapshot.docs) {
-            const moduleData = { id: moduleDoc.id, ...moduleDoc.data(), lessons: [] };
-            const lessonsRef = collection(db, 'courses', courseId, 'modules', moduleDoc.id, 'lessons');
-            const lessonsSnapshot = await getDocs(lessonsRef);
-            lessonsSnapshot.forEach(lessonDoc => {
-                moduleData.lessons.push({ id: lessonDoc.id, ...lessonDoc.data() });
-            });
-            modules.push(moduleData);
+        const [userDoc, courseDoc] = await Promise.all([getDoc(userDocRef), getDoc(courseDocRef)]);
+
+        if (courseDoc.exists() && userDoc.exists()) {
+            const userRole = userDoc.data().role;
+            courseData = courseDoc.data();
+
+            if (courseData.allowedRoles.includes(userRole) || userRole === 'admin') {
+                displayCourse();
+            } else {
+                alert("Você não tem permissão para acessar este curso.");
+                window.location.href = 'cursos.html';
+            }
+        } else {
+            alert("Curso não encontrado.");
+            window.location.href = 'cursos.html';
         }
-    } catch (error) {
-        console.error("Error loading modules and lessons:", error);
     }
-    return modules;
-}
+});
 
-function displayVideo(youtubeUrl, lessonTitle) {
-    const videoContainer = document.getElementById('video-container');
-    const lessonTitleElement = document.getElementById('lesson-title');
-    
-    // Extract video ID from URL
-    const videoId = youtubeUrl.split('v=')[1]?.split('&')[0] || youtubeUrl.split('/').pop();
-    
-    if (videoId) {
-        videoContainer.innerHTML = `
-            <iframe class="w-full h-full" src="https://www.youtube.com/embed/${videoId}" 
-                    frameborder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                    allowfullscreen>
-            </iframe>`;
-    } else {
-        videoContainer.innerHTML = '<p class="text-center p-4">URL do vídeo inválida.</p>';
-    }
-    lessonTitleElement.textContent = lessonTitle;
-}
+function displayCourse() {
+    courseTitlePlayer.textContent = courseData.title;
+    playlistList.innerHTML = '';
 
-function displayModules(modules) {
-    const modulesContainer = document.getElementById('modules-container');
-    modulesContainer.innerHTML = '';
-
-    modules.forEach(module => {
-        const moduleElement = document.createElement('div');
-        moduleElement.className = 'mb-4';
-        let lessonsHTML = module.lessons.map(lesson => 
-            `<li class="ml-4 p-2 rounded-md hover:bg-gray-700 cursor-pointer lesson-item" data-url="${lesson.youtubeUrl}" data-title="${lesson.title}">
-                ${lesson.title}
-            </li>`
-        ).join('');
-
-        moduleElement.innerHTML = `
-            <h4 class="font-semibold p-2 bg-gray-700 rounded-md">${module.title}</h4>
-            <ul class="mt-2">${lessonsHTML}</ul>
-        `;
-        modulesContainer.appendChild(moduleElement);
-    });
-
-    // Add event listeners to lesson items
-    document.querySelectorAll('.lesson-item').forEach(item => {
-        item.addEventListener('click', () => {
-            displayVideo(item.dataset.url, item.dataset.title);
+    courseData.lessons.forEach((lesson, index) => {
+        const li = document.createElement('li');
+        li.className = 'p-3 rounded-lg cursor-pointer hover:bg-gray-700 transition-colors duration-200';
+        li.textContent = lesson.name;
+        li.dataset.index = index;
+        li.addEventListener('click', () => {
+            playLesson(index);
         });
+        playlistList.appendChild(li);
     });
+
+    // Auto-play a primeira aula
+    if (courseData.lessons.length > 0) {
+        playLesson(0);
+    }
 }
 
+function playLesson(index) {
+    const lesson = courseData.lessons[index];
+    lessonTitle.textContent = lesson.name;
+    videoPlayer.src = getEmbedUrl(lesson.link);
 
-async function setupPlayerPage() {
-    const courseId = getCourseIdFromURL();
-    if (!courseId) {
-        document.getElementById('main-content').innerHTML = '<p class="text-center p-8">ID do curso não encontrado.</p>';
-        return;
-    }
-
-    const course = await loadCourseDetails(courseId);
-    if (course) {
-        document.getElementById('course-title').textContent = course.title;
-    }
-
-    const modules = await loadModulesAndLessons(courseId);
-    displayModules(modules);
-
-    // Display the first lesson of the first module by default
-    if (modules.length > 0 && modules[0].lessons.length > 0) {
-        displayVideo(modules[0].lessons[0].youtubeUrl, modules[0].lessons[0].title);
-    } else {
-         document.getElementById('video-container').innerHTML = '<p class="text-center p-4">Nenhuma aula encontrada neste curso.</p>';
-    }
-
-    setupUIListeners();
+    // Marcar aula ativa na playlist
+    document.querySelectorAll('#playlist-list li').forEach(li => {
+        li.classList.remove('active');
+    });
+    document.querySelector(`#playlist-list li[data-index='${index}']`).classList.add('active');
 }
 
-loadComponents(setupPlayerPage);
+function getEmbedUrl(url) {
+    // Tenta converter URLs do YouTube e Vimeo para o formato de incorporação
+    if (url.includes('youtube.com/watch?v=')) {
+        const videoId = url.split('v=')[1].split('&')[0];
+        return `https://www.youtube.com/embed/${videoId}`;
+    }
+    if (url.includes('youtu.be/')) {
+        const videoId = url.split('youtu.be/')[1].split('?')[0];
+        return `https://www.youtube.com/embed/${videoId}`;
+    }
+    if (url.includes('vimeo.com/')) {
+        const videoId = url.split('vimeo.com/')[1].split('?')[0];
+        return `https://player.vimeo.com/video/${videoId}`;
+    }
+    // Retorna a URL original se não for um formato conhecido
+    return url;
+}

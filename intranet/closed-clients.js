@@ -526,7 +526,7 @@ function renderClosedClients() {
 
 function createClientCard(client, users) {
     const card = document.createElement('div');
-    card.className = `bg-gray-800 p-4 rounded-lg shadow-md border-l-4 flex flex-col cursor-pointer hover:bg-gray-700/50 transition-colors duration-200`;
+    card.className = `relative group bg-gray-800 p-4 rounded-lg shadow-md border-l-4 flex flex-col hover:bg-gray-700/50 transition-colors duration-200`;
     card.style.borderLeftColor = getPriorityColor(client.prioridade);
     card.dataset.clientId = client.id;
 
@@ -548,7 +548,10 @@ function createClientCard(client, users) {
            </div>`
         : '';
 
-    card.innerHTML = `
+    const cardLink = document.createElement('a');
+    cardLink.href = `perfil.html?id=${client.id}`;
+    cardLink.className = 'flex flex-col flex-grow';
+    cardLink.innerHTML = `
         <h4 class="font-bold text-lg mb-2">${client.empresa}</h4>
         <div class="flex items-center gap-2 mb-3 flex-wrap">
             <span class="text-xs font-semibold px-2 py-0.5 rounded-full ${sectorColor.bg} ${sectorColor.text}">${client.setor}</span>
@@ -562,7 +565,19 @@ function createClientCard(client, users) {
             <p class="text-xs text-gray-400 mt-1">Fechado em: ${client.updatedAt ? new Date(client.updatedAt.seconds * 1000).toLocaleDateString('pt-BR') : 'N/A'}</p>
         </div>
     `;
-    card.addEventListener('click', () => window.location.href = `perfil.html?id=${client.id}`);
+
+    const deleteButton = document.createElement('button');
+    deleteButton.className = 'absolute top-2 right-2 text-gray-500 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100 z-10';
+    deleteButton.innerHTML = '<i class="fas fa-times"></i>';
+    deleteButton.title = 'Excluir Cliente';
+    deleteButton.onclick = (e) => {
+        e.stopPropagation();
+        handleDeleteRequest(client.id, client.empresa);
+    };
+
+    card.appendChild(deleteButton);
+    card.appendChild(cardLink);
+
     return card;
 }
 
@@ -620,6 +635,34 @@ document.addEventListener('DOMContentLoaded', () => {
     // The onAuthStateChanged logic will now correctly trigger loadComponents
     // after user is verified and initial data is fetched.
 });
+
+async function handleDeleteRequest(clientId, clientName) {
+    const confirmDelete = async () => {
+        const confirmationName = prompt(`Para confirmar a exclusão, por favor, digite o nome da empresa: "${clientName}"`);
+
+        if (confirmationName === clientName) {
+            try {
+                const clientDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'prospects', clientId);
+                await deleteDoc(clientDocRef);
+                showNotification('Cliente excluído com sucesso!', 'success');
+            } catch (error) {
+                console.error("Erro ao excluir cliente:", error);
+                showNotification('Falha ao excluir o cliente. Verifique o console para mais detalhes.', 'error');
+            }
+        } else if (confirmationName !== null && confirmationName !== "") {
+            showNotification('O nome da empresa não corresponde. A exclusão foi cancelada.', 'warning');
+        } else {
+            showNotification('Exclusão cancelada.', 'info');
+        }
+    };
+
+    showConfirmationModal(
+        'Você tem certeza que deseja excluir este cliente? Esta ação é irreversível.',
+        confirmDelete,
+        'Excluir',
+        'Cancelar'
+    );
+}
 
 // --- UTILITY ---
 function getPriorityColor(priority) {

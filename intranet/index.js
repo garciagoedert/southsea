@@ -62,7 +62,8 @@ async function initializeKanban() {
     renderBoard(); // Initial render
     
     // Setup modal listeners after the first render
-    setupEditKanbanModalListeners('prospects', COLUMN_NAMES, async () => {
+    const fullConfig = { columnOrder: COLUMN_NAMES, columns: COLUMNS };
+    setupEditKanbanModalListeners('prospects', fullConfig, async () => {
         await initializeKanban(); // Re-initialize to get the latest config and re-render
     });
 }
@@ -78,7 +79,34 @@ function setupProspectsListener() {
     let q = prospectsCollection;
 
     prospectsListener = onSnapshot(q, (snapshot) => {
-        prospects = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })).filter(p => !p.pagina || p.pagina === 'Prospecção');
+        const batch = writeBatch(db);
+        let shouldCommit = false;
+
+        prospects = snapshot.docs.map(documentSnapshot => {
+            const prospect = { id: documentSnapshot.id, ...documentSnapshot.data() };
+            const columnConfig = COLUMNS[prospect.status];
+
+            // Apply template if column has one and prospect doesn't have a to-do list
+            if (columnConfig && columnConfig.todoTemplate && (!prospect.todoList || prospect.todoList.length === 0)) {
+                const templateTasks = columnConfig.todoTemplate.split('\n').filter(t => t.trim() !== '');
+                prospect.todoList = templateTasks.map(taskText => ({
+                    text: taskText.trim(),
+                    completed: false
+                }));
+                
+                // Stage an update for this prospect
+                const prospectRef = doc(db, 'artifacts', appId, 'public', 'data', 'prospects', prospect.id);
+                batch.update(prospectRef, { todoList: prospect.todoList });
+                shouldCommit = true;
+            }
+            return prospect;
+        }).filter(p => !p.pagina || p.pagina === 'Prospecção');
+
+        // Commit all updates at once if any were staged
+        if (shouldCommit) {
+            batch.commit().catch(err => console.error("Error applying templates:", err));
+        }
+
         populateUserFilter();
         applyFilters();
     }, (error) => {
@@ -93,7 +121,7 @@ function renderBoard() {
     const isMobile = window.innerWidth < 768;
 
     COLUMN_NAMES.forEach(status => {
-        const columnId = COLUMNS[status];
+        const columnId = COLUMNS[status].id;
         const columnProspects = filteredProspects.filter(p => p.status === status);
         
         const columnEl = document.createElement('div');
@@ -167,6 +195,30 @@ function createProspectCard(prospect, isMobile = false) {
     card.dataset.id = prospect.id;
 
     const sectorColor = getSectorColor(prospect.setor);
+
+    // --- To-Do List Progress ---
+    let todoProgressHTML = '';
+    if (prospect.todoList && prospect.todoList.length > 0) {
+        const completed = prospect.todoList.filter(item => item.completed).length;
+        const total = prospect.todoList.length;
+        if (total > 0) {
+            const progressPercentage = (completed / total) * 100;
+            const isComplete = completed === total;
+            const iconColor = isComplete ? 'text-green-400' : 'text-gray-400';
+            const bgColor = isComplete ? 'bg-green-500' : 'bg-gray-600';
+
+            todoProgressHTML = `
+                <div class="flex items-center gap-2 text-xs ${iconColor} mt-2">
+                    <i class="fas fa-check-circle"></i>
+                    <span>${completed}/${total}</span>
+                    <div class="w-full bg-gray-700 rounded-full h-1.5">
+                        <div class="${bgColor} h-1.5 rounded-full" style="width: ${progressPercentage}%"></div>
+                    </div>
+                </div>
+            `;
+        }
+    }
+
 
     const tagsHTML = (prospect.tags || []).map(tag => `<span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-sky-900/50 text-sky-200">${tag}</span>`).join('');
 
@@ -244,6 +296,7 @@ function createProspectCard(prospect, isMobile = false) {
         </div>
         ${prospect.origemLead ? `<p class="text-xs text-gray-400 mb-2"><i class="fas fa-sign-in-alt mr-1"></i> ${prospect.origemLead}</p>` : ''}
         <p class="text-sm text-green-400 font-semibold mb-2">R$ ${prospect.ticketEstimado?.toLocaleString('pt-BR') || 'N/A'}</p>
+        ${todoProgressHTML}
         ${prospect.createdBy ? `<p class="text-xs text-gray-500 mt-2 pt-2 border-t border-gray-700"><i class="fas fa-user-plus mr-1"></i> ${prospect.createdBy}</p>` : ''}
         ${actionButtonHTML}
     `;
@@ -349,15 +402,29 @@ function addDragAndDropHandlers() {
 }
 
 async function updateProspectStatus(prospectId, newStatus) {
-    const user = auth.currentUser ? auth.currentUser.email || 'anonymous' : 'anonymous';
+    const user = sessionStorage.getItem('userName') || (auth.currentUser ? auth.currentUser.email || 'anonymous' : 'anonymous');
     const prospect = prospects.find(p => p.id === prospectId);
     const oldStatus = prospect ? prospect.status : 'N/A';
+    
     try {
         const prospectRef = doc(db, 'artifacts', appId, 'public', 'data', 'prospects', prospectId);
-        await updateDoc(prospectRef, {
+        const updateData = {
             status: newStatus,
             updatedAt: serverTimestamp()
-        });
+        };
+
+        // --- To-Do List Logic ---
+        // Check if the new column has a template and if the card doesn't have a to-do list yet.
+        const newColumnConfig = COLUMNS[newStatus];
+        if (newColumnConfig && newColumnConfig.todoTemplate && (!prospect.todoList || prospect.todoList.length === 0)) {
+            const templateTasks = newColumnConfig.todoTemplate.split('\n').filter(t => t.trim() !== '');
+            updateData.todoList = templateTasks.map(taskText => ({
+                text: taskText.trim(),
+                completed: false
+            }));
+        }
+
+        await updateDoc(prospectRef, updateData);
         generalLog.add(user, 'Move Card', `Card "${prospect.empresa}" moved from ${oldStatus} to ${newStatus}`);
     } catch (error) {
         console.error("Error updating status:", error);
@@ -365,7 +432,7 @@ async function updateProspectStatus(prospectId, newStatus) {
 }
 
 async function moveProspectToClosed(prospectId) {
-    const user = auth.currentUser ? auth.currentUser.email || 'anonymous' : 'anonymous';
+    const user = sessionStorage.getItem('userName') || (auth.currentUser ? auth.currentUser.email || 'anonymous' : 'anonymous');
     const prospect = prospects.find(p => p.id === prospectId);
     try {
         const prospectRef = doc(db, 'artifacts', appId, 'public', 'data', 'prospects', prospectId);
@@ -393,7 +460,7 @@ async function convertToClosedClientAndMove(prospect) {
         console.error("Prospect data is missing.");
         return;
     }
-    const user = auth.currentUser ? auth.currentUser.email || 'anonymous' : 'anonymous';
+    const user = sessionStorage.getItem('userName') || (auth.currentUser ? auth.currentUser.email || 'anonymous' : 'anonymous');
     
     // 1. Create a copy for the "closed-clients" page
     const newClientData = { ...prospect };
@@ -524,6 +591,8 @@ function openFormModal(prospect = null) {
         fields.forEach(field => {
             if (field.id !== 'prospectId') field.disabled = !isEditable;
         });
+        // To-do list is always editable, so we don't disable its checkboxes.
+
         contactLogSection.style.display = isEditable ? 'flex' : 'none';
         editBtn.classList.toggle('hidden', isEditable);
         saveBtn.classList.toggle('hidden', !isEditable);
@@ -608,6 +677,8 @@ function openFormModal(prospect = null) {
         document.getElementById('observacoes').value = prospect.observacoes || '';
         document.getElementById('pagina').value = prospect.pagina || 'Prospecção';
         
+        renderTodoList(prospect);
+
         // Handle proposal status field
         const proposalStatusGroup = document.getElementById('proposalStatusGroup');
         const proposalStatusInput = document.getElementById('proposalStatus');
@@ -702,6 +773,64 @@ function closeConfirmModal() {
     }
 }
 
+function renderTodoList(prospect) {
+    const todoContainer = document.getElementById('todoListContainer');
+    if (!todoContainer) return;
+
+    const todoList = prospect.todoList || [];
+
+    if (todoList.length === 0) {
+        todoContainer.innerHTML = '<p class="text-gray-500 text-sm px-3 py-2">Nenhuma tarefa definida para este card.</p>';
+        return;
+    }
+
+    todoContainer.innerHTML = todoList.map((item, index) => `
+        <label for="todo-${index}" class="flex items-center p-2 rounded-md hover:bg-gray-700/50 cursor-pointer">
+            <input type="checkbox" id="todo-${index}" data-index="${index}" class="h-4 w-4 rounded border-gray-400 text-blue-500 bg-gray-600 focus:ring-blue-500" ${item.completed ? 'checked' : ''}>
+            <span class="ml-3 text-gray-300 ${item.completed ? 'line-through text-gray-500' : ''}">${item.text}</span>
+        </label>
+    `).join('');
+
+    // Add event listeners to checkboxes for real-time updates
+    todoContainer.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+        checkbox.addEventListener('change', async (e) => {
+            const index = parseInt(e.target.dataset.index, 10);
+            const isChecked = e.target.checked;
+            
+            // Optimistically update UI
+            const label = e.target.nextElementSibling;
+            label.classList.toggle('line-through', isChecked);
+            label.classList.toggle('text-gray-500', isChecked);
+
+            // Update Firestore
+            const prospectRef = doc(db, 'artifacts', appId, 'public', 'data', 'prospects', prospect.id);
+            const updatedTodoList = [...prospect.todoList]; // Create a copy
+            updatedTodoList[index].completed = isChecked;
+            
+            try {
+                await updateDoc(prospectRef, { todoList: updatedTodoList });
+
+                // Update the local prospects array to reflect the change immediately
+                const prospectIndex = prospects.findIndex(p => p.id === prospect.id);
+                if (prospectIndex !== -1) {
+                    prospects[prospectIndex].todoList = updatedTodoList;
+                }
+                
+                // Re-filter and re-render the entire board to ensure UI consistency
+                applyFilters();
+
+            } catch (error) {
+                console.error("Error updating to-do list:", error);
+                // Revert UI on error
+                e.target.checked = !isChecked;
+                label.classList.toggle('line-through', !isChecked);
+                label.classList.toggle('text-gray-500', !isChecked);
+                alert("Não foi possível atualizar a tarefa. Tente novamente.");
+            }
+        });
+    });
+}
+
 function openArchiveReasonModal(prospectId) {
     const modal = document.getElementById('archiveReasonModal');
     document.getElementById('archiveProspectId').value = prospectId;
@@ -740,7 +869,20 @@ async function handleFormSubmit(e) {
         selectedTags.push(checkbox.value);
     });
 
+    // --- Read To-Do List from Modal ---
+    const currentProspect = prospects.find(p => p.id === prospectId);
+    const updatedTodoList = currentProspect ? [...(currentProspect.todoList || [])] : [];
+
+    document.querySelectorAll('#todoListContainer input[type="checkbox"]').forEach(checkbox => {
+        const index = parseInt(checkbox.dataset.index, 10);
+        if (updatedTodoList[index]) {
+            updatedTodoList[index].completed = checkbox.checked;
+        }
+    });
+
+
     const data = {
+        todoList: updatedTodoList,
         proposalStatus: document.getElementById('proposalStatus').value, // Always grab the value
         empresa: document.getElementById('empresa').value,
         setor: document.getElementById('setor').value,
@@ -761,7 +903,7 @@ async function handleFormSubmit(e) {
         updatedAt: serverTimestamp()
     };
 
-    const user = auth.currentUser ? auth.currentUser.email || 'anonymous' : 'anonymous';
+    const user = sessionStorage.getItem('userName') || (auth.currentUser ? auth.currentUser.email || 'anonymous' : 'anonymous');
     try {
         const collectionPath = collection(db, 'artifacts', appId, 'public', 'data', 'prospects');
         if (prospectId) { // Update
@@ -788,7 +930,7 @@ async function handleFormSubmit(e) {
 }
 
 async function deleteProspect(prospectId) {
-    const user = auth.currentUser ? auth.currentUser.email || 'anonymous' : 'anonymous';
+    const user = sessionStorage.getItem('userName') || (auth.currentUser ? auth.currentUser.email || 'anonymous' : 'anonymous');
     const prospect = prospects.find(p => p.id === prospectId);
     try {
         const prospectRef = doc(db, 'artifacts', appId, 'public', 'data', 'prospects', prospectId);
@@ -802,7 +944,7 @@ async function deleteProspect(prospectId) {
 }
 
 async function archiveProspect(prospectId, reason) {
-    const user = auth.currentUser ? auth.currentUser.email || 'anonymous' : 'anonymous';
+    const user = sessionStorage.getItem('userName') || (auth.currentUser ? auth.currentUser.email || 'anonymous' : 'anonymous');
     const prospect = prospects.find(p => p.id === prospectId);
     try {
         const prospectRef = doc(db, 'artifacts', appId, 'public', 'data', 'prospects', prospectId);
@@ -864,7 +1006,7 @@ async function handleImport() {
         importedCount++;
     });
 
-    const user = auth.currentUser ? auth.currentUser.email || 'anonymous' : 'anonymous';
+    const user = sessionStorage.getItem('userName') || (auth.currentUser ? auth.currentUser.email || 'anonymous' : 'anonymous');
     try {
         await batch.commit();
         generalLog.add(user, 'Import Leads', `${importedCount} leads imported successfully`);
