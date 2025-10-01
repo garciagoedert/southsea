@@ -1,5 +1,5 @@
 import { duplicateCardToProduction } from './production.js';
-import { loadComponents, setupUIListeners } from './common-ui.js';
+import { loadComponents, setupUIListeners, applyTheme } from './common-ui.js';
 import { updateUser } from './auth.js';
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import { doc, getDoc, updateDoc, Timestamp, collection, query, where, orderBy, getDocs, addDoc, serverTimestamp, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
@@ -203,11 +203,11 @@ async function loadClientForms(clientId) {
             }
 
             const cardHtml = `
-                <div class="bg-gray-700 p-4 rounded-lg">
+                <div class="bg-white dark:bg-gray-700 p-4 rounded-lg shadow">
                     <div class="flex justify-between items-start">
                         <div class="flex-grow">
-                            <h4 class="font-semibold text-white">${formName}</h4>
-                            <div class="text-xs text-gray-400 mt-1 space-y-1">
+                            <h4 class="font-semibold text-gray-800 dark:text-white">${formName}</h4>
+                            <div class="text-xs text-gray-500 dark:text-gray-400 mt-1 space-y-1">
                                 <p><strong>Associado em:</strong> ${creationDate}</p>
                                 ${submittedDate ? `<p><strong>Preenchido em:</strong> ${submittedDate}</p>` : ''}
                                 ${signedDate ? `<p><strong>Assinado em:</strong> ${signedDate}</p>` : ''}
@@ -218,13 +218,13 @@ async function loadClientForms(clientId) {
                             ${statusBadge}
                         </div>
                     </div>
-                    <div class="mt-4 pt-2 border-t border-gray-600">
+                    <div class="mt-4 pt-2 border-t border-gray-200 dark:border-gray-600">
                         <div class="flex justify-between items-center">
                              <div class="flex items-center gap-2">
                                 ${actionButtons}
                             </div>
                             <div class="flex items-center gap-2">
-                                <button class="bg-gray-600 hover:bg-gray-500 text-white font-bold py-2 px-3 rounded-lg" onclick="navigator.clipboard.writeText('${publicLink}').then(() => alert('Link copiado!'))" title="Copiar Link Público">
+                                <button class="bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 text-gray-800 dark:text-white font-bold py-2 px-3 rounded-lg" onclick="navigator.clipboard.writeText('${publicLink}').then(() => alert('Link copiado!'))" title="Copiar Link Público">
                                     <i class="fas fa-copy"></i>
                                 </button>
                                 <button class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-3 rounded-lg" onclick="deleteFormInstance('${instanceId}')" title="Excluir Formulário">
@@ -598,7 +598,7 @@ function renderCustomLinksView(links = []) {
     const container = document.getElementById('custom-links-view');
     container.innerHTML = '';
     if (!links || links.length === 0) {
-        container.innerHTML = '<p class="text-sm text-gray-400">Nenhum link adicionado.</p>';
+        container.innerHTML = '<p class="text-sm text-gray-500 dark:text-gray-400">Nenhum link adicionado.</p>';
         return;
     }
     links.forEach(link => {
@@ -606,7 +606,7 @@ function renderCustomLinksView(links = []) {
         a.href = link.url.startsWith('http') ? link.url : `http://${link.url}`;
         a.textContent = link.name;
         a.target = '_blank';
-        a.className = 'bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors';
+        a.className = 'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white font-semibold py-2 px-4 rounded-lg transition-colors';
         container.appendChild(a);
     });
 }
@@ -624,9 +624,9 @@ function addLinkInput(name = '', url = '') {
     const div = document.createElement('div');
     div.className = 'flex items-center gap-2';
     div.innerHTML = `
-        <input type="text" placeholder="Nome do Link" value="${name}" class="link-name-input w-1/3 bg-gray-600 border border-gray-500 rounded-lg p-2">
-        <input type="text" placeholder="URL" value="${url}" class="link-url-input w-2/3 bg-gray-600 border border-gray-500 rounded-lg p-2">
-        <button type="button" class="remove-link-btn text-red-500 hover:text-red-400 font-bold text-lg">&times;</button>
+        <input type="text" placeholder="Nome do Link" value="${name}" class="link-name-input w-1/3 bg-gray-50 dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded-lg p-2 text-gray-800 dark:text-white">
+        <input type="text" placeholder="URL" value="${url}" class="link-url-input w-2/3 bg-gray-50 dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded-lg p-2 text-gray-800 dark:text-white">
+        <button type="button" class="remove-link-btn text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-500 font-bold text-lg">&times;</button>
     `;
     container.appendChild(div);
     div.querySelector('.remove-link-btn').addEventListener('click', () => div.remove());
@@ -809,7 +809,7 @@ function handleClientError(message) {
 function renderContactLog(container, logs = []) {
     if (!container) return;
     if (!logs || logs.length === 0) {
-        container.innerHTML = '<p class="text-gray-500 text-sm">Nenhum contato registrado.</p>';
+        container.innerHTML = '<p class="text-gray-500 dark:text-gray-400 text-sm">Nenhum contato registrado.</p>';
         return;
     }
     container.innerHTML = logs
@@ -817,7 +817,7 @@ function renderContactLog(container, logs = []) {
         .map(log => {
             const date = log.timestamp ? log.timestamp.toDate().toLocaleString('pt-BR') : 'Data pendente';
             const author = log.author || 'Sistema';
-            return `<div class="bg-gray-700/50 p-2 rounded-md"><p class="text-sm text-gray-300 whitespace-pre-wrap">${log.description}</p><p class="text-xs text-gray-500 text-right mt-1">${author} - ${date}</p></div>`;
+            return `<div class="bg-gray-200 dark:bg-gray-700/50 p-2 rounded-md"><p class="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap">${log.description}</p><p class="text-xs text-gray-500 dark:text-gray-400 text-right mt-1">${author} - ${date}</p></div>`;
         }).join('');
 }
 
@@ -832,6 +832,7 @@ function setupUserProfile() {
     const passwordInput = document.getElementById('password');
     const profilePictureInput = document.getElementById('profile-picture-input');
     const logoutBtn = document.getElementById('logout-btn');
+    const themeSwitcher = document.getElementById('theme-switcher');
 
     const currentUserJSON = sessionStorage.getItem('currentUser');
     if (!currentUserJSON) {
@@ -856,6 +857,28 @@ function setupUserProfile() {
         userAvatar.classList.add('hidden');
         if (userAvatarIcon) userAvatarIcon.classList.remove('hidden');
     }
+
+    // Theme setup
+    let currentTheme = currentUser.theme || 'dark'; // Default to dark
+    applyTheme(currentTheme);
+
+    themeSwitcher.addEventListener('click', async () => {
+        currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        applyTheme(currentTheme);
+        
+        // Save theme preference immediately
+        const success = await updateUser(currentUser.email, { theme: currentTheme });
+        if (success) {
+            currentUser.theme = currentTheme;
+            sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
+            showNotification('Tema atualizado!', 'success');
+        } else {
+            showNotification('Erro ao salvar o tema.', 'error');
+            // Revert theme if save fails
+            currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            applyTheme(currentTheme);
+        }
+    });
 
     editProfileForm.addEventListener('submit', async function(e) {
         e.preventDefault();
@@ -919,7 +942,7 @@ function renderContractedServices() {
     const services = currentClientData.contractedServices || [];
 
     if (services.length === 0) {
-        container.innerHTML = '<p class="text-gray-400">Nenhum serviço contratado.</p>';
+        container.innerHTML = '<p class="text-gray-500 dark:text-gray-400">Nenhum serviço contratado.</p>';
         return;
     }
 
@@ -928,7 +951,7 @@ function renderContractedServices() {
     
     services.forEach(service => {
         const servicePill = document.createElement('div');
-        servicePill.className = 'inline-block bg-gray-700 text-gray-200 text-sm font-medium mr-2 px-3 py-1 rounded-full';
+        servicePill.className = 'inline-block bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-sm font-medium mr-2 px-3 py-1 rounded-full';
         servicePill.textContent = `${service.area} - ${service.serviceName}`;
         container.appendChild(servicePill);
     });
@@ -977,14 +1000,14 @@ function setupServicesManagementListeners() {
 
         let html = '';
         for (const area in servicesByArea) {
-            html += `<h3 class="text-lg font-semibold text-white mt-4 mb-2 border-b border-gray-600 pb-2">${area}</h3>`;
+            html += `<h3 class="text-lg font-semibold text-gray-800 dark:text-white mt-4 mb-2 border-b border-gray-200 dark:border-gray-600 pb-2">${area}</h3>`;
             servicesByArea[area].forEach(service => {
                 const isChecked = contractedServiceIds.has(service.id);
                 html += `
                     <div class="flex items-center my-2">
                         <input id="service-${service.id}" type="checkbox" value="${service.id}" data-name="${service.name}" data-area="${service.area}" 
-                               class="h-4 w-4 text-indigo-600 bg-gray-700 border-gray-600 rounded focus:ring-indigo-500" ${isChecked ? 'checked' : ''}>
-                        <label for="service-${service.id}" class="ml-3 block text-sm font-medium text-gray-300">${service.name}</label>
+                               class="h-4 w-4 text-indigo-600 bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded focus:ring-indigo-500" ${isChecked ? 'checked' : ''}>
+                        <label for="service-${service.id}" class="ml-3 block text-sm font-medium text-gray-700 dark:text-gray-300">${service.name}</label>
                     </div>
                 `;
             });
@@ -1070,20 +1093,20 @@ function renderResponsibleTeam() {
 }
 
 function renderCsResponsible() {
-    csResponsibleContainer.innerHTML = '<p class="text-gray-400">Nenhum CS associado.</p>';
+    csResponsibleContainer.innerHTML = '<p class="text-gray-500 dark:text-gray-400">Nenhum CS associado.</p>';
     if (currentClientData && currentClientData.csResponsibleId) {
         const csUser = allUsers.find(u => u.id === currentClientData.csResponsibleId);
         if (csUser) {
             const avatarHtml = csUser.profilePicture
                 ? `<img src="${csUser.profilePicture}" class="w-10 h-10 rounded-full">`
-                : `<i class="fas fa-user-circle text-gray-500 text-4xl w-10 h-10 flex items-center justify-center"></i>`;
+                : `<i class="fas fa-user-circle text-gray-400 dark:text-gray-500 text-4xl w-10 h-10 flex items-center justify-center"></i>`;
 
             csResponsibleContainer.innerHTML = `
                 <div class="flex items-center gap-3">
                     ${avatarHtml}
                     <div>
-                        <p class="font-semibold text-white">${csUser.name}</p>
-                        <p class="text-sm text-gray-400">${csUser.email}</p>
+                        <p class="font-semibold text-gray-800 dark:text-white">${csUser.name}</p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">${csUser.email}</p>
                     </div>
                 </div>
             `;
@@ -1106,7 +1129,7 @@ function getRoleColor(role) {
 }
 
 function renderProductionTeam() {
-    productionTeamContainer.innerHTML = '<p class="text-gray-400">Nenhum membro de produção associado.</p>';
+    productionTeamContainer.innerHTML = '<p class="text-gray-500 dark:text-gray-400">Nenhum membro de produção associado.</p>';
     if (currentClientData && currentClientData.productionTeam && currentClientData.productionTeam.length > 0) {
         productionTeamContainer.innerHTML = ''; // Limpa o container
         
@@ -1116,21 +1139,21 @@ function renderProductionTeam() {
                 const roleColor = getRoleColor(member.subRole);
                 const avatarHtml = user.profilePicture
                     ? `<img src="${user.profilePicture}" class="w-10 h-10 rounded-full">`
-                    : `<i class="fas fa-user-circle text-gray-500 text-4xl w-10 h-10 flex items-center justify-center"></i>`;
+                    : `<i class="fas fa-user-circle text-gray-400 dark:text-gray-500 text-4xl w-10 h-10 flex items-center justify-center"></i>`;
 
                 const memberCard = document.createElement('div');
-                memberCard.className = 'flex items-center justify-between bg-gray-700 p-3 rounded-lg mb-2';
+                memberCard.className = 'flex items-center justify-between bg-gray-50 dark:bg-gray-700 p-3 rounded-lg mb-2';
                 
                 memberCard.innerHTML = `
                     <div class="flex items-center gap-3">
                         ${avatarHtml}
                         <div>
-                            <p class="font-semibold text-white">${user.name}</p>
-                            <p class="text-sm text-gray-400">${user.email}</p>
+                            <p class="font-semibold text-gray-800 dark:text-white">${user.name}</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">${user.email}</p>
                             <p class="text-xs font-bold ${roleColor.text} mt-1 capitalize">${member.subRole}</p>
                         </div>
                     </div>
-                    <button class="text-gray-400 hover:text-red-500 remove-production-member-btn p-2" data-user-id="${user.id}" title="Remover ${user.name}">
+                    <button class="text-gray-500 dark:text-gray-400 hover:text-red-500 remove-production-member-btn p-2" data-user-id="${user.id}" title="Remover ${user.name}">
                         <i class="fas fa-trash-alt"></i>
                     </button>
                 `;
@@ -1184,22 +1207,22 @@ function renderCsSearchResults(searchTerm) {
     );
 
     if (results.length === 0) {
-        csSearchResults.innerHTML = '<p class="text-gray-400 p-2">Nenhum usuário encontrado.</p>';
+        csSearchResults.innerHTML = '<p class="text-gray-500 dark:text-gray-400 p-2">Nenhum usuário encontrado.</p>';
         return;
     }
 
     results.forEach(user => {
         const avatarHtml = user.profilePicture
             ? `<img src="${user.profilePicture}" class="w-8 h-8 rounded-full">`
-            : `<i class="fas fa-user-circle text-gray-500 text-2xl w-8 h-8 flex items-center justify-center"></i>`;
+            : `<i class="fas fa-user-circle text-gray-400 dark:text-gray-500 text-2xl w-8 h-8 flex items-center justify-center"></i>`;
 
         const userDiv = document.createElement('div');
-        userDiv.className = 'p-2 hover:bg-gray-600 cursor-pointer flex items-center gap-3';
+        userDiv.className = 'p-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer flex items-center gap-3';
         userDiv.innerHTML = `
             ${avatarHtml}
             <div>
-                <p class="font-semibold text-white">${user.name}</p>
-                <p class="text-sm text-gray-400">${user.email}</p>
+                <p class="font-semibold text-gray-800 dark:text-white">${user.name}</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400">${user.email}</p>
             </div>
         `;
         userDiv.addEventListener('click', () => associateCs(user.id));
@@ -1223,22 +1246,22 @@ function renderProductionSearchResults(searchTerm) {
     });
 
     if (results.length === 0) {
-        productionSearchResults.innerHTML = '<p class="text-gray-400 p-2">Nenhum usuário encontrado ou todos já estão na equipe.</p>';
+        productionSearchResults.innerHTML = '<p class="text-gray-500 dark:text-gray-400 p-2">Nenhum usuário encontrado ou todos já estão na equipe.</p>';
         return;
     }
 
     results.forEach(user => {
         const avatarHtml = user.profilePicture
             ? `<img src="${user.profilePicture}" class="w-8 h-8 rounded-full">`
-            : `<i class="fas fa-user-circle text-gray-500 text-2xl w-8 h-8 flex items-center justify-center"></i>`;
+            : `<i class="fas fa-user-circle text-gray-400 dark:text-gray-500 text-2xl w-8 h-8 flex items-center justify-center"></i>`;
 
         const userDiv = document.createElement('div');
-        userDiv.className = 'p-2 hover:bg-gray-600 cursor-pointer flex items-center gap-3';
+        userDiv.className = 'p-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer flex items-center gap-3';
         userDiv.innerHTML = `
             ${avatarHtml}
             <div>
-                <p class="font-semibold text-white">${user.name}</p>
-                <p class="text-sm text-gray-400">${user.email}</p>
+                <p class="font-semibold text-gray-800 dark:text-white">${user.name}</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400">${user.email}</p>
             </div>
         `;
         userDiv.addEventListener('click', () => selectProductionMember(user));

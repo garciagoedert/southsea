@@ -1,198 +1,151 @@
-import { loadComponents, setupUIListeners, showConfirmationModal, showNotification } from './common-ui.js';
+import { doc, getDoc, setDoc, addDoc, collection, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 import { db } from './firebase-config.js';
-import { 
-    doc, getDoc, collection, addDoc, getDocs, updateDoc, deleteDoc 
-} from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+import { loadComponents, checkAdminRole, setupUIListeners } from './common-ui.js';
+import { onAuthReady } from './auth.js';
 
-function getCourseIdFromURL() {
-    const params = new URLSearchParams(window.location.search);
-    return params.get('courseId');
-}
+let courseId = null;
 
-// --- Module Functions ---
-async function saveModule(courseId, moduleData) {
-    try {
-        const modulesRef = collection(db, 'courses', courseId, 'modules');
-        if (moduleData.id) {
-            const moduleDocRef = doc(db, 'courses', courseId, 'modules', moduleData.id);
-            await updateDoc(moduleDocRef, { title: moduleData.title });
-        } else {
-            await addDoc(modulesRef, { title: moduleData.title });
-        }
-    } catch (error) {
-        console.error("Error saving module:", error);
-    }
-}
-
-async function deleteModule(courseId, moduleId) {
-    try {
-        await deleteDoc(doc(db, 'courses', courseId, 'modules', moduleId));
-    } catch (error) {
-        console.error("Error deleting module:", error);
-    }
-}
-
-// --- Lesson Functions ---
-async function saveLesson(courseId, moduleId, lessonData) {
-    try {
-        const lessonsRef = collection(db, 'courses', courseId, 'modules', moduleId, 'lessons');
-        if (lessonData.id) {
-            const lessonDocRef = doc(db, 'courses', courseId, 'modules', moduleId, 'lessons', lessonData.id);
-            await updateDoc(lessonDocRef, { title: lessonData.title, youtubeUrl: lessonData.youtubeUrl });
-        } else {
-            await addDoc(lessonsRef, { title: lessonData.title, youtubeUrl: lessonData.youtubeUrl });
-        }
-    } catch (error) {
-        console.error("Error saving lesson:", error);
-    }
-}
-
-async function deleteLesson(courseId, moduleId, lessonId) {
-    try {
-        await deleteDoc(doc(db, 'courses', courseId, 'modules', moduleId, 'lessons', lessonId));
-    } catch (error) {
-        console.error("Error deleting lesson:", error);
-    }
-}
-
-
-// --- UI Rendering ---
-async function renderModulesAndLessons() {
-    const courseId = getCourseIdFromURL();
-    const container = document.getElementById('modules-list-container');
-    container.innerHTML = '';
-
-    const modulesSnapshot = await getDocs(collection(db, 'courses', courseId, 'modules'));
-    for (const moduleDoc of modulesSnapshot.docs) {
-        const module = { id: moduleDoc.id, ...moduleDoc.data() };
-        const moduleElement = document.createElement('div');
-        moduleElement.className = 'bg-gray-700 p-4 rounded-lg';
-        moduleElement.innerHTML = `
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-semibold">${module.title}</h3>
-                <div>
-                    <button class="text-primary hover:text-primary-dark mr-2 edit-module-btn" data-id="${module.id}" data-title="${module.title}"><i class="fas fa-edit"></i></button>
-                    <button class="text-red-400 hover:text-red-600 delete-module-btn" data-id="${module.id}"><i class="fas fa-trash"></i></button>
-                </div>
-            </div>
-            <ul class="lessons-list space-y-2 mb-4"></ul>
-            <form class="add-lesson-form">
-                <input type="hidden" name="moduleId" value="${module.id}">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <input type="text" name="lessonTitle" placeholder="Título da Aula" required class="w-full px-3 py-2 text-white bg-gray-600 border border-gray-500 rounded-md">
-                    <input type="url" name="lessonUrl" placeholder="URL do YouTube" required class="w-full px-3 py-2 text-white bg-gray-600 border border-gray-500 rounded-md">
-                </div>
-                <button type="submit" class="mt-4 px-4 py-2 font-bold text-white bg-primary rounded-md hover:bg-primary-dark">Adicionar Aula</button>
-            </form>
-        `;
-        container.appendChild(moduleElement);
-
-        const lessonsList = moduleElement.querySelector('.lessons-list');
-        const lessonsSnapshot = await getDocs(collection(db, 'courses', courseId, 'modules', module.id, 'lessons'));
-        lessonsSnapshot.forEach(lessonDoc => {
-            const lesson = { id: lessonDoc.id, ...lessonDoc.data() };
-            const lessonElement = document.createElement('li');
-            lessonElement.className = 'flex justify-between items-center p-2 bg-gray-600 rounded-md';
-            lessonElement.innerHTML = `
-                <span>${lesson.title}</span>
-                <div>
-                    <button class="text-red-400 hover:text-red-600 delete-lesson-btn" data-lesson-id="${lesson.id}" data-module-id="${module.id}"><i class="fas fa-trash"></i></button>
-                </div>
-            `;
-            lessonsList.appendChild(lessonElement);
-        });
-    }
-}
-
-// --- Event Handlers ---
-function setupEventListeners() {
-    const courseId = getCourseIdFromURL();
-
-    // Module form
-    const moduleForm = document.getElementById('module-form');
-    moduleForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const moduleData = {
-            id: document.getElementById('module-id-hidden').value,
-            title: document.getElementById('module-title').value
-        };
-        await saveModule(courseId, moduleData);
-        moduleForm.reset();
-        document.getElementById('module-id-hidden').value = '';
-        renderModulesAndLessons();
-    });
-
-    // Container for dynamic buttons
-    const container = document.getElementById('modules-list-container');
-    container.addEventListener('click', async (e) => {
-        // Edit Module
-        if (e.target.closest('.edit-module-btn')) {
-            const btn = e.target.closest('.edit-module-btn');
-            document.getElementById('module-title').value = btn.dataset.title;
-            document.getElementById('module-id-hidden').value = btn.dataset.id;
-            document.getElementById('cancel-module-edit').classList.remove('hidden');
-        }
-
-        // Delete Module
-        if (e.target.closest('.delete-module-btn')) {
-            const btn = e.target.closest('.delete-module-btn');
-            if (await showConfirmationModal('Tem certeza que deseja excluir este módulo e todas as suas aulas?', 'Excluir')) {
-                await deleteModule(courseId, btn.dataset.id);
-                renderModulesAndLessons();
-            }
-        }
-
-        // Delete Lesson
-        if (e.target.closest('.delete-lesson-btn')) {
-            const btn = e.target.closest('.delete-lesson-btn');
-            if (await showConfirmationModal('Tem certeza que deseja excluir esta aula?', 'Excluir')) {
-                await deleteLesson(courseId, btn.dataset.moduleId, btn.dataset.lessonId);
-                renderModulesAndLessons();
-            }
-        }
-    });
-
-    // Add Lesson forms
-    container.addEventListener('submit', async (e) => {
-        if (e.target.classList.contains('add-lesson-form')) {
-            e.preventDefault();
-            const form = e.target;
-            const lessonData = {
-                moduleId: form.moduleId.value,
-                title: form.lessonTitle.value,
-                youtubeUrl: form.lessonUrl.value
-            };
-            await saveLesson(courseId, lessonData.moduleId, lessonData);
-            form.reset();
-            renderModulesAndLessons();
-        }
-    });
-
-    // Cancel module edit
-    document.getElementById('cancel-module-edit').addEventListener('click', () => {
-        moduleForm.reset();
-        document.getElementById('module-id-hidden').value = '';
-        document.getElementById('cancel-module-edit').classList.add('hidden');
-    });
-}
-
-
-async function setupCourseEditorPage() {
-    const courseId = getCourseIdFromURL();
-    if (!courseId) {
-        document.getElementById('main-content').innerHTML = '<p class="text-center p-8">ID do curso não encontrado.</p>';
-        return;
-    }
-
-    const courseRef = doc(db, 'courses', courseId);
-    const courseSnap = await getDoc(courseRef);
-    if (courseSnap.exists()) {
-        document.getElementById('course-editor-title').textContent = `Editor: ${courseSnap.data().title}`;
-    }
-
-    renderModulesAndLessons();
-    setupEventListeners();
+document.addEventListener('DOMContentLoaded', async () => {
+    await loadComponents();
     setupUIListeners();
+
+    onAuthReady(async (user) => {
+        if (user) {
+            const isAdmin = await checkAdminRole(user.id);
+            if (!isAdmin) {
+                alert('Acesso negado. Você precisa ser um administrador para acessar esta página.');
+                window.location.href = 'cursos.html';
+                return;
+            }
+
+            const params = new URLSearchParams(window.location.search);
+            courseId = params.get('courseId');
+            if (courseId) {
+                document.getElementById('editor-title').textContent = 'Editar Curso';
+                loadCourseData(courseId);
+            }
+        }
+        // onAuthReady handles redirection
+    });
+
+    document.getElementById('add-module-btn').addEventListener('click', () => addModule());
+    document.getElementById('course-form').addEventListener('submit', saveCourse);
+});
+
+function addModule(module = { title: '', lessons: [] }) {
+    const container = document.getElementById('modules-container');
+    const moduleId = `module-${Date.now()}`;
+    const moduleDiv = document.createElement('div');
+    moduleDiv.className = 'bg-gray-50 dark:bg-gray-700 p-4 rounded-lg border border-gray-200 dark:border-gray-600';
+    moduleDiv.id = moduleId;
+    moduleDiv.innerHTML = `
+        <div class="flex justify-between items-center mb-3">
+            <input type="text" value="${module.title}" class="module-title w-full bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded-lg p-2 text-lg font-semibold text-gray-800 dark:text-white" placeholder="Título do Módulo" required>
+            <button type="button" class="remove-module-btn text-red-500 hover:text-red-600 dark:hover:text-red-400 ml-4"><i class="fas fa-trash"></i></button>
+        </div>
+        <div class="lessons-container space-y-2 pl-4 border-l-2 border-gray-200 dark:border-gray-600">
+            <!-- Lessons will be here -->
+        </div>
+        <button type="button" class="add-lesson-btn mt-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-1 px-3 rounded-lg">Adicionar Aula</button>
+    `;
+    container.appendChild(moduleDiv);
+
+    module.lessons.forEach(lesson => addLesson(moduleId, lesson));
+
+    moduleDiv.querySelector('.remove-module-btn').addEventListener('click', () => moduleDiv.remove());
+    moduleDiv.querySelector('.add-lesson-btn').addEventListener('click', () => addLesson(moduleId));
 }
 
-loadComponents(setupCourseEditorPage);
+function addLesson(moduleId, lesson = { title: '', type: 'video', content: '' }) {
+    const lessonsContainer = document.getElementById(moduleId).querySelector('.lessons-container');
+    const lessonId = `lesson-${Date.now()}`;
+    const lessonDiv = document.createElement('div');
+    lessonDiv.className = 'flex items-center gap-2 p-2 bg-white dark:bg-gray-600 rounded shadow-sm';
+    lessonDiv.id = lessonId;
+    lessonDiv.innerHTML = `
+        <input type="text" value="${lesson.title}" class="lesson-title flex-grow bg-gray-50 dark:bg-gray-500 border border-gray-300 dark:border-gray-400 rounded p-1 text-sm text-gray-800 dark:text-white" placeholder="Título da Aula" required>
+        <select class="lesson-type bg-gray-50 dark:bg-gray-500 border border-gray-300 dark:border-gray-400 rounded p-1 text-sm text-gray-800 dark:text-white">
+            <option value="video" ${lesson.type === 'video' ? 'selected' : ''}>Vídeo</option>
+            <option value="text" ${lesson.type === 'text' ? 'selected' : ''}>Texto</option>
+            <option value="quiz" ${lesson.type === 'quiz' ? 'selected' : ''}>Quiz</option>
+        </select>
+        <input type="text" value="${lesson.content}" class="lesson-content flex-grow bg-gray-50 dark:bg-gray-500 border border-gray-300 dark:border-gray-400 rounded p-1 text-sm text-gray-800 dark:text-white" placeholder="URL do Vídeo / Conteúdo" required>
+        <button type="button" class="remove-lesson-btn text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300"><i class="fas fa-times"></i></button>
+    `;
+    lessonsContainer.appendChild(lessonDiv);
+    lessonDiv.querySelector('.remove-lesson-btn').addEventListener('click', () => lessonDiv.remove());
+}
+
+async function loadCourseData(id) {
+    const docRef = doc(db, "courses", id);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+        const course = docSnap.data();
+        document.getElementById('course-title').value = course.title || '';
+        document.getElementById('course-author').value = course.author || '';
+        document.getElementById('course-description').value = course.description || '';
+        document.getElementById('course-thumbnail').value = course.thumbnailURL || '';
+        
+        if (course.modules) {
+            course.modules.forEach(module => addModule(module));
+        }
+    } else {
+        console.error("No such document!");
+        alert("Curso não encontrado!");
+        window.location.href = 'cursos.html';
+    }
+}
+
+async function saveCourse(event) {
+    event.preventDefault();
+    const saveButton = document.getElementById('save-course-btn');
+    saveButton.disabled = true;
+    saveButton.textContent = 'Salvando...';
+
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    const courseData = {
+        title: document.getElementById('course-title').value,
+        author: document.getElementById('course-author').value,
+        description: document.getElementById('course-description').value,
+        thumbnailURL: document.getElementById('course-thumbnail').value,
+        updatedAt: serverTimestamp(),
+        ownerId: user.id,
+        modules: []
+    };
+
+    document.querySelectorAll('#modules-container > div').forEach(moduleDiv => {
+        const module = {
+            title: moduleDiv.querySelector('.module-title').value,
+            lessons: []
+        };
+        moduleDiv.querySelectorAll('.lessons-container > div').forEach(lessonDiv => {
+            const lesson = {
+                title: lessonDiv.querySelector('.lesson-title').value,
+                type: lessonDiv.querySelector('.lesson-type').value,
+                content: lessonDiv.querySelector('.lesson-content').value
+            };
+            module.lessons.push(lesson);
+        });
+        courseData.modules.push(module);
+    });
+
+    try {
+        if (courseId) {
+            // Update existing document
+            const courseRef = doc(db, "courses", courseId);
+            await setDoc(courseRef, courseData, { merge: true });
+        } else {
+            // Create new document
+            courseData.createdAt = serverTimestamp();
+            await addDoc(collection(db, "courses"), courseData);
+        }
+        alert('Curso salvo com sucesso!');
+        window.location.href = 'cursos.html';
+    } catch (error) {
+        console.error("Error saving course: ", error);
+        alert('Erro ao salvar o curso. Verifique o console para mais detalhes.');
+        saveButton.disabled = false;
+        saveButton.textContent = 'Salvar Curso';
+    }
+}

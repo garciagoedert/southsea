@@ -1,3 +1,16 @@
+function applyTheme(theme) {
+    const html = document.documentElement;
+    const toggleDot = document.getElementById('theme-toggle-dot');
+
+    if (theme === 'dark') {
+        html.classList.add('dark');
+        if (toggleDot) toggleDot.style.transform = 'translateX(1.5rem)';
+    } else {
+        html.classList.remove('dark');
+        if (toggleDot) toggleDot.style.transform = 'translateX(0)';
+    }
+}
+
 function setupUIListeners(handlers = {}) {
     const {
         openFormModal,
@@ -169,6 +182,21 @@ async function loadWhitelabelSettings() {
     }
 }
 
+async function checkAdminRole(userId) {
+    if (!userId) return false;
+    try {
+        const userRef = doc(db, 'users', userId);
+        const docSnap = await getDoc(userRef);
+        if (docSnap.exists() && docSnap.data().role === 'admin') {
+            return true;
+        }
+        return false;
+    } catch (error) {
+        console.error("Error checking admin role:", error);
+        return false;
+    }
+}
+
 async function applyWhitelabelSettings() {
     const settings = await loadWhitelabelSettings();
     const primaryColor = settings?.primaryColor || '#2563eb'; // Default to Tailwind's blue-600
@@ -279,8 +307,8 @@ async function loadComponents(pageSpecificSetup) {
         sidebarLinks.forEach(link => {
             const linkPage = link.getAttribute('href').split('/').pop();
             if (linkPage === currentPage) {
-                link.classList.add('bg-primary-light', 'text-white');
-                link.classList.remove('bg-gray-700', 'hover:bg-gray-600');
+                link.classList.add('bg-primary', 'text-white');
+                link.classList.remove('bg-gray-700', 'hover:bg-gray-600', 'text-gray-300');
 
                 if (linkPage === 'index.html') {
                     const prospectActions = document.getElementById('prospect-actions');
@@ -405,6 +433,14 @@ async function loadComponents(pageSpecificSetup) {
         }
 
         updateUserProfilePicture();
+
+        // Apply theme based on user preference
+        const currentUserStr = sessionStorage.getItem('currentUser');
+        if (currentUserStr) {
+            const currentUser = JSON.parse(currentUserStr);
+            applyTheme(currentUser.theme || 'dark');
+        }
+
 
     } catch (error) {
         console.error('Error loading components:', error);
@@ -676,5 +712,99 @@ function stopFloatingStopwatch() {
 
 document.addEventListener('DOMContentLoaded', createFloatingStopwatch);
 
+// --- INPUT MODAL ---
+async function showInputModal({ title, label, placeholder = '', initialValue = '', confirmText = 'Confirmar', cancelText = 'Cancelar' }) {
+    return new Promise(async (resolve, reject) => {
+        // Check if modal HTML is already loaded
+        if (!document.getElementById('inputModal')) {
+            try {
+                const response = await fetch(`input-modal.html?v=${new Date().getTime()}`);
+                if (!response.ok) throw new Error('Failed to fetch input-modal.html');
+                const modalHtml = await response.text();
+                document.body.insertAdjacentHTML('beforeend', modalHtml);
+            } catch (error) {
+                console.error(error);
+                reject(error); // Reject promise if modal can't be loaded
+                return;
+            }
+        }
 
-export { setupUIListeners, loadComponents, showConfirmationModal, showNotification, startFloatingStopwatch, stopFloatingStopwatch };
+        const modal = document.getElementById('inputModal');
+        const titleEl = document.getElementById('inputModalTitle');
+        const labelEl = document.getElementById('inputModalLabel');
+        const inputEl = document.getElementById('inputModalField');
+        const errorEl = document.getElementById('inputModalError');
+        const confirmBtn = document.getElementById('confirmInputModalBtn');
+        const cancelBtn = document.getElementById('cancelInputModalBtn');
+        const closeBtn = document.getElementById('closeInputModalBtn');
+
+        // --- Configure Modal ---
+        titleEl.textContent = title;
+        labelEl.textContent = label;
+        inputEl.placeholder = placeholder;
+        inputEl.value = initialValue;
+        confirmBtn.textContent = confirmText;
+        cancelBtn.textContent = cancelText;
+        errorEl.classList.add('hidden');
+
+        // --- Show Modal ---
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        inputEl.focus();
+        inputEl.select();
+
+        // --- Event Handlers ---
+        const handleConfirm = () => {
+            const value = inputEl.value.trim();
+            if (!value) {
+                errorEl.textContent = 'O nome não pode estar vazio.';
+                errorEl.classList.remove('hidden');
+                return;
+            }
+            cleanup();
+            resolve(value);
+        };
+
+        const handleCancel = () => {
+            cleanup();
+            resolve(null); // Resolve with null when cancelled
+        };
+        
+        const handleKeydown = (event) => {
+            if (event.key === 'Enter') {
+                handleConfirm();
+            } else if (event.key === 'Escape') {
+                handleCancel();
+            }
+        };
+
+        // Use cloning to ensure no old listeners are attached
+        const newConfirmBtn = confirmBtn.cloneNode(true);
+        confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+        
+        const newCancelBtn = cancelBtn.cloneNode(true);
+        cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
+
+        const newCloseBtn = closeBtn.cloneNode(true);
+        closeBtn.parentNode.replaceChild(newCloseBtn, closeBtn);
+
+        // --- Add Event Listeners ---
+        newConfirmBtn.addEventListener('click', handleConfirm);
+        newCancelBtn.addEventListener('click', handleCancel);
+        newCloseBtn.addEventListener('click', handleCancel);
+        modal.addEventListener('click', (event) => {
+            if (event.target === modal) handleCancel();
+        });
+        inputEl.addEventListener('keydown', handleKeydown);
+
+        // --- Cleanup ---
+        function cleanup() {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            // No need to remove listeners from cloned nodes
+        }
+    });
+}
+
+
+export { setupUIListeners, loadComponents, showConfirmationModal, showNotification, startFloatingStopwatch, stopFloatingStopwatch, checkAdminRole, applyTheme, showInputModal };

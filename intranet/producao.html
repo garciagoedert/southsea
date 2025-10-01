@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="dark">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +9,12 @@
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Configure Tailwind CSS for dark mode
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -37,23 +43,33 @@
         .dropdown-content {
             display: none;
             position: absolute;
-            background-color: #2d3748; /* bg-gray-800 */
+            background-color: white;
             min-width: 200px;
             box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
             z-index: 10;
             border-radius: 0.5rem;
-            border: 1px solid #4a5568; /* border-gray-600 */
+            border: 1px solid #e2e8f0; /* border-gray-200 */
             max-height: 300px;
             overflow-y: auto;
         }
+        .dark .dropdown-content {
+            background-color: #2d3748; /* bg-gray-800 */
+            border: 1px solid #4a5568; /* border-gray-600 */
+        }
         .dropdown-content label {
-            color: white;
+            color: #1a202c; /* text-gray-900 */
             padding: 12px 16px;
             text-decoration: none;
             display: block;
             cursor: pointer;
         }
+        .dark .dropdown-content label {
+            color: white;
+        }
         .dropdown-content label:hover {
+            background-color: #f7fafc; /* bg-gray-100 */
+        }
+        .dark .dropdown-content label:hover {
             background-color: #4a5568; /* bg-gray-600 */
         }
         .dropdown-content input {
@@ -61,7 +77,7 @@
         }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-200">
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
 
     <div id="kanban-container" class="flex h-screen">
         <div id="sidebar-container"></div>
@@ -81,13 +97,13 @@
                 </div>
 
                 <!-- Filters -->
-                <div class="bg-gray-800 p-4 rounded-lg mb-6 flex flex-col xl:flex-row items-center gap-4 shadow-md">
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg mb-6 flex flex-col xl:flex-row items-center gap-4 shadow-md">
                      <div class="relative flex-grow w-full">
-                        <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                        <input type="text" id="searchInput" placeholder="Buscar por empresa ou setor..." class="w-full bg-gray-700 border border-gray-600 rounded-lg py-2 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500"></i>
+                        <input type="text" id="searchInput" placeholder="Buscar por empresa ou setor..." class="w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg py-2 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                     <div class="flex flex-col sm:flex-row w-full xl:w-auto gap-4">
-                        <select id="priorityFilter" class="w-full sm:w-auto bg-gray-700 border border-gray-600 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-label="Filter by priority">
+                        <select id="priorityFilter" class="w-full sm:w-auto bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-label="Filter by priority">
                             <option value="">Todas as Prioridades</option>
                             <option value="5">Máxima (5)</option>
                             <option value="4">Alta (4)</option>
@@ -97,7 +113,7 @@
                         </select>
                         <!-- User Filter Dropdown -->
                         <div class="relative">
-                            <button id="userFilterBtn" class="w-full sm:w-auto bg-gray-700 border border-gray-600 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 flex items-center justify-between min-w-[180px]">
+                            <button id="userFilterBtn" class="w-full sm:w-auto bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 flex items-center justify-between min-w-[180px]">
                                 <span class="truncate">Todos os Usuários</span>
                                 <i class="fas fa-chevron-down ml-2 text-xs"></i>
                             </button>
@@ -119,8 +135,8 @@
 
     <!-- Add/Edit Prospect Modal -->
     <div id="formModal" class="fixed inset-0 bg-black bg-opacity-70 z-50 hidden items-center justify-center sm:p-4">
-        <div class="bg-gray-800 w-full h-full sm:h-auto sm:rounded-xl shadow-2xl sm:max-w-3xl sm:max-h-[90vh] flex flex-col">
-            <div class="flex justify-between items-center p-4 border-b border-gray-700 gap-4">
+        <div class="bg-white dark:bg-gray-800 w-full h-full sm:h-auto sm:rounded-xl shadow-2xl sm:max-w-3xl sm:max-h-[90vh] flex flex-col">
+            <div class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700 gap-4">
                 <h2 id="modalTitle" class="text-xl font-bold">Adicionar Novo Prospect</h2>
                 <button id="closeFormModalBtn" class="text-gray-400 hover:text-white text-2xl">&times;</button>
             </div>
@@ -128,24 +144,24 @@
                 <input type="hidden" id="prospectId">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="form-group md:col-span-2">
-                        <label for="empresa" class="block text-sm font-medium text-gray-300 mb-1">Empresa *</label>
-                        <input type="text" id="empresa" placeholder="Nome da Empresa" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        <label for="empresa" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Empresa *</label>
+                        <input type="text" id="empresa" placeholder="Nome da Empresa" class="w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                     </div>
                      <div class="form-group">
-                        <label for="telefone" class="block text-sm font-medium text-gray-300 mb-1">Telefone</label>
-                        <input type="text" id="telefone" placeholder="(48) 99999-9999" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <label for="telefone" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Telefone</label>
+                        <input type="text" id="telefone" placeholder="(48) 99999-9999" class="w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <a id="whatsappLink" href="#" target="_blank" class="hidden w-full mt-2 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg text-sm items-center justify-center gap-2">
                             <i class="fab fa-whatsapp"></i>
                             <span>Chamar no WhatsApp</span>
                         </a>
                     </div>
                     <div class="form-group">
-                        <label for="setor" class="block text-sm font-medium text-gray-300 mb-1">Setor *</label>
-                        <input type="text" id="setor" placeholder="Ex: Imobiliário" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        <label for="setor" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Setor *</label>
+                        <input type="text" id="setor" placeholder="Ex: Imobiliário" class="w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                     </div>
                     <div class="form-group">
-                        <label for="prioridade" class="block text-sm font-medium text-gray-300 mb-1">Prioridade *</label>
-                        <select id="prioridade" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        <label for="prioridade" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Prioridade *</label>
+                        <select id="prioridade" class="w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                             <option value="">Selecione</option>
                             <option value="5">Máxima (5)</option>
                             <option value="4">Alta (4)</option>
@@ -482,7 +498,7 @@
                 
                 let contentHTML;
                 if (isMobile) {
-                    columnEl.className = 'bg-gray-800 rounded-lg flex flex-col';
+                    columnEl.className = 'bg-white dark:bg-gray-800 rounded-lg flex flex-col shadow';
                     contentHTML = `
                         <div class="overflow-x-auto pb-3">
                             <div id="${columnId}" data-status="${status}" class="column-content flex flex-nowrap space-x-3 p-2 min-h-[120px] pr-2">
@@ -491,7 +507,7 @@
                         </div>
                     `;
                 } else {
-                    columnEl.className = 'bg-gray-800 rounded-lg flex flex-col overflow-hidden';
+                    columnEl.className = 'bg-gray-50 dark:bg-gray-800 rounded-lg flex flex-col overflow-hidden shadow';
                     contentHTML = `
                         <div id="${columnId}" data-status="${status}" class="column-content flex-grow p-2 space-y-3 rounded-md overflow-y-auto">
                            <!-- Cards will be injected here -->
@@ -500,9 +516,9 @@
                 }
 
                 columnEl.innerHTML = `
-                    <div class="flex justify-between items-center p-3 flex-shrink-0">
-                        <h3 class="font-bold">${status}</h3>
-                        <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2 py-1 rounded-full">${columnProspects.length}</span>
+                    <div class="flex justify-between items-center p-3 flex-shrink-0 border-b border-gray-200 dark:border-gray-700">
+                        <h3 class="font-bold text-gray-800 dark:text-gray-200">${status}</h3>
+                        <span class="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs font-semibold px-2 py-1 rounded-full">${columnProspects.length}</span>
                     </div>
                     ${contentHTML}
                 `;
@@ -528,7 +544,7 @@
         function createProspectCard(prospect, isMobile = false) {
             const card = document.createElement('div');
             const mobileClasses = isMobile ? 'w-72 flex-shrink-0' : '';
-            card.className = `prospect-card relative bg-gray-900 p-3 rounded-lg shadow-md cursor-pointer border-l-4 transition-all duration-200 hover:shadow-xl hover:bg-gray-700 ${mobileClasses}`;
+            card.className = `prospect-card relative bg-white dark:bg-gray-900 p-3 rounded-lg shadow-md cursor-pointer border-l-4 transition-all duration-200 hover:shadow-xl hover:bg-gray-100 dark:hover:bg-gray-700 ${mobileClasses}`;
             card.style.borderLeftColor = getPriorityColor(prospect.prioridade);
             card.draggable = true;
             card.dataset.id = prospect.id;
@@ -553,15 +569,15 @@
             card.innerHTML = `
                 ${actionButtonsHTML}
                 <div class="flex justify-between items-start">
-                    <h4 class="font-bold mb-2 flex-grow pr-4">${prospect.empresa}</h4>
+                    <h4 class="font-bold mb-2 flex-grow pr-4 text-gray-800 dark:text-gray-200">${prospect.empresa}</h4>
                 </div>
                 <div class="flex items-center gap-2 mb-2 flex-wrap">
                     <span class="text-xs font-semibold px-2 py-0.5 rounded-full ${sectorColor.bg} ${sectorColor.text}">${prospect.setor}</span>
-                    <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-gray-700 text-gray-300">P${prospect.prioridade}</span>
+                    <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300">P${prospect.prioridade}</span>
                 </div>
-                ${prospect.origemLead ? `<p class="text-xs text-gray-400 mb-2"><i class="fas fa-sign-in-alt mr-1"></i> ${prospect.origemLead}</p>` : ''}
-                <p class="text-sm text-green-400 font-semibold mb-2">R$ ${prospect.ticketEstimado?.toLocaleString('pt-BR') || 'N/A'}</p>
-                <p class="text-xs text-gray-500 mt-2 pt-2 border-t border-gray-700"><i class="fas fa-user-plus mr-1"></i> ${assignedUserName}</p>
+                ${prospect.origemLead ? `<p class="text-xs text-gray-500 dark:text-gray-400 mb-2"><i class="fas fa-sign-in-alt mr-1"></i> ${prospect.origemLead}</p>` : ''}
+                <p class="text-sm text-green-600 dark:text-green-400 font-semibold mb-2">R$ ${prospect.ticketEstimado?.toLocaleString('pt-BR') || 'N/A'}</p>
+                <p class="text-xs text-gray-400 dark:text-gray-500 mt-2 pt-2 border-t border-gray-200 dark:border-gray-700"><i class="fas fa-user-plus mr-1"></i> ${assignedUserName}</p>
             `;
             
             // 4. Redirect to client's profile page on click.
@@ -589,13 +605,13 @@
 
         function createStatCard(label, value, icon, iconColor) {
             return `
-                <div class="bg-gray-800 p-4 rounded-lg flex items-center gap-4 shadow-md">
-                    <div class="bg-gray-700 p-3 rounded-full">
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg flex items-center gap-4 shadow-md">
+                    <div class="bg-gray-100 dark:bg-gray-700 p-3 rounded-full">
                         <i class="fas ${icon} fa-lg ${iconColor}"></i>
                     </div>
                     <div>
-                        <div class="text-2xl font-bold">${value}</div>
-                        <div class="text-sm text-gray-400">${label}</div>
+                        <div class="text-2xl font-bold text-gray-800 dark:text-gray-200">${value}</div>
+                        <div class="text-sm text-gray-500 dark:text-gray-400">${label}</div>
                     </div>
                 </div>
             `;

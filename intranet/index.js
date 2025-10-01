@@ -165,7 +165,7 @@ function renderBoard() {
         
         let contentHTML;
         if (isMobile) {
-            columnEl.className = 'bg-gray-800 rounded-lg flex flex-col';
+            columnEl.className = 'bg-white dark:bg-gray-800 rounded-lg flex flex-col shadow';
             contentHTML = `
                 <div class="overflow-x-auto pb-3">
                     <div id="${columnId}" data-status="${status}" class="column-content flex flex-nowrap space-x-3 p-2 min-h-[120px] pr-2">
@@ -174,7 +174,7 @@ function renderBoard() {
                 </div>
             `;
         } else {
-            columnEl.className = 'bg-gray-800 rounded-lg flex flex-col overflow-hidden';
+            columnEl.className = 'bg-white dark:bg-gray-800 rounded-lg flex flex-col overflow-hidden shadow';
             contentHTML = `
                 <div id="${columnId}" data-status="${status}" class="column-content flex-grow p-2 space-y-3 rounded-md overflow-y-auto">
                    <!-- Cards will be injected here -->
@@ -183,9 +183,9 @@ function renderBoard() {
         }
 
         columnEl.innerHTML = `
-            <div class="flex justify-between items-center p-3 flex-shrink-0">
-                <h3 class="font-bold">${status}</h3>
-                <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2 py-1 rounded-full">${columnProspects.length}</span>
+            <div class="flex justify-between items-center p-3 flex-shrink-0 border-b border-gray-200 dark:border-gray-700">
+                <h3 class="font-bold text-gray-800 dark:text-gray-200">${status}</h3>
+                <span class="bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300 text-xs font-semibold px-2 py-1 rounded-full">${columnProspects.length}</span>
             </div>
             ${contentHTML}
         `;
@@ -219,7 +219,7 @@ function getMeetingResultColor(status) {
 function createProspectCard(prospect, isMobile = false) {
     const card = document.createElement('div');
     const mobileClasses = isMobile ? 'w-72 flex-shrink-0' : '';
-    card.className = `prospect-card bg-gray-900 p-3 rounded-lg shadow-md cursor-pointer border-l-4 transition-all duration-200 hover:shadow-xl hover:bg-gray-700 ${mobileClasses}`;
+    card.className = `prospect-card bg-white dark:bg-gray-800 p-3 rounded-lg shadow-md cursor-pointer border-l-4 transition-all duration-200 hover:shadow-xl hover:bg-gray-100 dark:hover:bg-gray-700 ${mobileClasses}`;
     
     const meetingStatusColor = getMeetingResultColor(prospect.meetingResultStatus);
     if (meetingStatusColor) {
@@ -241,14 +241,15 @@ function createProspectCard(prospect, isMobile = false) {
         if (total > 0) {
             const progressPercentage = (completed / total) * 100;
             const isComplete = completed === total;
-            const iconColor = isComplete ? 'text-green-400' : 'text-gray-400';
-            const bgColor = isComplete ? 'bg-green-500' : 'bg-gray-600';
+            const iconColor = isComplete ? 'text-green-500 dark:text-green-400' : 'text-gray-500 dark:text-gray-400';
+            const bgColor = isComplete ? 'bg-green-500' : 'bg-gray-300 dark:bg-gray-600';
+            const trackColor = 'bg-gray-200 dark:bg-gray-700';
 
             todoProgressHTML = `
                 <div class="flex items-center gap-2 text-xs ${iconColor} mt-2">
                     <i class="fas fa-check-circle"></i>
                     <span>${completed}/${total}</span>
-                    <div class="w-full bg-gray-700 rounded-full h-1.5">
+                    <div class="w-full ${trackColor} rounded-full h-1.5">
                         <div class="${bgColor} h-1.5 rounded-full" style="width: ${progressPercentage}%"></div>
                     </div>
                 </div>
@@ -257,7 +258,7 @@ function createProspectCard(prospect, isMobile = false) {
     }
 
 
-    const tagsHTML = (prospect.tags || []).map(tag => `<span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-sky-900/50 text-sky-200">${tag}</span>`).join('');
+    const tagsHTML = (prospect.tags || []).map(tag => `<span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 dark:bg-sky-900/50 dark:text-sky-200">${tag}</span>`).join('');
 
     let actionButtonHTML = ''; // Default to no button
 
@@ -307,7 +308,7 @@ function createProspectCard(prospect, isMobile = false) {
         }
     } else if (prospect.status === 'Proposta' && prospect.proposalStatus) {
         actionButtonHTML = `
-            <div class="mt-3 w-full text-center bg-gray-700 text-gray-300 font-semibold py-2 px-3 rounded-lg text-sm items-center justify-center gap-2 flex">
+            <div class="mt-3 w-full text-center bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300 font-semibold py-2 px-3 rounded-lg text-sm items-center justify-center gap-2 flex">
                 <i class="fas fa-info-circle"></i>
                 <span>${prospect.proposalStatus}</span>
             </div>
@@ -322,19 +323,19 @@ function createProspectCard(prospect, isMobile = false) {
 
     card.innerHTML = `
         <div class="flex justify-between items-start">
-            <h4 class="font-bold mb-2 flex-grow pr-2">${prospect.empresa}</h4>
+            <h4 class="font-bold mb-2 flex-grow pr-2 text-gray-800 dark:text-gray-200">${prospect.empresa}</h4>
         </div>
         <div class="flex items-center gap-2 mb-2 flex-wrap">
             <span class="text-xs font-semibold px-2 py-0.5 rounded-full ${sectorColor.bg} ${sectorColor.text}">${prospect.setor}</span>
-            <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-gray-700 text-gray-300">P${prospect.prioridade}</span>
+            <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-300">P${prospect.prioridade}</span>
         </div>
         <div class="flex items-center gap-1 mb-3 flex-wrap">
             ${tagsHTML}
         </div>
-        ${prospect.origemLead ? `<p class="text-xs text-gray-400 mb-2"><i class="fas fa-sign-in-alt mr-1"></i> ${prospect.origemLead}</p>` : ''}
-        <p class="text-sm text-green-400 font-semibold mb-2">R$ ${prospect.ticketEstimado?.toLocaleString('pt-BR') || 'N/A'}</p>
+        ${prospect.origemLead ? `<p class="text-xs text-gray-500 dark:text-gray-400 mb-2"><i class="fas fa-sign-in-alt mr-1"></i> ${prospect.origemLead}</p>` : ''}
+        <p class="text-sm text-green-600 dark:text-green-400 font-semibold mb-2">R$ ${prospect.ticketEstimado?.toLocaleString('pt-BR') || 'N/A'}</p>
         ${todoProgressHTML}
-        ${prospect.createdBy ? `<p class="text-xs text-gray-500 mt-2 pt-2 border-t border-gray-700"><i class="fas fa-user-plus mr-1"></i> ${prospect.createdBy}</p>` : ''}
+        ${prospect.createdBy ? `<p class="text-xs text-gray-600 dark:text-gray-500 mt-2 pt-2 border-t border-gray-200 dark:border-gray-700"><i class="fas fa-user-plus mr-1"></i> ${prospect.createdBy}</p>` : ''}
         ${actionButtonHTML}
     `;
     
@@ -392,13 +393,13 @@ function updateStats() {
 
 function createStatCard(label, value, icon, iconColor) {
     return `
-        <div class="bg-gray-800 p-4 rounded-lg flex items-center gap-4 shadow-md">
-            <div class="bg-gray-700 p-3 rounded-full">
+        <div class="bg-white dark:bg-gray-800 p-4 rounded-lg flex items-center gap-4 shadow-md">
+            <div class="bg-gray-100 dark:bg-gray-700 p-3 rounded-full">
                 <i class="fas ${icon} fa-lg ${iconColor}"></i>
             </div>
             <div>
-                <div class="text-2xl font-bold">${value}</div>
-                <div class="text-sm text-gray-400">${label}</div>
+                <div class="text-2xl font-bold text-gray-800 dark:text-gray-200">${value}</div>
+                <div class="text-sm text-gray-500 dark:text-gray-400">${label}</div>
             </div>
         </div>
     `;
@@ -572,10 +573,10 @@ function renderContactLog(prospect) {
             const author = log.author || 'Sistema';
             const deleteButtonHTML = userRole === 'admin' ? `<button data-log-index="${index}" class="delete-log-btn text-red-500 hover:text-red-400 text-xs ml-2">&times;</button>` : '';
             return `
-                <div class="bg-gray-700/50 p-2 rounded-md flex justify-between items-start">
+                <div class="bg-gray-100 dark:bg-gray-700/50 p-2 rounded-md flex justify-between items-start">
                     <div>
-                        <p class="text-sm text-gray-300 whitespace-pre-wrap">${log.description}</p>
-                        <p class="text-xs text-gray-500 mt-1">${author} - ${date}</p>
+                        <p class="text-sm text-gray-800 dark:text-gray-300 whitespace-pre-wrap">${log.description}</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">${author} - ${date}</p>
                     </div>
                     ${deleteButtonHTML}
                 </div>
@@ -822,9 +823,9 @@ function renderTodoList(prospect) {
     }
 
     todoContainer.innerHTML = todoList.map((item, index) => `
-        <label for="todo-${index}" class="flex items-center p-2 rounded-md hover:bg-gray-700/50 cursor-pointer">
-            <input type="checkbox" id="todo-${index}" data-index="${index}" class="h-4 w-4 rounded border-gray-400 text-blue-500 bg-gray-600 focus:ring-blue-500" ${item.completed ? 'checked' : ''}>
-            <span class="ml-3 text-gray-300 ${item.completed ? 'line-through text-gray-500' : ''}">${item.text}</span>
+        <label for="todo-${index}" class="flex items-center p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700/50 cursor-pointer">
+            <input type="checkbox" id="todo-${index}" data-index="${index}" class="h-4 w-4 rounded border-gray-300 dark:border-gray-600 text-blue-600 dark:text-blue-500 bg-gray-100 dark:bg-gray-600 focus:ring-blue-600 dark:focus:ring-blue-500" ${item.completed ? 'checked' : ''}>
+            <span class="ml-3 text-gray-700 dark:text-gray-300 ${item.completed ? 'line-through text-gray-500' : ''}">${item.text}</span>
         </label>
     `).join('');
 
@@ -1191,20 +1192,20 @@ function stringToColorIndex(str, colorArrayLength) {
 
 function getSectorColor(sector) {
     const colorPalette = [
-        { bg: 'bg-blue-900/50', text: 'text-blue-200' },
-        { bg: 'bg-purple-900/50', text: 'text-purple-200' },
-        { bg: 'bg-teal-900/50', text: 'text-teal-200' },
-        { bg: 'bg-red-900/50', text: 'text-red-200' },
-        { bg: 'bg-cyan-900/50', text: 'text-cyan-200' },
-        { bg: 'bg-green-900/50', text: 'text-green-200' },
-        { bg: 'bg-amber-900/50', text: 'text-amber-200' },
-        { bg: 'bg-pink-900/50', text: 'text-pink-200' },
-        { bg: 'bg-indigo-900/50', text: 'text-indigo-200' },
-        { bg: 'bg-lime-900/50', text: 'text-lime-200' }
+        { bg: 'bg-blue-100 dark:bg-blue-900/50', text: 'text-blue-800 dark:text-blue-200' },
+        { bg: 'bg-purple-100 dark:bg-purple-900/50', text: 'text-purple-800 dark:text-purple-200' },
+        { bg: 'bg-teal-100 dark:bg-teal-900/50', text: 'text-teal-800 dark:text-teal-200' },
+        { bg: 'bg-red-100 dark:bg-red-900/50', text: 'text-red-800 dark:text-red-200' },
+        { bg: 'bg-cyan-100 dark:bg-cyan-900/50', text: 'text-cyan-800 dark:text-cyan-200' },
+        { bg: 'bg-green-100 dark:bg-green-900/50', text: 'text-green-800 dark:text-green-200' },
+        { bg: 'bg-amber-100 dark:bg-amber-900/50', text: 'text-amber-800 dark:text-amber-200' },
+        { bg: 'bg-pink-100 dark:bg-pink-900/50', text: 'text-pink-800 dark:text-pink-200' },
+        { bg: 'bg-indigo-100 dark:bg-indigo-900/50', text: 'text-indigo-800 dark:text-indigo-200' },
+        { bg: 'bg-lime-100 dark:bg-lime-900/50', text: 'text-lime-800 dark:text-lime-200' }
     ];
     
     const index = stringToColorIndex(sector, colorPalette.length);
-    return colorPalette[index] || { bg: 'bg-gray-700', text: 'text-gray-200' };
+    return colorPalette[index] || { bg: 'bg-gray-100 dark:bg-gray-700', text: 'text-gray-800 dark:text-gray-200' };
 }
 
 function exportData() {

@@ -1,7 +1,7 @@
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import { collection, addDoc, onSnapshot, serverTimestamp, query, where, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 import { db, app } from './firebase-config.js';
-import { loadComponents, setupUIListeners, showConfirmationModal, showNotification } from './common-ui.js';
+import { loadComponents, setupUIListeners, showConfirmationModal, showNotification, showInputModal } from './common-ui.js';
 
 // --- INITIALIZATION ---
 const auth = getAuth(app);
@@ -96,8 +96,14 @@ createMapBtn.addEventListener('click', async () => {
         return;
     }
 
-    const mapName = prompt("Qual o nome do novo mapa mental?");
-    if (mapName && mapName.trim() !== '') {
+    const mapName = await showInputModal({
+        title: 'Criar Novo Mapa Mental',
+        label: 'Qual o nome do novo mapa mental?',
+        placeholder: 'Ex: Planejamento de Projeto',
+        confirmText: 'Criar Mapa'
+    });
+
+    if (mapName) { // User confirmed and provided a name
         try {
             const mapsCollection = collection(db, 'artifacts', db.app.options.appId, 'public', 'data', 'mind-maps');
             const newMap = {
@@ -118,14 +124,21 @@ createMapBtn.addEventListener('click', async () => {
 
 // --- MAP ACTIONS ---
 async function editMapName(mapId, currentName) {
-    const newName = prompt("Digite o novo nome para o mapa mental:", currentName);
-    if (newName && newName.trim() !== '' && newName !== currentName) {
+    const newName = await showInputModal({
+        title: 'Editar Nome do Mapa',
+        label: 'Digite o novo nome para o mapa mental:',
+        initialValue: currentName,
+        confirmText: 'Salvar'
+    });
+
+    if (newName && newName !== currentName) {
         try {
             const mapRef = doc(db, 'artifacts', db.app.options.appId, 'public', 'data', 'mind-maps', mapId);
             await updateDoc(mapRef, {
                 name: newName,
                 updatedAt: serverTimestamp()
             });
+            showNotification("Nome do mapa atualizado com sucesso!", 'success');
         } catch (error) {
             console.error("Error updating map name:", error);
             showNotification("Não foi possível atualizar o nome do mapa.", 'error');

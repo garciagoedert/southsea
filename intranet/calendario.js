@@ -61,7 +61,7 @@ async function initializeCalendarPage(tasksCollectionRef, meetingsCollectionRef,
     const meetingLinkedCardResults = meetingModal.querySelector('#meeting-linked-card-results');
     const meetingCloserSelect = meetingModal.querySelector('#meeting-closer');
     const createMeetingBtnCalendar = document.getElementById('create-meeting-btn-calendar');
-    const viewLeadBtn = meetingModal.querySelector('#view-lead-btn');
+    let viewLeadBtn = meetingModal.querySelector('#view-lead-btn');
     const meetingStatusControls = meetingModal.querySelector('#meeting-status-controls');
     const meetingRealizadaBtn = meetingModal.querySelector('#meeting-realizada-btn');
     const meetingStatusOptions = meetingModal.querySelector('#meeting-status-options');
@@ -246,6 +246,8 @@ async function initializeCalendarPage(tasksCollectionRef, meetingsCollectionRef,
     };
 
     // --- Funções de CRUD para Reuniões ---
+    let viewLeadClickHandler = null; // Handler para o botão de ver lead
+
     const openModalForMeetingEdit = (meeting) => {
         document.getElementById('meeting-id').value = meeting.id;
         document.getElementById('meeting-title').value = meeting.title;
@@ -262,15 +264,19 @@ async function initializeCalendarPage(tasksCollectionRef, meetingsCollectionRef,
         meetingLinkedCardSearch.value = linkedCard ? linkedCard.empresa : '';
 
         // Controla a visibilidade do botão "Ver Detalhes do Lead"
+        if (viewLeadClickHandler) {
+            viewLeadBtn.removeEventListener('click', viewLeadClickHandler);
+        }
+
         if (linkedCard) {
             viewLeadBtn.classList.remove('hidden');
             meetingStatusControls.classList.remove('hidden');
-            // Remove listener antigo para evitar duplicação e adiciona o novo
-            const newViewLeadBtn = viewLeadBtn.cloneNode(true);
-            viewLeadBtn.parentNode.replaceChild(newViewLeadBtn, viewLeadBtn);
-            newViewLeadBtn.addEventListener('click', () => {
+            
+            viewLeadClickHandler = () => {
                 window.location.href = `index.html?cardId=${linkedCard.id}`;
-            });
+            };
+            
+            viewLeadBtn.addEventListener('click', viewLeadClickHandler);
         } else {
             viewLeadBtn.classList.add('hidden');
             meetingStatusControls.classList.add('hidden');
@@ -407,6 +413,14 @@ async function initializeCalendarPage(tasksCollectionRef, meetingsCollectionRef,
     cancelTaskBtn.addEventListener('click', closeTaskModal);
     deleteTaskBtn.addEventListener('click', handleDeleteTask);
     taskForm.addEventListener('submit', handleFormSubmit);
+
+    // Fechar modal de tarefa ao clicar fora
+    taskModal.addEventListener('click', (event) => {
+        if (event.target === taskModal) {
+            closeTaskModal();
+        }
+    });
+
     taskLinkedCardSearch.addEventListener('keyup', () => {
         const searchTerm = taskLinkedCardSearch.value.toLowerCase();
         if (searchTerm.length < 2) {
@@ -431,6 +445,13 @@ async function initializeCalendarPage(tasksCollectionRef, meetingsCollectionRef,
     deleteMeetingBtn.addEventListener('click', handleDeleteMeeting);
     meetingForm.addEventListener('submit', handleMeetingFormSubmit);
     editMeetingBtn.addEventListener('click', () => setMeetingModalMode(true));
+
+    // Fechar modal de reunião ao clicar fora
+    meetingModal.addEventListener('click', (event) => {
+        if (event.target === meetingModal) {
+            closeMeetingModal();
+        }
+    });
 
     meetingRealizadaBtn.addEventListener('click', () => {
         meetingStatusOptions.classList.toggle('hidden');

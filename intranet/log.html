@@ -1,18 +1,23 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="dark">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>South Sea - Log do Sistema</title>
     <link rel="icon" href="https://www.southsea.com.br/newimag/Ellipse%209.svg">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Configure Tailwind CSS for dark mode
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="log.css">
     <style>
         body { font-family: 'Inter', sans-serif; overflow-y: hidden; }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-200">
+<body class="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200">
 
     <div class="flex h-screen">
         <div id="sidebar-container"></div>
@@ -22,19 +27,19 @@
             <div id="header-container"></div>
 
             <div class="flex-grow p-4 md:p-6 lg:p-8 flex flex-col overflow-hidden">
-                <h1 class="text-2xl font-bold mb-4 text-white flex-shrink-0">Log do Sistema</h1>
-                <div class="bg-gray-800 rounded-lg shadow-md flex-grow overflow-hidden">
+                <h1 class="text-2xl font-bold mb-4 text-gray-900 dark:text-white flex-shrink-0">Log do Sistema</h1>
+                <div class="bg-gray-100 dark:bg-gray-800 rounded-lg shadow-md flex-grow overflow-hidden">
                     <div class="overflow-y-auto h-full custom-scrollbar">
                         <table class="w-full">
-                            <thead class="bg-gray-700 sticky top-0">
+                            <thead class="bg-gray-200 dark:bg-gray-700 sticky top-0">
                                 <tr>
-                                    <th class="p-3 text-left text-sm font-semibold text-gray-300 tracking-wide">Timestamp</th>
-                                    <th class="p-3 text-left text-sm font-semibold text-gray-300 tracking-wide">Usuário</th>
-                                    <th class="p-3 text-left text-sm font-semibold text-gray-300 tracking-wide">Ação</th>
-                                    <th class="p-3 text-left text-sm font-semibold text-gray-300 tracking-wide">Detalhes</th>
+                                    <th class="p-3 text-left text-sm font-semibold text-gray-600 dark:text-gray-300 tracking-wide">Timestamp</th>
+                                    <th class="p-3 text-left text-sm font-semibold text-gray-600 dark:text-gray-300 tracking-wide">Usuário</th>
+                                    <th class="p-3 text-left text-sm font-semibold text-gray-600 dark:text-gray-300 tracking-wide">Ação</th>
+                                    <th class="p-3 text-left text-sm font-semibold text-gray-600 dark:text-gray-300 tracking-wide">Detalhes</th>
                                 </tr>
                             </thead>
-                            <tbody id="log-table-body" class="divide-y divide-gray-700">
+                            <tbody id="log-table-body" class="divide-y divide-gray-200 dark:divide-gray-700">
                                 <!-- Log rows will be injected here -->
                             </tbody>
                         </table>

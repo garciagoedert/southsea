@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="dark">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +9,12 @@
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Configure Tailwind CSS for dark mode
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -41,7 +47,7 @@
         }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-200">
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
 
     <div id="kanban-container" class="flex h-screen">
         <div id="sidebar-container"></div>
@@ -61,13 +67,13 @@
                 </div>
 
                 <!-- Filters -->
-                <div class="bg-gray-800 p-4 rounded-lg mb-6 flex flex-col lg:flex-row items-center gap-4 shadow-md">
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg mb-6 flex flex-col lg:flex-row items-center gap-4 shadow-md">
                      <div class="relative flex-grow w-full">
-                        <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                        <input type="text" id="searchInput" placeholder="Buscar por empresa ou setor..." class="w-full bg-gray-700 border border-gray-600 rounded-lg py-2 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500"></i>
+                        <input type="text" id="searchInput" placeholder="Buscar por empresa ou setor..." class="w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg py-2 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                     <div class="flex flex-col sm:flex-row w-full lg:w-auto gap-2 flex-shrink-0">
-                        <select id="priorityFilter" class="w-full sm:w-auto bg-gray-700 border border-gray-600 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-label="Filter by priority">
+                        <select id="priorityFilter" class="w-full sm:w-auto bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-label="Filter by priority">
                             <option value="">Todas as Prioridades</option>
                             <option value="5">Máxima (5)</option>
                             <option value="4">Alta (4)</option>
@@ -75,14 +81,14 @@
                             <option value="2">Baixa (2)</option>
                             <option value="1">Mínima (1)</option>
                         </select>
-                        <select id="tagFilter" class="w-full sm:w-auto bg-gray-700 border border-gray-600 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-label="Filter by tag">
+                        <select id="tagFilter" class="w-full sm:w-auto bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-label="Filter by tag">
                             <option value="">Todas as Tags</option>
                         </select>
-                        <select id="userFilter" class="w-full sm:w-auto bg-gray-700 border border-gray-600 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-label="Filter by user">
+                        <select id="userFilter" class="w-full sm:w-auto bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-label="Filter by user">
                             <option value="">Todos os Usuários</option>
                         </select>
-                        <button id="quickMessagesBtn" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-500 font-semibold py-2 px-3 rounded-lg transition-all duration-200 flex-shrink-0">Mensagens Rápidas</button>
-                        <button id="resetFiltersBtn" class="w-full sm:w-auto bg-teal-600 hover:bg-teal-500 font-semibold py-2 px-3 rounded-lg transition-all duration-200 flex-shrink-0">Limpar</button>
+                        <button id="quickMessagesBtn" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2 px-3 rounded-lg transition-all duration-200 flex-shrink-0">Mensagens Rápidas</button>
+                        <button id="resetFiltersBtn" class="w-full sm:w-auto bg-teal-600 hover:bg-teal-500 text-white font-semibold py-2 px-3 rounded-lg transition-all duration-200 flex-shrink-0">Limpar</button>
                     </div>
                 </div>
 
@@ -96,8 +102,8 @@
 
     <!-- Add/Edit Prospect Modal -->
     <div id="formModal" class="fixed inset-0 bg-black bg-opacity-70 z-50 hidden items-center justify-center sm:p-4">
-        <div class="bg-gray-800 w-full h-full sm:h-auto sm:rounded-xl shadow-2xl sm:max-w-3xl sm:max-h-[90vh] flex flex-col">
-            <div class="flex justify-between items-center p-4 border-b border-gray-700 gap-4">
+        <div class="bg-white dark:bg-gray-800 w-full h-full sm:h-auto sm:rounded-xl shadow-2xl sm:max-w-3xl sm:max-h-[90vh] flex flex-col">
+            <div class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700 gap-4">
                 <div class="flex items-center gap-4">
                     <h2 id="modalTitle" class="text-xl font-bold">Adicionar Novo Prospect</h2>
                 </div>
@@ -107,16 +113,16 @@
                 <input type="hidden" id="prospectId">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="form-group">
-                        <label for="empresa" class="block text-sm font-medium text-gray-300 mb-1">Empresa *</label>
-                        <input type="text" id="empresa" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        <label for="empresa" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Empresa *</label>
+                        <input type="text" id="empresa" class="w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                     </div>
                     <div class="form-group">
-                        <label for="setor" class="block text-sm font-medium text-gray-300 mb-1">Setor *</label>
-                        <input type="text" id="setor" placeholder="Ex: Imobiliário" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        <label for="setor" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Setor *</label>
+                        <input type="text" id="setor" placeholder="Ex: Imobiliário" class="w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                     </div>
                     <div class="form-group">
-                        <label for="prioridade" class="block text-sm font-medium text-gray-300 mb-1">Prioridade *</label>
-                        <select id="prioridade" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        <label for="prioridade" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Prioridade *</label>
+                        <select id="prioridade" class="w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                             <option value="">Selecione</option>
                             <option value="5">5 - Máxima 🚀</option>
                             <option value="4">4 - Alta 🔥</option>
@@ -126,67 +132,67 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="ticketEstimado" class="block text-sm font-medium text-gray-300 mb-1">Ticket Estimado (R$)</label>
-                        <input type="number" id="ticketEstimado" placeholder="15000" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <label for="ticketEstimado" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Ticket Estimado (R$)</label>
+                        <input type="number" id="ticketEstimado" placeholder="15000" class="w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                     <div class="form-group">
-                        <label for="responsavel" class="block text-sm font-medium text-gray-300 mb-1">Nome do responsável</label>
-                        <input type="text" id="responsavel" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <label for="responsavel" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nome do responsável</label>
+                        <input type="text" id="responsavel" class="w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                      <div class="form-group">
-                        <label for="telefone" class="block text-sm font-medium text-gray-300 mb-1">Telefone</label>
-                        <input type="text" id="telefone" placeholder="(48) 99999-9999" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <label for="telefone" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Telefone</label>
+                        <input type="text" id="telefone" placeholder="(48) 99999-9999" class="w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <a id="whatsappLink" href="#" target="_blank" class="hidden w-full mt-2 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg text-sm items-center justify-center gap-2">
                             <i class="fab fa-whatsapp"></i>
                             <span>Chamar no WhatsApp</span>
                         </a>
                     </div>
                     <div class="form-group">
-                        <label for="email" class="block text-sm font-medium text-gray-300 mb-1">Email</label>
-                        <input type="email" id="email" placeholder="contato@empresa.com" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
+                        <input type="email" id="email" placeholder="contato@empresa.com" class="w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                     <div class="form-group">
-                        <label for="cpf" class="block text-sm font-medium text-gray-300 mb-1">CPF</label>
-                        <input type="text" id="cpf" placeholder="000.000.000-00" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <label for="cpf" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">CPF</label>
+                        <input type="text" id="cpf" placeholder="000.000.000-00" class="w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                     <div class="form-group">
-                        <label for="cnpj" class="block text-sm font-medium text-gray-300 mb-1">CNPJ</label>
-                        <input type="text" id="cnpj" placeholder="00.000.000/0000-00" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <label for="cnpj" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">CNPJ</label>
+                        <input type="text" id="cnpj" placeholder="00.000.000/0000-00" class="w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                     <div class="form-group md:col-span-2">
-                        <label for="endereco" class="block text-sm font-medium text-gray-300 mb-1">Endereço</label>
+                        <label for="endereco" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Endereço</label>
                         <div class="flex items-center">
-                            <input type="text" id="endereco" placeholder="Rua, Número, Bairro, Cidade" class="w-full bg-gray-700 border border-gray-600 rounded-l-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <input type="text" id="endereco" placeholder="Rua, Número, Bairro, Cidade" class="w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-l-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
                             <button type="button" id="openMapBtn" title="Abrir no Google Maps" class="bg-primary hover:bg-primary-dark text-white font-bold p-2 rounded-r-lg">
                                 <i class="fas fa-map-marker-alt"></i>
                             </button>
                         </div>
                     </div>
                     <div class="form-group md:col-span-2">
-                        <label for="redesSociais" class="block text-sm font-medium text-gray-300 mb-1">Redes Sociais</label>
-                        <textarea id="redesSociais" rows="2" placeholder="Links do Instagram, Facebook, etc." class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 custom-scrollbar"></textarea>
+                        <label for="redesSociais" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Redes Sociais</label>
+                        <textarea id="redesSociais" rows="2" placeholder="Links do Instagram, Facebook, etc." class="w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 custom-scrollbar"></textarea>
                     </div>
                     <div class="form-group md:col-span-2">
-                        <label for="siteAtual" class="block text-sm font-medium text-gray-300 mb-1">Site Atual</label>
-                        <input type="text" id="siteAtual" placeholder="empresa.com.br" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <label for="siteAtual" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Site Atual</label>
+                        <input type="text" id="siteAtual" placeholder="empresa.com.br" class="w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                     <div class="form-group md:col-span-2">
-                        <label for="observacoes" class="block text-sm font-medium text-gray-300 mb-1">Observações</label>
-                        <textarea id="observacoes" rows="3" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 custom-scrollbar"></textarea>
+                        <label for="observacoes" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Observações</label>
+                        <textarea id="observacoes" rows="3" class="w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 custom-scrollbar"></textarea>
                     </div>
                     <div class="form-group md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-300 mb-2">Log de Contatos</label>
-                        <div id="contactLogContainer" class="max-h-40 overflow-y-auto custom-scrollbar bg-gray-900/50 p-3 rounded-lg space-y-3 mb-3 border border-gray-700">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Log de Contatos</label>
+                        <div id="contactLogContainer" class="max-h-40 overflow-y-auto custom-scrollbar bg-gray-200 dark:bg-gray-900/50 p-3 rounded-lg space-y-3 mb-3 border border-gray-300 dark:border-gray-700">
                             <!-- Log entries will be injected here -->
                         </div>
                         <div class="flex gap-2">
-                            <textarea id="newContactLog" rows="2" placeholder="Adicionar novo contato..." class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 custom-scrollbar"></textarea>
+                            <textarea id="newContactLog" rows="2" placeholder="Adicionar novo contato..." class="w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 custom-scrollbar"></textarea>
                             <button type="button" id="addContactLogBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg self-start">Adicionar</button>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="pagina" class="block text-sm font-medium text-gray-300 mb-1">Página</label>
-                        <select id="pagina" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <label for="pagina" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Página</label>
+                        <select id="pagina" class="w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
                             <option value="Prospecção">Prospecção</option>
                             <option value="WhatsApp">WhatsApp</option>
                             <option value="Produção">Produção</option>
@@ -219,18 +225,18 @@
 
     <!-- Import Modal -->
     <div id="importModal" class="fixed inset-0 bg-black bg-opacity-70 z-50 hidden items-center justify-center p-4">
-        <div class="bg-gray-800 rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col">
-            <div class="flex justify-between items-center p-4 border-b border-gray-700">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col">
+            <div class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700">
                 <h2 class="text-xl font-bold">Importar Leads</h2>
-                <button id="closeImportModalBtn" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+                <button id="closeImportModalBtn" class="text-gray-400 hover:text-gray-800 dark:hover:text-white text-2xl">&times;</button>
             </div>
             <div class="p-6 overflow-y-auto custom-scrollbar">
-                <p class="text-gray-400 mb-4">Copie e cole os dados da sua planilha (formato CSV). A primeira linha deve ser o cabeçalho e as colunas devem estar na seguinte ordem:</p>
-                <code class="block bg-gray-900 text-gray-300 p-2 rounded-md text-xs mb-4">Empresa,Setor,Prioridade,Ticket Estimado,Telefone,Email,CPF,CNPJ,Endereço,Redes Sociais,Site,Observações</code>
-                <textarea id="csvData" rows="10" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 custom-scrollbar" placeholder="Cole seus dados aqui..."></textarea>
+                <p class="text-gray-600 dark:text-gray-400 mb-4">Copie e cole os dados da sua planilha (formato CSV). A primeira linha deve ser o cabeçalho e as colunas devem estar na seguinte ordem:</p>
+                <code class="block bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-300 p-2 rounded-md text-xs mb-4">Empresa,Setor,Prioridade,Ticket Estimado,Telefone,Email,CPF,CNPJ,Endereço,Redes Sociais,Site,Observações</code>
+                <textarea id="csvData" rows="10" class="w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 custom-scrollbar" placeholder="Cole seus dados aqui..."></textarea>
             </div>
-            <div class="flex justify-end gap-3 p-6 border-t border-gray-700">
-                <button type="button" id="cancelImportBtn" class="bg-gray-600 hover:bg-gray-500 font-semibold py-2 px-4 rounded-lg">Cancelar</button>
+            <div class="flex justify-end gap-3 p-6 border-t border-gray-200 dark:border-gray-700">
+                <button type="button" id="cancelImportBtn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white font-semibold py-2 px-4 rounded-lg">Cancelar</button>
                 <button type="button" id="processImportBtn" class="bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-lg">Importar</button>
             </div>
         </div>
@@ -238,11 +244,11 @@
 
     <!-- Confirmation Modal -->
     <div id="confirmModal" class="fixed inset-0 bg-black bg-opacity-70 z-50 hidden items-center justify-center p-4">
-        <div class="bg-gray-800 rounded-lg shadow-xl w-full max-w-sm p-6 text-center">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-sm p-6 text-center">
             <h3 class="text-lg font-bold mb-2">Confirmar Ação</h3>
-            <p id="confirmMessage" class="text-gray-300 mb-6">Você tem certeza?</p>
+            <p id="confirmMessage" class="text-gray-600 dark:text-gray-300 mb-6">Você tem certeza?</p>
             <div class="flex justify-center gap-4">
-                <button id="cancelConfirmBtn" class="bg-gray-600 hover:bg-gray-500 font-semibold py-2 px-6 rounded-lg">Cancelar</button>
+                <button id="cancelConfirmBtn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white font-semibold py-2 px-6 rounded-lg">Cancelar</button>
                 <button id="confirmActionBtn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg">Confirmar</button>
             </div>
         </div>
@@ -250,10 +256,10 @@
 
     <!-- Edit Kanban Modal -->
     <div id="editKanbanModal" class="fixed inset-0 bg-black bg-opacity-70 z-50 hidden items-center justify-center sm:p-4">
-        <div class="bg-gray-800 w-full h-full sm:h-auto sm:rounded-xl shadow-2xl sm:max-w-2xl sm:max-h-[90vh] flex flex-col">
-            <div class="flex justify-between items-center p-4 border-b border-gray-700">
+        <div class="bg-white dark:bg-gray-800 w-full h-full sm:h-auto sm:rounded-xl shadow-2xl sm:max-w-2xl sm:max-h-[90vh] flex flex-col">
+            <div class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700">
                 <h2 class="text-xl font-bold">Editar Colunas do Kanban</h2>
-                <button id="closeEditModalBtn" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+                <button id="closeEditModalBtn" class="text-gray-400 hover:text-gray-800 dark:hover:text-white text-2xl">&times;</button>
             </div>
             <div class="p-6 overflow-y-auto">
                 <div id="kanbanColumnsContainer" class="space-y-3">
@@ -261,8 +267,8 @@
                 </div>
                 <button id="addColumnBtn" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg w-full">Adicionar Coluna</button>
             </div>
-            <div class="flex justify-end gap-3 p-6 border-t border-gray-700">
-                <button type="button" id="cancelEditModalBtn" class="bg-gray-600 hover:bg-gray-500 font-semibold py-2 px-4 rounded-lg">Cancelar</button>
+            <div class="flex justify-end gap-3 p-6 border-t border-gray-200 dark:border-gray-700">
+                <button type="button" id="cancelEditModalBtn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white font-semibold py-2 px-4 rounded-lg">Cancelar</button>
                 <button type="button" id="saveKanbanConfigBtn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg">Salvar Alterações</button>
             </div>
         </div>
@@ -270,38 +276,38 @@
 
     <!-- Quick Messages Modal -->
     <div id="quickMessagesModal" class="fixed inset-0 bg-black bg-opacity-70 z-50 hidden items-center justify-center p-4">
-        <div class="bg-gray-800 rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col">
             <!-- Modal Header -->
-            <div class="flex justify-between items-center p-4 border-b border-gray-700">
+            <div class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700">
                 <h2 class="text-xl font-bold">Mensagens Rápidas</h2>
-                <button id="closeQuickMessagesModalBtn" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+                <button id="closeQuickMessagesModalBtn" class="text-gray-400 hover:text-gray-800 dark:hover:text-white text-2xl">&times;</button>
             </div>
 
             <!-- Modal Body -->
             <div class="p-6 flex-1 overflow-y-auto custom-scrollbar">
                 <!-- Add/Edit Form (initially hidden) -->
-                <form id="messageForm" class="hidden mb-6 bg-gray-900/50 p-4 rounded-lg">
+                <form id="messageForm" class="hidden mb-6 bg-gray-100 dark:bg-gray-900/50 p-4 rounded-lg">
                     <input type="hidden" id="messageId">
                     <h3 id="messageFormTitle" class="text-lg font-semibold mb-3">Adicionar Nova Mensagem</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="form-group">
-                            <label for="messageTitle" class="block text-sm font-medium text-gray-300 mb-1">Título</label>
-                            <input type="text" id="messageTitle" placeholder="Ex: Apresentação Inicial" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                            <label for="messageTitle" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Título</label>
+                            <input type="text" id="messageTitle" placeholder="Ex: Apresentação Inicial" class="w-full bg-gray-200 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                         </div>
                         <div class="form-group">
-                            <label for="messageType" class="block text-sm font-medium text-gray-300 mb-1">Tipo</label>
-                            <select id="messageType" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                            <label for="messageType" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tipo</label>
+                            <select id="messageType" class="w-full bg-gray-200 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                                 <option value="Início de Conversa">Início de Conversa</option>
                                 <option value="Follow-up">Follow-up</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group mt-4">
-                        <label for="messageContent" class="block text-sm font-medium text-gray-300 mb-1">Conteúdo da Mensagem</label>
-                        <textarea id="messageContent" rows="5" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 custom-scrollbar" required></textarea>
+                        <label for="messageContent" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Conteúdo da Mensagem</label>
+                        <textarea id="messageContent" rows="5" class="w-full bg-gray-200 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 custom-scrollbar" required></textarea>
                     </div>
                     <div class="flex justify-end gap-3 mt-4">
-                        <button type="button" id="cancelMessageFormBtn" class="bg-gray-600 hover:bg-gray-500 font-semibold py-2 px-4 rounded-lg">Cancelar</button>
+                        <button type="button" id="cancelMessageFormBtn" class="bg-gray-300 hover:bg-gray-400 text-gray-800 dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white font-semibold py-2 px-4 rounded-lg">Cancelar</button>
                         <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg">Salvar</button>
                     </div>
                 </form>
@@ -309,9 +315,9 @@
                 <!-- Message List -->
                 <div class="flex justify-between items-center mb-4">
                     <!-- Tabs -->
-                    <div class="flex border-b border-gray-700">
-                        <button data-tab="Início de Conversa" class="tab-btn text-white bg-gray-700 py-2 px-4 rounded-t-lg">Início de Conversa</button>
-                        <button data-tab="Follow-up" class="tab-btn text-gray-400 py-2 px-4">Follow-up</button>
+                    <div class="flex border-b border-gray-200 dark:border-gray-700">
+                        <button data-tab="Início de Conversa" class="tab-btn text-gray-800 dark:text-white bg-gray-200 dark:bg-gray-700 py-2 px-4 rounded-t-lg">Início de Conversa</button>
+                        <button data-tab="Follow-up" class="tab-btn text-gray-500 dark:text-gray-400 py-2 px-4">Follow-up</button>
                     </div>
                     <button id="addNewMessageBtn" class="bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2">
                         <i class="fas fa-plus"></i>
@@ -577,18 +583,18 @@
             const filteredMessages = quickMessages.filter(msg => msg.type === activeMessageType);
 
             if (filteredMessages.length === 0) {
-                messagesListContainer.innerHTML = `<div class="text-center text-gray-500 p-4">Nenhuma mensagem encontrada para esta categoria.</div>`;
+                messagesListContainer.innerHTML = `<div class="text-center text-gray-500 dark:text-gray-400 p-4">Nenhuma mensagem encontrada para esta categoria.</div>`;
                 return;
             }
 
             filteredMessages.forEach(msg => {
                 const messageEl = document.createElement('div');
-                messageEl.className = 'bg-gray-900 p-3 rounded-lg flex justify-between items-start gap-4 cursor-grab';
+                messageEl.className = 'bg-white dark:bg-gray-900 p-3 rounded-lg flex justify-between items-start gap-4 cursor-grab shadow';
                 messageEl.dataset.id = msg.id; // Set data-id for sortable
                 messageEl.innerHTML = `
                     <div class="flex-1">
-                        <h4 class="font-bold text-white">${msg.title}</h4>
-                        <p class="text-gray-400 text-sm mt-1 whitespace-pre-wrap">${msg.content}</p>
+                        <h4 class="font-bold text-gray-800 dark:text-white">${msg.title}</h4>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm mt-1 whitespace-pre-wrap">${msg.content}</p>
                     </div>
                     <div class="flex flex-col sm:flex-row gap-2 flex-shrink-0">
                         <button class="copy-btn bg-sky-600 hover:bg-sky-700 text-white font-semibold py-1 px-3 rounded-lg text-xs" data-content="${escape(msg.content)}">Copiar</button>
@@ -685,7 +691,7 @@
                 
                 let contentHTML;
                 if (isMobile) {
-                    columnEl.className = 'bg-gray-800 rounded-lg flex flex-col';
+                    columnEl.className = 'bg-gray-200 dark:bg-gray-800 rounded-lg flex flex-col';
                     contentHTML = `
                         <div class="overflow-x-auto custom-scrollbar pb-3">
                             <div id="${columnId}" data-status="${status}" class="column-content flex flex-nowrap space-x-3 p-2 min-h-[120px] pr-2">
@@ -694,7 +700,7 @@
                         </div>
                     `;
                 } else {
-                    columnEl.className = 'bg-gray-800 rounded-lg flex flex-col overflow-hidden';
+                    columnEl.className = 'bg-gray-200 dark:bg-gray-800 rounded-lg flex flex-col overflow-hidden';
                     contentHTML = `
                         <div id="${columnId}" data-status="${status}" class="column-content flex-grow p-2 space-y-3 rounded-md custom-scrollbar overflow-y-auto">
                            <!-- Cards will be injected here -->
@@ -705,7 +711,7 @@
                 columnEl.innerHTML = `
                     <div class="flex justify-between items-center p-3 flex-shrink-0">
                         <h3 class="font-bold">${status}</h3>
-                        <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2 py-1 rounded-full">${columnProspects.length}</span>
+                        <span class="bg-gray-300 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs font-semibold px-2 py-1 rounded-full">${columnProspects.length}</span>
                     </div>
                     ${contentHTML}
                 `;
@@ -729,7 +735,7 @@
         function createProspectCard(prospect, isMobile = false) {
             const card = document.createElement('div');
             const mobileClasses = isMobile ? 'w-72 flex-shrink-0' : '';
-            card.className = `prospect-card bg-gray-900 p-3 rounded-lg shadow-md cursor-pointer border-l-4 transition-all duration-200 hover:shadow-xl hover:bg-gray-700 ${mobileClasses}`;
+            card.className = `prospect-card bg-white dark:bg-gray-900 p-3 rounded-lg shadow-md cursor-pointer border-l-4 transition-all duration-200 hover:shadow-xl hover:bg-gray-100 dark:hover:bg-gray-700 ${mobileClasses}`;
             card.style.borderLeftColor = getPriorityColor(prospect.prioridade);
             card.draggable = true;
             card.dataset.id = prospect.id;
@@ -744,14 +750,14 @@
                 </div>
                 <div class="flex items-center gap-2 mb-2 flex-wrap">
                     <span class="text-xs font-semibold px-2 py-0.5 rounded-full ${sectorColor.bg} ${sectorColor.text}">${prospect.setor}</span>
-                    <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-gray-700 text-gray-300">P${prospect.prioridade}</span>
+                    <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300">P${prospect.prioridade}</span>
                 </div>
                 <div class="flex items-center gap-1 mb-3 flex-wrap">
                     ${tagsHTML}
                 </div>
-                ${prospect.origemLead ? `<p class="text-xs text-gray-400 mb-2"><i class="fas fa-sign-in-alt mr-1"></i> ${prospect.origemLead}</p>` : ''}
-                <p class="text-sm text-green-400 font-semibold mb-2">R$ ${prospect.ticketEstimado?.toLocaleString('pt-BR') || 'N/A'}</p>
-                ${prospect.createdBy ? `<p class="text-xs text-gray-500 mt-2 pt-2 border-t border-gray-700"><i class="fas fa-user-plus mr-1"></i> ${prospect.createdBy}</p>` : ''}
+                ${prospect.origemLead ? `<p class="text-xs text-gray-500 dark:text-gray-400 mb-2"><i class="fas fa-sign-in-alt mr-1"></i> ${prospect.origemLead}</p>` : ''}
+                <p class="text-sm text-green-600 dark:text-green-400 font-semibold mb-2">R$ ${prospect.ticketEstimado?.toLocaleString('pt-BR') || 'N/A'}</p>
+                ${prospect.createdBy ? `<p class="text-xs text-gray-400 dark:text-gray-500 mt-2 pt-2 border-t border-gray-200 dark:border-gray-700"><i class="fas fa-user-plus mr-1"></i> ${prospect.createdBy}</p>` : ''}
             `;
             
             card.addEventListener('click', () => {
@@ -777,13 +783,13 @@
 
         function createStatCard(label, value, icon, iconColor) {
             return `
-                <div class="bg-gray-800 p-4 rounded-lg flex items-center gap-4 shadow-md">
-                    <div class="bg-gray-700 p-3 rounded-full">
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg flex items-center gap-4 shadow-md">
+                    <div class="bg-gray-100 dark:bg-gray-700 p-3 rounded-full">
                         <i class="fas ${icon} fa-lg ${iconColor}"></i>
                     </div>
                     <div>
                         <div class="text-2xl font-bold">${value}</div>
-                        <div class="text-sm text-gray-400">${label}</div>
+                        <div class="text-sm text-gray-500 dark:text-gray-400">${label}</div>
                     </div>
                 </div>
             `;
@@ -873,9 +879,9 @@
                     const date = log.timestamp ? log.timestamp.toDate().toLocaleString('pt-BR') : 'Data pendente';
                     const author = log.author || 'Sistema';
                     return `
-                        <div class="bg-gray-700/50 p-2 rounded-md">
-                            <p class="text-sm text-gray-300 whitespace-pre-wrap">${log.description}</p>
-                            <p class="text-xs text-gray-500 text-right mt-1">${author} - ${date}</p>
+                        <div class="bg-gray-100 dark:bg-gray-700/50 p-2 rounded-md">
+                            <p class="text-sm text-gray-800 dark:text-gray-300 whitespace-pre-wrap">${log.description}</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-500 text-right mt-1">${author} - ${date}</p>
                         </div>
                     `;
                 }).join('');
@@ -1242,12 +1248,12 @@
                 checkbox.type = 'checkbox';
                 checkbox.id = `tag-${tag}`;
                 checkbox.value = tag;
-                checkbox.className = 'h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 bg-gray-700';
+                checkbox.className = 'h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 bg-gray-100 dark:bg-gray-700';
                 
                 const label = document.createElement('label');
                 label.htmlFor = `tag-${tag}`;
                 label.textContent = tag;
-                label.className = 'ml-2 block text-sm text-gray-300';
+                label.className = 'ml-2 block text-sm text-gray-700 dark:text-gray-300';
 
                 checkboxContainer.appendChild(checkbox);
                 checkboxContainer.appendChild(label);
@@ -1372,17 +1378,17 @@
                 messageForm.addEventListener('submit', handleMessageFormSubmit);
 
                 tabButtons.forEach(button => {
-                    button.addEventListener('click', () => {
-                        activeMessageType = button.dataset.tab;
-                        tabButtons.forEach(btn => {
-                            btn.classList.remove('text-white', 'bg-gray-700');
-                            btn.classList.add('text-gray-400');
+                        button.addEventListener('click', () => {
+                            activeMessageType = button.dataset.tab;
+                            tabButtons.forEach(btn => {
+                                btn.classList.remove('text-gray-800', 'dark:text-white', 'bg-gray-200', 'dark:bg-gray-700');
+                                btn.classList.add('text-gray-500', 'dark:text-gray-400');
+                            });
+                            button.classList.add('text-gray-800', 'dark:text-white', 'bg-gray-200', 'dark:bg-gray-700');
+                            button.classList.remove('text-gray-500', 'dark:text-gray-400');
+                            renderQuickMessages();
                         });
-                        button.classList.add('text-white', 'bg-gray-700');
-                        button.classList.remove('text-gray-400');
-                        renderQuickMessages();
                     });
-                });
 
                 messagesListContainer.addEventListener('click', (e) => {
                     const target = e.target;

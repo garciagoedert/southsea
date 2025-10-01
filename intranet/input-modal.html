@@ -1,0 +1,18 @@
+<!-- Input Modal -->
+<div id="inputModal" class="fixed inset-0 bg-black bg-opacity-70 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-md text-gray-900 dark:text-gray-200">
+        <div class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700">
+            <h2 id="inputModalTitle" class="text-xl font-bold">Input</h2>
+            <button id="closeInputModalBtn" class="text-gray-400 hover:text-gray-800 dark:hover:text-white text-2xl">&times;</button>
+        </div>
+        <div class="p-6">
+            <label id="inputModalLabel" for="inputModalField" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Valor:</label>
+            <input type="text" id="inputModalField" class="w-full bg-gray-200 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <p id="inputModalError" class="text-red-500 text-sm mt-1 hidden"></p>
+        </div>
+        <div class="flex justify-end gap-3 p-6 bg-gray-50 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 rounded-b-xl">
+            <button type="button" id="cancelInputModalBtn" class="bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 font-semibold py-2 px-4 rounded-lg">Cancelar</button>
+            <button type="button" id="confirmInputModalBtn" class="bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-lg">Confirmar</button>
+        </div>
+    </div>
+</div>

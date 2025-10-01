@@ -9,14 +9,18 @@
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Configure Tailwind CSS for dark mode
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="log.css">
-
     <style>
         /* Custom Styles */
         body {
@@ -45,7 +49,7 @@
         }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-200">
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
 
     <div id="main-container" class="flex h-screen">
         <div id="sidebar-container"></div>
@@ -62,40 +66,40 @@
                 <h1 class="text-3xl font-bold mb-6 flex-shrink-0">Clientes Fechados</h1>
 
                 <!-- Filters and Search -->
-                <div class="bg-gray-800 p-4 rounded-lg mb-6 shadow-md flex-shrink-0">
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg mb-6 shadow-md flex-shrink-0">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                         <!-- Search Input -->
                         <div class="relative flex-grow">
-                            <label for="searchInput" class="block text-sm font-medium text-gray-300 mb-1">Buscar</label>
-                            <i class="fas fa-search absolute left-3 bottom-2.5 text-gray-400"></i>
-                            <input type="text" id="searchInput" placeholder="Empresa ou setor..." class="w-full bg-gray-700 border border-gray-600 rounded-lg py-2 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <label for="searchInput" class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Buscar</label>
+                            <i class="fas fa-search absolute left-3 bottom-2.5 text-gray-400 dark:text-gray-400"></i>
+                            <input type="text" id="searchInput" placeholder="Empresa ou setor..." class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg py-2 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                         <!-- CS Filter -->
                         <div>
-                            <label for="csFilterContainer" class="block text-sm font-medium text-gray-300 mb-1">CS Responsável</label>
-                            <button id="csFilterContainer" class="relative w-full bg-gray-700 border border-gray-600 rounded-lg flex items-center justify-between p-2 min-h-[42px] cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500" tabindex="0">
+                            <label for="csFilterContainer" class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">CS Responsável</label>
+                            <button id="csFilterContainer" class="relative w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg flex items-center justify-between p-2 min-h-[42px] cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500" tabindex="0">
                                 <div class="flex items-center gap-1 overflow-hidden">
                                     <div id="csFilterTags" class="user-filter-tags"></div>
                                     <span id="csFilterPlaceholder" class="user-filter-placeholder truncate">Todos</span>
                                 </div>
-                                <i class="fas fa-chevron-down text-gray-400"></i>
+                                <i class="fas fa-chevron-down text-gray-400 dark:text-gray-400"></i>
                             </button>
                         </div>
                         <!-- Production User Filter -->
                         <div>
-                            <label for="prodFilterContainer" class="block text-sm font-medium text-gray-300 mb-1">Usuário Produção</label>
-                            <button id="prodFilterContainer" class="relative w-full bg-gray-700 border border-gray-600 rounded-lg flex items-center justify-between p-2 min-h-[42px] cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500" tabindex="0">
+                            <label for="prodFilterContainer" class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Usuário Produção</label>
+                            <button id="prodFilterContainer" class="relative w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg flex items-center justify-between p-2 min-h-[42px] cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500" tabindex="0">
                                 <div class="flex items-center gap-1 overflow-hidden">
                                     <div id="prodFilterTags" class="user-filter-tags"></div>
                                     <span id="prodFilterPlaceholder" class="user-filter-placeholder truncate">Todos</span>
                                 </div>
-                                <i class="fas fa-chevron-down text-gray-400"></i>
+                                <i class="fas fa-chevron-down text-gray-400 dark:text-gray-400"></i>
                             </button>
                         </div>
                         <!-- Service Area Filter -->
                         <div>
-                            <label for="serviceAreaFilter" class="block text-sm font-medium text-gray-300 mb-1">Área de Serviço</label>
-                            <select id="serviceAreaFilter" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <label for="serviceAreaFilter" class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Área de Serviço</label>
+                            <select id="serviceAreaFilter" class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 <option value="">Todas</option>
                                 <!-- Options will be populated by JS -->
                             </select>
@@ -104,30 +108,30 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
                         <!-- Service Filter -->
                         <div>
-                            <label for="serviceFilter" class="block text-sm font-medium text-gray-300 mb-1">Serviço</label>
-                            <div id="serviceFilterContainer" class="relative w-full bg-gray-700 border border-gray-600 rounded-lg flex items-center justify-between p-2 min-h-[42px] cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500" data-enabled="false" tabindex="0">
+                            <label for="serviceFilter" class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Serviço</label>
+                            <div id="serviceFilterContainer" class="relative w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg flex items-center justify-between p-2 min-h-[42px] cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500" data-enabled="false" tabindex="0">
                                 <div class="flex items-center gap-1 overflow-hidden">
                                     <div id="serviceFilterTags" class="user-filter-tags"></div>
                                     <span id="serviceFilterPlaceholder" class="user-filter-placeholder truncate">Selecione uma área</span>
                                 </div>
-                                <i class="fas fa-chevron-down text-gray-400"></i>
+                                <i class="fas fa-chevron-down text-gray-400 dark:text-gray-400"></i>
                             </div>
                         </div>
                         <!-- Column Visibility Filter -->
                         <div class="lg:col-span-2 flex flex-col">
-                            <label for="columnVisibilityContainer" class="block text-sm font-medium text-gray-300 mb-1">Exibir Seções</label>
-                            <div id="columnVisibilityContainer" class="relative w-full bg-gray-700 border border-gray-600 rounded-lg flex items-center justify-between p-2 min-h-[42px] cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500" tabindex="0">
+                            <label for="columnVisibilityContainer" class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Exibir Seções</label>
+                            <div id="columnVisibilityContainer" class="relative w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg flex items-center justify-between p-2 min-h-[42px] cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500" tabindex="0">
                                 <div class="flex items-center gap-1 overflow-hidden">
                                     <div id="columnFilterTags" class="user-filter-tags"></div>
                                     <span id="columnFilterPlaceholder" class="user-filter-placeholder truncate">Todas</span>
                                 </div>
-                                <i class="fas fa-chevron-down text-gray-400"></i>
+                                <i class="fas fa-chevron-down text-gray-400 dark:text-gray-400"></i>
                             </div>
                         </div>
                         <!-- Action Buttons -->
                         <div class="flex items-end gap-2">
                             <button id="applyFiltersBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg h-full">Aplicar</button>
-                            <button id="clearFiltersBtn" class="w-full bg-gray-600 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-lg h-full">Limpar</button>
+                            <button id="clearFiltersBtn" class="w-full bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 text-gray-800 dark:text-white font-bold py-2 px-4 rounded-lg h-full">Limpar</button>
                         </div>
                     </div>
                 </div>
@@ -135,24 +139,24 @@
                 <!-- Board Columns -->
                 <div id="board-columns-container" class="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1 min-h-0">
                     <!-- New Column -->
-                    <div id="new-column" class="flex flex-col bg-gray-800/50 rounded-lg overflow-hidden">
-                        <h2 class="text-lg font-bold p-4 border-b border-gray-700 flex-shrink-0">Novos</h2>
+                    <div id="new-column" class="flex flex-col bg-gray-200/50 dark:bg-gray-800/50 rounded-lg overflow-hidden">
+                        <h2 class="text-lg font-bold p-4 border-b border-gray-300 dark:border-gray-700 flex-shrink-0">Novos</h2>
                         <div id="new-clients-grid" class="p-4 flex-grow min-h-0 overflow-y-auto custom-scrollbar space-y-4">
                             <!-- New client cards will be injected here -->
                         </div>
                     </div>
 
                     <!-- In Production Column -->
-                    <div id="production-column" class="flex flex-col bg-gray-800/50 rounded-lg overflow-hidden">
-                        <h2 class="text-lg font-bold p-4 border-b border-gray-700 flex-shrink-0">Em Produção</h2>
+                    <div id="production-column" class="flex flex-col bg-gray-200/50 dark:bg-gray-800/50 rounded-lg overflow-hidden">
+                        <h2 class="text-lg font-bold p-4 border-b border-gray-300 dark:border-gray-700 flex-shrink-0">Em Produção</h2>
                         <div id="production-clients-grid" class="p-4 flex-grow min-h-0 overflow-y-auto custom-scrollbar space-y-4">
                             <!-- In production client cards will be injected here -->
                         </div>
                     </div>
 
                     <!-- Completed Column -->
-                    <div id="completed-column" class="flex flex-col bg-gray-800/50 rounded-lg overflow-hidden">
-                        <h2 class="text-lg font-bold p-4 border-b border-gray-700 flex-shrink-0">Concluídos</h2>
+                    <div id="completed-column" class="flex flex-col bg-gray-200/50 dark:bg-gray-800/50 rounded-lg overflow-hidden">
+                        <h2 class="text-lg font-bold p-4 border-b border-gray-300 dark:border-gray-700 flex-shrink-0">Concluídos</h2>
                         <div id="completed-clients-grid" class="p-4 flex-grow min-h-0 overflow-y-auto custom-scrollbar space-y-4">
                             <!-- Completed client cards will be injected here -->
                         </div>
@@ -164,11 +168,11 @@
 
     <!-- Confirmation Modal -->
     <div id="confirmModal" class="fixed inset-0 bg-black bg-opacity-70 z-50 hidden items-center justify-center p-4">
-        <div class="bg-gray-800 rounded-lg shadow-xl w-full max-w-sm p-6 text-center">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-sm p-6 text-center">
             <h3 class="text-lg font-bold mb-2">Confirmar Ação</h3>
-            <p id="confirmMessage" class="text-gray-300 mb-6">Você tem certeza?</p>
+            <p id="confirmMessage" class="text-gray-600 dark:text-gray-300 mb-6">Você tem certeza?</p>
             <div class="flex justify-center gap-4">
-                <button id="cancelConfirmBtn" class="bg-gray-600 hover:bg-gray-500 font-semibold py-2 px-6 rounded-lg">Cancelar</button>
+                <button id="cancelConfirmBtn" class="bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 font-semibold py-2 px-6 rounded-lg">Cancelar</button>
                 <button id="confirmActionBtn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg">Confirmar</button>
             </div>
         </div>

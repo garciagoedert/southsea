@@ -6,15 +6,20 @@
     <title>Módulo de Tarefas - CRM</title>
     <link rel="icon" type="image/svg+xml" href="../imgs/favicon.svg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="log.css">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Configure Tailwind CSS for dark mode
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
     <style>
         body {
             overflow-y: hidden; /* Prevent body scroll */
         }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-200">
+<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-200">
     <div id="app-container" class="flex h-screen">
         <div id="sidebar-container"></div>
         
@@ -28,9 +33,9 @@
             <!-- Page Content -->
             <div class="p-4 md:p-6 lg:p-8 flex flex-col flex-1 min-h-0">
                 <div class="flex justify-between items-center mb-6 flex-shrink-0">
-                    <h1 class="text-2xl font-semibold text-white">Gerenciamento de Tarefas</h1>
+                    <h1 class="text-2xl font-semibold text-gray-800 dark:text-white">Gerenciamento de Tarefas</h1>
                     <div class="flex gap-2">
-                        <button id="manage-standard-tasks-btn" class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg shadow-md hidden">Gerenciar Padrões</button>
+                        <button id="manage-standard-tasks-btn" class="bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white font-bold py-2 px-4 rounded-lg shadow-md hidden">Gerenciar Padrões</button>
                         <button id="create-task-btn" class="bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-lg shadow-md">Nova Tarefa</button>
                     </div>
                 </div>
@@ -38,18 +43,18 @@
                 <!-- Scrollable Content Area -->
                 <div class="overflow-y-auto custom-scrollbar flex-1">
                     <div class="flex flex-col md:flex-row items-center gap-4 mb-6">
-                        <input type="text" id="search-input" placeholder="Buscar por título..." class="w-full md:flex-grow p-2 border border-gray-700 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <input type="text" id="search-input" placeholder="Buscar por título..." class="w-full md:flex-grow p-2 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <div class="w-full md:w-auto flex flex-col md:flex-row gap-4">
-                            <select id="filter-assignee" title="Filtrar por Responsável" class="w-full md:w-auto p-2 border border-gray-700 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <select id="filter-assignee" title="Filtrar por Responsável" class="w-full md:w-auto p-2 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 <option value="">Todos os Responsáveis</option>
                             </select>
-                            <select id="filter-status" title="Filtrar por Status" class="w-full md:w-auto p-2 border border-gray-700 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <select id="filter-status" title="Filtrar por Status" class="w-full md:w-auto p-2 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 <option value="">Pendentes/Em Progresso</option>
                                 <option value="pending">Pendente</option>
                                 <option value="in_progress">Em Progresso</option>
                                 <option value="done">Concluída</option>
                             </select>
-                            <select id="filter-priority" title="Filtrar por Prioridade" class="w-full md:w-auto p-2 border border-gray-700 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <select id="filter-priority" title="Filtrar por Prioridade" class="w-full md:w-auto p-2 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 <option value="">Todas as Prioridades</option>
                                 <option value="low">Baixa</option>
                                 <option value="normal">Normal</option>
@@ -58,9 +63,9 @@
                             </select>
                         </div>
                     </div>
-                    <div class="overflow-x-auto custom-scrollbar bg-gray-800 rounded-lg">
-                        <table class="min-w-full text-sm text-left text-gray-400">
-                            <thead class="text-xs text-gray-300 uppercase bg-gray-700">
+                    <div class="overflow-x-auto custom-scrollbar bg-gray-100 dark:bg-gray-800 rounded-lg">
+                        <table class="min-w-full text-sm text-left text-gray-600 dark:text-gray-400">
+                            <thead class="text-xs text-gray-700 dark:text-gray-300 uppercase bg-gray-200 dark:bg-gray-700">
                                 <tr>
                                     <th scope="col" class="px-6 py-3">Título</th>
                                     <th scope="col" class="px-6 py-3">Cliente/Vínculo</th>
@@ -83,43 +88,43 @@
 
     <!-- Modal de Gerenciamento de Tarefas Padrão -->
     <div id="standard-task-manager-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 z-50 items-center justify-center sm:p-4">
-        <div class="bg-gray-800 w-full h-full sm:h-auto sm:rounded-xl shadow-2xl sm:max-w-3xl sm:max-h-[90vh] flex flex-col">
-            <div class="flex justify-between items-center p-4 border-b border-gray-700">
-                <h2 id="standard-task-modal-title" class="text-xl font-bold">Gerenciar Tarefas Padrão</h2>
-                <button id="close-standard-task-modal-btn" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+        <div class="bg-white dark:bg-gray-800 w-full h-full sm:h-auto sm:rounded-xl shadow-2xl sm:max-w-3xl sm:max-h-[90vh] flex flex-col">
+            <div class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700">
+                <h2 id="standard-task-modal-title" class="text-xl font-bold text-gray-800 dark:text-white">Gerenciar Tarefas Padrão</h2>
+                <button id="close-standard-task-modal-btn" class="text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white text-2xl">&times;</button>
             </div>
             <div class="p-6 overflow-y-auto custom-scrollbar flex-1 flex flex-col md:flex-row gap-6">
                 <!-- Formulário para Adicionar/Editar -->
                 <div class="w-full md:w-1/2">
-                    <h3 id="standard-task-form-title" class="text-lg font-semibold mb-4">Adicionar Nova Tarefa Padrão</h3>
+                    <h3 id="standard-task-form-title" class="text-lg font-semibold mb-4 text-gray-800 dark:text-white">Adicionar Nova Tarefa Padrão</h3>
                     <form id="standard-task-form" class="space-y-4">
                         <input type="hidden" id="standard-task-id">
                         <div>
-                            <label for="standard-task-title" class="block text-sm font-medium text-gray-300 mb-1">Título</label>
-                            <input type="text" id="standard-task-title" required class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2">
+                            <label for="standard-task-title" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Título</label>
+                            <input type="text" id="standard-task-title" required class="w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 text-gray-900 dark:text-white">
                         </div>
                         <div>
-                            <label for="standard-task-description" class="block text-sm font-medium text-gray-300 mb-1">Descrição</label>
-                            <textarea id="standard-task-description" rows="4" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2"></textarea>
+                            <label for="standard-task-description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Descrição</label>
+                            <textarea id="standard-task-description" rows="4" class="w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 text-gray-900 dark:text-white"></textarea>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-300 mb-2">Subtarefas</label>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Subtarefas</label>
                             <div id="standard-subtasks-container" class="space-y-2">
                                 <!-- Subtarefas dinâmicas aqui -->
                             </div>
                             <div class="flex items-center mt-2">
-                                <input type="text" id="new-standard-subtask-input" placeholder="Adicionar subtarefa e Enter" class="w-full bg-gray-900 border border-gray-600 rounded-lg p-2">
+                                <input type="text" id="new-standard-subtask-input" placeholder="Adicionar subtarefa e Enter" class="w-full bg-gray-200 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg p-2 text-gray-900 dark:text-white">
                             </div>
                         </div>
                         <div class="flex justify-end gap-3 pt-4">
-                            <button type="button" id="cancel-standard-task-edit-btn" class="bg-gray-600 hover:bg-gray-500 font-semibold py-2 px-4 rounded-lg hidden">Cancelar Edição</button>
+                            <button type="button" id="cancel-standard-task-edit-btn" class="bg-gray-200 hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-500 font-semibold py-2 px-4 rounded-lg hidden">Cancelar Edição</button>
                             <button type="submit" class="bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-lg">Salvar</button>
                         </div>
                     </form>
                 </div>
                 <!-- Lista de Tarefas Padrão Existentes -->
-                <div class="w-full md:w-1/2 border-t md:border-t-0 md:border-l border-gray-700 pt-6 md:pt-0 md:pl-6">
-                    <h3 class="text-lg font-semibold mb-4">Tarefas Padrão Salvas</h3>
+                <div class="w-full md:w-1/2 border-t md:border-t-0 md:border-l border-gray-200 dark:border-gray-700 pt-6 md:pt-0 md:pl-6">
+                    <h3 class="text-lg font-semibold mb-4 text-gray-800 dark:text-white">Tarefas Padrão Salvas</h3>
                     <div id="standard-tasks-list" class="space-y-2 max-h-96 overflow-y-auto custom-scrollbar">
                         <!-- Lista será populada aqui -->
                     </div>
@@ -130,11 +135,11 @@
 
     <!-- Modal de Visualização de Tarefa -->
 <div id="task-detail-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 z-50 items-center justify-center sm:p-4">
-    <div class="bg-gray-800 w-full h-full sm:h-auto sm:rounded-xl shadow-2xl sm:max-w-4xl sm:max-h-[90vh] flex flex-col">
+    <div class="bg-white dark:bg-gray-800 w-full h-full sm:h-auto sm:rounded-xl shadow-2xl sm:max-w-4xl sm:max-h-[90vh] flex flex-col">
         <!-- Cabeçalho do Modal -->
-        <div class="flex justify-between items-center p-4 border-b border-gray-700 flex-shrink-0">
-            <h2 id="detail-modal-title" class="text-xl font-bold text-white">Detalhes da Tarefa</h2>
-            <button id="detail-close-modal-btn" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+        <div class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
+            <h2 id="detail-modal-title" class="text-xl font-bold text-gray-800 dark:text-white">Detalhes da Tarefa</h2>
+            <button id="detail-close-modal-btn" class="text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white text-2xl">&times;</button>
         </div>
 
         <!-- Corpo do Modal -->
@@ -142,31 +147,31 @@
             <!-- Conteúdo Principal com Abas -->
             <div class="flex-1 flex flex-col">
                 <!-- Barra de Status Principal -->
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 bg-gray-900/50 border-b border-gray-700">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 bg-gray-50 dark:bg-gray-900/50 border-b border-gray-200 dark:border-gray-700">
                     <div>
-                        <label class="block text-xs font-medium text-gray-400">Status</label>
+                        <label class="block text-xs font-medium text-gray-500 dark:text-gray-400">Status</label>
                         <p id="detail-task-status" class="text-sm"></p>
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-gray-400">Responsável</label>
-                        <p id="detail-task-assignee" class="text-sm text-white"></p>
+                        <label class="block text-xs font-medium text-gray-500 dark:text-gray-400">Responsável</label>
+                        <p id="detail-task-assignee" class="text-sm text-gray-900 dark:text-white"></p>
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-gray-400">Prazo</label>
-                        <p id="detail-task-due-date" class="text-sm text-white"></p>
+                        <label class="block text-xs font-medium text-gray-500 dark:text-gray-400">Prazo</label>
+                        <p id="detail-task-due-date" class="text-sm text-gray-900 dark:text-white"></p>
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-gray-400">Prioridade</label>
+                        <label class="block text-xs font-medium text-gray-500 dark:text-gray-400">Prioridade</label>
                         <p id="detail-task-priority" class="text-sm"></p>
                     </div>
                 </div>
 
                 <!-- Navegação das Abas -->
-                <div class="border-b border-gray-700 px-4">
+                <div class="border-b border-gray-200 dark:border-gray-700 px-4">
                     <nav class="flex space-x-4 -mb-px" aria-label="Tabs">
-                        <button id="detail-tab-details" role="tab" class="px-3 py-2 font-medium text-sm rounded-t-lg text-white border-b-2 border-primary">Detalhes</button>
-                        <button id="detail-tab-comments" role="tab" class="px-3 py-2 font-medium text-sm rounded-t-lg text-gray-400 hover:text-white border-b-2 border-transparent hover:border-gray-500">Comentários</button>
-                        <button id="detail-tab-activity" role="tab" class="px-3 py-2 font-medium text-sm rounded-t-lg text-gray-400 hover:text-white border-b-2 border-transparent hover:border-gray-500">Atividade</button>
+                        <button id="detail-tab-details" role="tab" class="px-3 py-2 font-medium text-sm rounded-t-lg text-primary dark:text-white border-b-2 border-primary">Detalhes</button>
+                        <button id="detail-tab-comments" role="tab" class="px-3 py-2 font-medium text-sm rounded-t-lg text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white border-b-2 border-transparent hover:border-gray-400 dark:hover:border-gray-500">Comentários</button>
+                        <button id="detail-tab-activity" role="tab" class="px-3 py-2 font-medium text-sm rounded-t-lg text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white border-b-2 border-transparent hover:border-gray-400 dark:hover:border-gray-500">Atividade</button>
                     </nav>
                 </div>
 
@@ -176,11 +181,11 @@
                     <div id="detail-tab-panel-details" role="tabpanel">
                         <div class="space-y-6">
                             <div>
-                                <h3 class="text-lg font-semibold text-white mb-2">Descrição</h3>
-                                <div id="detail-task-description" class="text-gray-300 prose prose-invert max-w-none"></div>
+                                <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-2">Descrição</h3>
+                                <div id="detail-task-description" class="text-gray-600 dark:text-gray-300 prose dark:prose-invert max-w-none"></div>
                             </div>
                             <div>
-                                <h3 class="text-lg font-semibold text-white mb-2">Subtarefas</h3>
+                                <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-2">Subtarefas</h3>
                                 <div id="detail-subtasks-container" class="space-y-2"></div>
                             </div>
                         </div>
@@ -197,32 +202,32 @@
             </div>
 
             <!-- Barra Lateral de Contexto -->
-            <div class="w-full md:w-64 lg:w-72 bg-gray-900/50 border-l border-gray-700 p-4 overflow-y-auto custom-scrollbar flex-shrink-0">
+            <div class="w-full md:w-64 lg:w-72 bg-gray-50 dark:bg-gray-900/50 border-l border-gray-200 dark:border-gray-700 p-4 overflow-y-auto custom-scrollbar flex-shrink-0">
                 <div class="space-y-6">
                     <div>
-                        <h3 class="text-sm font-semibold text-gray-400 mb-2">Vínculo</h3>
+                        <h3 class="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-2">Vínculo</h3>
                         <p id="detail-task-link" class="text-sm"></p>
                     </div>
                     <div>
-                        <h3 class="text-sm font-semibold text-gray-400 mb-2">Controle de Tempo</h3>
+                        <h3 class="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-2">Controle de Tempo</h3>
                         <div class="flex items-center justify-between">
                             <div>
-                                <span id="detail-stopwatch" class="text-2xl font-mono">00:00:00</span>
-                                <p class="text-xs text-gray-400">Total: <span id="detail-total-logged-time">0h 0m</span></p>
+                                <span id="detail-stopwatch" class="text-2xl font-mono text-gray-900 dark:text-white">00:00:00</span>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">Total: <span id="detail-total-logged-time">0h 0m</span></p>
                             </div>
                         </div>
                     </div>
                      <div>
-                        <h3 class="text-sm font-semibold text-gray-400 mb-2">Ações</h3>
-                        <button type="button" id="detail-edit-btn" class="w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg">Editar Tarefa</button>
+                        <h3 class="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-2">Ações</h3>
+                        <button type="button" id="detail-edit-btn" class="w-full bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white font-bold py-2 px-4 rounded-lg">Editar Tarefa</button>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Rodapé do Modal -->
-        <div class="flex justify-end items-center p-4 border-t border-gray-700 gap-3 flex-shrink-0">
-            <button type="button" id="detail-cancel-btn" class="bg-gray-600 hover:bg-gray-500 font-semibold py-2 px-4 rounded-lg">Fechar</button>
+        <div class="flex justify-end items-center p-4 border-t border-gray-200 dark:border-gray-700 gap-3 flex-shrink-0">
+            <button type="button" id="detail-cancel-btn" class="bg-gray-200 hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-500 font-semibold py-2 px-4 rounded-lg">Fechar</button>
             <div id="detail-actions-container" class="flex gap-3">
                 <button type="button" id="detail-start-btn" class="bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-lg">Começar Tarefa</button>
                 <button type="button" id="detail-pause-btn" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg hidden">Pausar</button>
@@ -235,18 +240,18 @@
 
     <!-- Modal para Criar/Editar Tarefa -->
     <div id="task-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 z-50 items-center justify-center sm:p-4">
-        <div class="bg-gray-800 w-full h-full sm:h-auto sm:rounded-xl shadow-2xl sm:max-w-2xl sm:max-h-[90vh] flex flex-col">
-            <div class="flex justify-between items-center p-4 border-b border-gray-700">
-                <h2 id="modal-title" class="text-xl font-bold">Nova Tarefa</h2>
-                <button id="close-modal-btn" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+        <div class="bg-white dark:bg-gray-800 w-full h-full sm:h-auto sm:rounded-xl shadow-2xl sm:max-w-2xl sm:max-h-[90vh] flex flex-col">
+            <div class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700">
+                <h2 id="modal-title" class="text-xl font-bold text-gray-800 dark:text-white">Nova Tarefa</h2>
+                <button id="close-modal-btn" class="text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white text-2xl">&times;</button>
             </div>
             <div class="p-6 overflow-y-auto custom-scrollbar flex-1">
                 <!-- Abas de Navegação do Modal -->
-                <div class="border-b border-gray-700 mb-4">
+                <div class="border-b border-gray-200 dark:border-gray-700 mb-4">
                     <nav class="flex space-x-4" aria-label="Tabs">
-                        <button id="tab-details" role="tab" aria-controls="tab-panel-details" aria-selected="true" class="px-3 py-2 font-medium text-sm rounded-t-lg text-white border-b-2 border-primary">Detalhes</button>
-                        <button id="tab-comments" role="tab" aria-controls="tab-panel-comments" aria-selected="false" class="px-3 py-2 font-medium text-sm rounded-t-lg text-gray-400 hover:text-white border-b-2 border-transparent hover:border-gray-500">Comentários</button>
-                        <button id="tab-activity" role="tab" aria-controls="tab-panel-activity" aria-selected="false" class="px-3 py-2 font-medium text-sm rounded-t-lg text-gray-400 hover:text-white border-b-2 border-transparent hover:border-gray-500">Atividade</button>
+                        <button id="tab-details" role="tab" aria-controls="tab-panel-details" aria-selected="true" class="px-3 py-2 font-medium text-sm rounded-t-lg text-primary dark:text-white border-b-2 border-primary">Detalhes</button>
+                        <button id="tab-comments" role="tab" aria-controls="tab-panel-comments" aria-selected="false" class="px-3 py-2 font-medium text-sm rounded-t-lg text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white border-b-2 border-transparent hover:border-gray-400 dark:hover:border-gray-500">Comentários</button>
+                        <button id="tab-activity" role="tab" aria-controls="tab-panel-activity" aria-selected="false" class="px-3 py-2 font-medium text-sm rounded-t-lg text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white border-b-2 border-transparent hover:border-gray-400 dark:hover:border-gray-500">Atividade</button>
                     </nav>
                 </div>
 
@@ -255,43 +260,43 @@
                     <form id="task-form" class="space-y-4">
                         <input type="hidden" id="task-id">
                         <div>
-                            <label for="task-standard-task" class="block text-sm font-medium text-gray-300 mb-1">Tarefa Padrão (Opcional)</label>
-                            <select id="task-standard-task" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <label for="task-standard-task" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tarefa Padrão (Opcional)</label>
+                            <select id="task-standard-task" class="w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 <option value="">Nenhuma</option>
                                 <!-- As tarefas padrão serão carregadas aqui -->
                             </select>
                         </div>
                         <div>
-                            <label for="task-title" class="block text-sm font-medium text-gray-300 mb-1">Título</label>
-                            <input type="text" id="task-title" required class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <label for="task-title" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Título</label>
+                            <input type="text" id="task-title" required class="w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                         <div>
-                            <label for="task-description" class="block text-sm font-medium text-gray-300 mb-1">Descrição</label>
-                            <textarea id="task-description" rows="4" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                            <label for="task-description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Descrição</label>
+                            <textarea id="task-description" rows="4" class="w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
                         </div>
 
                         <!-- Seção de Subtarefas -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-300 mb-2">Subtarefas</label>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Subtarefas</label>
                             <div id="subtasks-container" class="space-y-2 max-h-40 overflow-y-auto custom-scrollbar pr-2">
                                 <!-- Subtarefas renderizadas aqui -->
                             </div>
                             <div class="flex items-center mt-2">
-                                <input type="text" id="new-subtask-title-input" placeholder="Adicionar nova subtarefa e pressionar Enter" class="w-full bg-gray-900 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <input type="text" id="new-subtask-title-input" placeholder="Adicionar nova subtarefa e pressionar Enter" class="w-full bg-gray-200 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg p-2 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                             </div>
                         </div>
 
                         <div>
-                            <label for="task-assignee" class="block text-sm font-medium text-gray-300 mb-1">Responsável</label>
-                            <select id="task-assignee" required class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"></select>
+                            <label for="task-assignee" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Responsável</label>
+                            <select id="task-assignee" required class="w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"></select>
                         </div>
                         <div>
-                            <label for="task-due-date" class="block text-sm font-medium text-gray-300 mb-1">Prazo</label>
-                            <input type="datetime-local" id="task-due-date" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <label for="task-due-date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Prazo</label>
+                            <input type="datetime-local" id="task-due-date" class="w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                         <div>
-                            <label for="task-priority" class="block text-sm font-medium text-gray-300 mb-1">Prioridade</label>
-                            <select id="task-priority" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <label for="task-priority" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Prioridade</label>
+                            <select id="task-priority" class="w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 <option value="low">Baixa</option>
                                 <option value="normal">Normal</option>
                                 <option value="high">Alta</option>
@@ -299,34 +304,34 @@
                             </select>
                         </div>
                         <div>
-                            <label for="task-status" class="block text-sm font-medium text-gray-300 mb-1">Status</label>
-                            <select id="task-status" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <label for="task-status" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status</label>
+                            <select id="task-status" class="w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 <option value="pending">Pendente</option>
                                 <option value="in_progress">Em Progresso</option>
                                 <option value="done">Concluída</option>
                             </select>
                         </div>
                         <div>
-                            <label for="task-parent-entity" class="block text-sm font-medium text-gray-300 mb-1">Vincular a (Cliente, Negócio, etc.)</label>
-                            <input type="text" id="task-parent-entity" placeholder="Busque por um cliente ou negócio..." class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <label for="task-parent-entity" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Vincular a (Cliente, Negócio, etc.)</label>
+                            <input type="text" id="task-parent-entity" placeholder="Busque por um cliente ou negócio..." class="w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                         <div class="relative">
-                            <label for="task-linked-card-search" class="block text-sm font-medium text-gray-300 mb-1">Vincular ao Card (Prospect/Produção)</label>
-                            <input type="text" id="task-linked-card-search" placeholder="Digite para buscar..." class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <label for="task-linked-card-search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Vincular ao Card (Prospect/Produção)</label>
+                            <input type="text" id="task-linked-card-search" placeholder="Digite para buscar..." class="w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                             <input type="hidden" id="task-linked-card-id">
-                            <div id="task-linked-card-results" class="absolute z-10 w-full bg-gray-600 border border-gray-500 rounded-b-lg mt-1 max-h-48 overflow-y-auto hidden"></div>
+                            <div id="task-linked-card-results" class="absolute z-10 w-full bg-gray-200 dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded-b-lg mt-1 max-h-48 overflow-y-auto hidden"></div>
                         </div>
                         <div id="createdByContainer" class="hidden">
-                            <p class="text-sm text-gray-400">Criado por: <span id="createdByInfo" class="font-semibold"></span></p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Criado por: <span id="createdByInfo" class="font-semibold"></span></p>
                         </div>
 
                         <!-- Seção de Time Tracking -->
-                        <div class="pt-4 border-t border-gray-700">
-                            <label class="block text-sm font-medium text-gray-300 mb-2">Controle de Tempo</label>
-                            <div class="flex items-center justify-between bg-gray-900 p-3 rounded-lg">
+                        <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Controle de Tempo</label>
+                            <div class="flex items-center justify-between bg-gray-100 dark:bg-gray-900 p-3 rounded-lg">
                                 <div>
-                                    <span id="stopwatch" class="text-2xl font-mono">00:00:00</span>
-                                    <p class="text-xs text-gray-500">Tempo total registrado: <span id="total-logged-time">0h 0m</span></p>
+                                    <span id="stopwatch" class="text-2xl font-mono text-gray-900 dark:text-white">00:00:00</span>
+                                    <p class="text-xs text-gray-500 dark:text-gray-500">Tempo total registrado: <span id="total-logged-time">0h 0m</span></p>
                                 </div>
                                 <button type="button" id="toggle-stopwatch-btn" class="text-white text-2xl w-12 h-12 flex items-center justify-center rounded-full bg-primary hover:bg-primary-dark">
                                     <i class="fas fa-play"></i>
@@ -341,11 +346,11 @@
                     <div class="space-y-4">
                         <div id="comments-container" class="space-y-3 max-h-60 overflow-y-auto custom-scrollbar pr-2">
                             <!-- Comentários serão inseridos aqui -->
-                            <p class="text-gray-500 text-sm text-center">Nenhum comentário ainda.</p>
+                            <p class="text-gray-500 dark:text-gray-500 text-sm text-center">Nenhum comentário ainda.</p>
                         </div>
                         <div class="mt-4">
                             <form id="comment-form">
-                                <textarea id="comment-input" rows="3" placeholder="Adicionar um comentário..." class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                                <textarea id="comment-input" rows="3" placeholder="Adicionar um comentário..." class="w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
                                 <button type="submit" class="mt-2 bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-lg">Comentar</button>
                             </form>
                         </div>
@@ -356,14 +361,14 @@
                 <div id="tab-panel-activity" role="tabpanel" class="hidden">
                     <div id="activity-log-container" class="space-y-3 max-h-80 overflow-y-auto custom-scrollbar pr-2">
                         <!-- Entradas do log de atividades serão inseridas aqui -->
-                        <p class="text-gray-500 text-sm text-center">Nenhuma atividade registrada.</p>
+                        <p class="text-gray-500 dark:text-gray-500 text-sm text-center">Nenhuma atividade registrada.</p>
                     </div>
                 </div>
             </div>
-            <div class="flex justify-between items-center mt-auto p-4 border-t border-gray-700">
+            <div class="flex justify-between items-center mt-auto p-4 border-t border-gray-200 dark:border-gray-700">
                 <button type="button" id="delete-task-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg hidden">Apagar</button>
                 <div class="flex justify-end gap-3 flex-grow">
-                    <button type="button" id="cancel-btn" class="bg-gray-600 hover:bg-gray-500 font-semibold py-2 px-4 rounded-lg">Cancelar</button>
+                    <button type="button" id="cancel-btn" class="bg-gray-200 hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-500 font-semibold py-2 px-4 rounded-lg">Cancelar</button>
                     <button type="submit" form="task-form" class="bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-lg">Salvar</button>
                 </div>
             </div>

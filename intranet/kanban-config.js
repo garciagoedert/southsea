@@ -71,13 +71,13 @@ function setupEditKanbanModalListeners(configId, initialConfig, onSave) {
 
     const createColumnInput = (name = '', todoTemplate = '') => {
         const div = document.createElement('div');
-        div.className = 'flex flex-col gap-2 p-3 bg-gray-900/50 rounded-lg';
+        div.className = 'flex flex-col gap-2 p-3 bg-gray-100 dark:bg-gray-900/50 rounded-lg border border-gray-200 dark:border-transparent';
         div.innerHTML = `
             <div class="flex items-center gap-2">
-                <input type="text" value="${name}" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 column-name-input" placeholder="Nome da Coluna">
+                <input type="text" value="${name}" class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 column-name-input" placeholder="Nome da Coluna">
                 <button class="remove-column-btn bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-3 rounded-lg self-start">&times;</button>
             </div>
-            <textarea class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 column-todo-template" rows="3" placeholder="Template de To-Do (uma tarefa por linha)...">${todoTemplate}</textarea>
+            <textarea class="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 column-todo-template" rows="3" placeholder="Template de To-Do (uma tarefa por linha)...">${todoTemplate}</textarea>
         `;
         div.querySelector('.remove-column-btn').addEventListener('click', () => div.remove());
         return div;

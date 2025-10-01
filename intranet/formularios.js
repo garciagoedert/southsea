@@ -571,15 +571,15 @@ async function loadForms() {
             const formId = doc.id;
             const fieldCount = form.sections ? form.sections.reduce((acc, s) => acc + s.fields.length, 0) : 0;
             const card = document.createElement('div');
-            card.className = 'bg-white p-6 rounded-lg shadow-md flex flex-col justify-between';
+            card.className = 'bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md flex flex-col justify-between';
             card.innerHTML = `
                 <div>
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">${form.name}</h3>
-                    <p class="text-gray-600 mb-4">${fieldCount} campo(s)</p>
+                    <h3 class="text-xl font-bold text-gray-800 dark:text-gray-200 mb-2">${form.name}</h3>
+                    <p class="text-gray-600 dark:text-gray-400 mb-4">${fieldCount} campo(s)</p>
                 </div>
                 <div class="flex justify-end space-x-2 mt-4">
-                    <button class="text-blue-500 hover:text-blue-700 edit-btn" title="Editar"><i class="fas fa-edit"></i></button>
-                    <button class="text-red-500 hover:text-red-700 delete-btn" title="Excluir"><i class="fas fa-trash"></i></button>
+                    <button class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 edit-btn" title="Editar"><i class="fas fa-edit"></i></button>
+                    <button class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 delete-btn" title="Excluir"><i class="fas fa-trash"></i></button>
                 </div>
             `;
             card.querySelector('.edit-btn').addEventListener('click', () => editForm(formId));

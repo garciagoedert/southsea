@@ -8,12 +8,46 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="log.css">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Configure Tailwind CSS for dark mode
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
     <!-- FullCalendar CSS -->
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
     <style>
         /* Custom styles for FullCalendar */
         :root {
-            --fc-border-color: rgba(128, 128, 128, 0.3); /* Lighter, less prominent grid lines */
+            --fc-border-color: #e5e7eb; /* gray-200 */
+            --fc-daygrid-day-number-color: #374151; /* gray-700 */
+            --fc-col-header-cell-cushion-color: #374151; /* gray-700 */
+            --fc-more-link-color: #374151; /* gray-700 */
+            --fc-today-bg-color: rgba(37, 99, 235, 0.1); /* blue-600 with opacity */
+
+            /* Button Styles - Light Mode */
+            --fc-button-bg-color: #f3f4f6; /* gray-100 */
+            --fc-button-text-color: #374151; /* gray-700 */
+            --fc-button-border-color: #d1d5db; /* gray-300 */
+            --fc-button-hover-bg-color: #e5e7eb; /* gray-200 */
+            --fc-button-active-bg-color: #d1d5db; /* gray-300 */
+            --fc-button-active-border-color: #9ca3af; /* gray-400 */
+        }
+
+        .dark {
+            --fc-border-color: rgba(128, 128, 128, 0.3);
+            --fc-daygrid-day-number-color: #d1d5db; /* gray-300 */
+            --fc-col-header-cell-cushion-color: #d1d5db; /* gray-300 */
+            --fc-more-link-color: #d1d5db; /* gray-300 */
+            --fc-today-bg-color: rgba(75, 85, 99, 0.4); /* gray-600 with opacity */
+
+            /* Button Styles - Dark Mode */
+            --fc-button-bg-color: #374151; /* gray-700 */
+            --fc-button-text-color: #f9fafb; /* gray-50 */
+            --fc-button-border-color: #4b5563; /* gray-600 */
+            --fc-button-hover-bg-color: #4b5563; /* gray-600 */
+            --fc-button-active-bg-color: #6b7280; /* gray-500 */
+            --fc-button-active-border-color: #9ca3af; /* gray-400 */
         }
 
         #calendar-container {
@@ -28,11 +62,21 @@
 
         /* Custom scrollbar for FullCalendar's internal scroller (week/day view) */
         .fc-scroller::-webkit-scrollbar { width: 8px; }
-        .fc-scroller::-webkit-scrollbar-track { background: #1e293b; }
-        .fc-scroller::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+        .fc-scroller::-webkit-scrollbar-track { background: #f1f5f9; } /* gray-100 */
+        .fc-scroller::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; } /* slate-300 */
+        .dark .fc-scroller::-webkit-scrollbar-track { background: #1e293b; } /* slate-800 */
+        .dark .fc-scroller::-webkit-scrollbar-thumb { background: #475569; } /* slate-600 */
+
+        /* Ensure calendar text color is correct */
+        .fc .fc-daygrid-day-number,
+        .fc .fc-col-header-cell-cushion,
+        .fc .fc-more-link {
+            color: var(--fc-daygrid-day-number-color);
+        }
+        /* The rule for .fc-event-title is removed to let FullCalendar handle text color for contrast */
     </style>
 </head>
-<body class="bg-gray-900 text-gray-200">
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
     <div id="app-container" class="flex h-screen">
         <div id="sidebar-container"></div>
         
@@ -46,45 +90,45 @@
             <!-- Page Content -->
             <div id="calendar-container" class="flex-grow p-6 flex flex-col custom-scrollbar">
                 <div class="flex justify-between items-center mb-6 flex-shrink-0">
-                    <h1 class="text-2xl font-semibold text-white">Calendário</h1>
+                    <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">Calendário</h1>
                     <div class="flex gap-4">
                         <button id="create-meeting-btn-calendar" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow-md">Agendar Reunião</button>
                         <button id="create-task-btn-calendar" class="bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-lg shadow-md">Nova Tarefa</button>
                     </div>
                 </div>
-                <div id='calendar' class="bg-gray-800 p-4 rounded-lg"></div>
+                <div id='calendar' class="bg-white dark:bg-gray-800 p-4 rounded-lg"></div>
             </div>
         </main>
     </div>
 
     <!-- Modal para Criar/Editar Tarefa (reutilizado de tarefas.html) -->
     <div id="task-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 z-50 items-center justify-center p-4">
-        <div class="bg-gray-800 rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col">
-            <div class="flex justify-between items-center p-4 border-b border-gray-700">
-                <h2 id="modal-title" class="text-xl font-bold">Nova Tarefa</h2>
-                <button id="close-modal-btn" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col">
+            <div class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700">
+                <h2 id="modal-title" class="text-xl font-bold text-gray-900 dark:text-white">Nova Tarefa</h2>
+                <button id="close-modal-btn" class="text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white text-2xl">&times;</button>
             </div>
             <form id="task-form" class="p-6 overflow-y-auto space-y-4 custom-scrollbar">
                 <input type="hidden" id="task-id">
                 <div>
-                    <label for="task-title" class="block text-sm font-medium text-gray-300 mb-1">Título</label>
-                    <input type="text" id="task-title" required class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label for="task-title" class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Título</label>
+                    <input type="text" id="task-title" required class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <div>
-                    <label for="task-description" class="block text-sm font-medium text-gray-300 mb-1">Descrição</label>
-                    <textarea id="task-description" rows="4" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                    <label for="task-description" class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Descrição</label>
+                    <textarea id="task-description" rows="4" class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
                 </div>
                 <div>
-                    <label for="task-assignee" class="block text-sm font-medium text-gray-300 mb-1">Responsável</label>
-                    <select id="task-assignee" required class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"></select>
+                    <label for="task-assignee" class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Responsável</label>
+                    <select id="task-assignee" required class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"></select>
                 </div>
                 <div>
-                    <label for="task-due-date" class="block text-sm font-medium text-gray-300 mb-1">Prazo</label>
-                    <input type="datetime-local" id="task-due-date" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label for="task-due-date" class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Prazo</label>
+                    <input type="datetime-local" id="task-due-date" class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <div>
-                    <label for="task-priority" class="block text-sm font-medium text-gray-300 mb-1">Prioridade</label>
-                    <select id="task-priority" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label for="task-priority" class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Prioridade</label>
+                    <select id="task-priority" class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="low">Baixa</option>
                         <option value="normal">Normal</option>
                         <option value="high">Alta</option>
@@ -92,32 +136,32 @@
                     </select>
                 </div>
                 <div>
-                    <label for="task-status" class="block text-sm font-medium text-gray-300 mb-1">Status</label>
-                    <select id="task-status" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label for="task-status" class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Status</label>
+                    <select id="task-status" class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="pending">Pendente</option>
                         <option value="in_progress">Em Progresso</option>
                         <option value="done">Concluída</option>
                     </select>
                 </div>
                 <div>
-                    <label for="task-color" class="block text-sm font-medium text-gray-300 mb-1">Cor</label>
-                    <input type="color" id="task-color" value="#3b82f6" class="w-full h-10 bg-gray-700 border border-gray-600 rounded-lg p-1 cursor-pointer">
+                    <label for="task-color" class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Cor</label>
+                    <input type="color" id="task-color" value="#3b82f6" class="w-full h-10 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-1 cursor-pointer">
                 </div>
                 <div>
-                    <label for="task-parent-entity" class="block text-sm font-medium text-gray-300 mb-1">Vincular a (Cliente, Negócio, etc.)</label>
-                    <input type="text" id="task-parent-entity" placeholder="Busque por um cliente ou negócio..." class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label for="task-parent-entity" class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Vincular a (Cliente, Negócio, etc.)</label>
+                    <input type="text" id="task-parent-entity" placeholder="Busque por um cliente ou negócio..." class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <div class="relative">
-                    <label for="task-linked-card-search" class="block text-sm font-medium text-gray-300 mb-1">Vincular ao Card (Prospect/Produção)</label>
-                    <input type="text" id="task-linked-card-search" placeholder="Digite para buscar..." class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label for="task-linked-card-search" class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Vincular ao Card (Prospect/Produção)</label>
+                    <input type="text" id="task-linked-card-search" placeholder="Digite para buscar..." class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <input type="hidden" id="task-linked-card-id">
-                    <div id="task-linked-card-results" class="absolute z-10 w-full bg-gray-600 border border-gray-500 rounded-b-lg mt-1 max-h-48 overflow-y-auto hidden"></div>
+                    <div id="task-linked-card-results" class="absolute z-10 w-full bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded-b-lg mt-1 max-h-48 overflow-y-auto hidden"></div>
                 </div>
             </form>
-            <div class="flex justify-between items-center mt-auto p-4 border-t border-gray-700">
+            <div class="flex justify-between items-center mt-auto p-4 border-t border-gray-200 dark:border-gray-700">
                 <button type="button" id="delete-task-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg hidden">Apagar</button>
                 <div class="flex justify-end gap-3 flex-grow">
-                    <button type="button" id="cancel-btn" class="bg-gray-600 hover:bg-gray-500 font-semibold py-2 px-4 rounded-lg">Cancelar</button>
+                    <button type="button" id="cancel-btn" class="bg-gray-200 hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-800 dark:text-gray-200 font-semibold py-2 px-4 rounded-lg">Cancelar</button>
                     <button type="submit" form="task-form" class="bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-lg">Salvar</button>
                 </div>
             </div>
@@ -126,66 +170,66 @@
 
     <!-- Modal para Criar/Editar Reunião -->
     <div id="meeting-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 z-50 items-center justify-center p-4">
-        <div class="bg-gray-800 rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col">
-            <div class="flex justify-between items-center p-4 border-b border-gray-700">
-                <h2 id="meeting-modal-title" class="text-xl font-bold">Agendar Nova Reunião</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col">
+            <div class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700">
+                <h2 id="meeting-modal-title" class="text-xl font-bold text-gray-900 dark:text-white">Agendar Nova Reunião</h2>
                 <div>
-                    <button id="edit-meeting-btn" class="text-gray-400 hover:text-white text-xl hidden mr-2"><i class="fas fa-pencil-alt"></i></button>
-                    <button id="close-meeting-modal-btn" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+                    <button id="edit-meeting-btn" class="text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white text-xl hidden mr-2"><i class="fas fa-pencil-alt"></i></button>
+                    <button id="close-meeting-modal-btn" class="text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white text-2xl">&times;</button>
                 </div>
             </div>
             <form id="meeting-form" class="p-6 overflow-y-auto space-y-4 custom-scrollbar">
                 <input type="hidden" id="meeting-id">
                 <div>
-                    <label for="meeting-title" class="block text-sm font-medium text-gray-300 mb-1">Título</label>
-                    <input type="text" id="meeting-title" required class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label for="meeting-title" class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Título</label>
+                    <input type="text" id="meeting-title" required class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <div>
-                    <label for="meeting-date" class="block text-sm font-medium text-gray-300 mb-1">Data e Hora de Início</label>
-                    <input type="datetime-local" id="meeting-date" required class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label for="meeting-date" class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Data e Hora de Início</label>
+                    <input type="datetime-local" id="meeting-date" required class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <div>
-                    <label for="meeting-end-date" class="block text-sm font-medium text-gray-300 mb-1">Data e Hora Final</label>
-                    <input type="datetime-local" id="meeting-end-date" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label for="meeting-end-date" class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Data e Hora Final</label>
+                    <input type="datetime-local" id="meeting-end-date" class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <div>
-                    <label for="meeting-meet-link" class="block text-sm font-medium text-gray-300 mb-1">Link da Reunião (Google Meet)</label>
-                    <input type="url" id="meeting-meet-link" placeholder="https://meet.google.com/..." class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label for="meeting-meet-link" class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Link da Reunião (Google Meet)</label>
+                    <input type="url" id="meeting-meet-link" placeholder="https://meet.google.com/..." class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <div>
-                    <label for="meeting-guests" class="block text-sm font-medium text-gray-300 mb-1">Convidados (e-mails separados por vírgula)</label>
-                    <input type="text" id="meeting-guests" placeholder="email1@exemplo.com, email2@exemplo.com" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label for="meeting-guests" class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Convidados (e-mails separados por vírgula)</label>
+                    <input type="text" id="meeting-guests" placeholder="email1@exemplo.com, email2@exemplo.com" class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <div>
-                    <label for="meeting-description" class="block text-sm font-medium text-gray-300 mb-1">Pauta / Descrição</label>
-                    <textarea id="meeting-description" rows="3" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                    <label for="meeting-description" class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Pauta / Descrição</label>
+                    <textarea id="meeting-description" rows="3" class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
                 </div>
                 <div>
-                    <label for="meeting-closer" class="block text-sm font-medium text-gray-300 mb-1">Closer Responsável</label>
-                    <select id="meeting-closer" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label for="meeting-closer" class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Closer Responsável</label>
+                    <select id="meeting-closer" class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <!-- Options will be populated by JavaScript -->
                     </select>
                 </div>
                 <div class="relative">
-                    <label for="meeting-linked-card-search" class="block text-sm font-medium text-gray-300 mb-1">Vincular ao Card (Prospect/Produção)</label>
-                    <input type="text" id="meeting-linked-card-search" placeholder="Digite para buscar..." class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label for="meeting-linked-card-search" class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Vincular ao Card (Prospect/Produção)</label>
+                    <input type="text" id="meeting-linked-card-search" placeholder="Digite para buscar..." class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <input type="hidden" id="meeting-linked-card-id">
-                    <div id="meeting-linked-card-results" class="absolute z-10 w-full bg-gray-600 border border-gray-500 rounded-b-lg mt-1 max-h-48 overflow-y-auto hidden"></div>
+                    <div id="meeting-linked-card-results" class="absolute z-10 w-full bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded-b-lg mt-1 max-h-48 overflow-y-auto hidden"></div>
                 </div>
                  <div>
-                    <label for="meeting-status" class="block text-sm font-medium text-gray-300 mb-1">Status</label>
-                    <select id="meeting-status" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label for="meeting-status" class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Status</label>
+                    <select id="meeting-status" class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="scheduled">Agendada</option>
                         <option value="completed">Realizada</option>
                         <option value="canceled">Cancelada</option>
                     </select>
                 </div>
                 <div>
-                    <label for="meeting-color" class="block text-sm font-medium text-gray-300 mb-1">Cor</label>
-                    <input type="color" id="meeting-color" value="#f97316" class="w-full h-10 bg-gray-700 border border-gray-600 rounded-lg p-1 cursor-pointer">
+                    <label for="meeting-color" class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Cor</label>
+                    <input type="color" id="meeting-color" value="#f97316" class="w-full h-10 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-1 cursor-pointer">
                 </div>
             </form>
-                <div class="flex justify-between items-center mt-auto p-4 border-t border-gray-700">
+                <div class="flex justify-between items-center mt-auto p-4 border-t border-gray-200 dark:border-gray-700">
                     <div class="flex gap-3">
                         <button type="button" id="view-lead-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg hidden">
                             <i class="fas fa-eye mr-2"></i>Ver Detalhes do Lead
@@ -194,11 +238,11 @@
                             <button type="button" id="meeting-realizada-btn" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg">
                                 <i class="fas fa-check-circle mr-2"></i>Reunião Realizada
                             </button>
-                            <div id="meeting-status-options" class="absolute bottom-full mb-2 w-max bg-gray-700 border border-gray-600 rounded-lg shadow-lg hidden flex flex-col items-start">
-                                <button type="button" data-status="closed_won" class="w-full text-left px-4 py-2 hover:bg-gray-600 text-green-400">Fechou na hora</button>
-                                <button type="button" data-status="thinking" class="w-full text-left px-4 py-2 hover:bg-gray-600 text-blue-400">Vai pensar</button>
-                                <button type="button" data-status="closed_lost" class="w-full text-left px-4 py-2 hover:bg-gray-600 text-yellow-400">Compareceu, não fechou</button>
-                                <button type="button" data-status="no_show" class="w-full text-left px-4 py-2 hover:bg-gray-600 text-red-400">Não Compareceu</button>
+                            <div id="meeting-status-options" class="absolute bottom-full mb-2 w-max bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg hidden flex flex-col items-start">
+                                <button type="button" data-status="closed_won" class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 text-green-500 dark:text-green-400">Fechou na hora</button>
+                                <button type="button" data-status="thinking" class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 text-blue-500 dark:text-blue-400">Vai pensar</button>
+                                <button type="button" data-status="closed_lost" class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 text-yellow-500 dark:text-yellow-400">Compareceu, não fechou</button>
+                                <button type="button" data-status="no_show" class="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 text-red-500 dark:text-red-400">Não Compareceu</button>
                             </div>
                         </div>
                     </div>
@@ -207,7 +251,7 @@
                     <butt>
                     <div id="meeting-action-buttons" class="flex items-center gap-3">
                         <button type="button" id="delete-meeting-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg hidden">Apagar</button>
-                        <button type="button" id="cancel-meeting-btn" class="bg-gray-600 hover:bg-gray-500 font-semibold py-2 px-4 rounded-lg">Cancelar</button>
+                        <button type="button" id="cancel-meeting-btn" class="bg-gray-200 hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-800 dark:text-gray-200 font-semibold py-2 px-4 rounded-lg">Cancelar</button>
                         <button type="submit" form="meeting-form" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg">Salvar Reunião</button>
                     </div>
                 </div>

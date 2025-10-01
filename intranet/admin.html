@@ -1,11 +1,17 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="dark">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>South Sea - Admin</title>
     <link rel="icon" href="https://www.southsea.com.br/newimag/Ellipse%209.svg">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Configure Tailwind CSS for dark mode
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css?v=1">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="log.css">
@@ -15,7 +21,7 @@
         }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-200">
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
     <div class="flex h-screen">
         <div id="sidebar-container"></div>
         
@@ -27,22 +33,22 @@
             <div id="header-container"></div>
 
             <div class="flex-grow p-4 md:p-6 lg:p-8 flex flex-col overflow-y-auto">
-                <h1 class="text-2xl font-bold mb-4">Painel de Administração</h1>
+                <h1 class="text-2xl font-bold mb-4 text-gray-800 dark:text-white">Painel de Administração</h1>
 
                 <!-- User Table -->
-                <div class="bg-gray-800 p-6 rounded-lg shadow-lg mb-6">
-                    <h2 class="text-xl font-semibold mb-4">Usuários</h2>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg mb-6">
+                    <h2 class="text-xl font-semibold mb-4 text-gray-800 dark:text-white">Usuários</h2>
                     <div class="overflow-x-auto">
-                        <table class="min-w-full bg-gray-800">
+                        <table class="min-w-full bg-white dark:bg-gray-800">
                             <thead>
-                                <tr>
-                                    <th class="py-2 px-4 border-b border-gray-700 text-left">Nome</th>
-                                    <th class="py-2 px-4 border-b border-gray-700 text-left">Email</th>
-                                    <th class="py-2 px-4 border-b border-gray-700 text-left">Função</th>
-                                    <th class="py-2 px-4 border-b border-gray-700 text-left">Ações</th>
+                                <tr class="bg-gray-50 dark:bg-gray-700">
+                                    <th class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-sm font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Nome</th>
+                                    <th class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-sm font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Email</th>
+                                    <th class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-sm font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Função</th>
+                                    <th class="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-sm font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Ações</th>
                                 </tr>
                             </thead>
-                            <tbody id="user-table-body">
+                            <tbody id="user-table-body" class="divide-y divide-gray-200 dark:divide-gray-700">
                                 <!-- User rows will be inserted here -->
                             </tbody>
                         </table>
@@ -50,26 +56,26 @@
                 </div>
 
                 <!-- Add/Edit User Form -->
-                <div class="bg-gray-800 p-6 rounded-lg shadow-lg mb-6">
-                    <h2 id="form-title" class="text-xl font-semibold mb-4">Adicionar Novo Usuário</h2>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg mb-6">
+                    <h2 id="form-title" class="text-xl font-semibold mb-4 text-gray-800 dark:text-white">Adicionar Novo Usuário</h2>
                     <form id="user-form">
                         <input type="hidden" id="user-email-hidden">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label for="name" class="block text-sm font-medium text-gray-300">Nome</label>
-                                <input type="text" id="name" required class="w-full px-3 py-2 mt-1 text-white bg-gray-700 border border-gray-600 rounded-md">
+                                <label for="name" class="block text-sm font-medium text-gray-600 dark:text-gray-300">Nome</label>
+                                <input type="text" id="name" required class="w-full px-3 py-2 mt-1 text-gray-800 dark:text-white bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md">
                             </div>
                             <div>
-                                <label for="email" class="block text-sm font-medium text-gray-300">Email</label>
-                                <input type="email" id="email" required class="w-full px-3 py-2 mt-1 text-white bg-gray-700 border border-gray-600 rounded-md">
+                                <label for="email" class="block text-sm font-medium text-gray-600 dark:text-gray-300">Email</label>
+                                <input type="email" id="email" required class="w-full px-3 py-2 mt-1 text-gray-800 dark:text-white bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md">
                             </div>
                             <div>
-                                <label for="password" class="block text-sm font-medium text-gray-300">Senha</label>
-                                <input type="password" id="password" class="w-full px-3 py-2 mt-1 text-white bg-gray-700 border border-gray-600 rounded-md">
+                                <label for="password" class="block text-sm font-medium text-gray-600 dark:text-gray-300">Senha</label>
+                                <input type="password" id="password" class="w-full px-3 py-2 mt-1 text-gray-800 dark:text-white bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md">
                             </div>
                             <div>
-                                <label for="role" class="block text-sm font-medium text-gray-300">Função</label>
-                                <select id="role" class="mt-1 block w-full pl-3 pr-10 py-2 text-base bg-gray-700 border-gray-600 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md">
+                                <label for="role" class="block text-sm font-medium text-gray-600 dark:text-gray-300">Função</label>
+                                <select id="role" class="mt-1 block w-full pl-3 pr-10 py-2 text-base text-gray-800 dark:text-white bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md">
                                     <option>bdr</option>
                                     <option>bdr_supervisor</option>
                                     <option>closer</option>
@@ -79,62 +85,49 @@
                                 </select>
                             </div>
                             <div id="producao-subroles-section" class="hidden md:col-span-2 mt-4">
-                                <label class="block text-sm font-medium text-gray-300">Especialidades de Produção</label>
+                                <label class="block text-sm font-medium text-gray-600 dark:text-gray-300">Especialidades de Produção</label>
                                 <div class="mt-2 flex space-x-4">
                                     <div class="flex items-center">
-                                        <input id="subrole-designer" type="checkbox" value="designer" class="h-4 w-4 text-primary bg-gray-700 border-gray-600 rounded focus:ring-primary">
-                                        <label for="subrole-designer" class="ml-2 text-sm text-gray-300">Designer</label>
+                                        <input id="subrole-designer" type="checkbox" value="designer" class="h-4 w-4 text-primary bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded focus:ring-primary">
+                                        <label for="subrole-designer" class="ml-2 text-sm text-gray-600 dark:text-gray-300">Designer</label>
                                     </div>
                                     <div class="flex items-center">
-                                        <input id="subrole-dev" type="checkbox" value="dev" class="h-4 w-4 text-primary bg-gray-700 border-gray-600 rounded focus:ring-primary">
-                                        <label for="subrole-dev" class="ml-2 text-sm text-gray-300">Dev</label>
+                                        <input id="subrole-dev" type="checkbox" value="dev" class="h-4 w-4 text-primary bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded focus:ring-primary">
+                                        <label for="subrole-dev" class="ml-2 text-sm text-gray-600 dark:text-gray-300">Dev</label>
                                     </div>
                                     <div class="flex items-center">
-                                        <input id="subrole-gestor" type="checkbox" value="gestor" class="h-4 w-4 text-primary bg-gray-700 border-gray-600 rounded focus:ring-primary">
-                                        <label for="subrole-gestor" class="ml-2 text-sm text-gray-300">Gestor</label>
+                                        <input id="subrole-gestor" type="checkbox" value="gestor" class="h-4 w-4 text-primary bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded focus:ring-primary">
+                                        <label for="subrole-gestor" class="ml-2 text-sm text-gray-600 dark:text-gray-300">Gestor</label>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div id="cs-client-association-section" class="hidden mt-4 md:col-span-2">
-                            <label class="block text-sm font-medium text-gray-300">Clientes Associados</label>
-                            <input type="text" id="client-search-input" placeholder="Buscar cliente para associar..." class="w-full px-3 py-2 mt-1 text-white bg-gray-700 border border-gray-600 rounded-md">
-                            <div id="client-search-results" class="mt-1 border border-gray-600 rounded-md bg-gray-800 max-h-40 overflow-y-auto"></div>
+                            <label class="block text-sm font-medium text-gray-600 dark:text-gray-300">Clientes Associados</label>
+                            <input type="text" id="client-search-input" placeholder="Buscar cliente para associar..." class="w-full px-3 py-2 mt-1 text-gray-800 dark:text-white bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md">
+                            <div id="client-search-results" class="mt-1 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 max-h-40 overflow-y-auto"></div>
                             <div id="associated-clients-list" class="mt-2 space-y-2"></div>
                         </div>
                         <div class="mt-6 flex space-x-4">
                             <button type="submit" class="px-4 py-2 font-bold text-white bg-primary rounded-md hover:bg-primary-dark">Salvar</button>
-                            <button type="button" id="cancel-edit" class="px-4 py-2 font-bold text-white bg-gray-600 rounded-md hover:bg-gray-700 hidden">Cancelar</button>
+                            <button type="button" id="cancel-edit" class="px-4 py-2 font-bold text-gray-800 dark:text-white bg-gray-200 dark:bg-gray-600 rounded-md hover:bg-gray-300 dark:hover:bg-gray-700 hidden">Cancelar</button>
                         </div>
                     </form>
                 </div>
 
-                <!-- System Actions -->
-                <div class="bg-gray-800 p-6 rounded-lg shadow-lg mb-6">
-                    <h2 class="text-xl font-semibold mb-4">Ações do Sistema</h2>
-                    <div class="flex flex-col md:flex-row gap-4 items-center">
-                        <button id="seed-roles-btn" class="px-4 py-2 font-bold text-white bg-teal-600 rounded-md hover:bg-teal-700">
-                            <i class="fas fa-users-cog mr-2"></i>Criar Roles Padrão
-                        </button>
-                        <p class="text-sm text-gray-400 md:w-2/3">
-                            Clique aqui se a lista de "funções" estiver vazia em outras partes do sistema (como na criação de cursos). Isso criará as roles padrão (Admin, BDR, CS, etc.) no banco de dados. Execute apenas uma vez.
-                        </p>
-                    </div>
-                </div>
-
                 <!-- Service Management -->
-                <div class="bg-gray-800 p-6 rounded-lg shadow-lg mb-6">
-                    <h2 class="text-xl font-semibold mb-4">Gerenciamento de Serviços</h2>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg mb-6">
+                    <h2 class="text-xl font-semibold mb-4 text-gray-800 dark:text-white">Gerenciamento de Serviços</h2>
                     <!-- Add Service Form -->
-                    <form id="service-form" class="mb-6 pb-6 border-b border-gray-700">
+                    <form id="service-form" class="mb-6 pb-6 border-b border-gray-200 dark:border-gray-700">
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>
-                                <label for="service-name" class="block text-sm font-medium text-gray-300">Nome do Serviço</label>
-                                <input type="text" id="service-name" required class="w-full px-3 py-2 mt-1 text-white bg-gray-700 border border-gray-600 rounded-md">
+                                <label for="service-name" class="block text-sm font-medium text-gray-600 dark:text-gray-300">Nome do Serviço</label>
+                                <input type="text" id="service-name" required class="w-full px-3 py-2 mt-1 text-gray-800 dark:text-white bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md">
                             </div>
                             <div>
-                                <label for="service-area" class="block text-sm font-medium text-gray-300">Área</label>
-                                <select id="service-area" class="mt-1 block w-full pl-3 pr-10 py-2 text-base bg-gray-700 border-gray-600 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md">
+                                <label for="service-area" class="block text-sm font-medium text-gray-600 dark:text-gray-300">Área</label>
+                                <select id="service-area" class="mt-1 block w-full pl-3 pr-10 py-2 text-base text-gray-800 dark:text-white bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md">
                                     <option>Site</option>
                                     <option value="GestaodeTrafego">Gestao de Trafego</option>
                                     <option>Design</option>
@@ -149,19 +142,19 @@
                     <!-- Service Lists -->
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div>
-                            <h3 class="text-lg font-semibold mb-3 text-teal-400">Site</h3>
+                            <h3 class="text-lg font-semibold mb-3 text-teal-500 dark:text-teal-400">Site</h3>
                             <ul id="services-list-site" class="space-y-2">
                                 <!-- Services will be listed here -->
                             </ul>
                         </div>
                         <div>
-                            <h3 class="text-lg font-semibold mb-3 text-indigo-400">Gestão de Tráfego</h3>
+                            <h3 class="text-lg font-semibold mb-3 text-indigo-500 dark:text-indigo-400">Gestão de Tráfego</h3>
                             <ul id="services-list-gestao" class="space-y-2">
                                 <!-- Services will be listed here -->
                             </ul>
                         </div>
                         <div>
-                            <h3 class="text-lg font-semibold mb-3 text-pink-400">Design</h3>
+                            <h3 class="text-lg font-semibold mb-3 text-pink-500 dark:text-pink-400">Design</h3>
                             <ul id="services-list-design" class="space-y-2">
                                 <!-- Services will be listed here -->
                             </ul>
@@ -170,67 +163,27 @@
                 </div>
 
                 <!-- Whitelabel Settings -->
-                <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
-                    <h2 class="text-xl font-semibold mb-4">Personalização (Whitelabel)</h2>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+                    <h2 class="text-xl font-semibold mb-4 text-gray-800 dark:text-white">Personalização (Whitelabel)</h2>
                     <form id="whitelabel-form">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label for="header-logo" class="block text-sm font-medium text-gray-300">URL do Logo (Header)</label>
-                                <input type="url" id="header-logo" class="w-full px-3 py-2 mt-1 text-white bg-gray-700 border border-gray-600 rounded-md" placeholder="https://exemplo.com/logo-header.png">
+                                <label for="header-logo" class="block text-sm font-medium text-gray-600 dark:text-gray-300">URL do Logo (Header)</label>
+                                <input type="url" id="header-logo" class="w-full px-3 py-2 mt-1 text-gray-800 dark:text-white bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md" placeholder="https://exemplo.com/logo-header.png">
                             </div>
                             <div>
-                                <label for="sidebar-logo" class="block text-sm font-medium text-gray-300">URL do Ícone (Sidebar)</label>
-                                <input type="url" id="sidebar-logo" class="w-full px-3 py-2 mt-1 text-white bg-gray-700 border border-gray-600 rounded-md" placeholder="https://exemplo.com/logo-sidebar.svg">
+                                <label for="sidebar-logo" class="block text-sm font-medium text-gray-600 dark:text-gray-300">URL do Ícone (Sidebar)</label>
+                                <input type="url" id="sidebar-logo" class="w-full px-3 py-2 mt-1 text-gray-800 dark:text-white bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md" placeholder="https://exemplo.com/logo-sidebar.svg">
                             </div>
                             <div>
-                                <label for="primary-color" class="block text-sm font-medium text-gray-300">Cor Principal do Tema</label>
-                                <input type="color" id="primary-color" class="w-full h-10 px-1 py-1 mt-1 bg-gray-700 border border-gray-600 rounded-md">
+                                <label for="primary-color" class="block text-sm font-medium text-gray-600 dark:text-gray-300">Cor Principal do Tema</label>
+                                <input type="color" id="primary-color" class="w-full h-10 px-1 py-1 mt-1 bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md">
                             </div>
                         </div>
                         <div class="mt-6">
                             <button type="submit" class="px-4 py-2 font-bold text-white bg-primary rounded-md hover:bg-primary-dark">Salvar Personalização</button>
                         </div>
                     </form>
-                </div>
-
-                <!-- Course Management -->
-                <div class="bg-gray-800 p-6 rounded-lg shadow-lg mt-6">
-                    <h2 class="text-xl font-semibold mb-4">Gerenciamento de Cursos</h2>
-                    
-                    <!-- Add Course Form -->
-                    <form id="course-form" class="mb-6">
-                        <input type="hidden" id="course-id-hidden">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label for="course-title" class="block text-sm font-medium text-gray-300">Título do Curso</label>
-                                <input type="text" id="course-title" required class="w-full px-3 py-2 mt-1 text-white bg-gray-700 border border-gray-600 rounded-md">
-                            </div>
-                            <div>
-                                <label for="course-description" class="block text-sm font-medium text-gray-300">Descrição</label>
-                                <textarea id="course-description" rows="3" class="w-full px-3 py-2 mt-1 text-white bg-gray-700 border border-gray-600 rounded-md"></textarea>
-                            </div>
-                        </div>
-                        <div class="mt-6 flex space-x-4">
-                            <button type="submit" class="px-4 py-2 font-bold text-white bg-primary rounded-md hover:bg-primary-dark">Salvar Curso</button>
-                            <button type="button" id="cancel-course-edit" class="px-4 py-2 font-bold text-white bg-gray-600 rounded-md hover:bg-gray-700 hidden">Cancelar</button>
-                        </div>
-                    </form>
-
-                    <!-- Course List -->
-                    <h3 class="text-lg font-semibold mb-4">Cursos Existentes</h3>
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full bg-gray-800">
-                            <thead>
-                                <tr>
-                                    <th class="py-2 px-4 border-b border-gray-700 text-left">Título</th>
-                                    <th class="py-2 px-4 border-b border-gray-700 text-left">Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody id="course-table-body">
-                                <!-- Course rows will be inserted here -->
-                            </tbody>
-                        </table>
-                    </div>
                 </div>
 
             </div>

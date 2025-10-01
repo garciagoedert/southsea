@@ -48,53 +48,6 @@ async function deleteService(serviceId) {
 }
 
 
-// Course Management Functions
-async function saveCourse(courseData) {
-    try {
-        if (courseData.id) {
-            const courseRef = doc(db, 'courses', courseData.id);
-            await updateDoc(courseRef, {
-                title: courseData.title,
-                description: courseData.description
-            });
-            showNotification('Curso atualizado com sucesso!');
-        } else {
-            await addDoc(collection(db, 'courses'), {
-                title: courseData.title,
-                description: courseData.description
-            });
-            showNotification('Curso salvo com sucesso!');
-        }
-    } catch (error) {
-        console.error("Erro ao salvar curso:", error);
-        showNotification('Erro ao salvar curso.', 'error');
-    }
-}
-
-async function loadCourses() {
-    const courses = [];
-    try {
-        const querySnapshot = await getDocs(collection(db, 'courses'));
-        querySnapshot.forEach((doc) => {
-            courses.push({ id: doc.id, ...doc.data() });
-        });
-    } catch (error) {
-        console.error("Erro ao carregar cursos:", error);
-    }
-    return courses;
-}
-
-async function deleteCourse(courseId) {
-    try {
-        await deleteDoc(doc(db, 'courses', courseId));
-        showNotification('Curso excluído com sucesso!');
-    } catch (error) {
-        console.error("Erro ao excluir curso:", error);
-        showNotification('Erro ao excluir curso.', 'error');
-    }
-}
-
-
 async function saveWhitelabelSettings(settings) {
     try {
         const settingsRef = doc(db, 'settings', 'whitelabel');
@@ -154,14 +107,6 @@ function setupAdminPage() {
     const sidebarLogoInput = document.getElementById('sidebar-logo');
     const primaryColorInput = document.getElementById('primary-color');
 
-    // Course form elements
-    const courseForm = document.getElementById('course-form');
-    const courseTitleInput = document.getElementById('course-title');
-    const courseDescriptionInput = document.getElementById('course-description');
-    const courseIdHiddenInput = document.getElementById('course-id-hidden');
-    const cancelCourseEditBtn = document.getElementById('cancel-course-edit');
-    const courseTableBody = document.getElementById('course-table-body');
-
     // Service Management elements
     const serviceForm = document.getElementById('service-form');
     const serviceNameInput = document.getElementById('service-name');
@@ -210,15 +155,16 @@ function setupAdminPage() {
         const users = await getAllUsers();
         users.forEach(user => {
             const row = document.createElement('tr');
+            row.className = 'hover:bg-gray-50 dark:hover:bg-gray-700';
             row.innerHTML = `
-                <td class="py-2 px-4 border-b border-gray-700">${user.name}</td>
-                <td class="py-2 px-4 border-b border-gray-700">${user.email}</td>
-                <td class="py-2 px-4 border-b border-gray-700">${user.role}</td>
-                <td class="py-2 px-4 border-b border-gray-700">
+                <td class="py-2 px-4">${user.name}</td>
+                <td class="py-2 px-4">${user.email}</td>
+                <td class="py-2 px-4">${user.role}</td>
+                <td class="py-2 px-4">
                     <button class="text-primary hover:text-primary-dark mr-2 edit-btn" data-email="${user.email}">
                         <i class="fas fa-edit"></i>
                     </button>
-                    <button class="text-red-400 hover:text-red-600 delete-btn" data-email="${user.email}">
+                    <button class="text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-500 delete-btn" data-email="${user.email}">
                         <i class="fas fa-trash"></i>
                     </button>
                 </td>
@@ -347,7 +293,7 @@ function setupAdminPage() {
         clientSearchResults.innerHTML = '';
         results.slice(0, 5).forEach(prospect => {
             const div = document.createElement('div');
-            div.className = 'p-2 hover:bg-gray-600 cursor-pointer';
+            div.className = 'p-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer';
             div.textContent = prospect.empresa;
             div.onclick = () => {
                 associatedClientIds.add(prospect.id);
@@ -365,8 +311,8 @@ function setupAdminPage() {
             const prospect = allProspects.find(p => p.id === id);
             if (prospect) {
                 const div = document.createElement('div');
-                div.className = 'flex justify-between items-center bg-gray-600 p-2 rounded';
-                div.innerHTML = `<span>${prospect.empresa}</span><button type="button" class="text-red-400">&times;</button>`;
+                div.className = 'flex justify-between items-center bg-gray-100 dark:bg-gray-600 p-2 rounded';
+                div.innerHTML = `<span>${prospect.empresa}</span><button type="button" class="text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-500">&times;</button>`;
                 div.querySelector('button').onclick = () => {
                     associatedClientIds.delete(id);
                     renderAssociatedClients();
@@ -413,10 +359,10 @@ function setupAdminPage() {
         
         services.forEach(service => {
             const li = document.createElement('li');
-            li.className = 'flex justify-between items-center bg-gray-700 p-2 rounded';
+            li.className = 'flex justify-between items-center bg-gray-50 dark:bg-gray-700 p-2 rounded';
             li.innerHTML = `
-                <span>${service.name}</span>
-                <button class="text-red-400 hover:text-red-600 delete-service-btn" data-id="${service.id}">&times;</button>
+                <span class="text-gray-800 dark:text-gray-300">${service.name}</span>
+                <button class="text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-500 delete-service-btn" data-id="${service.id}">&times;</button>
             `;
 
             const normalizedArea = (service.area || '').replace(/\s+/g, '').toLowerCase();
@@ -432,123 +378,12 @@ function setupAdminPage() {
     }
 
 
-    // Course Management Logic
-    async function renderCourses() {
-        courseTableBody.innerHTML = '';
-        const courses = await loadCourses();
-        courses.forEach(course => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td class="py-2 px-4 border-b border-gray-700">${course.title}</td>
-                <td class="py-2 px-4 border-b border-gray-700">
-                    <a href="course-editor.html?courseId=${course.id}" class="text-primary hover:text-primary-dark mr-2" title="Editar Módulos e Aulas">
-                        <i class="fas fa-cog"></i>
-                    </a>
-                    <button class="text-primary hover:text-primary-dark mr-2 edit-course-btn" data-id="${course.id}" title="Editar Título/Descrição">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    <button class="text-red-400 hover:text-red-600 delete-course-btn" data-id="${course.id}" title="Excluir Curso">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </td>
-            `;
-            courseTableBody.appendChild(row);
-        });
-    }
-
-    function handleCourseFormSubmit(e) {
-        e.preventDefault();
-        const courseData = {
-            id: courseIdHiddenInput.value,
-            title: courseTitleInput.value,
-            description: courseDescriptionInput.value
-        };
-        saveCourse(courseData).then(() => {
-            resetCourseForm();
-            renderCourses();
-        });
-    }
-
-    function resetCourseForm() {
-        courseForm.reset();
-        courseIdHiddenInput.value = '';
-        cancelCourseEditBtn.classList.add('hidden');
-    }
-
-    courseTableBody.addEventListener('click', async function(e) {
-        if (e.target.closest('.edit-course-btn')) {
-            const courseId = e.target.closest('.edit-course-btn').dataset.id;
-            const courses = await loadCourses();
-            const course = courses.find(c => c.id === courseId);
-            if (course) {
-                courseTitleInput.value = course.title;
-                courseDescriptionInput.value = course.description;
-                courseIdHiddenInput.value = course.id;
-                cancelCourseEditBtn.classList.remove('hidden');
-            }
-        }
-
-        if (e.target.closest('.delete-course-btn')) {
-            const courseId = e.target.closest('.delete-course-btn').dataset.id;
-            if (await showConfirmationModal('Tem certeza que deseja excluir este curso?', 'Excluir')) {
-                deleteCourse(courseId).then(() => {
-                    renderCourses();
-                });
-            }
-        }
-    });
-
-    cancelCourseEditBtn.addEventListener('click', resetCourseForm);
-    courseForm.addEventListener('submit', handleCourseFormSubmit);
-
-
     renderUsers();
     populateWhitelabelForm();
-    renderCourses();
     renderServices();
     setupServiceManagement();
     setupUIListeners();
 
-    // --- SYSTEM ACTIONS ---
-    const seedRolesBtn = document.getElementById('seed-roles-btn');
-    seedRolesBtn.addEventListener('click', async () => {
-        showConfirmationModal(
-            'Tem certeza que deseja criar as roles padrão? Esta ação só deve ser executada uma vez.',
-            async () => {
-                await seedRoles();
-            },
-            'Sim, criar roles'
-        );
-    });
-
-    async function seedRoles() {
-        const rolesCollection = collection(db, 'roles');
-        const rolesSnapshot = await getDocs(rolesCollection);
-
-        if (!rolesSnapshot.empty) {
-            showNotification("A coleção 'roles' já contém dados. Nenhuma ação foi executada.", "info");
-            return;
-        }
-
-        const rolesToAdd = [
-            { name: 'Admin' },
-            { name: 'BDR' },
-            { name: 'BDR Líder' },
-            { name: 'Closer' },
-            { name: 'CS' },
-            { name: 'Produção' }
-        ];
-
-        try {
-            for (const role of rolesToAdd) {
-                await addDoc(rolesCollection, role);
-            }
-            showNotification("Roles padrão criadas com sucesso!", "success");
-        } catch (error) {
-            console.error("Erro ao adicionar roles:", error);
-            showNotification("Ocorreu um erro ao criar as roles.", "error");
-        }
-    }
 }
 
 loadComponents(() => {

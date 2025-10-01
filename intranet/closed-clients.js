@@ -2,7 +2,7 @@
 import { getAuth, onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import { collection, onSnapshot, query, where, doc, deleteDoc, updateDoc, Timestamp, arrayUnion, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 import { db, appId, app } from './firebase-config.js';
-import { showNotification, showConfirmationModal, setupUIListeners as setupCommonUIListeners } from './common-ui.js';
+import { showNotification, showConfirmationModal, loadComponents, setupUIListeners } from './common-ui.js';
 
 // --- INITIALIZATION ---
 const auth = getAuth(app);
@@ -52,7 +52,10 @@ onAuthStateChanged(auth, async (user) => {
             await fetchAllUsers();
             setupClosedClientsListener();
             // Load components and setup UI listeners after main data is ready
-            loadComponents(); 
+            loadComponents().then(() => {
+                setupUIListeners(); // Initialize sidebar toggle and other common listeners
+                setupPageSpecificListeners(); // Initialize page-specific listeners
+            });
         } else {
             window.location.href = 'login.html';
         }
@@ -171,8 +174,8 @@ function renderUserList(config, searchTerm) {
 
     // Add "All" option
     const allOption = document.createElement('div');
-    allOption.className = 'p-2 hover:bg-gray-700 cursor-pointer flex items-center gap-3';
-    allOption.innerHTML = `<i class="fas fa-globe text-gray-500 text-2xl w-8 h-8 flex items-center justify-center"></i> <div><p class="font-semibold text-white">Todos</p></div>`;
+    allOption.className = 'p-2 hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer flex items-center gap-3';
+    allOption.innerHTML = `<i class="fas fa-globe text-gray-500 text-2xl w-8 h-8 flex items-center justify-center"></i> <div><p class="font-semibold text-gray-800 dark:text-white">Todos</p></div>`;
     allOption.addEventListener('click', () => {
         const state = config.type === 'cs' ? selectedCs : selectedProd;
         state.length = 0; // Clear the selection
@@ -183,8 +186,8 @@ function renderUserList(config, searchTerm) {
 
 
     const noneOption = document.createElement('div');
-    noneOption.className = 'p-2 hover:bg-gray-700 cursor-pointer flex items-center gap-3';
-    noneOption.innerHTML = `<i class="fas fa-ban text-gray-500 text-2xl w-8 h-8 flex items-center justify-center"></i> <div><p class="font-semibold text-white">Nenhum</p></div>`;
+    noneOption.className = 'p-2 hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer flex items-center gap-3';
+    noneOption.innerHTML = `<i class="fas fa-ban text-gray-500 text-2xl w-8 h-8 flex items-center justify-center"></i> <div><p class="font-semibold text-gray-800 dark:text-white">Nenhum</p></div>`;
     noneOption.addEventListener('click', () => selectUser(config, { id: 'NONE', name: 'Nenhum' }));
     list.appendChild(noneOption);
 
@@ -192,15 +195,15 @@ function renderUserList(config, searchTerm) {
         .filter(user => user.name.toLowerCase().includes(lowerCaseSearchTerm) || user.email.toLowerCase().includes(lowerCaseSearchTerm))
         .forEach(user => {
             const item = document.createElement('div');
-            item.className = 'p-2 hover:bg-gray-700 cursor-pointer flex items-center gap-3';
+            item.className = 'p-2 hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer flex items-center gap-3';
             const avatar = user.profilePicture || 'default-profile.svg';
             const avatarHtml = `<img src="${avatar}" alt="${user.name}" class="w-8 h-8 rounded-full">`;
             
             item.innerHTML = `
                 ${avatarHtml}
                 <div>
-                    <p class="font-semibold text-white">${user.name}</p>
-                    <p class="text-sm text-gray-400">${user.email}</p>
+                    <p class="font-semibold text-gray-800 dark:text-white">${user.name}</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">${user.email}</p>
                 </div>`;
             item.addEventListener('click', () => selectUser(config, user));
             list.appendChild(item);
@@ -526,17 +529,17 @@ function renderClosedClients() {
 
 function createClientCard(client, users) {
     const card = document.createElement('div');
-    card.className = `relative group bg-gray-800 p-4 rounded-lg shadow-md border-l-4 flex flex-col hover:bg-gray-700/50 transition-colors duration-200`;
+    card.className = `relative group bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md border-l-4 flex flex-col hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-200`;
     card.style.borderLeftColor = getPriorityColor(client.prioridade);
     card.dataset.clientId = client.id;
 
     const sectorColor = getSectorColor(client.setor);
     const csUser = users.find(u => u.id === client.csResponsibleId);
-    const csResponsibleHTML = csUser ? `<p class="text-xs text-gray-400 mt-1"><i class="fas fa-headset mr-1"></i> CS: ${csUser.name}</p>` : '';
+    const csResponsibleHTML = csUser ? `<p class="text-xs text-gray-500 dark:text-gray-400 mt-1"><i class="fas fa-headset mr-1"></i> CS: ${csUser.name}</p>` : '';
 
     const productionTeamHTML = (client.productionTeam && client.productionTeam.length > 0)
-        ? `<div class="mt-3 pt-3 border-t border-gray-700">
-               <h5 class="text-xs font-bold text-gray-400 mb-2">Equipe de Produção:</h5>
+        ? `<div class="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
+               <h5 class="text-xs font-bold text-gray-500 dark:text-gray-400 mb-2">Equipe de Produção:</h5>
                <div class="flex flex-wrap gap-2">
                    ${client.productionTeam.map(member => {
                        const user = users.find(u => u.id === member.userId);
@@ -552,22 +555,22 @@ function createClientCard(client, users) {
     cardLink.href = `perfil.html?id=${client.id}`;
     cardLink.className = 'flex flex-col flex-grow';
     cardLink.innerHTML = `
-        <h4 class="font-bold text-lg mb-2">${client.empresa}</h4>
+        <h4 class="font-bold text-lg mb-2 text-gray-900 dark:text-white">${client.empresa}</h4>
         <div class="flex items-center gap-2 mb-3 flex-wrap">
             <span class="text-xs font-semibold px-2 py-0.5 rounded-full ${sectorColor.bg} ${sectorColor.text}">${client.setor}</span>
-            <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-gray-700 text-gray-300">P${client.prioridade}</span>
+            <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300">P${client.prioridade}</span>
         </div>
-        <p class="text-sm text-green-400 font-semibold mb-2">R$ ${client.ticketEstimado?.toLocaleString('pt-BR') || 'N/A'}</p>
+        <p class="text-sm text-green-600 dark:text-green-400 font-semibold mb-2">R$ ${client.ticketEstimado?.toLocaleString('pt-BR') || 'N/A'}</p>
         <div class="flex-grow"></div>
         ${productionTeamHTML}
-        <div class="mt-3 pt-3 border-t border-gray-700">
+        <div class="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
             ${csResponsibleHTML}
-            <p class="text-xs text-gray-400 mt-1">Fechado em: ${client.updatedAt ? new Date(client.updatedAt.seconds * 1000).toLocaleDateString('pt-BR') : 'N/A'}</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Fechado em: ${client.updatedAt ? new Date(client.updatedAt.seconds * 1000).toLocaleDateString('pt-BR') : 'N/A'}</p>
         </div>
     `;
 
     const deleteButton = document.createElement('button');
-    deleteButton.className = 'absolute top-2 right-2 text-gray-500 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100 z-10';
+    deleteButton.className = 'absolute top-2 right-2 text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100 z-10';
     deleteButton.innerHTML = '<i class="fas fa-times"></i>';
     deleteButton.title = 'Excluir Cliente';
     deleteButton.onclick = (e) => {
@@ -590,51 +593,6 @@ function setupPageSpecificListeners() {
     if (applyBtn) applyBtn.addEventListener('click', applyFilters);
     if (clearBtn) clearBtn.addEventListener('click', clearFilters);
 };
-
-// --- INITIALIZE APP ---
-async function loadComponents() {
-    const headerContainer = document.getElementById('header-container');
-    const sidebarContainer = document.getElementById('sidebar-container');
-    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-
-    try {
-        const [headerRes, sidebarRes] = await Promise.all([
-            fetch('header.html'),
-            fetch(`sidebar.html?v=${new Date().getTime()}`) // Add cache-busting query param
-        ]);
-
-        if (!headerRes.ok || !sidebarRes.ok) {
-            throw new Error('Failed to fetch components');
-        }
-
-        headerContainer.innerHTML = await headerRes.text();
-        sidebarContainer.innerHTML = await sidebarRes.text();
-
-        // Set active link in sidebar
-        const sidebarLinks = sidebarContainer.querySelectorAll('nav a');
-        sidebarLinks.forEach(link => {
-            const linkPage = link.getAttribute('href').split('/').pop();
-            if (linkPage === currentPage) {
-                link.classList.add('bg-blue-500', 'text-white');
-                link.classList.remove('text-gray-400', 'hover:bg-gray-700');
-            }
-        });
-        
-        // All components are loaded, now setup listeners
-        setupCommonUIListeners();
-        setupPageSpecificListeners();
-
-    } catch (error) {
-        console.error('Error loading components:', error);
-        if (headerContainer) headerContainer.innerHTML = '<p class="text-red-500 p-4">Error loading header.</p>';
-        if (sidebarContainer) sidebarContainer.innerHTML = '<p class="text-red-500 p-4">Error loading sidebar.</p>';
-    }
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    // The onAuthStateChanged logic will now correctly trigger loadComponents
-    // after user is verified and initial data is fetched.
-});
 
 async function handleDeleteRequest(clientId, clientName) {
     const confirmDelete = async () => {

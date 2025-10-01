@@ -1,24 +1,8 @@
 // Firebase Imports
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-import { getAuth, onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+import { db, app, auth, appId } from './firebase-config.js';
+import { onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import { getFirestore, collection, getDocs, query, where, writeBatch, doc, arrayUnion } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-// Your web app's Firebase configuration
-const firebaseConfig = {
-    apiKey: "AIzaSyAKTAVsJKQISRYamsX7SMmh9uCJ6d2bMEs",
-    authDomain: "kanban-652ba.firebaseapp.com",
-    projectId: "kanban-652ba",
-    storageBucket: "kanban-652ba.firebasestorage.app",
-    messagingSenderId: "476390177044",
-    appId: "1:476390177044:web:39e6597eb624006ee06a01",
-    measurementId: "G-KRW331FL5F"
-};
-
-// --- INITIALIZATION ---
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-const appId = firebaseConfig.appId || 'default-kanban-app';
+import { loadComponents, setupUIListeners } from './common-ui.js';
 
 // --- UI ELEMENTS ---
 const exportEmailsBtn = document.getElementById('exportEmailsBtn');
@@ -34,8 +18,10 @@ let lastFilteredProspectIds = [];
 onAuthStateChanged(auth, async (user) => {
     if (user) {
         if (sessionStorage.getItem('isLoggedIn') === 'true') {
-            document.getElementById('main-container').classList.remove('hidden');
-            setupEventListeners();
+            loadComponents().then(() => {
+                setupUIListeners();
+                setupEventListeners();
+            });
         } else {
             window.location.href = 'login.html';
         }
@@ -156,35 +142,4 @@ function downloadEmails(emailArray) {
     
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-}
-
-// --- UI LISTENERS (for sidebar, etc.) ---
-window.setupUIListeners = function() {
-    const sidebar = document.getElementById('sidebar');
-    const mainContent = document.getElementById('main-content');
-    const menuToggle = document.getElementById('menu-toggle');
-    const sidebarCloseBtn = document.getElementById('sidebar-close-btn');
-    const backdrop = document.getElementById('sidebar-backdrop');
-
-    if (sidebar && menuToggle && sidebarCloseBtn && backdrop) {
-        const toggleSidebar = () => {
-            const isHidden = sidebar.classList.contains('-translate-x-full');
-            if (isHidden) {
-                sidebar.classList.remove('-translate-x-full');
-                backdrop.classList.remove('hidden');
-                if (window.innerWidth >= 768) { 
-                     mainContent.classList.add('md:ml-64');
-                }
-            } else {
-                sidebar.classList.add('-translate-x-full');
-                backdrop.classList.add('hidden');
-                if (window.innerWidth >= 768) {
-                    mainContent.classList.remove('md:ml-64');
-                }
-            }
-        };
-        menuToggle.addEventListener('click', toggleSidebar);
-        sidebarCloseBtn.addEventListener('click', toggleSidebar);
-        backdrop.addEventListener('click', toggleSidebar);
-    }
 }

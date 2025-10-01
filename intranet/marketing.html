@@ -9,13 +9,18 @@
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Configure Tailwind CSS for dark mode
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="log.css">
 
     <style>
         /* Custom Styles */
@@ -25,7 +30,7 @@
         }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-200">
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
 
     <div id="main-container" class="flex h-screen">
         <div id="sidebar-container"></div>
@@ -39,19 +44,19 @@
 
             <!-- Board Content -->
             <div class="flex-grow p-4 md:p-6 lg:p-8 flex flex-col overflow-hidden">
-                <h1 class="text-3xl font-bold mb-6">Marketing</h1>
+                <h1 class="text-3xl font-bold mb-6 text-gray-900 dark:text-white">Marketing</h1>
 
                 <!-- Marketing Tools Section -->
-                <div class="bg-gray-800 p-6 rounded-lg shadow-md">
-                    <h2 class="text-xl font-semibold mb-4">Ferramentas de Exportação</h2>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                    <h2 class="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Ferramentas de Exportação</h2>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                         <div>
-                            <label for="sectorFilter" class="block text-sm font-medium text-gray-300 mb-1">Filtrar por Setor</label>
-                            <input type="text" id="sectorFilter" placeholder="Ex: Imobiliário" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <label for="sectorFilter" class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Filtrar por Setor</label>
+                            <input type="text" id="sectorFilter" placeholder="Ex: Imobiliário" class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                         <div>
-                            <label for="leadSourceFilter" class="block text-sm font-medium text-gray-300 mb-1">Filtrar por Origem</label>
-                            <input type="text" id="leadSourceFilter" placeholder="Ex: Indicação" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <label for="leadSourceFilter" class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Filtrar por Origem</label>
+                            <input type="text" id="leadSourceFilter" placeholder="Ex: Indicação" class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                     </div>
                     <div class="flex items-center gap-4">
@@ -59,17 +64,17 @@
                             <i class="fas fa-envelope"></i>
                             Exportar E-mails Filtrados
                         </button>
-                        <span id="exportStatus" class="text-sm text-gray-400"></span>
+                        <span id="exportStatus" class="text-sm text-gray-500 dark:text-gray-400"></span>
                     </div>
-                    <div class="mt-6 border-t border-gray-700 pt-6">
-                        <h3 class="text-lg font-semibold mb-2">Registrar Campanha</h3>
+                    <div class="mt-6 border-t border-gray-200 dark:border-gray-700 pt-6">
+                        <h3 class="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Registrar Campanha</h3>
                         <div class="flex items-center gap-4">
-                            <input type="text" id="campaignName" placeholder="Nome da Campanha (ex: Promoção de Inverno)" class="w-full md:w-1/2 bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <input type="text" id="campaignName" placeholder="Nome da Campanha (ex: Promoção de Inverno)" class="w-full md:w-1/2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
                             <button id="registerCampaignBtn" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2">
                                 <i class="fas fa-save"></i>
                                 Registrar
                             </button>
-                            <span id="campaignStatus" class="text-sm text-gray-400"></span>
+                            <span id="campaignStatus" class="text-sm text-gray-500 dark:text-gray-400"></span>
                         </div>
                     </div>
                 </div>
@@ -79,49 +84,5 @@
 
     <!-- Firebase SDK -->
     <script type="module" src="marketing.js"></script>
-    <script type="module">
-        async function loadComponents() {
-            const headerContainer = document.getElementById('header-container');
-            const sidebarContainer = document.getElementById('sidebar-container');
-            const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-
-            try {
-                const [headerRes, sidebarRes] = await Promise.all([
-                    fetch('header.html'),
-                    fetch(`sidebar.html?v=${new Date().getTime()}`)
-                ]);
-
-                if (!headerRes.ok || !sidebarRes.ok) {
-                    throw new Error('Failed to fetch components');
-                }
-
-                headerContainer.innerHTML = await headerRes.text();
-                sidebarContainer.innerHTML = await sidebarRes.text();
-
-                // Set active link in sidebar
-                const sidebarLinks = sidebarContainer.querySelectorAll('nav a');
-                sidebarLinks.forEach(link => {
-                    const linkPage = link.getAttribute('href').split('/').pop();
-                    if (linkPage === currentPage) {
-                        link.classList.add('bg-blue-500', 'text-white');
-                        link.classList.remove('bg-gray-700', 'hover:bg-gray-600');
-                    }
-                });
-                
-                if (typeof window.setupUIListeners === 'function') {
-                    window.setupUIListeners();
-                }
-
-            } catch (error) {
-                console.error('Error loading components:', error);
-                headerContainer.innerHTML = '<p class="text-red-500 p-4">Error loading header.</p>';
-                sidebarContainer.innerHTML = '<p class="text-red-500 p-4">Error loading sidebar.</p>';
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            loadComponents();
-        });
-    </script>
 </body>
 </html>

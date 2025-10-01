@@ -81,7 +81,7 @@ function setupTabs() {
         const tabButton = document.createElement('a');
         tabButton.href = '#';
         tabButton.id = `tab-${tab.id}`;
-        tabButton.className = `tab-link py-2 px-4 text-sm font-medium rounded-t-lg whitespace-nowrap ${index === 0 ? 'border-b-2 border-blue-500 text-blue-500' : 'text-gray-400 hover:text-gray-200 hover:border-gray-500'}`;
+        tabButton.className = `tab-link py-2 px-4 text-sm font-medium rounded-t-lg whitespace-nowrap ${index === 0 ? 'border-b-2 border-blue-500 text-blue-500' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:border-gray-300 dark:hover:border-gray-500'}`;
         tabButton.textContent = tab.label;
         tabButton.dataset.tab = tab.id;
         tabsContainer.appendChild(tabButton);
@@ -99,10 +99,10 @@ function setupTabs() {
 
         document.querySelectorAll('.tab-link').forEach(tab => {
             tab.classList.remove('border-blue-500', 'text-blue-500');
-            tab.classList.add('text-gray-400', 'hover:text-gray-200', 'hover:border-gray-500');
+            tab.classList.add('text-gray-500', 'dark:text-gray-400', 'hover:text-gray-700', 'dark:hover:text-gray-200', 'hover:border-gray-300', 'dark:hover:border-gray-500');
         });
         targetTab.classList.add('border-blue-500', 'text-blue-500');
-        targetTab.classList.remove('text-gray-400', 'hover:text-gray-200', 'hover:border-gray-500');
+        targetTab.classList.remove('text-gray-500', 'dark:text-gray-400', 'hover:text-gray-700', 'dark:hover:text-gray-200', 'hover:border-gray-300', 'dark:hover:border-gray-500');
 
         document.querySelectorAll('.tab-panel').forEach(panel => {
             panel.classList.add('hidden');
@@ -168,7 +168,7 @@ function renderLeads(leadsToRender, searchTerm = '') {
 
 function renderCardsInPanel(leads, panel) {
     if (leads.length === 0) {
-        panel.innerHTML = '<p class="text-gray-400 col-span-full">Nenhum lead encontrado nesta categoria.</p>';
+        panel.innerHTML = '<p class="text-gray-500 dark:text-gray-400 col-span-full">Nenhum lead encontrado nesta categoria.</p>';
         return;
     }
 
@@ -177,18 +177,18 @@ function renderCardsInPanel(leads, panel) {
         const timeAgo = archivedDate ? `${Math.floor((new Date() - archivedDate) / (1000 * 60 * 60 * 24))} dias atrás` : 'Data indisponível';
 
         return `
-        <div class="bg-gray-800 p-4 rounded-lg shadow-lg flex flex-col">
+        <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg flex flex-col">
             <div>
-                <h3 class="text-lg font-bold text-white">${lead.empresa || 'Empresa não informada'}</h3>
-                <p class="text-sm text-gray-400">${lead.setor || 'Setor não informado'}</p>
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white">${lead.empresa || 'Empresa não informada'}</h3>
+                <p class="text-sm text-gray-500 dark:text-gray-400">${lead.setor || 'Setor não informado'}</p>
                 <div class="mt-2">
-                    ${lead.telefone ? `<p class="text-sm text-gray-300"><i class="fas fa-phone-alt mr-2"></i>${lead.telefone}</p>` : ''}
-                    ${lead.email ? `<p class="text-sm text-gray-300"><i class="fas fa-envelope mr-2"></i>${lead.email}</p>` : ''}
+                    ${lead.telefone ? `<p class="text-sm text-gray-700 dark:text-gray-300"><i class="fas fa-phone-alt mr-2"></i>${lead.telefone}</p>` : ''}
+                    ${lead.email ? `<p class="text-sm text-gray-700 dark:text-gray-300"><i class="fas fa-envelope mr-2"></i>${lead.email}</p>` : ''}
                 </div>
-                <p class="text-xs text-gray-500 mt-2"><i class="fas fa-calendar-alt mr-1"></i> Arquivado: ${timeAgo}</p>
-                ${lead.createdBy ? `<p class="text-xs text-gray-500 mt-2 pt-2 border-t border-gray-700"><i class="fas fa-user-plus mr-1"></i> ${lead.createdBy}</p>` : ''}
+                <p class="text-xs text-gray-400 dark:text-gray-500 mt-2"><i class="fas fa-calendar-alt mr-1"></i> Arquivado: ${timeAgo}</p>
+                ${lead.createdBy ? `<p class="text-xs text-gray-400 dark:text-gray-500 mt-2 pt-2 border-t border-gray-200 dark:border-gray-700"><i class="fas fa-user-plus mr-1"></i> ${lead.createdBy}</p>` : ''}
             </div>
-            <div class="mt-4 pt-4 border-t border-gray-700 text-right">
+            <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 text-right">
                 <button data-id="${lead.id}" class="edit-btn bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-lg">Detalhes</button>
             </div>
         </div>
@@ -236,7 +236,7 @@ function renderContactLog(logs = []) {
     if (!logContainer) return;
 
     if (!logs || logs.length === 0) {
-        logContainer.innerHTML = '<p class="text-gray-500 text-sm">Nenhum contato registrado.</p>';
+        logContainer.innerHTML = '<p class="text-gray-500 dark:text-gray-500 text-sm">Nenhum contato registrado.</p>';
         return;
     }
 
@@ -246,9 +246,9 @@ function renderContactLog(logs = []) {
             const date = log.timestamp ? log.timestamp.toDate().toLocaleString('pt-BR') : 'Data pendente';
             const author = log.author || 'Sistema';
             return `
-                <div class="bg-gray-700/50 p-2 rounded-md">
-                    <p class="text-sm text-gray-300 whitespace-pre-wrap">${log.description}</p>
-                    <p class="text-xs text-gray-500 text-right mt-1">${author} - ${date}</p>
+                <div class="bg-gray-200 dark:bg-gray-700/50 p-2 rounded-md">
+                    <p class="text-sm text-gray-800 dark:text-gray-300 whitespace-pre-wrap">${log.description}</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-500 text-right mt-1">${author} - ${date}</p>
                 </div>
             `;
         }).join('');

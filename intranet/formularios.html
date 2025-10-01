@@ -25,9 +25,17 @@
             background-color: #f9fafb;
             border: 1px solid #e5e7eb;
         }
+        .dark .builder-panel {
+            background-color: #1f2937; /* bg-gray-800 */
+            border: 1px solid #374151; /* bg-gray-700 */
+        }
         .preview-panel {
             background-color: #ffffff;
             border: 1px solid #e5e7eb;
+        }
+        .dark .preview-panel {
+            background-color: #111827; /* bg-gray-900 */
+            border: 1px solid #374151; /* bg-gray-700 */
         }
         .sortable-ghost {
             opacity: 0.4;
@@ -38,14 +46,14 @@
         }
     </style>
 </head>
-<body>
+<body class="bg-gray-100 dark:bg-gray-900">
     <div id="sidebar-container"></div>
     <div id="main-content" class="main-content">
         <div id="header-container"></div>
         <div class="content-area">
             <div id="form-list-view">
                 <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-semibold text-gray-700">Gerenciamento de Formulários</h2>
+                    <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200">Gerenciamento de Formulários</h2>
                 </div>
                 <div id="forms-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <!-- Cards dos formulários existentes serão inseridos aqui -->

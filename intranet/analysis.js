@@ -125,33 +125,33 @@ async function renderBdrDashboard(user) {
 
         // --- Render BDR stats and charts ---
         mainContent.innerHTML = `
-            <h1 class="text-2xl font-bold mb-6">Dashboard de BDR: ${user.name || user.email}</h1>
+            <h1 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Dashboard de BDR: ${user.name || user.email}</h1>
             <div id="stats" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-                <div class="bg-gray-800 p-4 rounded-lg flex items-center gap-4 shadow-md">
-                    <div class="bg-gray-700 p-3 rounded-full"><i class="fas fa-bullseye fa-lg text-blue-400"></i></div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg flex items-center gap-4 shadow-md">
+                    <div class="bg-gray-100 dark:bg-gray-700 p-3 rounded-full"><i class="fas fa-bullseye fa-lg text-blue-500 dark:text-blue-400"></i></div>
                     <div>
-                        <div class="text-2xl font-bold">${leadsProspectados}</div>
-                        <div class="text-sm text-gray-400">Leads Prospectados</div>
+                        <div class="text-2xl font-bold text-gray-900 dark:text-white">${leadsProspectados}</div>
+                        <div class="text-sm text-gray-500 dark:text-gray-400">Leads Prospectados</div>
                     </div>
                 </div>
-                <div class="bg-gray-800 p-4 rounded-lg flex items-center gap-4 shadow-md">
-                    <div class="bg-gray-700 p-3 rounded-full"><i class="fas fa-calendar-check fa-lg text-yellow-400"></i></div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg flex items-center gap-4 shadow-md">
+                    <div class="bg-gray-100 dark:bg-gray-700 p-3 rounded-full"><i class="fas fa-calendar-check fa-lg text-yellow-500 dark:text-yellow-400"></i></div>
                     <div>
-                        <div class="text-2xl font-bold">${reunioesMarcadas}</div>
-                        <div class="text-sm text-gray-400">Reuniões Marcadas</div>
+                        <div class="text-2xl font-bold text-gray-900 dark:text-white">${reunioesMarcadas}</div>
+                        <div class="text-sm text-gray-500 dark:text-gray-400">Reuniões Marcadas</div>
                     </div>
                 </div>
-                <div class="bg-gray-800 p-4 rounded-lg flex items-center gap-4 shadow-md">
-                    <div class="bg-gray-700 p-3 rounded-full"><i class="fas fa-handshake fa-lg text-green-400"></i></div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg flex items-center gap-4 shadow-md">
+                    <div class="bg-gray-100 dark:bg-gray-700 p-3 rounded-full"><i class="fas fa-handshake fa-lg text-green-500 dark:text-green-400"></i></div>
                     <div>
-                        <div class="text-2xl font-bold">${reunioesCompareceram} <span class="text-lg text-gray-400">/ ${metaIndividualBDR}</span></div>
-                        <div class="text-sm text-gray-400">Meta Individual</div>
+                        <div class="text-2xl font-bold text-gray-900 dark:text-white">${reunioesCompareceram} <span class="text-lg text-gray-500 dark:text-gray-400">/ ${metaIndividualBDR}</span></div>
+                        <div class="text-sm text-gray-500 dark:text-gray-400">Meta Individual</div>
                     </div>
                 </div>
             </div>
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
-                <div class="bg-gray-800 p-4 rounded-lg shadow-md">
-                    <h2 class="text-xl font-bold mb-4">Leads por Setor</h2>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
+                    <h2 class="text-xl font-bold mb-4 text-gray-900 dark:text-white">Leads por Setor</h2>
                     <canvas id="sectorChart"></canvas>
                 </div>
             </div>
@@ -236,11 +236,11 @@ async function renderAdminDashboard(user) {
     const mainContent = document.getElementById('dashboard-content');
     mainContent.innerHTML = `
         <div class="flex flex-wrap justify-between items-center gap-4 mb-6">
-            <h1 class="text-2xl font-bold">Dashboard de Administrador</h1>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Dashboard de Administrador</h1>
             <div class="flex items-center gap-4">
                 <div class="flex-grow md:flex-grow-0">
                     <label for="user-select" class="sr-only">Ver dashboard como:</label>
-                    <select id="user-select" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                    <select id="user-select" class="bg-gray-200 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                         <!-- Options will be populated by JS -->
                     </select>
                 </div>
@@ -249,10 +249,10 @@ async function renderAdminDashboard(user) {
                 </button>
             </div>
         </div>
-        <hr class="border-gray-700 my-4">
+        <hr class="border-gray-200 dark:border-gray-700 my-4">
         <div id="admin-dashboard-view">
             <!-- Global or selected user dashboard will be loaded here -->
-            <p class="text-center p-8">Carregando dados...</p>
+            <p class="text-center p-8 text-gray-500 dark:text-gray-400">Carregando dados...</p>
         </div>
     `;
 
@@ -384,42 +384,42 @@ async function renderGlobalAdminView(adminUser) {
         // --- RENDER HTML ---
         viewContainer.innerHTML = `
             <!-- Global Metrics -->
-            <h2 class="text-xl font-bold mb-4">Métricas Gerais do Sistema</h2>
+            <h2 class="text-xl font-bold mb-4 text-gray-900 dark:text-white">Métricas Gerais do Sistema</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                <div class="bg-gray-800 p-4 rounded-lg shadow-md"><div class="text-2xl font-bold">${totalLeads}</div><div class="text-sm text-gray-400">Total de Leads</div></div>
-                <div class="bg-gray-800 p-4 rounded-lg shadow-md"><div class="text-2xl font-bold">${totalReunioesMarcadas}</div><div class="text-sm text-gray-400">Reuniões Marcadas</div></div>
-                <div class="bg-gray-800 p-4 rounded-lg shadow-md"><div class="text-2xl font-bold">${totalReunioesCompareceram}</div><div class="text-sm text-gray-400">Reuniões Realizadas</div></div>
-                <div class="bg-gray-800 p-4 rounded-lg shadow-md"><div class="text-2xl font-bold">${conversaoGeral}%</div><div class="text-sm text-gray-400">Conversão (Realizadas/Marcadas)</div></div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md"><div class="text-2xl font-bold text-gray-900 dark:text-white">${totalLeads}</div><div class="text-sm text-gray-500 dark:text-gray-400">Total de Leads</div></div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md"><div class="text-2xl font-bold text-gray-900 dark:text-white">${totalReunioesMarcadas}</div><div class="text-sm text-gray-500 dark:text-gray-400">Reuniões Marcadas</div></div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md"><div class="text-2xl font-bold text-gray-900 dark:text-white">${totalReunioesCompareceram}</div><div class="text-sm text-gray-500 dark:text-gray-400">Reuniões Realizadas</div></div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md"><div class="text-2xl font-bold text-gray-900 dark:text-white">${conversaoGeral}%</div><div class="text-sm text-gray-500 dark:text-gray-400">Conversão (Realizadas/Marcadas)</div></div>
             </div>
 
             <!-- Admin's Personal Metrics -->
-            <h2 class="text-xl font-bold mb-4">Minhas Métricas (${adminUser.name})</h2>
+            <h2 class="text-xl font-bold mb-4 text-gray-900 dark:text-white">Minhas Métricas (${adminUser.name})</h2>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-                <div class="bg-gray-800 p-4 rounded-lg shadow-md"><div class="text-2xl font-bold">${adminLeads}</div><div class="text-sm text-gray-400">Meus Leads Prospectados</div></div>
-                <div class="bg-gray-800 p-4 rounded-lg shadow-md"><div class="text-2xl font-bold">${adminReunioes}</div><div class="text-sm text-gray-400">Minhas Reuniões Marcadas</div></div>
-                <div class="bg-gray-800 p-4 rounded-lg shadow-md"><div class="text-2xl font-bold">${adminCompareceram}</div><div class="text-sm text-gray-400">Minhas Reuniões Realizadas</div></div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md"><div class="text-2xl font-bold text-gray-900 dark:text-white">${adminLeads}</div><div class="text-sm text-gray-500 dark:text-gray-400">Meus Leads Prospectados</div></div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md"><div class="text-2xl font-bold text-gray-900 dark:text-white">${adminReunioes}</div><div class="text-sm text-gray-500 dark:text-gray-400">Minhas Reuniões Marcadas</div></div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md"><div class="text-2xl font-bold text-gray-900 dark:text-white">${adminCompareceram}</div><div class="text-sm text-gray-500 dark:text-gray-400">Minhas Reuniões Realizadas</div></div>
             </div>
 
             <!-- BDR Performance Ranking -->
-            <div class="bg-gray-800 p-4 rounded-lg shadow-md">
-                <h2 class="text-xl font-bold mb-4">Ranking de Performance (BDRs)</h2>
+            <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
+                <h2 class="text-xl font-bold mb-4 text-gray-900 dark:text-white">Ranking de Performance (BDRs)</h2>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left">
-                        <thead class="bg-gray-700">
+                        <thead class="bg-gray-50 dark:bg-gray-700">
                             <tr>
-                                <th class="p-3">BDR</th>
-                                <th class="p-3">Leads</th>
-                                <th class="p-3">Reuniões Marcadas</th>
-                                <th class="p-3">Reuniões Realizadas</th>
+                                <th class="p-3 text-gray-600 dark:text-gray-300">BDR</th>
+                                <th class="p-3 text-gray-600 dark:text-gray-300">Leads</th>
+                                <th class="p-3 text-gray-600 dark:text-gray-300">Reuniões Marcadas</th>
+                                <th class="p-3 text-gray-600 dark:text-gray-300">Reuniões Realizadas</th>
                             </tr>
                         </thead>
                         <tbody>
                             ${sortedBdrs.map(bdr => `
-                                <tr class="border-b border-gray-700">
-                                    <td class="p-3">${bdr.name}</td>
-                                    <td class="p-3">${bdr.leads}</td>
-                                    <td class="p-3">${bdr.reunioes}</td>
-                                    <td class="p-3">${bdr.compareceram}</td>
+                                <tr class="border-b border-gray-200 dark:border-gray-700">
+                                    <td class="p-3 text-gray-800 dark:text-gray-200">${bdr.name}</td>
+                                    <td class="p-3 text-gray-800 dark:text-gray-200">${bdr.leads}</td>
+                                    <td class="p-3 text-gray-800 dark:text-gray-200">${bdr.reunioes}</td>
+                                    <td class="p-3 text-gray-800 dark:text-gray-200">${bdr.compareceram}</td>
                                 </tr>
                             `).join('')}
                         </tbody>
@@ -442,17 +442,17 @@ async function renderSupervisorDashboard(user) {
     const mainContent = document.getElementById('dashboard-content');
     mainContent.innerHTML = `
         <div class="flex justify-between items-center mb-6">
-            <h1 class="text-2xl font-bold">Dashboard de Supervisor</h1>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Dashboard de Supervisor</h1>
         </div>
         <div class="mb-4">
-            <label for="user-select" class="block text-sm font-medium text-gray-300 mb-2">Ver dashboard do BDR:</label>
-            <select id="user-select" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+            <label for="user-select" class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">Ver dashboard do BDR:</label>
+            <select id="user-select" class="bg-gray-200 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                 <option selected disabled>Selecione um BDR</option>
             </select>
         </div>
-        <hr class="border-gray-700 my-4">
+        <hr class="border-gray-200 dark:border-gray-700 my-4">
         <div id="selected-user-dashboard">
-            <p>Selecione um BDR para ver seu dashboard.</p>
+            <p class="text-gray-500 dark:text-gray-400">Selecione um BDR para ver seu dashboard.</p>
         </div>
     `;
 
@@ -501,19 +501,19 @@ async function showGoalsModal() {
     modalBackdrop.id = 'goals-modal-backdrop';
 
     modalBackdrop.innerHTML = `
-        <div class="bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md">
-            <h2 class="text-xl font-bold mb-4">Ajustar Metas</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md">
+            <h2 class="text-xl font-bold mb-4 text-gray-900 dark:text-white">Ajustar Metas</h2>
             <form id="goals-form">
                 <div class="mb-4">
-                    <label for="bdr-individual-goal" class="block text-sm font-medium text-gray-300">Meta Individual BDR (Reuniões Comparecidas)</label>
-                    <input type="number" id="bdr-individual-goal" class="mt-1 bg-gray-700 border border-gray-600 text-white rounded-md w-full p-2" placeholder="0">
+                    <label for="bdr-individual-goal" class="block text-sm font-medium text-gray-600 dark:text-gray-300">Meta Individual BDR (Reuniões Comparecidas)</label>
+                    <input type="number" id="bdr-individual-goal" class="mt-1 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-md w-full p-2" placeholder="0">
                 </div>
                 <div class="mb-4">
-                    <label for="group-sales-goal" class="block text-sm font-medium text-gray-300">Meta de Vendas em Grupo (Clientes em Produção)</label>
-                    <input type="number" id="group-sales-goal" class="mt-1 bg-gray-700 border border-gray-600 text-white rounded-md w-full p-2" placeholder="0">
+                    <label for="group-sales-goal" class="block text-sm font-medium text-gray-600 dark:text-gray-300">Meta de Vendas em Grupo (Clientes em Produção)</label>
+                    <input type="number" id="group-sales-goal" class="mt-1 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-md w-full p-2" placeholder="0">
                 </div>
                 <div class="flex justify-end gap-4 mt-6">
-                    <button type="button" id="cancel-goals-btn" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">Cancelar</button>
+                    <button type="button" id="cancel-goals-btn" class="bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-700 text-gray-800 dark:text-white font-bold py-2 px-4 rounded">Cancelar</button>
                     <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Salvar</button>
                 </div>
             </form>

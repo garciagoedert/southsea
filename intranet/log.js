@@ -12,11 +12,11 @@ function initializeLogPage() {
     const sortedLogData = logData.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
     logTableBody.innerHTML = sortedLogData.map(logEntry => `
-        <tr class="bg-gray-800 hover:bg-gray-700/50">
-            <td class="p-3 text-sm text-gray-400">${new Date(logEntry.timestamp).toLocaleString('pt-BR')}</td>
-            <td class="p-3 font-medium text-gray-200">${logEntry.user || 'system'}</td>
-            <td class="p-3 text-gray-300">${logEntry.action}</td>
-            <td class="p-3 text-gray-300">${logEntry.details}</td>
+        <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700/50">
+            <td class="p-3 text-sm text-gray-500 dark:text-gray-400">${new Date(logEntry.timestamp).toLocaleString('pt-BR')}</td>
+            <td class="p-3 font-medium text-gray-900 dark:text-gray-200">${logEntry.user || 'system'}</td>
+            <td class="p-3 text-gray-700 dark:text-gray-300">${logEntry.action}</td>
+            <td class="p-3 text-gray-700 dark:text-gray-300">${logEntry.details}</td>
         </tr>
     `).join('');
 }
