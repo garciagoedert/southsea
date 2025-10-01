@@ -178,12 +178,12 @@ async function initializeTasksPage() {
         standardTasksListContainer.innerHTML = '';
         standardTasks.forEach(task => {
             const taskElement = document.createElement('div');
-            taskElement.className = 'flex justify-between items-center bg-gray-700 p-2 rounded';
+            taskElement.className = 'flex justify-between items-center bg-gray-100 dark:bg-gray-700 p-2 rounded';
             taskElement.innerHTML = `
-                <span class="text-sm">${task.title}</span>
+                <span class="text-sm text-gray-800 dark:text-gray-200">${task.title}</span>
                 <div>
                     <button class="text-primary hover:text-primary-dark mr-2 edit-std-task-btn" data-id="${task.id}"><i class="fas fa-edit"></i></button>
-                    <button class="text-red-400 hover:text-red-600 delete-std-task-btn" data-id="${task.id}"><i class="fas fa-trash"></i></button>
+                    <button class="text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-500 delete-std-task-btn" data-id="${task.id}"><i class="fas fa-trash"></i></button>
                 </div>
             `;
             standardTasksListContainer.appendChild(taskElement);
@@ -261,10 +261,10 @@ async function initializeTasksPage() {
     
     const renderStandardSubtask = (subtaskTitle) => {
         const subtaskEl = document.createElement('div');
-        subtaskEl.className = 'flex items-center justify-between bg-gray-900 p-2 rounded';
+        subtaskEl.className = 'flex items-center justify-between bg-gray-200 dark:bg-gray-900 p-2 rounded';
         subtaskEl.innerHTML = `
-            <span class="text-sm">${subtaskTitle}</span>
-            <button type="button" class="text-red-400 hover:text-red-600 remove-std-subtask-btn">&times;</button>
+            <span class="text-sm text-gray-800 dark:text-gray-200">${subtaskTitle}</span>
+            <button type="button" class="text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-500 remove-std-subtask-btn">&times;</button>
         `;
         standardSubtasksContainer.appendChild(subtaskEl);
     };
@@ -639,13 +639,23 @@ async function initializeTasksPage() {
     const renderTasks = (tasksToRender) => {
         tasksContainer.innerHTML = '';
         if (tasksToRender.length === 0) {
-            tasksContainer.innerHTML = `<tr><td colspan="7" class="text-center py-4">Nenhuma tarefa encontrada.</td></tr>`;
+            tasksContainer.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-gray-500 dark:text-gray-400">Nenhuma tarefa encontrada.</td></tr>`;
             return;
         }
         tasksToRender.forEach(task => {
             const row = document.createElement('tr');
             const isOverdue = task.due_date && new Date(task.due_date) < new Date() && task.status !== 'done';
-            row.className = `bg-gray-800 border-b border-gray-700 hover:bg-gray-700/60 cursor-pointer ${isOverdue ? 'bg-red-900/30' : ''}`;
+            
+            // Classes de fundo e borda responsivas ao tema
+            let rowClasses = 'border-b cursor-pointer';
+            if (isOverdue) {
+                rowClasses += ' bg-red-50 dark:bg-red-900/30 hover:bg-red-100 dark:hover:bg-red-900/40';
+            } else {
+                rowClasses += ' bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700/60';
+            }
+            rowClasses += ' border-gray-200 dark:border-gray-700';
+            row.className = rowClasses;
+
             row.addEventListener('click', () => openTaskReadOnlyModal(task));
 
             const assignee = systemUsers.find(u => u.email === task.assignee_email);
@@ -657,14 +667,19 @@ async function initializeTasksPage() {
                 ? `<a href="index.html?cardId=${linkedCard.id}" class="text-primary hover:underline" onclick="event.stopPropagation()">${linkedCard.empresa}</a>`
                 : (task.parent_entity || 'N/A');
 
+            // Classes de texto responsivas ao tema
+            const primaryTextClass = 'text-gray-900 dark:text-white';
+            const secondaryTextClass = 'text-gray-600 dark:text-gray-400';
+            const overdueTextClass = isOverdue ? 'text-red-600 dark:text-red-400 font-semibold' : secondaryTextClass;
+
             row.innerHTML = `
-                <td class="px-6 py-4 font-medium text-white">${task.title}</td>
-                <td class="px-6 py-4">${clientLinkHTML}</td>
-                <td class="px-6 py-4">${assignee?.name || 'N/A'}</td>
-                <td class="px-6 py-4 ${isOverdue ? 'text-red-400 font-semibold' : ''}">${dueDate}</td>
+                <td class="px-6 py-4 font-medium ${primaryTextClass}">${task.title}</td>
+                <td class="px-6 py-4 ${secondaryTextClass}">${clientLinkHTML}</td>
+                <td class="px-6 py-4 ${secondaryTextClass}">${assignee?.name || 'N/A'}</td>
+                <td class="px-6 py-4 ${overdueTextClass}">${dueDate}</td>
                 <td class="px-6 py-4 ${getPriorityClass(task.priority)}">${priorityText}</td>
                 <td class="px-6 py-4">${getStatusBadge(task.status)}</td>
-                <td class="px-6 py-4 text-gray-400">${task.createdBy || 'N/A'}</td>
+                <td class="px-6 py-4 ${secondaryTextClass}">${task.createdBy || 'N/A'}</td>
             `;
             
             tasksContainer.appendChild(row);
@@ -730,15 +745,31 @@ async function initializeTasksPage() {
         };
 
         try {
-            if (taskId) {
+            let newTaskId = taskId;
+            if (taskId) { // Editando tarefa existente
                 const taskRef = doc(tasksCollectionRef, taskId);
                 await updateDoc(taskRef, taskData);
-            } else {
+            } else { // Criando nova tarefa
                 taskData.status = 'pending';
                 taskData.createdAt = serverTimestamp();
                 taskData.createdBy = sessionStorage.getItem('userName') || (auth.currentUser ? auth.currentUser.email : 'Desconhecido');
-                await addDoc(tasksCollectionRef, taskData);
+                const newDocRef = await addDoc(tasksCollectionRef, taskData);
+                newTaskId = newDocRef.id; // Pega o ID da nova tarefa
             }
+
+            // Salvar subtarefas que foram adicionadas apenas no DOM (para novas tarefas)
+            const newSubtasks = subtasksContainer.querySelectorAll('.new-subtask');
+            if (newSubtasks.length > 0 && newTaskId) {
+                for (const subtaskEl of newSubtasks) {
+                    const title = subtaskEl.querySelector('span').textContent;
+                    await addDoc(subtasksCollectionRef(newTaskId), {
+                        title: title,
+                        done: false,
+                        createdAt: serverTimestamp()
+                    });
+                }
+            }
+
             closeModal();
         } catch (error) {
             console.error("Erro ao salvar tarefa:", error);
@@ -853,31 +884,48 @@ async function initializeTasksPage() {
         });
     };
 
-    const renderSubtasks = (subtasks) => {
-        subtasksContainer.innerHTML = '';
-        if (subtasks.length === 0) {
-            subtasksContainer.innerHTML = '<p class="text-gray-500 text-xs text-center">Nenhuma subtarefa adicionada.</p>';
-            return;
+    const renderSubtasks = (subtasks, isNew = false) => {
+        // Se for a primeira subtarefa, limpa a mensagem "Nenhuma subtarefa"
+        if (subtasksContainer.querySelector('p')) {
+            subtasksContainer.innerHTML = '';
         }
+
         subtasks.forEach(subtask => {
             const subtaskElement = document.createElement('div');
-            subtaskElement.className = 'flex items-center bg-gray-900 p-2 rounded-md';
-            subtaskElement.innerHTML = `
-                <input type="checkbox" data-id="${subtask.id}" class="h-4 w-4 rounded border-gray-600 bg-gray-700 text-primary focus:ring-primary" ${subtask.done ? 'checked' : ''}>
-                <span class="ml-3 text-sm ${subtask.done ? 'line-through text-gray-500' : 'text-gray-300'}">${subtask.title}</span>
+            // Adiciona a classe 'new-subtask' se for uma subtarefa que ainda não foi salva
+            subtaskElement.className = `flex items-center justify-between bg-gray-200 dark:bg-gray-900 p-2 rounded-md ${isNew ? 'new-subtask' : ''}`;
+            
+            const subtaskContent = `
+                <div class="flex items-center">
+                    <input type="checkbox" data-id="${subtask.id || ''}" class="h-4 w-4 rounded border-gray-400 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-primary focus:ring-primary" ${subtask.done ? 'checked' : ''}>
+                    <span class="ml-3 text-sm text-gray-800 dark:text-gray-300 ${subtask.done ? 'line-through text-gray-500' : ''}">${subtask.title}</span>
+                </div>
+                ${isNew ? '<button type="button" class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-500 remove-new-subtask-btn">&times;</button>' : ''}
             `;
+            subtaskElement.innerHTML = subtaskContent;
             subtasksContainer.appendChild(subtaskElement);
         });
 
-        // Adiciona event listeners para os checkboxes
-        subtasksContainer.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+        // Adiciona event listeners para os checkboxes de subtarefas existentes
+        subtasksContainer.querySelectorAll('input[type="checkbox"]:not([data-id=""])').forEach(checkbox => {
             checkbox.addEventListener('change', async (e) => {
                 const subtaskId = e.target.dataset.id;
+                if (!subtaskId) return; // Ignora checkboxes de novas subtarefas
                 const isDone = e.target.checked;
                 const taskId = document.getElementById('task-id').value;
                 const subtaskRef = doc(subtasksCollectionRef(taskId), subtaskId);
                 await updateDoc(subtaskRef, { done: isDone });
                 logActivity(taskId, 'subtask.status.changed', !isDone, isDone);
+            });
+        });
+
+        // Adiciona event listeners para os botões de remover de novas subtarefas
+        subtasksContainer.querySelectorAll('.remove-new-subtask-btn').forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.target.closest('.new-subtask').remove();
+                if (subtasksContainer.children.length === 0) {
+                    subtasksContainer.innerHTML = '<p class="text-gray-500 text-xs text-center">Nenhuma subtarefa adicionada.</p>';
+                }
             });
         });
     };
@@ -890,26 +938,33 @@ async function initializeTasksPage() {
         });
     };
 
-    const handleNewSubtask = async (event) => {
+    const handleNewSubtask = (event) => {
         if (event.key === 'Enter') {
             event.preventDefault();
-            const taskId = document.getElementById('task-id').value;
             const title = newSubtaskTitleInput.value.trim();
+            if (!title) return;
 
-            if (!taskId || !title) return;
+            const taskId = document.getElementById('task-id').value;
 
-            try {
-                await addDoc(subtasksCollectionRef(taskId), {
-                    title: title,
-                    done: false,
-                    createdAt: serverTimestamp()
-                });
-                newSubtaskTitleInput.value = '';
-                logActivity(taskId, 'subtask.created', null, title);
-            } catch (error) {
-                console.error("Erro ao adicionar subtarefa:", error);
-                showNotification("Não foi possível adicionar a subtarefa.", 'error');
+            if (taskId) {
+                // Se a tarefa já existe, salva a subtarefa diretamente
+                try {
+                    addDoc(subtasksCollectionRef(taskId), {
+                        title: title,
+                        done: false,
+                        createdAt: serverTimestamp()
+                    });
+                    logActivity(taskId, 'subtask.created', null, title);
+                } catch (error) {
+                    console.error("Erro ao adicionar subtarefa:", error);
+                    showNotification("Não foi possível adicionar a subtarefa.", 'error');
+                }
+            } else {
+                // Se é uma nova tarefa, apenas renderiza no DOM
+                renderSubtasks([{ title: title, done: false }], true);
             }
+            
+            newSubtaskTitleInput.value = '';
         }
     };
 
