@@ -22,9 +22,20 @@ const groupNameInput = document.getElementById('groupName');
 const groupMembersContainer = document.getElementById('group-members');
 const userSearchInput = document.getElementById('user-search-input');
 const searchResultsContainer = document.getElementById('search-results');
+const viewAsBtn = document.getElementById('viewAsBtn');
+const viewAsModal = document.getElementById('viewAsModal');
+const closeViewAsModalBtn = document.getElementById('closeViewAsModalBtn');
+const viewAsUserSearchInput = document.getElementById('viewAs-user-search-input');
+const viewAsSearchResultsContainer = document.getElementById('viewAs-search-results');
+const viewAsBanner = document.getElementById('viewAsBanner');
+const viewAsBannerText = document.getElementById('viewAsBannerText');
+const exitViewAsBtn = document.getElementById('exitViewAsBtn');
+
 
 // Variáveis de estado
 let currentChatId = null;
+let isViewingAs = false;
+let viewingAsUser = null;
 let allUsers = []; // Usado para popular o modal de criação de grupo
 const userCache = new Map(); // Cache para dados de usuários
 
@@ -35,8 +46,10 @@ function initializeChat() {
     if (user && user.id) {
         console.log("Usuário da sessão autenticado:", user.id);
         
-        // Controla a visibilidade do botão "Novo Grupo"
-        if (user.role !== 'admin') {
+        // Controla a visibilidade do botão "Novo Grupo" e "Ver como"
+        if (user.role === 'admin') {
+            viewAsBtn.classList.remove('hidden');
+        } else {
             newGroupBtn.classList.add('hidden');
         }
 
@@ -380,6 +393,7 @@ async function loadMessages(chatId) {
 }
 
 function getStatusIcon(status) {
+    if (isViewingAs) return ''; // Não mostra o status no modo "Ver como"
     if (status === 'lido') {
         return `<span class="text-blue-400 ml-2">✓✓</span>`;
     } else if (status === 'entregue') {
@@ -390,6 +404,10 @@ function getStatusIcon(status) {
 
 // Envia uma mensagem
 async function sendMessage() {
+    if (isViewingAs) {
+        console.log("Envio de mensagens desabilitado no modo 'Ver como'.");
+        return;
+    }
     const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
     if (!currentUser) return;
 
@@ -476,13 +494,138 @@ async function createGroup() {
 }
 
 function enableChatInput() {
-    messageInput.disabled = false;
-    sendButton.disabled = false;
-    messageInput.placeholder = "Digite sua mensagem...";
+    if (isViewingAs) {
+        messageInput.disabled = true;
+        sendButton.disabled = true;
+        messageInput.placeholder = "Visualizando como outro usuário (somente leitura)";
+    } else {
+        messageInput.disabled = false;
+        sendButton.disabled = false;
+        messageInput.placeholder = "Digite sua mensagem...";
+    }
 }
+
+// --- Lógica do "Ver como" ---
+
+// Abre o modal "Ver como"
+viewAsBtn.addEventListener('click', () => {
+    viewAsModal.classList.remove('hidden');
+    viewAsUserSearchInput.focus();
+});
+
+// Fecha o modal "Ver como"
+closeViewAsModalBtn.addEventListener('click', () => {
+    viewAsModal.classList.add('hidden');
+});
+
+// Busca de usuários para o modal "Ver como"
+async function searchUserForViewAs() {
+    const searchTerm = viewAsUserSearchInput.value.trim();
+    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    if (!searchTerm || !currentUser) {
+        viewAsSearchResultsContainer.innerHTML = '';
+        return;
+    }
+
+    const usersCollection = collection(db, 'users');
+    const endTerm = searchTerm + '\uf8ff';
+
+    const nameQuery = query(usersCollection, orderBy('name'), where('name', '>=', searchTerm), where('name', '<', endTerm));
+    const emailQuery = query(usersCollection, orderBy('email'), where('email', '>=', searchTerm), where('email', '<', endTerm));
+
+    const [nameSnapshot, emailSnapshot] = await Promise.all([getDocs(nameQuery), getDocs(emailQuery)]);
+    const foundUsers = new Map();
+
+    nameSnapshot.forEach(doc => foundUsers.set(doc.id, { id: doc.id, ...doc.data() }));
+    emailSnapshot.forEach(doc => foundUsers.set(doc.id, { id: doc.id, ...doc.data() }));
+
+    viewAsSearchResultsContainer.innerHTML = '';
+    if (foundUsers.size === 0) {
+        viewAsSearchResultsContainer.innerHTML = '<div class="p-2 text-gray-500">Nenhum usuário encontrado.</div>';
+    } else {
+        foundUsers.forEach(foundUser => {
+            if (foundUser.id !== currentUser.id) {
+                const userElement = document.createElement('div');
+                userElement.className = 'flex items-center p-2 hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer rounded-lg';
+                
+                const avatarHtml = foundUser.profilePicture
+                    ? `<img src="${foundUser.profilePicture}" alt="Foto de perfil" class="w-10 h-10 rounded-full mr-3">`
+                    : `<div class="w-10 h-10 rounded-full mr-3 bg-gray-300 dark:bg-gray-700 flex items-center justify-center"><i class="fas fa-user-circle text-gray-500 dark:text-gray-400 text-2xl"></i></div>`;
+
+                userElement.innerHTML = `
+                    ${avatarHtml}
+                    <div>
+                        <div class="font-bold">${foundUser.name || 'Usuário'}</div>
+                        <div class="text-sm text-gray-400">${foundUser.email}</div>
+                    </div>
+                `;
+                userElement.onclick = () => {
+                    startViewingAs(foundUser);
+                };
+                viewAsSearchResultsContainer.appendChild(userElement);
+            }
+        });
+    }
+}
+
+
+// Inicia o modo "Ver como"
+function startViewingAs(user) {
+    isViewingAs = true;
+    viewingAsUser = user;
+
+    // Mostra o banner
+    viewAsBannerText.textContent = `Visualizando como ${user.name}`;
+    viewAsBanner.classList.remove('hidden');
+    viewAsBanner.classList.add('flex');
+
+
+    // Limpa a interface
+    groupList.innerHTML = '';
+    directMessageList.innerHTML = '';
+    chatMessages.innerHTML = '';
+    chatTitle.textContent = `Visualizando como ${user.name}`;
+    
+    // Desabilita o input
+    enableChatInput();
+
+    // Carrega as conversas do usuário selecionado
+    populateConversationsList(user);
+
+    // Fecha o modal
+    viewAsModal.classList.add('hidden');
+    viewAsUserSearchInput.value = '';
+    viewAsSearchResultsContainer.innerHTML = '';
+}
+
+// Sai do modo "Ver como"
+function exitViewingAs() {
+    isViewingAs = false;
+    viewingAsUser = null;
+
+    // Esconde o banner
+    viewAsBanner.classList.add('hidden');
+    viewAsBanner.classList.remove('flex');
+
+    // Limpa a interface
+    groupList.innerHTML = '';
+    directMessageList.innerHTML = '';
+    chatMessages.innerHTML = '';
+    chatTitle.textContent = 'Selecione uma conversa';
+
+    // Recarrega o chat com o usuário original (admin)
+    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    populateConversationsList(currentUser);
+    
+    // Habilita o input
+    enableChatInput();
+}
+
 
 // Event Listeners
 userSearchInput.addEventListener('input', searchUser);
+exitViewAsBtn.addEventListener('click', exitViewingAs);
+viewAsUserSearchInput.addEventListener('input', searchUserForViewAs);
 sendButton.addEventListener('click', sendMessage);
 messageInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') sendMessage();

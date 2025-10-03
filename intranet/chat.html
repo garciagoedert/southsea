@@ -41,6 +41,12 @@
         <main id="main-content" class="flex-1 flex flex-col h-screen">
             <div id="header-container"></div>
 
+            <!-- "Ver como" Banner -->
+            <div id="viewAsBanner" class="bg-yellow-400 text-black p-2 text-center hidden items-center justify-center">
+                <span id="viewAsBannerText" class="font-bold"></span>
+                <button id="exitViewAsBtn" class="ml-4 bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded-lg">Sair</button>
+            </div>
+
             <div class="flex-1 flex overflow-hidden">
                 <!-- Users/Groups List -->
                 <div class="w-1/4 bg-gray-100 dark:bg-gray-800 p-4 flex flex-col">
@@ -50,6 +56,7 @@
                             <!-- Search results will be populated here -->
                         </div>
                     </div>
+                    <button id="viewAsBtn" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg mb-2 hidden">Ver como</button>
                     <button id="newGroupBtn" class="w-full bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-lg mb-4">Novo Grupo</button>
                     
                     <div id="group-list-container" class="overflow-y-auto">
@@ -90,6 +97,22 @@
                 </div>
             </div>
         </main>
+    </div>
+
+    <!-- View As Modal -->
+    <div id="viewAsModal" class="fixed inset-0 bg-black bg-opacity-70 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-md text-gray-900 dark:text-gray-200">
+            <div class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700">
+                <h2 class="text-xl font-bold">Ver Chat Como...</h2>
+                <button id="closeViewAsModalBtn" class="text-gray-400 hover:text-gray-800 dark:hover:text-white text-2xl">&times;</button>
+            </div>
+            <div class="p-6">
+                <input type="text" id="viewAs-user-search-input" class="w-full bg-gray-200 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Buscar usuário...">
+                <div id="viewAs-search-results" class="mt-2 max-h-60 overflow-y-auto">
+                    <!-- Search results will be populated here -->
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- New Group Modal -->
