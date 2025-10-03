@@ -137,7 +137,7 @@ function setupProspectsListener() {
                 shouldCommit = true;
             }
             return prospect;
-        }).filter(p => !p.pagina || p.pagina === 'Prospecção');
+        }).filter(p => p.pagina === 'Prospecção' || p.pagina === 'WhatsApp' || !p.pagina);
 
         // Commit all updates at once if any were staged
         if (shouldCommit) {

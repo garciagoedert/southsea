@@ -1,20 +1,14 @@
 import { getAllUsers } from './auth.js';
 import { loadComponents, setupUIListeners, startFloatingStopwatch, stopFloatingStopwatch } from './common-ui.js';
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import { getFirestore, collection, doc, addDoc, onSnapshot, updateDoc, deleteDoc, serverTimestamp, getDocs, getDoc, query, where } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 import { showConfirmationModal, showNotification } from './common-ui.js';
+import { db, auth, appId } from './firebase-config.js';
 
-let db, auth, appId;
 let tasksCollectionRef, prospectsCollectionRef, commentsCollectionRef, activityLogCollectionRef, subtasksCollectionRef, timeLogsCollectionRef, standardTasksCollectionRef;
 
 // Função principal que será exportada e chamada pelo HTML
-export function initializeAppWithFirebase(firebaseConfig) {
-    const app = initializeApp(firebaseConfig);
-    db = getFirestore(app);
-    auth = getAuth(app);
-    appId = firebaseConfig.appId || 'default-app';
-
+function initializeAppWithFirebase() {
     // Definindo as referências das coleções em um escopo mais amplo
     tasksCollectionRef = collection(db, 'artifacts', appId, 'public', 'data', 'tasks');
     standardTasksCollectionRef = collection(db, 'artifacts', appId, 'public', 'data', 'standard_tasks');
@@ -1241,3 +1235,6 @@ async function initializeTasksPage() {
         tasksContainer.innerHTML = `<p class="text-center text-red-500 p-4 col-span-full">Erro ao carregar as tarefas.</p>`;
     });
 }
+
+// Inicializa a aplicação
+initializeAppWithFirebase();

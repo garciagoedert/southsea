@@ -1,16 +1,12 @@
 import { loadComponents, setupUIListeners } from './common-ui.js';
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import { getFirestore, collection, doc, addDoc, onSnapshot, updateDoc, deleteDoc, serverTimestamp, getDocs, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 import { showConfirmationModal, showNotification } from './common-ui.js';
 import { getAllUsers } from './auth.js';
+import { db, auth, appId } from './firebase-config.js';
 
 // Função principal que será exportada e chamada pelo HTML
-export function initializeAppWithFirebase(firebaseConfig) {
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const auth = getAuth(app);
-    const appId = firebaseConfig.appId || 'default-app';
+function initializeAppWithFirebase() {
     const tasksCollectionRef = collection(db, 'artifacts', appId, 'public', 'data', 'tasks');
     const meetingsCollectionRef = collection(db, 'artifacts', appId, 'public', 'data', 'meetings');
     const prospectsCollectionRef = collection(db, 'artifacts', appId, 'public', 'data', 'prospects');
@@ -664,3 +660,6 @@ async function initializeCalendarPage(tasksCollectionRef, meetingsCollectionRef,
         console.error("Erro ao buscar reuniões:", error);
     });
 }
+
+// Inicializa a aplicação
+initializeAppWithFirebase();

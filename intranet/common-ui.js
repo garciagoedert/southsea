@@ -166,7 +166,58 @@ function setupModalCloseListeners(handlers = {}) {
 }
 
 import { db } from './firebase-config.js';
-import { doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+import { doc, getDoc, collection, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+import { showNotification as showChatMessageNotification } from './notification.js';
+
+// Listener global para notificações de novas mensagens
+function listenForChatNotifications() {
+    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    if (!currentUser || !currentUser.id) return;
+
+    const listenerStartTime = new Date();
+
+    const chatsCollection = collection(db, 'chats');
+    const q = query(chatsCollection, where('members', 'array-contains', currentUser.id));
+
+    onSnapshot(q, (snapshot) => {
+        snapshot.docChanges().forEach(async (change) => {
+            if (change.type === 'modified') {
+                const chatData = change.doc.data();
+                const chatId = change.doc.id;
+                const lastMessage = chatData.lastMessage;
+
+                if (!lastMessage || !lastMessage.timestamp) {
+                    return;
+                }
+
+                const messageTime = lastMessage.timestamp.toDate();
+
+                if (messageTime > listenerStartTime && lastMessage.senderId !== currentUser.id) {
+                    const isChatPage = window.location.pathname.endsWith('chat.html');
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const currentOpenChatId = urlParams.get('chatId');
+
+                    if (isChatPage && chatId === currentOpenChatId) {
+                        return;
+                    }
+
+                    const senderRef = doc(db, 'users', lastMessage.senderId);
+                    const senderSnap = await getDoc(senderRef);
+                    if (senderSnap.exists()) {
+                        const senderData = senderSnap.data();
+                        showChatMessageNotification({
+                            title: `Nova mensagem de ${senderData.name || senderData.email}`,
+                            message: lastMessage.text,
+                            icon: senderData.profilePicture || './default-profile.svg',
+                            onClickUrl: `chat.html?chatId=${chatId}`
+                        });
+                    }
+                }
+            }
+        });
+    });
+}
+
 
 async function loadWhitelabelSettings() {
     try {
@@ -272,22 +323,22 @@ async function loadComponents(pageSpecificSetup) {
 
         if (modalRes.ok) {
             const modalHtml = await modalRes.text();
-            const modalContainer = document.getElementById('modal-container');
-            if (modalContainer) {
-                modalContainer.innerHTML = modalHtml;
-            } else {
-                // Fallback for pages that might not have the container
-                const tempContainer = document.createElement('div');
-                tempContainer.innerHTML = modalHtml;
+            const tempContainer = document.createElement('div');
+            tempContainer.innerHTML = modalHtml;
+            // Append all children from the temporary container to the body
+            while (tempContainer.firstChild) {
                 document.body.appendChild(tempContainer.firstChild);
             }
         }
 
         if (notificationRes.ok) {
             const notificationHtml = await notificationRes.text();
-            const notificationContainer = document.createElement('div');
-            notificationContainer.innerHTML = notificationHtml;
-            document.body.appendChild(notificationContainer);
+            const tempContainer = document.createElement('div');
+            tempContainer.innerHTML = notificationHtml;
+            // Append all children from the temporary container to the body
+            while (tempContainer.firstChild) {
+                document.body.appendChild(tempContainer.firstChild);
+            }
         }
 
         await applyWhitelabelSettings();
@@ -441,6 +492,8 @@ async function loadComponents(pageSpecificSetup) {
             applyTheme(currentUser.theme || 'dark');
         }
 
+        // Inicia o listener de notificações de chat
+        listenForChatNotifications();
 
     } catch (error) {
         console.error('Error loading components:', error);

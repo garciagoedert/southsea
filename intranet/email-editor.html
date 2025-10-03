@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>South Sea - Editor de E-mail</title>
+    <link rel="icon" href="https://www.southsea.com.br/newimag/Ellipse%209.svg">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class' }
+    </script>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- TinyMCE Editor -->
+    <script src="https://cdn.tiny.cloud/1/m3jgh5ralhliki7w8pw4yp8j58vgzzgx0n7b2rpoibnikokz/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <script src="https://cdn.tiny.cloud/1/m3jgh5ralhliki7w8pw4yp8j58vgzzgx0n7b2rpoibnikokz/tinymce/6/langs/pt_BR.js" referrerpolicy="origin"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-y: hidden;
+        }
+        /* Ensure TinyMCE toolbar is visible in dark mode */
+        .tox .tox-edit-area__iframe {
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+
+    <div id="main-container" class="flex h-screen">
+        <div id="sidebar-container"></div>
+        <div id="sidebar-backdrop" class="fixed inset-0 bg-black/50 z-30 hidden"></div>
+
+        <!-- Main Content -->
+        <main id="main-content" class="flex-1 flex flex-col h-screen transition-all duration-300 ease-in-out">
+            <div id="header-container"></div>
+
+            <!-- Editor Content -->
+            <div class="flex-grow p-4 md:p-6 lg:p-8 flex flex-col overflow-hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h1 id="editor-title" class="text-3xl font-bold text-gray-900 dark:text-white">Criar Novo Modelo</h1>
+                    <div class="flex gap-4">
+                        <button id="cancel-btn" class="bg-gray-300 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-800 dark:text-white font-bold py-2 px-4 rounded-lg">Cancelar</button>
+                        <button id="save-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2">
+                            <i class="fas fa-save"></i>
+                            Salvar Modelo
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Form -->
+                <div class="flex-1 flex flex-col gap-4 overflow-hidden">
+                    <div>
+                        <label for="template-title-input" class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Título do Modelo</label>
+                        <input type="text" id="template-title-input" placeholder="Ex: E-mail de Boas-Vindas" class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <div class="flex items-center">
+                        <input id="full-width-image-checkbox" type="checkbox" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                        <label for="full-width-image-checkbox" class="ml-2 block text-sm text-gray-900 dark:text-gray-300">Usar a primeira imagem como capa (largura total)</label>
+                    </div>
+                    
+                    <!-- TinyMCE will attach to this textarea -->
+                    <div class="flex-1 h-full">
+                        <textarea id="email-editor">Comece a escrever seu modelo aqui...</textarea>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script type="module" src="email-editor.js"></script>
+</body>
+</html>

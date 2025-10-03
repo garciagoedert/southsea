@@ -9,13 +9,18 @@
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Configure Tailwind CSS for dark mode
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="log.css">
 
     <style>
         /* Custom Styles */
@@ -28,18 +33,37 @@
 
     <div class="flex h-screen">
         <div id="sidebar-container"></div>
+
+        <!-- Backdrop for mobile sidebar -->
+        <div id="sidebar-backdrop" class="fixed inset-0 bg-black/50 z-30 hidden"></div>
         
         <!-- Main Content -->
-        <main class="flex-1 flex flex-col h-screen">
+        <main id="main-content" class="flex-1 flex flex-col h-screen">
             <div id="header-container"></div>
 
             <div class="flex-1 flex overflow-hidden">
                 <!-- Users/Groups List -->
                 <div class="w-1/4 bg-gray-100 dark:bg-gray-800 p-4 flex flex-col">
-                    <h2 class="text-xl font-bold mb-4">Conversas</h2>
+                    <div class="my-4 relative">
+                        <input type="text" id="user-search-input" class="w-full bg-gray-200 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Buscar usuário...">
+                        <div id="search-results" class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg hidden">
+                            <!-- Search results will be populated here -->
+                        </div>
+                    </div>
                     <button id="newGroupBtn" class="w-full bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-lg mb-4">Novo Grupo</button>
-                    <div id="user-list" class="flex-1 overflow-y-auto">
-                        <!-- User and group list will be populated here -->
+                    
+                    <div id="group-list-container" class="overflow-y-auto">
+                        <h2 class="text-xl font-bold mb-2">Grupos</h2>
+                        <div id="group-list">
+                            <!-- Group list will be populated here -->
+                        </div>
+                    </div>
+
+                    <div id="direct-message-list-container" class="overflow-y-auto mt-4">
+                        <h2 class="text-xl font-bold mb-2">Conversas</h2>
+                        <div id="direct-message-list">
+                            <!-- Direct message list will be populated here -->
+                        </div>
                     </div>
                 </div>
 
@@ -48,8 +72,14 @@
                     <div id="chat-header" class="p-4 border-b border-gray-200 dark:border-gray-700">
                         <h2 id="chat-title" class="text-xl font-bold">Selecione uma conversa</h2>
                     </div>
-                    <div id="chat-messages" class="flex-1 p-4 overflow-y-auto flex flex-col">
-                        <!-- Messages will be displayed here -->
+                    <div id="chat-messages-container" class="flex-1 relative overflow-hidden">
+                        <div id="chat-messages" class="h-full p-4 overflow-y-auto flex flex-col">
+                            <!-- Messages will be displayed here -->
+                        </div>
+                        <!-- Scroll to Bottom Button -->
+                        <button id="scrollToBottomBtn" class="absolute bottom-4 right-4 bg-blue-500 hover:bg-blue-600 text-white rounded-full h-10 w-10 flex items-center justify-center shadow-lg opacity-0 transition-opacity duration-300 z-10">
+                            <i class="fas fa-arrow-down"></i>
+                        </button>
                     </div>
                     <div id="chat-input-container" class="p-4 border-t border-gray-200 dark:border-gray-700">
                         <div class="flex items-center">
@@ -89,25 +119,6 @@
     </div>
 
     <!-- Firebase SDK -->
-    <script type="module">
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { db, app } from './firebase-config.js';
-        import { loadComponents, setupUIListeners } from './common-ui.js';
-
-        const auth = getAuth(app);
-
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                if (sessionStorage.getItem('isLoggedIn') === 'true') {
-                    loadComponents(setupUIListeners);
-                } else {
-                    window.location.href = 'login.html';
-                }
-            } else {
-                window.location.href = 'login.html';
-            }
-        });
-    </script>
     <script type="module" src="chat.js"></script>
 </body>
 </html>

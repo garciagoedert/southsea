@@ -1,6 +1,21 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+
+    // Regras abertas para depuração do CHAT
+    match /users/{userId} {
+      allow read, write: if true;
+    }
+
+    match /chats/{chatId} {
+      allow read, write: if true;
+      match /messages/{messageId} {
+        allow read, write: if true;
+      }
+    }
+
+    // --- REGRAS ORIGINAIS DO PROJETO ---
+
     // Regra existente para prospects
     match /artifacts/{appId}/public/data/prospects/{prospectId} {
       allow create, read: if true;
@@ -72,18 +87,6 @@ service cloud.firestore {
       }
     }
 
-    // Regras para o chat
-    match /chats/{chatId} {
-      allow read, write: if request.auth != null && request.auth.uid in resource.data.members;
-      match /messages/{messageId} {
-        allow read, create: if request.auth != null && get(/databases/$(database)/documents/chats/$(chatId)).data.members;
-      }
-    }
-
-    match /users/{userId} {
-      allow read, write: if true;
-    }
-
     // Regra para a coleção de Roles
     match /roles/{roleId} {
       allow read: if request.auth != null;
@@ -103,13 +106,10 @@ service cloud.firestore {
     }
 
     match /courses/{courseId} {
-      // Qualquer usuário autenticado pode ler e escrever nos cursos e seu conteúdo.
       allow read, write: if request.auth != null;
-
       match /modules/{moduleId} {
         allow read, write: if request.auth != null;
-        
-      match /lessons/{lessonId} {
+        match /lessons/{lessonId} {
           allow read, write: if request.auth != null;
         }
       }
@@ -122,6 +122,11 @@ service cloud.firestore {
 
     // Regra para Conteúdos Exclusivos
     match /artifacts/{appId}/public/data/conteudosExclusivos/{contentId} {
+      allow read, write: if request.auth != null;
+    }
+
+    // Regras para Modelos de E-mail
+    match /artifacts/{appId}/public/data/email_templates/{templateId} {
       allow read, write: if request.auth != null;
     }
   }

@@ -377,26 +377,7 @@
 
     <script type="module" src="auth.js"></script>
     <script type="module" src="common-ui.js?v=1.1"></script>
-    
-    <!-- Firebase SDK -->
-    <script type="module">
-        // Import a função que inicializa a página de tarefas
-        import { initializeAppWithFirebase } from './tarefas.js?v=2.1';
-
-        // Configuração do Firebase (mesma do index.html)
-        const firebaseConfig = {
-            apiKey: "AIzaSyAKTAVsJKQISRYamsX7SMmh9uCJ6d2bMEs",
-            authDomain: "kanban-652ba.firebaseapp.com",
-            projectId: "kanban-652ba",
-            storageBucket: "kanban-652ba.firebasestorage.app",
-            messagingSenderId: "476390177044",
-            appId: "1:476390177044:web:39e6597eb624006ee06a01",
-            measurementId: "G-KRW331FL5F"
-        };
-        
-        // Inicializa o Firebase e passa a configuração para o script de tarefas
-        initializeAppWithFirebase(firebaseConfig);
-    </script>
+    <script type="module" src="./tarefas.js?v=2.1"></script>
     <div id="modal-container"></div>
 </body>
 </html>

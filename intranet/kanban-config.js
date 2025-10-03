@@ -11,7 +11,7 @@ async function loadKanbanConfig(configId, defaultConfig) {
     const configRef = doc(db, 'artifacts', appId, 'public', 'data', 'kanban_configs', configId);
     try {
         const docSnap = await getDoc(configRef);
-        if (docSnap.exists() && docSnap.data().columnOrder) {
+        if (docSnap.exists() && docSnap.data().columnOrder && docSnap.data().columns) {
             let { columns, columnOrder } = docSnap.data();
             // --- Backwards compatibility check ---
             // If a column is just a string, convert it to the new object format.

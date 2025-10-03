@@ -1,17 +1,9 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-import { getFirestore, collection, getDocs, query, where, doc, updateDoc, arrayUnion, Timestamp, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
-import { getAuth, onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+import { getFirestore, collection, getDocs, query, where, doc, updateDoc, arrayUnion, Timestamp, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+import { getAuth, onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import { loadComponents, setupUIListeners, showConfirmationModal, showNotification } from './common-ui.js';
+import { db, auth, appId } from './firebase-config.js';
 
-let db;
-let auth;
-
-// Função para inicializar o Firebase e a página
-export function initializeAppWithFirebase(firebaseConfig) {
-    const app = initializeApp(firebaseConfig);
-    db = getFirestore(app);
-    auth = getAuth(app);
-
+document.addEventListener('DOMContentLoaded', () => {
     onAuthStateChanged(auth, async (user) => {
         if (user) {
             if (sessionStorage.getItem('isLoggedIn') === 'true') {
@@ -40,15 +32,12 @@ export function initializeAppWithFirebase(firebaseConfig) {
                 window.location.href = 'login.html';
             }
         } else {
-            try {
-                await signInAnonymously(auth);
-            } catch (error) {
-                console.error("Authentication Error:", error);
-                document.body.innerHTML = `<div class="flex items-center justify-center h-screen text-red-500">Erro de autenticação. Tente novamente mais tarde.</div>`;
-            }
+            // A autenticação anônima é tratada no onAuthStateChanged principal,
+            // mas podemos ter um fallback se necessário.
+            console.log("Nenhum usuário logado, aguardando autenticação...");
         }
     });
-}
+});
 
 const archiveReasons = {
     'reuniao_realizada_sem_fechamento': 'Reunião (Sem Fechamento)',
@@ -199,7 +188,7 @@ function renderCardsInPanel(leads, panel) {
 async function loadArchivedLeads(searchTerm = '') {
     try {
         if (allLeads.length === 0) { // Carrega apenas na primeira vez
-            const leadsRef = collection(db, 'artifacts', '1:476390177044:web:39e6597eb624006ee06a01', 'public', 'data', 'prospects');
+            const leadsRef = collection(db, 'artifacts', appId, 'public', 'data', 'prospects');
             const userRole = sessionStorage.getItem('userRole');
             const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
 
@@ -307,7 +296,7 @@ function openEditModal(lead) {
         if (!description) return showNotification('Por favor, adicione uma descrição para o contato.', 'info');
         
         try {
-            const clientRef = doc(db, 'artifacts', '1:476390177044:web:39e6597eb624006ee06a01', 'public', 'data', 'prospects', lead.id);
+            const clientRef = doc(db, 'artifacts', appId, 'public', 'data', 'prospects', lead.id);
             await updateDoc(clientRef, {
                 contactLog: arrayUnion({
                     author: auth.currentUser ? auth.currentUser.email || 'anonymous' : 'anonymous',
@@ -343,7 +332,7 @@ async function unarchiveLead(leadId) {
     if (!await showConfirmationModal('Tem certeza que deseja desarquivar este lead?', 'Desarquivar')) return;
 
     try {
-        const leadRef = doc(db, 'artifacts', '1:476390177044:web:39e6597eb624006ee06a01', 'public', 'data', 'prospects', leadId);
+        const leadRef = doc(db, 'artifacts', appId, 'public', 'data', 'prospects', leadId);
         await updateDoc(leadRef, {
             pagina: 'Prospecção',
             status: 'Pendente'
@@ -360,7 +349,7 @@ async function deleteLead(leadId) {
     if (!await showConfirmationModal('Tem certeza que deseja excluir este lead permanentemente? Esta ação não pode ser desfeita.', 'Excluir Permanentemente')) return;
 
     try {
-        const leadRef = doc(db, 'artifacts', '1:476390177044:web:39e6597eb624006ee06a01', 'public', 'data', 'prospects', leadId);
+        const leadRef = doc(db, 'artifacts', appId, 'public', 'data', 'prospects', leadId);
         await deleteDoc(leadRef);
         closeEditModal();
         loadArchivedLeads(document.getElementById('search-input').value);
@@ -392,7 +381,7 @@ async function saveLeadChanges(e) {
     };
 
     try {
-        const leadRef = doc(db, 'artifacts', '1:476390177044:web:39e6597eb624006ee06a01', 'public', 'data', 'prospects', leadId);
+        const leadRef = doc(db, 'artifacts', appId, 'public', 'data', 'prospects', leadId);
         await updateDoc(leadRef, data);
         closeEditModal();
         loadArchivedLeads(document.getElementById('search-input').value);
@@ -401,3 +390,5 @@ async function saveLeadChanges(e) {
         showNotification("Erro ao salvar as alterações.", 'error');
     }
 }
+
+// A lógica agora é iniciada pelo DOMContentLoaded
