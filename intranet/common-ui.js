@@ -169,52 +169,108 @@ import { db } from './firebase-config.js';
 import { doc, getDoc, collection, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 import { showNotification as showChatMessageNotification } from './notification.js';
 
+// Atualiza ou remove o indicador de notificação (ponto ou contador)
+function updateNotificationIndicator(element, count) {
+    if (!element) return;
+
+    let indicator = element.querySelector('.notification-indicator');
+
+    if (count > 0) {
+        if (!indicator) {
+            indicator = document.createElement('span');
+            indicator.className = 'notification-indicator';
+            element.appendChild(indicator);
+            element.style.position = 'relative'; // Garante que o posicionamento absoluto funcione
+        }
+        indicator.textContent = count;
+    } else {
+        if (indicator) {
+            indicator.remove();
+        }
+    }
+}
+
+
 // Listener global para notificações de novas mensagens
 function listenForChatNotifications() {
     const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
     if (!currentUser || !currentUser.id) return;
 
-    const listenerStartTime = new Date();
-
     const chatsCollection = collection(db, 'chats');
     const q = query(chatsCollection, where('members', 'array-contains', currentUser.id));
+    
+    let isInitialLoad = true;
 
     onSnapshot(q, (snapshot) => {
-        snapshot.docChanges().forEach(async (change) => {
-            if (change.type === 'modified') {
-                const chatData = change.doc.data();
-                const chatId = change.doc.id;
-                const lastMessage = chatData.lastMessage;
+        let totalUnreadCount = 0;
+        const safeCurrentUserKey = currentUser.id.replace(/\./g, '_');
+        const groups = [];
+        const directMessages = [];
 
-                if (!lastMessage || !lastMessage.timestamp) {
-                    return;
-                }
-
-                const messageTime = lastMessage.timestamp.toDate();
-
-                if (messageTime > listenerStartTime && lastMessage.senderId !== currentUser.id) {
-                    const isChatPage = window.location.pathname.endsWith('chat.html');
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const currentOpenChatId = urlParams.get('chatId');
-
-                    if (isChatPage && chatId === currentOpenChatId) {
-                        return;
-                    }
-
-                    const senderRef = doc(db, 'users', lastMessage.senderId);
-                    const senderSnap = await getDoc(senderRef);
-                    if (senderSnap.exists()) {
-                        const senderData = senderSnap.data();
-                        showChatMessageNotification({
-                            title: `Nova mensagem de ${senderData.name || senderData.email}`,
-                            message: lastMessage.text,
-                            icon: senderData.profilePicture || './default-profile.svg',
-                            onClickUrl: `chat.html?chatId=${chatId}`
-                        });
-                    }
-                }
+        // 1. Processa todos os documentos para contagem e listas
+        snapshot.forEach(doc => {
+            const chatData = { id: doc.id, ...doc.data() };
+            totalUnreadCount += chatData.unreadCount?.[safeCurrentUserKey] || 0;
+            
+            if (chatData.isGroup) {
+                groups.push(chatData);
+            } else {
+                directMessages.push(chatData);
             }
         });
+
+        // 2. Atualiza a UI global (indicadores na sidebar)
+        const chatLink = document.getElementById('chat-link');
+        const menuToggle = document.getElementById('menu-toggle');
+        updateNotificationIndicator(chatLink, totalUnreadCount);
+        updateNotificationIndicator(menuToggle, totalUnreadCount);
+
+        // 3. Dispara evento para a página de chat (se estiver aberta)
+        document.dispatchEvent(new CustomEvent('chat-data-updated', {
+            detail: {
+                groups,
+                directMessages,
+                totalUnreadCount,
+                currentUser
+            }
+        }));
+
+        // 4. Lógica para notificações push, ignorando o carregamento inicial
+        if (!isInitialLoad) {
+            snapshot.docChanges().forEach(async (change) => {
+                if (change.type === 'modified') {
+                    const chatData = change.doc.data();
+                    const lastMessage = chatData.lastMessage;
+
+                    // Verifica se a modificação foi na última mensagem e se não é do próprio usuário
+                    if (lastMessage && lastMessage.senderId !== currentUser.id) {
+                        const unreadCount = chatData.unreadCount?.[safeCurrentUserKey] || 0;
+                        // A notificação só deve ser enviada se a mensagem realmente for nova (contador > 0)
+                        if (unreadCount > 0) {
+                            const isChatPage = window.location.pathname.endsWith('chat.html');
+                            // Não envia notificação push se o usuário já estiver na página de chat
+                            if (isChatPage) {
+                                return;
+                            }
+
+                            const senderRef = doc(db, 'users', lastMessage.senderId);
+                            const senderSnap = await getDoc(senderRef);
+                            if (senderSnap.exists()) {
+                                const senderData = senderSnap.data();
+                                showChatMessageNotification({
+                                    title: `Nova mensagem de ${senderData.name || senderData.email}`,
+                                    message: lastMessage.text,
+                                    icon: senderData.profilePicture || './default-profile.svg',
+                                    onClickUrl: `chat.html?chatId=${change.doc.id}`
+                                });
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        isInitialLoad = false;
     });
 }
 
@@ -302,6 +358,35 @@ function shadeColor(color, percent) {
 }
 
 async function loadComponents(pageSpecificSetup) {
+    // Injeta o CSS para o indicador de notificação
+    const style = document.createElement('style');
+    style.innerHTML = `
+        .notification-indicator {
+            position: absolute;
+            top: 50%;
+            right: 0.75rem;
+            transform: translateY(-50%);
+            width: 1.25rem;
+            height: 1.25rem;
+            background-color: #3b82f6; /* blue-500 */
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 500;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+        #menu-toggle .notification-indicator {
+             top: 0.25rem;
+             right: 0.25rem;
+             width: 1.25rem;
+             height: 1.25rem;
+        }
+    `;
+    document.head.appendChild(style);
+
     const headerContainer = document.getElementById('header-container');
     const sidebarContainer = document.getElementById('sidebar-container');
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';

@@ -1,11 +1,9 @@
 import { db, app } from './firebase-config.js';
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import { collection, query, where, onSnapshot, addDoc, serverTimestamp, orderBy, doc, getDoc, setDoc, getDocs, Timestamp, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
 import { loadComponents, setupUIListeners } from './common-ui.js';
 
 const auth = getAuth(app);
-const storage = getStorage(app);
 
 // Elementos do DOM
 const groupList = document.getElementById('group-list');
@@ -14,8 +12,6 @@ const chatTitle = document.getElementById('chat-title');
 const chatMessages = document.getElementById('chat-messages');
 const messageInput = document.getElementById('message-input');
 const sendButton = document.getElementById('send-button');
-const attachFileButton = document.getElementById('attach-file-button');
-const fileInput = document.getElementById('file-input');
 const scrollToBottomBtn = document.getElementById('scrollToBottomBtn');
 const newGroupBtn = document.getElementById('newGroupBtn');
 const newGroupModal = document.getElementById('newGroupModal');
@@ -34,6 +30,8 @@ const viewAsSearchResultsContainer = document.getElementById('viewAs-search-resu
 const viewAsBanner = document.getElementById('viewAsBanner');
 const viewAsBannerText = document.getElementById('viewAsBannerText');
 const exitViewAsBtn = document.getElementById('exitViewAsBtn');
+const emojiButton = document.getElementById('emoji-button');
+const emojiPickerContainer = document.getElementById('emoji-picker-container');
 
 
 // Variáveis de estado
@@ -42,9 +40,12 @@ let isViewingAs = false;
 let viewingAsUser = null;
 let allUsers = []; // Usado para popular o modal de criação de grupo
 const userCache = new Map(); // Cache para dados de usuários
+const originalTitle = document.title;
 
 // Ponto de entrada principal
 function initializeChat() {
+    setupChatUpdateListener(); // Configura o listener para receber dados do common-ui.js
+
     const user = JSON.parse(sessionStorage.getItem('currentUser'));
     
     if (user && user.id) {
@@ -57,7 +58,8 @@ function initializeChat() {
             newGroupBtn.classList.add('hidden');
         }
 
-        populateConversationsList(user);
+        // A chamada a populateConversationsList não é mais necessária aqui,
+        // pois os dados agora chegam através do evento 'chat-data-updated'.
         fetchAllUsersForModal(user);
     } else {
         console.log("Nenhum usuário na sessão, redirecionando para o login...");
@@ -83,34 +85,28 @@ function fetchAllUsersForModal(currentUser) {
     });
 }
 
-// Popula a lista de conversas (grupos e 1-a-1)
-function populateConversationsList(currentUser) {
-    const chatsCollection = collection(db, 'chats');
-    const q = query(chatsCollection, where('members', 'array-contains', currentUser.id));
-    
-    onSnapshot(q, (snapshot) => {
-        const groups = [];
-        const directMessages = [];
+// Ouve o evento global e atualiza a UI da página de chat
+function setupChatUpdateListener() {
+    document.addEventListener('chat-data-updated', (event) => {
+        const { groups, directMessages, totalUnreadCount, currentUser } = event.detail;
 
-        snapshot.forEach(doc => {
-            const chatData = { id: doc.id, ...doc.data() };
-            if (chatData.isGroup) {
-                groups.push(chatData);
-            } else {
-                directMessages.push(chatData);
-            }
-        });
+        // 1. Atualiza o título da página
+        if (totalUnreadCount > 0) {
+            document.title = `(${totalUnreadCount}) ${originalTitle}`;
+        } else {
+            document.title = originalTitle;
+        }
 
-        // Ordena as listas no lado do cliente
+        // 2. Ordena as listas
         const sortChats = (a, b) => {
             const timeA = a.lastMessage?.timestamp?.toMillis() || 0;
             const timeB = b.lastMessage?.timestamp?.toMillis() || 0;
             return timeB - timeA;
         };
-
         groups.sort(sortChats);
         directMessages.sort(sortChats);
 
+        // 3. Renderiza as listas de conversas
         renderChatLists(groups, directMessages, currentUser);
     });
 }
@@ -370,33 +366,11 @@ async function loadMessages(chatId) {
             messageElement.className = `flex flex-col mb-2 max-w-xs ${isSender ? 'items-end self-end' : 'items-start self-start'}`;
             
             const bubbleClass = isSender ? 'bg-blue-500 text-white' : 'bg-gray-200 dark:bg-gray-700';
-            const bubblePadding = message.fileURL && message.fileType.startsWith('image/') ? 'p-1' : 'p-2'; // Less padding for images
-
-            let messageContentHtml = '';
-            if (message.fileURL) {
-                if (message.fileType.startsWith('image/')) {
-                    messageContentHtml = `
-                        <a href="${message.fileURL}" target="_blank" rel="noopener noreferrer">
-                            <img src="${message.fileURL}" alt="${message.fileName}" class="max-w-xs max-h-48 rounded-lg">
-                        </a>
-                    `;
-                } else { // PDF and other files
-                    const iconClass = message.fileType === 'application/pdf' ? 'fa-file-pdf' : 'fa-file-alt';
-                    messageContentHtml = `
-                        <a href="${message.fileURL}" target="_blank" rel="noopener noreferrer" class="flex items-center text-current">
-                            <i class="fas ${iconClass} text-2xl mr-2"></i>
-                            <span class="truncate">${message.fileName}</span>
-                        </a>
-                    `;
-                }
-            } else {
-                messageContentHtml = message.text;
-            }
 
             messageElement.innerHTML = `
                 ${senderInfoHtml}
-                <div class="rounded-lg ${bubbleClass} ${bubblePadding}">
-                    ${messageContentHtml}
+                <div class="p-2 rounded-lg ${bubbleClass}">
+                    ${message.text}
                 </div>
                 <div class="flex items-center text-gray-500 dark:text-gray-400 mt-1" style="font-size: 0.65rem; line-height: 0.8rem;">
                     <span>${messageTime}</span>
@@ -523,112 +497,11 @@ function enableChatInput() {
     if (isViewingAs) {
         messageInput.disabled = true;
         sendButton.disabled = true;
-        attachFileButton.disabled = true;
         messageInput.placeholder = "Visualizando como outro usuário (somente leitura)";
     } else {
         messageInput.disabled = false;
         sendButton.disabled = false;
-        attachFileButton.disabled = false;
         messageInput.placeholder = "Digite sua mensagem...";
-    }
-}
-
-// --- File Attachment Logic ---
-
-async function handleFileUpload(event) {
-    const file = event.target.files[0];
-    if (!file || !currentChatId) return;
-
-    const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
-    if (!allowedTypes.includes(file.type)) {
-        alert('Tipo de arquivo não suportado. Por favor, selecione PNG, JPEG ou PDF.');
-        return;
-    }
-
-    if (file.size > 5 * 1024 * 1024) { // 5MB limit
-        alert('O arquivo é muito grande. O limite é de 5MB.');
-        return;
-    }
-
-    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
-    if (!currentUser) return;
-
-    try {
-        // Show some feedback to the user, e.g., disable inputs
-        messageInput.disabled = true;
-        sendButton.disabled = true;
-        attachFileButton.disabled = true;
-        messageInput.placeholder = "Enviando arquivo...";
-
-        const storageRef = ref(storage, `chat_attachments/${currentChatId}/${Date.now()}_${file.name}`);
-        const snapshot = await uploadBytes(storageRef, file);
-        const downloadURL = await getDownloadURL(snapshot.ref);
-
-        await sendFileMessage(downloadURL, file.name, file.type);
-
-    } catch (error) {
-        console.error("Erro ao fazer upload do arquivo:", error);
-        alert("Ocorreu um erro ao enviar o arquivo. Tente novamente.");
-    } finally {
-        // Re-enable inputs
-        fileInput.value = ''; // Reset file input
-        enableChatInput();
-    }
-}
-
-async function sendFileMessage(fileURL, fileName, fileType) {
-    if (isViewingAs) {
-        console.log("Envio de mensagens desabilitado no modo 'Ver como'.");
-        return;
-    }
-    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
-    if (!currentUser || !currentChatId) return;
-
-    const messagesCollection = collection(db, 'chats', currentChatId, 'messages');
-    const chatRef = doc(db, 'chats', currentChatId);
-
-    try {
-        await addDoc(messagesCollection, {
-            senderId: currentUser.id,
-            timestamp: serverTimestamp(),
-            status: 'enviado',
-            fileURL: fileURL,
-            fileName: fileName,
-            fileType: fileType
-        });
-
-        const chatSnap = await getDoc(chatRef);
-        if (chatSnap.exists()) {
-            const chatData = chatSnap.data();
-            const unreadCountUpdate = {};
-            const lastMessageText = `Arquivo: ${fileName}`;
-
-            if (chatData.isGroup) {
-                chatData.members.forEach(memberId => {
-                    if (memberId !== currentUser.id) {
-                        const safeMemberKey = memberId.replace(/\./g, '_');
-                        unreadCountUpdate[`unreadCount.${safeMemberKey}`] = (chatData.unreadCount?.[safeMemberKey] || 0) + 1;
-                    }
-                });
-            } else {
-                const otherUserId = chatData.members.find(id => id !== currentUser.id);
-                if (otherUserId) {
-                    const safeOtherUserKey = otherUserId.replace(/\./g, '_');
-                    unreadCountUpdate[`unreadCount.${safeOtherUserKey}`] = (chatData.unreadCount?.[safeOtherUserKey] || 0) + 1;
-                }
-            }
-
-            await updateDoc(chatRef, {
-                lastMessage: {
-                    text: lastMessageText,
-                    senderId: currentUser.id,
-                    timestamp: serverTimestamp()
-                },
-                ...unreadCountUpdate
-            });
-        }
-    } catch (error) {
-        console.error("Erro ao enviar mensagem de arquivo:", error);
     }
 }
 
@@ -717,7 +590,8 @@ function startViewingAs(user) {
     enableChatInput();
 
     // Carrega as conversas do usuário selecionado
-    populateConversationsList(user);
+    // Esta chamada agora apenas ativa o listener, que fará o trabalho
+    // populateConversationsList(user);
 
     // Fecha o modal
     viewAsModal.classList.add('hidden');
@@ -742,7 +616,7 @@ function exitViewingAs() {
 
     // Recarrega o chat com o usuário original (admin)
     const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
-    populateConversationsList(currentUser);
+    // A UI será atualizada automaticamente pelo evento 'chat-data-updated'
     
     // Habilita o input
     enableChatInput();
@@ -750,8 +624,31 @@ function exitViewingAs() {
 
 
 // Event Listeners
-attachFileButton.addEventListener('click', () => fileInput.click());
-fileInput.addEventListener('change', handleFileUpload);
+
+// --- Lógica do Seletor de Emojis ---
+emojiButton.addEventListener('click', (event) => {
+    event.stopPropagation(); // Impede que o clique no documento feche o seletor imediatamente
+
+    // Ajusta o tema do seletor de emojis (dark/light) ao abrir
+    const emojiPicker = document.querySelector('emoji-picker');
+    if (document.documentElement.classList.contains('dark')) {
+        emojiPicker.classList.remove('light');
+        emojiPicker.classList.add('dark');
+    } else {
+        emojiPicker.classList.remove('dark');
+        emojiPicker.classList.add('light');
+    }
+
+    const isHidden = emojiPickerContainer.style.display === 'none' || emojiPickerContainer.style.display === '';
+    emojiPickerContainer.style.display = isHidden ? 'block' : 'none';
+});
+
+document.querySelector('emoji-picker').addEventListener('emoji-click', event => {
+    messageInput.value += event.detail.unicode;
+    messageInput.focus();
+});
+// --- Fim da Lógica do Seletor de Emojis ---
+
 userSearchInput.addEventListener('input', searchUser);
 exitViewAsBtn.addEventListener('click', exitViewingAs);
 viewAsUserSearchInput.addEventListener('input', searchUserForViewAs);
@@ -765,8 +662,14 @@ cancelGroupBtn.addEventListener('click', () => newGroupModal.classList.add('hidd
 createGroupBtn.addEventListener('click', createGroup);
 
 document.addEventListener('click', (event) => {
+    // Oculta os resultados da busca ao clicar fora
     if (!event.target.closest('#search-results') && event.target !== userSearchInput) {
         searchResultsContainer.classList.add('hidden');
+    }
+
+    // Oculta o seletor de emojis ao clicar fora
+    if (!emojiPickerContainer.contains(event.target) && !emojiButton.contains(event.target)) {
+        emojiPickerContainer.style.display = 'none';
     }
 });
 

@@ -21,11 +21,34 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Emoji Picker -->
+    <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
 
     <style>
         /* Custom Styles */
         body {
             font-family: 'Inter', sans-serif;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #9ca3af; /* bg-gray-400 */
+            border-radius: 4px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #4b5563; /* bg-gray-600 */
+            border: 2px solid #1f2937; /* bg-gray-800 */
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6b7280; /* bg-gray-500 */
         }
     </style>
 </head>
@@ -88,14 +111,16 @@
                             <i class="fas fa-arrow-down"></i>
                         </button>
                     </div>
-                    <div id="chat-input-container" class="p-4 border-t border-gray-200 dark:border-gray-700">
+                    <div id="chat-input-container" class="p-4 border-t border-gray-200 dark:border-gray-700 relative">
                         <div class="flex items-center">
-                            <input type="file" id="file-input" accept="image/png, image/jpeg, application/pdf" class="hidden">
-                            <button id="attach-file-button" class="mr-2 bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg" disabled>
-                                <i class="fas fa-paperclip"></i>
+                            <button id="emoji-button" class="p-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+                                <i class="fas fa-smile text-xl"></i>
                             </button>
                             <input type="text" id="message-input" class="w-full bg-gray-200 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Selecione uma conversa para começar" disabled>
                             <button id="send-button" class="ml-2 bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-lg" disabled>Enviar</button>
+                        </div>
+                        <div id="emoji-picker-container" class="absolute bottom-full mb-2 right-4" style="display: none;">
+                            <emoji-picker class="light"></emoji-picker>
                         </div>
                     </div>
                 </div>
