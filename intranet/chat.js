@@ -1,9 +1,11 @@
 import { db, app } from './firebase-config.js';
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import { collection, query, where, onSnapshot, addDoc, serverTimestamp, orderBy, doc, getDoc, setDoc, getDocs, Timestamp, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
 import { loadComponents, setupUIListeners } from './common-ui.js';
 
 const auth = getAuth(app);
+const storage = getStorage(app);
 
 // Elementos do DOM
 const groupList = document.getElementById('group-list');
@@ -12,6 +14,8 @@ const chatTitle = document.getElementById('chat-title');
 const chatMessages = document.getElementById('chat-messages');
 const messageInput = document.getElementById('message-input');
 const sendButton = document.getElementById('send-button');
+const attachFileButton = document.getElementById('attach-file-button');
+const fileInput = document.getElementById('file-input');
 const scrollToBottomBtn = document.getElementById('scrollToBottomBtn');
 const newGroupBtn = document.getElementById('newGroupBtn');
 const newGroupModal = document.getElementById('newGroupModal');
@@ -366,11 +370,33 @@ async function loadMessages(chatId) {
             messageElement.className = `flex flex-col mb-2 max-w-xs ${isSender ? 'items-end self-end' : 'items-start self-start'}`;
             
             const bubbleClass = isSender ? 'bg-blue-500 text-white' : 'bg-gray-200 dark:bg-gray-700';
+            const bubblePadding = message.fileURL && message.fileType.startsWith('image/') ? 'p-1' : 'p-2'; // Less padding for images
+
+            let messageContentHtml = '';
+            if (message.fileURL) {
+                if (message.fileType.startsWith('image/')) {
+                    messageContentHtml = `
+                        <a href="${message.fileURL}" target="_blank" rel="noopener noreferrer">
+                            <img src="${message.fileURL}" alt="${message.fileName}" class="max-w-xs max-h-48 rounded-lg">
+                        </a>
+                    `;
+                } else { // PDF and other files
+                    const iconClass = message.fileType === 'application/pdf' ? 'fa-file-pdf' : 'fa-file-alt';
+                    messageContentHtml = `
+                        <a href="${message.fileURL}" target="_blank" rel="noopener noreferrer" class="flex items-center text-current">
+                            <i class="fas ${iconClass} text-2xl mr-2"></i>
+                            <span class="truncate">${message.fileName}</span>
+                        </a>
+                    `;
+                }
+            } else {
+                messageContentHtml = message.text;
+            }
 
             messageElement.innerHTML = `
                 ${senderInfoHtml}
-                <div class="p-2 rounded-lg ${bubbleClass}">
-                    ${message.text}
+                <div class="rounded-lg ${bubbleClass} ${bubblePadding}">
+                    ${messageContentHtml}
                 </div>
                 <div class="flex items-center text-gray-500 dark:text-gray-400 mt-1" style="font-size: 0.65rem; line-height: 0.8rem;">
                     <span>${messageTime}</span>
@@ -497,11 +523,112 @@ function enableChatInput() {
     if (isViewingAs) {
         messageInput.disabled = true;
         sendButton.disabled = true;
+        attachFileButton.disabled = true;
         messageInput.placeholder = "Visualizando como outro usuário (somente leitura)";
     } else {
         messageInput.disabled = false;
         sendButton.disabled = false;
+        attachFileButton.disabled = false;
         messageInput.placeholder = "Digite sua mensagem...";
+    }
+}
+
+// --- File Attachment Logic ---
+
+async function handleFileUpload(event) {
+    const file = event.target.files[0];
+    if (!file || !currentChatId) return;
+
+    const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+    if (!allowedTypes.includes(file.type)) {
+        alert('Tipo de arquivo não suportado. Por favor, selecione PNG, JPEG ou PDF.');
+        return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) { // 5MB limit
+        alert('O arquivo é muito grande. O limite é de 5MB.');
+        return;
+    }
+
+    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    if (!currentUser) return;
+
+    try {
+        // Show some feedback to the user, e.g., disable inputs
+        messageInput.disabled = true;
+        sendButton.disabled = true;
+        attachFileButton.disabled = true;
+        messageInput.placeholder = "Enviando arquivo...";
+
+        const storageRef = ref(storage, `chat_attachments/${currentChatId}/${Date.now()}_${file.name}`);
+        const snapshot = await uploadBytes(storageRef, file);
+        const downloadURL = await getDownloadURL(snapshot.ref);
+
+        await sendFileMessage(downloadURL, file.name, file.type);
+
+    } catch (error) {
+        console.error("Erro ao fazer upload do arquivo:", error);
+        alert("Ocorreu um erro ao enviar o arquivo. Tente novamente.");
+    } finally {
+        // Re-enable inputs
+        fileInput.value = ''; // Reset file input
+        enableChatInput();
+    }
+}
+
+async function sendFileMessage(fileURL, fileName, fileType) {
+    if (isViewingAs) {
+        console.log("Envio de mensagens desabilitado no modo 'Ver como'.");
+        return;
+    }
+    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    if (!currentUser || !currentChatId) return;
+
+    const messagesCollection = collection(db, 'chats', currentChatId, 'messages');
+    const chatRef = doc(db, 'chats', currentChatId);
+
+    try {
+        await addDoc(messagesCollection, {
+            senderId: currentUser.id,
+            timestamp: serverTimestamp(),
+            status: 'enviado',
+            fileURL: fileURL,
+            fileName: fileName,
+            fileType: fileType
+        });
+
+        const chatSnap = await getDoc(chatRef);
+        if (chatSnap.exists()) {
+            const chatData = chatSnap.data();
+            const unreadCountUpdate = {};
+            const lastMessageText = `Arquivo: ${fileName}`;
+
+            if (chatData.isGroup) {
+                chatData.members.forEach(memberId => {
+                    if (memberId !== currentUser.id) {
+                        const safeMemberKey = memberId.replace(/\./g, '_');
+                        unreadCountUpdate[`unreadCount.${safeMemberKey}`] = (chatData.unreadCount?.[safeMemberKey] || 0) + 1;
+                    }
+                });
+            } else {
+                const otherUserId = chatData.members.find(id => id !== currentUser.id);
+                if (otherUserId) {
+                    const safeOtherUserKey = otherUserId.replace(/\./g, '_');
+                    unreadCountUpdate[`unreadCount.${safeOtherUserKey}`] = (chatData.unreadCount?.[safeOtherUserKey] || 0) + 1;
+                }
+            }
+
+            await updateDoc(chatRef, {
+                lastMessage: {
+                    text: lastMessageText,
+                    senderId: currentUser.id,
+                    timestamp: serverTimestamp()
+                },
+                ...unreadCountUpdate
+            });
+        }
+    } catch (error) {
+        console.error("Erro ao enviar mensagem de arquivo:", error);
     }
 }
 
@@ -623,6 +750,8 @@ function exitViewingAs() {
 
 
 // Event Listeners
+attachFileButton.addEventListener('click', () => fileInput.click());
+fileInput.addEventListener('change', handleFileUpload);
 userSearchInput.addEventListener('input', searchUser);
 exitViewAsBtn.addEventListener('click', exitViewingAs);
 viewAsUserSearchInput.addEventListener('input', searchUserForViewAs);

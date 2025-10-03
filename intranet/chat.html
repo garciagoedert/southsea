@@ -90,6 +90,10 @@
                     </div>
                     <div id="chat-input-container" class="p-4 border-t border-gray-200 dark:border-gray-700">
                         <div class="flex items-center">
+                            <input type="file" id="file-input" accept="image/png, image/jpeg, application/pdf" class="hidden">
+                            <button id="attach-file-button" class="mr-2 bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg" disabled>
+                                <i class="fas fa-paperclip"></i>
+                            </button>
                             <input type="text" id="message-input" class="w-full bg-gray-200 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Selecione uma conversa para começar" disabled>
                             <button id="send-button" class="ml-2 bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-lg" disabled>Enviar</button>
                         </div>
