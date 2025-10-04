@@ -32,10 +32,12 @@ const viewAsBannerText = document.getElementById('viewAsBannerText');
 const exitViewAsBtn = document.getElementById('exitViewAsBtn');
 const emojiButton = document.getElementById('emoji-button');
 const emojiPickerContainer = document.getElementById('emoji-picker-container');
+const reactionEmojiPickerContainer = document.getElementById('reaction-emoji-picker-container');
 
 
 // Variáveis de estado
 let currentChatId = null;
+let currentReactionMessageId = null; // Para saber a qual mensagem a reação se aplica
 let isViewingAs = false;
 let viewingAsUser = null;
 let allUsers = []; // Usado para popular o modal de criação de grupo
@@ -166,6 +168,7 @@ function renderGroupItem(chat, chatId, currentUser) {
 
     groupElement.onclick = () => {
         currentChatId = chatId;
+        sessionStorage.setItem('activeChatId', chatId);
         chatTitle.textContent = chat.name;
         loadMessages(chatId);
         enableChatInput();
@@ -204,6 +207,7 @@ function renderUserItem(chat, chatId, currentUser) {
                 `;
         userElement.onclick = () => {
             currentChatId = chatId;
+            sessionStorage.setItem('activeChatId', chatId);
             chatTitle.textContent = otherUserData.name || otherUserData.email;
             loadMessages(chatId);
             enableChatInput();
@@ -289,6 +293,7 @@ async function startChat(otherUserId, otherUserName) {
 
     const chatId = [currentUser.id, otherUserId].sort().join('_');
     currentChatId = chatId;
+    sessionStorage.setItem('activeChatId', chatId);
 
     const chatRef = doc(db, 'chats', chatId);
     const chatSnap = await getDoc(chatRef);
@@ -315,12 +320,10 @@ async function loadMessages(chatId) {
     const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
     if (!currentUser) return;
 
-    // Zera o contador de não lidas
     const chatRef = doc(db, 'chats', chatId);
     const safeCurrentUserKey = currentUser.id.replace(/\./g, '_');
     await updateDoc(chatRef, { [`unreadCount.${safeCurrentUserKey}`]: 0 });
 
-    // Busca os dados do chat para saber se é um grupo
     const chatDoc = await getDoc(chatRef);
     const isGroup = chatDoc.data()?.isGroup || false;
 
@@ -331,6 +334,7 @@ async function loadMessages(chatId) {
     onSnapshot(q, (snapshot) => {
         chatMessages.innerHTML = '';
         snapshot.forEach(messageDoc => {
+            const messageId = messageDoc.id;
             const message = messageDoc.data();
 
             if (message.senderId !== currentUser.id && message.status !== 'lido') {
@@ -363,15 +367,38 @@ async function loadMessages(chatId) {
             }
 
             const messageElement = document.createElement('div');
-            messageElement.className = `flex flex-col mb-2 max-w-xs ${isSender ? 'items-end self-end' : 'items-start self-start'}`;
-            
+            messageElement.className = `message-container group relative flex flex-col mb-2 max-w-xs ${isSender ? 'items-end self-end' : 'items-start self-start'}`;
+            messageElement.setAttribute('data-message-id', messageId);
+
             const bubbleClass = isSender ? 'bg-blue-500 text-white' : 'bg-gray-200 dark:bg-gray-700';
+
+            // Renderiza as reações
+            let reactionsHtml = '<div class="reactions-container flex gap-1 mt-1">';
+            if (message.reactions) {
+                for (const [emoji, userIds] of Object.entries(message.reactions)) {
+                    if (userIds.length > 0) {
+                        const isReactedByUser = userIds.includes(currentUser.id);
+                        const reactionBg = isReactedByUser ? 'bg-blue-200 dark:bg-blue-800' : 'bg-gray-200 dark:bg-gray-600';
+                        reactionsHtml += `
+                            <div class="reaction-emoji ${reactionBg} rounded-full px-2 py-0.5 text-xs flex items-center cursor-pointer" data-emoji="${emoji}">
+                                <span>${emoji}</span>
+                                <span class="ml-1 text-gray-800 dark:text-gray-200">${userIds.length}</span>
+                            </div>
+                        `;
+                    }
+                }
+            }
+            reactionsHtml += '</div>';
 
             messageElement.innerHTML = `
                 ${senderInfoHtml}
-                <div class="p-2 rounded-lg ${bubbleClass}">
+                <div class="message-bubble relative p-2 rounded-lg ${bubbleClass}">
                     ${message.text}
+                     <button class="add-reaction-btn absolute top-[-10px] ${isSender ? 'left-[-25px]' : 'right-[-25px]'} p-1 rounded-full bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <i class="fas fa-smile"></i>
+                    </button>
                 </div>
+                ${reactionsHtml}
                 <div class="flex items-center text-gray-500 dark:text-gray-400 mt-1" style="font-size: 0.65rem; line-height: 0.8rem;">
                     <span>${messageTime}</span>
                     ${isSender ? getStatusIcon(message.status) : ''}
@@ -381,13 +408,49 @@ async function loadMessages(chatId) {
             chatMessages.appendChild(messageElement);
         });
 
-        // Lógica de rolagem inteligente
+        // Adiciona event listeners para os botões de reação após renderizar
+        document.querySelectorAll('.reaction-emoji').forEach(el => {
+            el.addEventListener('click', () => {
+                const messageId = el.closest('.message-container').dataset.messageId;
+                const emoji = el.dataset.emoji;
+                toggleReaction(chatId, messageId, emoji);
+            });
+        });
+        document.querySelectorAll('.add-reaction-btn').forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
+                currentReactionMessageId = e.currentTarget.closest('.message-container').dataset.messageId;
+                
+                const rect = e.currentTarget.getBoundingClientRect();
+                reactionEmojiPickerContainer.style.top = `${rect.top - reactionEmojiPickerContainer.offsetHeight}px`;
+                reactionEmojiPickerContainer.style.left = `${rect.left}px`;
+                reactionEmojiPickerContainer.style.display = 'block';
+
+                const reactionEmojiPicker = reactionEmojiPickerContainer.querySelector('emoji-picker');
+                if (document.documentElement.classList.contains('dark')) {
+                    reactionEmojiPicker.classList.remove('light');
+                    reactionEmojiPicker.classList.add('dark');
+                } else {
+                    reactionEmojiPicker.classList.remove('dark');
+                    reactionEmojiPicker.classList.add('light');
+                }
+            });
+        });
+
         const isScrolledToBottom = chatMessages.scrollHeight - chatMessages.clientHeight <= chatMessages.scrollTop + 1;
         
         if (isInitialLoad || isScrolledToBottom) {
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
         
+        const chatRef = doc(db, 'chats', chatId);
+        const safeCurrentUserKey = currentUser.id.replace(/\./g, '_');
+        getDoc(chatRef).then(docSnap => {
+            if (docSnap.exists() && docSnap.data().unreadCount?.[safeCurrentUserKey] > 0) {
+                updateDoc(chatRef, { [`unreadCount.${safeCurrentUserKey}`]: 0 });
+            }
+        });
+
         isInitialLoad = false;
     });
 }
@@ -401,6 +464,46 @@ function getStatusIcon(status) {
     }
     return `<span class="text-gray-400 ml-2">✓</span>`;
 }
+
+// Adiciona ou remove uma reação
+async function toggleReaction(chatId, messageId, emoji) {
+    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    if (!currentUser || isViewingAs) return;
+
+    const messageRef = doc(db, 'chats', chatId, 'messages', messageId);
+
+    try {
+        const messageSnap = await getDoc(messageRef);
+        if (messageSnap.exists()) {
+            const messageData = messageSnap.data();
+            const reactions = messageData.reactions || {};
+            
+            // Se o emoji não existe nas reações, inicializa
+            if (!reactions[emoji]) {
+                reactions[emoji] = [];
+            }
+
+            const userIndex = reactions[emoji].indexOf(currentUser.id);
+
+            if (userIndex > -1) {
+                // Usuário já reagiu, então remove a reação
+                reactions[emoji].splice(userIndex, 1);
+                // Se não houver mais ninguém reagindo com este emoji, remove o emoji
+                if (reactions[emoji].length === 0) {
+                    delete reactions[emoji];
+                }
+            } else {
+                // Usuário ainda não reagiu, adiciona a reação
+                reactions[emoji].push(currentUser.id);
+            }
+
+            await updateDoc(messageRef, { reactions });
+        }
+    } catch (error) {
+        console.error("Erro ao atualizar reação:", error);
+    }
+}
+
 
 // Envia uma mensagem
 async function sendMessage() {
@@ -484,6 +587,7 @@ async function createGroup() {
                 createdAt: serverTimestamp()
             });
             currentChatId = newGroup.id;
+            sessionStorage.setItem('activeChatId', newGroup.id);
             chatTitle.textContent = groupName;
             loadMessages(newGroup.id);
             newGroupModal.classList.add('hidden');
@@ -647,6 +751,14 @@ document.querySelector('emoji-picker').addEventListener('emoji-click', event => 
     messageInput.value += event.detail.unicode;
     messageInput.focus();
 });
+
+reactionEmojiPickerContainer.querySelector('emoji-picker').addEventListener('emoji-click', event => {
+    if (currentReactionMessageId) {
+        toggleReaction(currentChatId, currentReactionMessageId, event.detail.unicode);
+        reactionEmojiPickerContainer.style.display = 'none';
+        currentReactionMessageId = null;
+    }
+});
 // --- Fim da Lógica do Seletor de Emojis ---
 
 userSearchInput.addEventListener('input', searchUser);
@@ -671,6 +783,11 @@ document.addEventListener('click', (event) => {
     if (!emojiPickerContainer.contains(event.target) && !emojiButton.contains(event.target)) {
         emojiPickerContainer.style.display = 'none';
     }
+
+    // Oculta o seletor de emojis de reação ao clicar fora
+    if (!reactionEmojiPickerContainer.contains(event.target) && !event.target.classList.contains('add-reaction-btn')) {
+        reactionEmojiPickerContainer.style.display = 'none';
+    }
 });
 
 // Event Listeners para o botão de rolar para o final
@@ -690,6 +807,12 @@ scrollToBottomBtn.addEventListener('click', () => {
 });
 
 // --- AUTHENTICATION & INITIALIZATION ---
+
+// Limpa o chat ativo ao sair da página
+window.addEventListener('beforeunload', () => {
+    sessionStorage.removeItem('activeChatId');
+});
+
 document.addEventListener('DOMContentLoaded', () => {
     onAuthStateChanged(auth, (user) => {
         if (user) {

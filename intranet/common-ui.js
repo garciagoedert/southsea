@@ -247,22 +247,33 @@ function listenForChatNotifications() {
                         const unreadCount = chatData.unreadCount?.[safeCurrentUserKey] || 0;
                         // A notificação só deve ser enviada se a mensagem realmente for nova (contador > 0)
                         if (unreadCount > 0) {
-                            const isChatPage = window.location.pathname.endsWith('chat.html');
-                            // Não envia notificação push se o usuário já estiver na página de chat
-                            if (isChatPage) {
-                                return;
+                            // Verifica se a mensagem é do chat que já está aberto
+                            const activeChatId = sessionStorage.getItem('activeChatId');
+                            if (change.doc.id === activeChatId) {
+                                return; // Não mostra notificação para o chat ativo
                             }
 
+                            const isChatPage = window.location.pathname.endsWith('chat.html');
                             const senderRef = doc(db, 'users', lastMessage.senderId);
                             const senderSnap = await getDoc(senderRef);
                             if (senderSnap.exists()) {
                                 const senderData = senderSnap.data();
-                                showChatMessageNotification({
+                                const isChatPage = window.location.pathname.endsWith('chat.html');
+
+                                // Prepara os detalhes da notificação
+                                const notificationDetails = {
                                     title: `Nova mensagem de ${senderData.name || senderData.email}`,
                                     message: lastMessage.text,
-                                    icon: senderData.profilePicture || './default-profile.svg',
-                                    onClickUrl: `chat.html?chatId=${change.doc.id}`
-                                });
+                                    icon: senderData.profilePicture || './default-profile.svg'
+                                };
+
+                                // Adiciona a URL de clique apenas se não estiver na página de chat
+                                if (!isChatPage) {
+                                    notificationDetails.onClickUrl = `chat.html?chatId=${change.doc.id}`;
+                                }
+
+                                // Mostra a notificação
+                                showChatMessageNotification(notificationDetails);
                             }
                         }
                     }
