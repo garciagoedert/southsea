@@ -39,9 +39,12 @@ onAuthStateChanged(auth, (user) => {
 async function initializeApp(userRole) {
     console.log("Inicializando a página de Customer Success...");
     await loadConfigModal();
+    await loadOptionsModal(); // Carrega o novo modal de opções
     await loadFilterPopup();
     await loadCommentsModal();
     await loadCentralCommentsModal(); // Carrega o novo modal
+    await loadConfirmationModal(); // Carrega o modal de confirmação
+    await loadInputModal(); // Carrega o modal de input
     if (userRole === 'admin') {
         configViewBtn.classList.remove('hidden');
         configViewBtn.addEventListener('click', openConfigModal);
@@ -62,6 +65,19 @@ async function fetchViewConfig() {
 
         if (docSnap.exists()) {
             viewConfig = docSnap.data();
+
+            // Fallback for missing groups property
+            if (!viewConfig.groups || !Array.isArray(viewConfig.groups)) {
+                console.warn("Propriedade 'groups' ausente ou inválida na configuração. Usando fallback.");
+                viewConfig.groups = [
+                    { id: 'onboarding', title: 'Onboarding' },
+                    { id: 'acompanhamento', title: 'Em Acompanhamento' },
+                    { id: 'atencao', title: 'Atenção Necessária' },
+                    { id: 'aguardando', title: 'Aguardando Ação' },
+                    { id: 'sucesso', title: 'Sucesso/Estável' },
+                ];
+            }
+
             // --- MIGRATION LOGIC ---
             // Ensures that select options are in the new object format for backward compatibility.
             if (viewConfig.columns) {
@@ -98,7 +114,6 @@ async function fetchViewConfig() {
                 columns: [
                     { id: 'empresa', title: 'Empresa', type: 'text' },
                     { id: 'setor', title: 'Setor', type: 'text' },
-                    { id: 'csStatus', title: 'Grupo', type: 'select', options: ['onboarding', 'acompanhamento', 'atencao', 'aguardando', 'sucesso', 'concluido'] },
                     { id: 'actionStatus', title: 'Status Ação', type: 'select', options: ['Aguardando', 'Em Andamento', 'Pendente', 'Urgente'] },
                     { id: 'healthScore', title: 'Health Score', type: 'number' },
                     { id: 'csResponsible', title: 'CS Responsável', type: 'user' }
@@ -138,6 +153,16 @@ async function loadClients(userRole) {
         }
 
         const clientsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data(), comments_summary: {} }));
+
+        // Auto-correção de status de grupo inválido
+        clientsData.forEach(client => {
+            if (!client.csStatus || client.csStatus === 'undefined') {
+                console.log(`Corrigindo cliente ${client.id}: csStatus inválido. Definindo para 'onboarding'.`);
+                client.csStatus = 'onboarding';
+                const clientRef = doc(db, 'artifacts', appId, 'public', 'data', 'prospects', client.id);
+                updateDoc(clientRef, { csStatus: 'onboarding' }).catch(err => console.error(`Falha ao corrigir csStatus para o cliente ${client.id}:`, err));
+            }
+        });
 
         // Agora, para cada cliente, buscamos os resumos de comentários
         const commentPromises = clientsData.map(async (client) => {
@@ -186,7 +211,7 @@ function renderGroup(group, allClients) {
         return 0;
     });
 
-    const visibleColumns = viewConfig.columns.filter(col => !col.hidden);
+    const visibleColumns = viewConfig.columns.filter(col => !col.hidden && col.id !== 'csStatus');
 
     let headerHTML = visibleColumns.map(col => {
         const sortIcon = sortConfig.columnId === col.id ? (sortConfig.direction === 'asc' ? '▲' : '▼') : '';
@@ -215,11 +240,13 @@ function renderGroup(group, allClients) {
             </div>
         </div>
         <div class="group-content ${isCollapsed ? 'hidden' : ''}">
-            <div class="table-grid" style="display: grid; grid-template-columns: repeat(${visibleColumns.length}, 1fr); gap: 8px;">
-                ${headerHTML}
-            </div>
-            <div class="table-body-grid" data-group-id="${group.id}" style="display: grid; grid-template-columns: repeat(${visibleColumns.length}, 1fr); gap: 8px;">
-                 ${rowsHTML}
+            <div class="overflow-x-auto">
+                <div class="table-grid" style="display: grid; grid-template-columns: repeat(${visibleColumns.length}, minmax(150px, 1fr)); gap: 8px; min-width: ${visibleColumns.length * 150}px;">
+                    ${headerHTML}
+                </div>
+                <div class="table-body-grid" data-group-id="${group.id}" style="display: grid; grid-template-columns: repeat(${visibleColumns.length}, minmax(150px, 1fr)); gap: 8px; min-width: ${visibleColumns.length * 150}px;">
+                     ${rowsHTML}
+                </div>
             </div>
         </div>
     `;
@@ -248,6 +275,8 @@ function renderRow(client, columns) {
 
         if (col.id === 'empresa') cellClass += ' empresa-cell cursor-pointer';
         if (col.type === 'select' || col.type === 'number') cellClass += ' status-cell cursor-pointer';
+        if (col.type === 'link') cellClass += ' link-cell cursor-pointer';
+        if (col.type === 'text') cellClass += ' text-cell cursor-pointer';
 
         switch (col.type) {
             case 'user':
@@ -258,6 +287,19 @@ function renderRow(client, columns) {
                 const currentVal = client[col.id] || null;
                 const style = getStatusStyle(currentVal, col);
                 cellContentHTML = `<span class="status-span font-semibold px-3 py-1 rounded-full text-xs ${style.bgTag} ${style.textTag}">${style.label}</span>`;
+                break;
+            case 'link':
+                const linkValue = client[col.id];
+                if (linkValue && typeof linkValue === 'string' && linkValue.startsWith('http')) {
+                    cellContentHTML = `
+                        <div class="flex items-center justify-between w-full">
+                            <a href="${linkValue}" target="_blank" class="text-blue-500 hover:underline truncate" title="${linkValue}">${linkValue.replace(/^(https?:\/\/)?(www\.)?/, '').substring(0, 25)}...</a>
+                            <i class="fas fa-pencil-alt text-gray-400 hover:text-blue-500 cursor-pointer ml-2 edit-link-btn"></i>
+                        </div>
+                    `;
+                } else {
+                    cellContentHTML = `<span class="text-gray-400 italic add-link-span cursor-pointer">Adicionar link</span>`;
+                }
                 break;
             case 'number':
                 if (col.id === 'healthScore') {
@@ -275,8 +317,8 @@ function renderRow(client, columns) {
                     cellContentHTML = `<span class="status-span">${client[col.id] || 'N/A'}</span>`;
                 }
                 break;
-            default:
-                cellContentHTML = `<span>${client[col.id] || '—'}</span>`;
+            default: // Catches 'text' and any other type
+                cellContentHTML = `<span class="editable-text">${client[col.id] || '—'}</span>`;
                 break;
         }
 
@@ -358,9 +400,32 @@ function setupRowClickListener() {
             return;
         }
 
+        const linkCell = event.target.closest('.link-cell');
+        if (linkCell) {
+            const editBtn = event.target.closest('.edit-link-btn');
+            const addSpan = event.target.closest('.add-link-span');
+            
+            // Only trigger modal if the edit icon or the 'add link' text is clicked
+            if (editBtn || addSpan) {
+                const columnId = linkCell.dataset.columnId;
+                handleLinkClick(clientId, columnId);
+            }
+            return; // Prevent other actions on the cell
+        }
+
         const empresaCell = event.target.closest('.empresa-cell');
         if (empresaCell && !event.target.closest('.drag-handle')) {
             window.location.href = `perfil.html?id=${clientId}`;
+            return; // Return to avoid triggering other handlers
+        }
+
+        const textCell = event.target.closest('.text-cell');
+        if (textCell) {
+            // Make sure we are not clicking on the company name cell, which has its own action
+            if (!textCell.classList.contains('empresa-cell')) {
+                const columnId = textCell.dataset.columnId;
+                handleTextClick(textCell, clientId, columnId);
+            }
         }
     });
 }
@@ -430,7 +495,7 @@ function handleStatusClick(cell, clientId, columnId) {
     if (columnConfig.type === 'select') {
         editElement = document.createElement('select');
         editElement.className = 'w-full p-1 border rounded-md text-xs bg-gray-50 dark:bg-gray-600';
-        const options = columnConfig.options || [];
+        const options = (columnConfig.options || []).sort((a, b) => (a.priority || 99) - (b.priority || 99));
         options.forEach(option => {
             const optionEl = document.createElement('option');
             optionEl.value = option.value;
@@ -475,6 +540,78 @@ function handleStatusClick(cell, clientId, columnId) {
     editElement.addEventListener('blur', handleUpdate);
 }
 
+async function handleLinkClick(clientId, columnId) {
+    const client = allClients.find(c => c.id === clientId);
+    const column = viewConfig.columns.find(c => c.id === columnId);
+    if (!client || !column) return;
+
+    try {
+        const result = await showInputModal({
+            title: `Editar Link para ${column.title}`,
+            label: 'URL do Link',
+            initialValue: client[columnId] || 'https://'
+        });
+        const newLink = result.inputModalField;
+
+        // newLink can be undefined if the user cancels
+        if (newLink !== undefined && newLink !== client[columnId]) {
+            // Basic validation
+            if (newLink === '' || newLink.startsWith('http://') || newLink.startsWith('https://')) {
+                 await updateClientField(clientId, columnId, newLink);
+            } else {
+                showNotification('Por favor, insira uma URL válida (começando com http:// ou https://).', 'error');
+            }
+        }
+    } catch (error) {
+        // This catch block will be executed if the user cancels the modal
+        console.log('Edição de link cancelada.');
+    }
+}
+
+function handleTextClick(cell, clientId, columnId) {
+    const currentTextSpan = cell.querySelector('.editable-text');
+    if (!currentTextSpan) return; // Already in edit mode or something is wrong
+
+    const currentTextValue = allClients.find(c => c.id === clientId)?.[columnId] || '';
+    
+    const editElement = document.createElement('input');
+    editElement.type = 'text';
+    editElement.className = 'w-full p-1 border rounded-md text-xs bg-gray-50 dark:bg-gray-600';
+    editElement.value = currentTextValue === '—' ? '' : currentTextValue;
+
+    // Replace the span with the input
+    const cellContainer = cell.querySelector('.cell-container');
+    const commentButton = cellContainer.querySelector('.open-comments-btn, .open-central-comments-btn');
+    
+    // Clear the container but save the comment button
+    cellContainer.innerHTML = '';
+    cellContainer.appendChild(editElement);
+    if (commentButton) {
+        cellContainer.appendChild(commentButton);
+    }
+    editElement.focus();
+
+    const handleUpdate = () => {
+        const newValue = editElement.value;
+        if (newValue !== currentTextValue) {
+            updateClientField(clientId, columnId, newValue);
+        } else {
+            renderTableView(allClients); // Re-render to restore original state
+        }
+    };
+
+    editElement.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault(); // Prevent form submission if any
+            handleUpdate();
+        } else if (e.key === 'Escape') {
+            renderTableView(allClients);
+        }
+    });
+
+    editElement.addEventListener('blur', handleUpdate);
+}
+
 // --- FILTERING LOGIC ---
 function setupFilters() {
     tableViewContainer.addEventListener('click', (event) => {
@@ -504,18 +641,20 @@ function applyFilters() {
     const filteredClients = allClients.filter(client => {
         if (searchTerm && !client.empresa.toLowerCase().includes(searchTerm)) return false;
         for (const columnId in activeFilters) {
-            const filterValue = activeFilters[columnId];
-            const clientValue = client[columnId];
+            const filterValues = activeFilters[columnId];
+            const clientValue = (client[columnId] || '').toString().toLowerCase();
             const column = viewConfig.columns.find(c => c.id === columnId);
-            if (!column) continue;
+            if (!column || !filterValues || filterValues.length === 0) continue;
 
             if (column.type === 'select' || column.type === 'user') {
-                if (Array.isArray(filterValue) && filterValue.length > 0 && !filterValue.includes(clientValue || '')) return false;
+                if (!filterValues.includes(client[columnId] || '')) return false;
             } else if (column.type === 'text') {
-                if (typeof filterValue === 'string' && filterValue && !(clientValue || '').toLowerCase().includes(filterValue.toLowerCase())) return false;
+                // Check if any of the filter values are present in the client value
+                const match = filterValues.some(filter => clientValue.includes(filter.toLowerCase()));
+                if (!match) return false;
             } else if (column.type === 'number' && column.id === 'healthScore') {
-                const score = clientValue || 3; // Default to 3 if not set
-                if (Array.isArray(filterValue) && filterValue.length > 0 && !filterValue.includes(score)) return false;
+                const score = client[columnId] || 3;
+                if (!filterValues.includes(score)) return false;
             }
         }
         return true;
@@ -554,10 +693,64 @@ function openFilterPopup(anchorElement, columnId) {
             contentEl.innerHTML += `<label class="flex items-center space-x-2 p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md"><input type="checkbox" value="${opt.value}" class="form-checkbox h-4 w-4 text-blue-600 rounded" ${currentFilter.includes(opt.value) ? 'checked' : ''}><span class="text-sm">${opt.text}</span></label>`;
         });
     } else if (column.type === 'text') {
-        const currentFilter = activeFilters[columnId] || '';
         const suggestions = [...new Set(allClients.map(c => c[columnId]).filter(Boolean))];
         const datalistHTML = `<datalist id="text-suggestions">${suggestions.map(s => `<option value="${s}"></option>`).join('')}</datalist>`;
-        contentEl.innerHTML = `<input type="text" id="text-filter-input" list="text-suggestions" class="w-full pl-3 pr-3 py-2 border rounded-lg bg-white dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500" value="${currentFilter}" placeholder="Filtrar...">${datalistHTML}`;
+        const currentFilters = activeFilters[columnId] || [];
+        contentEl.innerHTML = `
+            <div id="text-filter-tags" class="flex flex-wrap gap-1 mb-2"></div>
+            <div class="flex gap-2">
+                <input type="text" id="text-filter-input" list="text-suggestions" class="w-full text-sm p-1 border rounded bg-white dark:bg-gray-600" placeholder="Adicionar filtro...">
+                <button id="add-text-filter-btn" class="px-2 py-1 rounded bg-blue-500 text-white text-sm hover:bg-blue-600">Add</button>
+            </div>
+            ${datalistHTML}
+        `;
+
+        const tagsContainer = contentEl.querySelector('#text-filter-tags');
+        const input = contentEl.querySelector('#text-filter-input');
+
+        const renderTags = () => {
+            tagsContainer.innerHTML = '';
+            const currentValues = activeFilters[columnId] || [];
+            currentValues.forEach(tagText => {
+                const tag = document.createElement('div');
+                tag.className = 'flex items-center bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs font-semibold px-2 py-1 rounded-full';
+                tag.innerHTML = `
+                    <span>${tagText}</span>
+                    <button class="ml-2 text-blue-500 hover:text-blue-700 remove-tag-btn">&times;</button>
+                `;
+                tag.querySelector('.remove-tag-btn').onclick = () => {
+                    activeFilters[columnId] = activeFilters[columnId].filter(t => t !== tagText);
+                    renderTags();
+                };
+                tagsContainer.appendChild(tag);
+            });
+        };
+
+        const addTag = () => {
+            const value = input.value.trim();
+            if (value) {
+                if (!activeFilters[columnId]) {
+                    activeFilters[columnId] = [];
+                }
+                if (!activeFilters[columnId].includes(value)) {
+                    activeFilters[columnId].push(value);
+                    renderTags();
+                }
+                input.value = '';
+            }
+            input.focus();
+        };
+
+        contentEl.querySelector('#add-text-filter-btn').onclick = addTag;
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                addTag();
+            }
+        });
+
+        renderTags();
+
     } else if (column.type === 'number' && column.id === 'healthScore') {
         const currentFilter = activeFilters[columnId] || [];
         Object.entries(healthScoreMap).forEach(([score, { label }]) => {
@@ -592,13 +785,21 @@ function openFilterPopup(anchorElement, columnId) {
             const selectedValues = Array.from(contentEl.querySelectorAll('input:checked')).map(input => input.value);
             activeFilters[columnId] = selectedValues.length > 0 ? selectedValues : undefined;
         } else if (column.type === 'text') {
-            const textValue = document.getElementById('text-filter-input').value;
-            activeFilters[columnId] = textValue || undefined;
+            // A lógica de adicionar/remover já atualiza activeFilters[columnId] diretamente.
+            // Apenas precisamos garantir que um array vazio seja removido.
+            if (activeFilters[columnId] && activeFilters[columnId].length === 0) {
+                delete activeFilters[columnId];
+            }
         } else if (column.type === 'number' && column.id === 'healthScore') {
             const selectedValues = Array.from(contentEl.querySelectorAll('input:checked')).map(input => parseInt(input.value, 10));
             activeFilters[columnId] = selectedValues.length > 0 ? selectedValues : undefined;
         }
-        if (!activeFilters[columnId]) delete activeFilters[columnId];
+        
+        // Limpeza geral de filtros vazios
+        if (activeFilters[columnId] === undefined || (Array.isArray(activeFilters[columnId]) && activeFilters[columnId].length === 0)) {
+            delete activeFilters[columnId];
+        }
+
         applyFilters();
         closePopup();
     };
@@ -613,8 +814,200 @@ function openFilterPopup(anchorElement, columnId) {
     }, 0);
 }
 
+// --- OPTIONS MODAL ---
+const tailwindColorMap = {
+    gray: { bgTag: 'bg-gray-100', textTag: 'text-gray-800', bg: 'bg-gray-500' },
+    red: { bgTag: 'bg-red-100', textTag: 'text-red-800', bg: 'bg-red-500' },
+    yellow: { bgTag: 'bg-yellow-100', textTag: 'text-yellow-800', bg: 'bg-yellow-500' },
+    green: { bgTag: 'bg-green-100', textTag: 'text-green-800', bg: 'bg-green-500' },
+    blue: { bgTag: 'bg-blue-100', textTag: 'text-blue-800', bg: 'bg-blue-500' },
+    indigo: { bgTag: 'bg-indigo-100', textTag: 'text-indigo-800', bg: 'bg-indigo-500' },
+    purple: { bgTag: 'bg-purple-100', textTag: 'text-purple-800', bg: 'bg-purple-500' },
+    pink: { bgTag: 'bg-pink-100', textTag: 'text-pink-800', bg: 'bg-pink-500' },
+};
+
+async function loadOptionsModal() {
+    try {
+        const response = await fetch(`cs-options-modal.html?v=${new Date().getTime()}`);
+        if (!response.ok) throw new Error('Failed to fetch cs-options-modal.html');
+        const modalHtml = await response.text();
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+function openOptionsModal(columnId) {
+    const modal = document.getElementById('cs-options-modal');
+    const titleEl = document.getElementById('cs-options-modal-title');
+    const optionsListEl = document.getElementById('cs-options-list');
+    const column = viewConfig.columns.find(c => c.id === columnId);
+
+    if (!column) return;
+
+    titleEl.textContent = `Editar Opções: ${column.title}`;
+    optionsListEl.innerHTML = '';
+
+    const renderOption = (option = {}) => {
+        const optionEl = document.createElement('div');
+        optionEl.className = 'option-item grid grid-cols-6 gap-x-4 gap-y-2 items-center p-2 bg-gray-50 dark:bg-gray-700/50 rounded-md';
+
+        const colorPaletteHTML = Object.keys(tailwindColorMap).map(color => `
+            <button data-color="${color}" class="color-swatch h-6 w-6 rounded-full ${tailwindColorMap[color].bg} border-2 border-white dark:border-gray-800"></button>
+        `).join('');
+
+        optionEl.innerHTML = `
+            <div class="col-span-2">
+                <input type="text" placeholder="Nome da Opção" class="option-label-input w-full text-sm p-2 border rounded bg-white dark:bg-gray-600" value="${option.label || ''}">
+            </div>
+            <div class="col-span-3 flex items-center gap-2">
+                <div class="color-palette flex gap-1">${colorPaletteHTML}</div>
+                <button class="custom-color-btn text-gray-400 hover:text-blue-500"><i class="fas fa-plus"></i></button>
+                <input type="color" class="custom-color-input hidden w-8 h-8 p-0 border-none cursor-pointer" value="${option.customColor || '#ffffff'}">
+                <div class="selected-color-preview h-6 w-6 rounded-full border-2 border-white dark:border-gray-800"></div>
+            </div>
+            <div class="flex items-center">
+                <input type="number" placeholder="0" class="option-priority-input w-16 text-sm p-2 border rounded bg-white dark:bg-gray-600" value="${option.priority || 0}">
+                <button class="text-red-500 hover:text-red-700 ml-auto remove-option-btn"><i class="fas fa-trash-alt"></i></button>
+            </div>
+        `;
+        optionsListEl.appendChild(optionEl);
+
+        const customColorBtn = optionEl.querySelector('.custom-color-btn');
+        const customColorInput = optionEl.querySelector('.custom-color-input');
+        const selectedColorPreview = optionEl.querySelector('.selected-color-preview');
+
+        const updateSelectedColor = (colorValue) => {
+            selectedColorPreview.style.backgroundColor = colorValue;
+            optionEl.dataset.selectedColor = colorValue;
+        };
+        
+        optionEl.querySelectorAll('.color-swatch').forEach(swatch => {
+            swatch.onclick = (e) => {
+                e.preventDefault();
+                const colorName = e.target.dataset.color;
+                const colorInfo = tailwindColorMap[colorName];
+                const hexColor = window.getComputedStyle(swatch).backgroundColor;
+                updateSelectedColor(hexColor);
+                optionEl.dataset.colorName = colorName; // Store the name for saving
+            };
+        });
+
+        customColorBtn.onclick = (e) => { e.preventDefault(); customColorInput.click(); };
+        customColorInput.oninput = (e) => {
+            updateSelectedColor(e.target.value);
+            optionEl.dataset.colorName = ''; // Clear name if custom color is used
+        };
+
+        // Set initial color
+        if (option.color) {
+            updateSelectedColor(option.color);
+            const colorName = Object.keys(tailwindColorMap).find(name => {
+                const elem = document.createElement('div');
+                elem.className = tailwindColorMap[name].bg;
+                document.body.appendChild(elem);
+                const style = window.getComputedStyle(elem);
+                const rgb = style.backgroundColor;
+                elem.remove();
+                return `rgb(${option.color.match(/\w\w/g).map(c => parseInt(c, 16)).join(', ')})` === rgb;
+            });
+            if(colorName) optionEl.dataset.colorName = colorName;
+
+        } else if (option.bg) { // Backward compatibility
+             const colorName = Object.keys(tailwindColorMap).find(cn => tailwindColorMap[cn].bg === option.bg);
+             if(colorName) {
+                const elem = document.createElement('div');
+                elem.className = option.bg;
+                document.body.appendChild(elem);
+                const style = window.getComputedStyle(elem);
+                const hexColor = style.backgroundColor;
+                elem.remove();
+                updateSelectedColor(hexColor);
+                optionEl.dataset.colorName = colorName;
+             }
+        }
+
+
+        optionEl.querySelector('.remove-option-btn').onclick = () => optionEl.remove();
+    };
+
+    (column.options || []).forEach(renderOption);
+
+    document.getElementById('add-new-option-btn').onclick = () => renderOption();
+    modal.classList.remove('hidden');
+
+    const closeOptionsModal = () => modal.classList.add('hidden');
+    document.getElementById('close-cs-options-modal-btn').onclick = closeOptionsModal;
+    document.getElementById('cancel-cs-options-btn').onclick = closeOptionsModal;
+    document.getElementById('save-cs-options-btn').onclick = () => saveColumnOptions(columnId);
+}
+
+async function saveColumnOptions(columnId) {
+    const column = viewConfig.columns.find(c => c.id === columnId);
+    if (!column) return;
+
+    const optionsListEl = document.getElementById('cs-options-list');
+    const newOptions = [];
+    const optionItems = optionsListEl.querySelectorAll('.option-item');
+
+    for (const item of optionItems) {
+        const label = item.querySelector('.option-label-input').value.trim();
+        const priority = parseInt(item.querySelector('.option-priority-input').value, 10) || 0;
+        const colorName = item.dataset.colorName;
+        const customColor = item.dataset.selectedColor;
+
+        if (label) {
+            const value = label.toLowerCase().replace(/\s+/g, '_').replace(/[^\w-]/g, '');
+            let colorClasses;
+
+            if (colorName) {
+                colorClasses = tailwindColorMap[colorName];
+            } else {
+                // For custom colors, we can't generate Tailwind classes, so we'll store the hex
+                // and maybe apply inline styles later or just use a default. For now, default.
+                colorClasses = tailwindColorMap.gray;
+            }
+            
+            newOptions.push({
+                label,
+                value,
+                priority,
+                color: customColor || '', // Store the raw color for re-editing
+                bgTag: colorClasses.bgTag,
+                textTag: colorClasses.textTag,
+                bg: colorClasses.bg
+            });
+        }
+    }
+
+    column.options = newOptions;
+    
+    const configModalList = document.getElementById('column-config-list');
+    const allColumns = Array.from(configModalList.querySelectorAll('li')).map(li => {
+        const id = li.dataset.columnId;
+        const originalColumn = viewConfig.columns.find(c => c.id === id);
+        return { ...originalColumn, hidden: !li.querySelector('input[type="checkbox"]').checked };
+    });
+
+    viewConfig.columns = allColumns;
+
+    try {
+        const configRef = doc(db, 'artifacts', 'southsea-crm', 'configs', 'cs_view_config');
+        await setDoc(configRef, { columns: viewConfig.columns }, { merge: true });
+        showNotification("Opções da coluna salvas com sucesso!", "success");
+        renderTableView(allClients);
+        document.getElementById('cs-options-modal').classList.add('hidden');
+        openConfigModal();
+    } catch (error) {
+        console.error("Erro ao salvar opções da coluna:", error);
+        showNotification("Falha ao salvar as opções.", "error");
+    }
+}
+
+
 // --- CONFIG MODAL ---
 let configModalSortable = null;
+let configModalGroupSortable = null; // Add this for the groups list
 
 async function loadConfigModal() {
     try {
@@ -627,45 +1020,110 @@ async function loadConfigModal() {
     }
 }
 
+async function loadConfirmationModal() {
+    if (document.getElementById('confirmModal')) return;
+    try {
+        const response = await fetch(`confirm-modal.html?v=${new Date().getTime()}`);
+        if (!response.ok) throw new Error('Failed to fetch confirm-modal.html');
+        const modalHtml = await response.text();
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+    } catch (error) {
+        console.error("Erro ao carregar o modal de confirmação:", error);
+    }
+}
+
+async function loadInputModal() {
+    if (document.getElementById('inputModal')) return;
+    try {
+        const response = await fetch(`input-modal.html?v=${new Date().getTime()}`);
+        if (!response.ok) throw new Error('Failed to fetch input-modal.html');
+        const modalHtml = await response.text();
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+    } catch (error) {
+        console.error("Erro ao carregar o modal de input:", error);
+    }
+}
+
 function openConfigModal() {
     const modal = document.getElementById('config-view-modal');
+    const groupList = document.getElementById('group-config-list');
     const columnList = document.getElementById('column-config-list');
+    groupList.innerHTML = '';
     columnList.innerHTML = '';
 
+    // Populate Groups
+    viewConfig.groups.forEach(group => {
+        const li = document.createElement('li');
+        li.className = 'flex items-center justify-between p-2 bg-gray-100 dark:bg-gray-700 rounded-md';
+        li.dataset.groupId = group.id;
+        li.innerHTML = `
+            <div class="flex items-center gap-3 flex-grow">
+                <i class="fas fa-grip-vertical cursor-move text-gray-400 drag-handle-modal"></i>
+                <span class="font-medium">${group.title}</span>
+            </div>
+            <div class="flex items-center gap-3">
+                <i class="fas fa-pencil-alt text-gray-400 hover:text-blue-500 cursor-pointer edit-group-btn" title="Renomear"></i>
+                <i class="fas fa-trash-alt text-gray-400 hover:text-red-500 cursor-pointer delete-group-btn" title="Excluir"></i>
+            </div>
+        `;
+        groupList.appendChild(li);
+    });
+
+    // Populate Columns
     viewConfig.columns.forEach(col => {
         const li = document.createElement('li');
         li.className = 'flex items-center justify-between p-2 bg-gray-100 dark:bg-gray-700 rounded-md';
         li.dataset.columnId = col.id;
         const isCustom = col.id.startsWith('custom_');
+        const isSelect = col.type === 'select';
         li.innerHTML = `
             <div class="flex items-center gap-3 flex-grow">
                 <i class="fas fa-grip-vertical cursor-move text-gray-400 drag-handle-modal"></i>
                 <span class="font-medium">${col.title}</span>
             </div>
             <div class="flex items-center gap-3">
-                <i class="fas fa-pencil-alt text-gray-400 hover:text-blue-500 cursor-pointer edit-column-btn"></i>
-                ${isCustom ? `<i class="fas fa-trash-alt text-gray-400 hover:text-red-500 cursor-pointer delete-column-btn"></i>` : ''}
+                ${isSelect ? `<i class="fas fa-list-alt text-gray-400 hover:text-green-500 cursor-pointer edit-options-btn" title="Editar opções"></i>` : ''}
+                <i class="fas fa-pencil-alt text-gray-400 hover:text-blue-500 cursor-pointer edit-column-btn" title="Renomear"></i>
+                ${isCustom ? `<i class="fas fa-trash-alt text-gray-400 hover:text-red-500 cursor-pointer delete-column-btn" title="Excluir"></i>` : ''}
                 <input type="checkbox" class="form-checkbox h-5 w-5 text-blue-600 rounded ml-2" ${!col.hidden ? 'checked' : ''}>
             </div>
         `;
         columnList.appendChild(li);
     });
 
+    // Group Listeners
+    groupList.querySelectorAll('.edit-group-btn').forEach(btn => {
+        btn.onclick = (e) => renameGroup(e.target.closest('li').dataset.groupId);
+    });
+    groupList.querySelectorAll('.delete-group-btn').forEach(btn => {
+        btn.onclick = (e) => deleteGroup(e.target.closest('li').dataset.groupId);
+    });
+
+    // Column Listeners
     columnList.querySelectorAll('.edit-column-btn').forEach(btn => {
         btn.onclick = (e) => renameColumn(e.target.closest('li').dataset.columnId);
+    });
+    columnList.querySelectorAll('.edit-options-btn').forEach(btn => {
+        btn.onclick = (e) => openOptionsModal(e.target.closest('li').dataset.columnId);
     });
     columnList.querySelectorAll('.delete-column-btn').forEach(btn => {
         btn.onclick = (e) => deleteColumn(e.target.closest('li').dataset.columnId);
     });
+
+    // Init SortableJS
+    if (configModalGroupSortable) configModalGroupSortable.destroy();
+    configModalGroupSortable = new Sortable(groupList, { animation: 150, handle: '.drag-handle-modal' });
 
     if (configModalSortable) configModalSortable.destroy();
     configModalSortable = new Sortable(columnList, { animation: 150, handle: '.drag-handle-modal' });
 
     modal.classList.remove('hidden');
     
+    // Modal Action Buttons
     document.getElementById('close-config-modal-btn').onclick = closeConfigModal;
     document.getElementById('cancel-config-btn').onclick = closeConfigModal;
     document.getElementById('save-config-btn').onclick = saveViewConfig;
+    document.getElementById('add-new-group-btn').onclick = addNewGroup;
     document.getElementById('add-new-column-btn').onclick = addNewColumn;
 }
 
@@ -674,20 +1132,30 @@ function closeConfigModal() {
 }
 
 async function saveViewConfig() {
+    // Save Groups
+    const groupList = document.getElementById('group-config-list');
+    const newGroups = Array.from(groupList.querySelectorAll('li')).map(li => {
+        const groupId = li.dataset.groupId;
+        const originalGroup = viewConfig.groups.find(g => g.id === groupId);
+        // The title might have been updated in the DOM if we implement inline editing,
+        // but for now, we rely on the renameGroup function to update the viewConfig object.
+        return { ...originalGroup };
+    });
+    viewConfig.groups = newGroups;
+
+    // Save Columns
     const columnList = document.getElementById('column-config-list');
     const newColumns = Array.from(columnList.querySelectorAll('li')).map(li => {
         const columnId = li.dataset.columnId;
         const originalColumn = viewConfig.columns.find(c => c.id === columnId);
         return { ...originalColumn, hidden: !li.querySelector('input[type="checkbox"]').checked };
     });
-
     viewConfig.columns = newColumns;
 
     try {
         const configRef = doc(db, 'artifacts', 'southsea-crm', 'configs', 'cs_view_config');
-        // Use updateDoc para substituir o array de colunas.
-        // setDoc com merge:true não funciona como esperado para arrays.
-        await updateDoc(configRef, { columns: newColumns });
+        // Save the entire updated config object
+        await setDoc(configRef, { groups: viewConfig.groups, columns: viewConfig.columns }, { merge: true });
         showNotification("Visualização salva com sucesso!", "success");
         renderTableView(allClients);
         closeConfigModal();
@@ -699,11 +1167,12 @@ async function saveViewConfig() {
 
 async function addNewColumn() {
     try {
-        const title = await showInputModal({ title: 'Nova Coluna', label: 'Nome da Coluna' });
+        const titleResult = await showInputModal({ title: 'Nova Coluna', label: 'Nome da Coluna' });
+        const title = titleResult.inputModalField;
         if (!title) return;
 
         // Substituir input por um select para o tipo da coluna
-        const type = await showInputModal({
+        const typeResult = await showInputModal({
             title: 'Tipo de Coluna',
             label: 'Selecione o tipo da nova coluna',
             inputType: 'select',
@@ -714,21 +1183,28 @@ async function addNewColumn() {
                 { value: 'select', text: 'Seleção' }
             ]
         });
+        const type = typeResult.inputModalField;
 
         if (!type) return; // O usuário cancelou
 
         const newColumn = { id: `custom_${Date.now()}`, title, type, hidden: false };
 
         if (type === 'select') {
-            const optionsStr = await showInputModal({ title: 'Opções para a Coluna', label: 'Digite as opções separadas por vírgula' });
+            const optionsResult = await showInputModal({ title: 'Opções para a Coluna', label: 'Digite as opções separadas por vírgula' });
+            const optionsStr = optionsResult.inputModalField;
             newColumn.options = optionsStr ? optionsStr.split(',').map(s => s.trim()) : [];
         }
 
         viewConfig.columns.push(newColumn);
         openConfigModal();
     } catch (error) {
-        console.error("Erro ao adicionar nova coluna:", error);
-        showNotification("Falha ao adicionar a coluna.", "error");
+        // Se o erro for uma string 'Modal cancelled by user.', apenas loga no console.
+        if (typeof error === 'string' && error.includes('cancelled')) {
+            console.log("Operação de adicionar coluna cancelada.");
+        } else {
+            console.error("Erro ao adicionar nova coluna:", error);
+            showNotification("Falha ao adicionar a coluna.", "error");
+        }
     }
 }
 
@@ -751,6 +1227,82 @@ function deleteColumn(columnId) {
     showConfirmationModal('Tem certeza que deseja excluir esta coluna?', () => {
         viewConfig.columns = viewConfig.columns.filter(c => c.id !== columnId);
         openConfigModal();
+    }, 'Excluir', 'Cancelar');
+}
+
+// --- GROUP MANAGEMENT FUNCTIONS ---
+async function addNewGroup() {
+    try {
+        const result = await showInputModal({ title: 'Novo Grupo', label: 'Nome do Grupo' });
+        const title = result.inputModalField;
+        if (title) {
+            const newGroup = {
+                id: title.toLowerCase().replace(/\s+/g, '_').replace(/[^\w-]/g, '') + `_${Date.now()}`,
+                title: title
+            };
+            viewConfig.groups.push(newGroup);
+            openConfigModal(); // Refresh the modal list
+        }
+    } catch (error) {
+        if (typeof error === 'string' && error.includes('cancelled')) {
+            console.log("Operação de adicionar grupo cancelada.");
+        } else {
+            console.error("Erro ao adicionar novo grupo:", error);
+            showNotification("Falha ao adicionar o grupo.", "error");
+        }
+    }
+}
+
+async function renameGroup(groupId) {
+    const group = viewConfig.groups.find(g => g.id === groupId);
+    if (!group) return;
+
+    try {
+        const result = await showInputModal({ title: 'Renomear Grupo', label: 'Novo nome do grupo', initialValue: group.title });
+        const newTitle = result.inputModalField;
+        if (newTitle && newTitle !== group.title) {
+            group.title = newTitle;
+            openConfigModal(); // Refresh the modal list
+        }
+    } catch (error) {
+        if (typeof error === 'string' && error.includes('cancelled')) {
+            console.log("Operação de renomear grupo cancelada.");
+        } else {
+            console.error("Erro ao renomear grupo:", error);
+        }
+    }
+}
+
+function deleteGroup(groupId) {
+    if (viewConfig.groups.length <= 1) {
+        showNotification("Você deve ter pelo menos um grupo.", "error");
+        return;
+    }
+
+    showConfirmationModal('Tem certeza que deseja excluir este grupo?', async () => {
+        const groupToDelete = viewConfig.groups.find(g => g.id === groupId);
+        viewConfig.groups = viewConfig.groups.filter(g => g.id !== groupId);
+        const fallbackGroupId = viewConfig.groups[0].id; // Move clients to the first remaining group
+
+        // Find all clients in the deleted group and move them
+        const clientsToMove = allClients.filter(c => c.csStatus === groupId);
+        const updatePromises = clientsToMove.map(client => {
+            const clientRef = doc(db, 'artifacts', appId, 'public', 'data', 'prospects', client.id);
+            return updateDoc(clientRef, { csStatus: fallbackGroupId });
+        });
+
+        try {
+            await Promise.all(updatePromises);
+            // Update local cache as well
+            clientsToMove.forEach(c => c.csStatus = fallbackGroupId);
+            showNotification(`Grupo "${groupToDelete.title}" excluído. Clientes movidos para "${viewConfig.groups[0].title}".`, "success");
+            openConfigModal(); // Refresh the modal
+        } catch (error) {
+            console.error("Erro ao mover clientes do grupo excluído:", error);
+            showNotification("Falha ao mover clientes do grupo excluído.", "error");
+            // Revert the deletion if moving clients fails
+            viewConfig.groups.push(groupToDelete);
+        }
     }, 'Excluir', 'Cancelar');
 }
 
