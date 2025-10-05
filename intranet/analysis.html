@@ -44,10 +44,30 @@
             <div id="header-container"></div>
 
             <!-- Board Content -->
-            <div id="dashboard-content" class="flex-grow p-4 md:p-6 lg:p-8 flex flex-col overflow-y-auto custom-scrollbar">
-                <!-- O conteúdo do dashboard será renderizado aqui pelo analysis.js -->
-                <div class="flex items-center justify-center h-full">
+            <div class="p-4 md:p-6 lg:p-8 flex flex-col overflow-y-auto custom-scrollbar">
+                <!-- Date Filter -->
+                <div class="flex items-center gap-4 mb-6">
+                    <h2 class="text-xl font-bold text-gray-900 dark:text-white">Análise de Desempenho</h2>
+                    <div class="flex-grow"></div>
+                    <div>
+                        <label for="month-select" class="sr-only">Mês</label>
+                        <select id="month-select" class="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md p-2">
+                            <!-- Options populated by JS -->
+                        </select>
+                    </div>
+                    <div>
+                        <label for="year-select" class="sr-only">Ano</label>
+                        <select id="year-select" class="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md p-2">
+                            <!-- Options populated by JS -->
+                        </select>
+                    </div>
+                </div>
+
+                <div id="dashboard-content" class="flex-grow flex flex-col">
+                    <!-- O conteúdo do dashboard será renderizado aqui pelo analysis.js -->
+                    <div class="flex items-center justify-center h-full">
                     <p class="text-xl text-gray-400">Carregando dados de análise...</p>
+                    </div>
                 </div>
             </div>
         </main>

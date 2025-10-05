@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-p">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM - Customer Success</title>
+    <link rel="icon" href="https://www.southsea.com.br/newimag/Ellipse%209.svg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Configure Tailwind CSS for dark mode
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css?v=1">
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .kanban-column {
+            min-width: 300px;
+            max-width: 320px;
+        }
+        .kanban-card {
+            cursor: grab;
+        }
+        .kanban-card:active {
+            cursor: grabbing;
+        }
+        .dragging {
+            opacity: 0.5;
+            transform: rotate(2deg);
+        }
+        .drag-over {
+            border: 2px dashed #60a5fa; /* Tailwind's blue-400 */
+            background-color: rgba(96, 165, 250, 0.1);
+        }
+        .cell-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+        }
+        .open-comments-btn {
+            opacity: 0; /* Começa invisível */
+            transition: opacity 0.2s ease-in-out;
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        /* Aparece no hover da célula OU se já tiver a classe de opacidade total */
+        .cell-container:hover .open-comments-btn,
+        .open-comments-btn.opacity-100 {
+            opacity: 1;
+        }
+        .open-comments-btn.has-comments {
+            opacity: 1;
+            color: #3b82f6; /* Tailwind's blue-500 */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+    <div class="flex h-screen">
+        <div id="sidebar-container"></div>
+        
+        <div id="sidebar-backdrop" class="fixed inset-0 bg-black/50 z-30 hidden"></div>
+
+        <main id="main-content" class="flex-1 flex flex-col h-screen transition-all duration-300 ease-in-out">
+            <div id="header-container"></div>
+
+            <div class="p-6 flex-grow overflow-y-auto">
+                <div class="flex justify-between items-center mb-6">
+                    <h1 class="text-3xl font-bold text-gray-800 dark:text-white">Painel de Customer Success</h1>
+                    <button id="config-view-btn" class="hidden bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 items-center gap-2">
+                        <i class="fas fa-cog"></i>
+                        <span>Configurar Visualização</span>
+                    </button>
+                </div>
+
+                <!-- Search Bar remains for now, can be integrated into column filters later if desired -->
+                <div class="mb-6">
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-search text-gray-400"></i>
+                        </span>
+                        <input type="text" id="search-input" class="w-full pl-10 pr-4 py-2 border rounded-lg bg-white dark:bg-gray-800 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Buscar por empresa...">
+                    </div>
+                </div>
+
+                <!-- Table View Container -->
+                <div id="table-view-container" class="space-y-8">
+                    <!-- Groups and rows will be dynamically generated here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals and other components will be loaded here -->
+    <div id="notification-container-wrapper"></div>
+    <div id="confirm-modal-wrapper"></div>
+    <div id="input-modal-wrapper"></div>
+
+    <script type="module" src="cs.js"></script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!-- Config View Modal -->
+<div id="config-view-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Configurar Visualização</h2>
+            <button id="close-config-modal-btn" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+                <i class="fas fa-times fa-lg"></i>
+            </button>
+        </div>
+        
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+            Arraste para reordenar, marque para exibir e use os ícones para gerenciar as colunas.
+        </p>
+
+        <!-- Column List -->
+        <ul id="column-config-list" class="space-y-2 mb-4">
+            <!-- Columns will be dynamically populated here -->
+        </ul>
+
+        <button id="add-new-column-btn" class="w-full text-left px-3 py-2 rounded-md bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-sm">
+            <i class="fas fa-plus mr-2"></i>
+            Adicionar Nova Coluna
+        </button>
+
+        <!-- Action Buttons -->
+        <div class="flex justify-end gap-4 mt-6">
+            <button id="cancel-config-btn" class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200">Cancelar</button>
+            <button id="save-config-btn" class="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold">Salvar Alterações</button>
+        </div>
+    </div>
+</div>

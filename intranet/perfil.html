@@ -193,6 +193,43 @@
                             <p class="text-gray-500 dark:text-gray-400">Nenhum formulário associado a este cliente.</p>
                         </div>
                     </div>
+
+                    <!-- Seção de Acompanhamento de CS -->
+                    <div id="cs-tracking-section" class="mt-6 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg hidden">
+                        <h2 class="text-xl font-bold text-gray-800 dark:text-white mb-4">Acompanhamento de CS</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <!-- Health Score & Status -->
+                            <div class="md:col-span-1">
+                                <div class="mb-4">
+                                    <label for="health-score" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Health Score</label>
+                                    <div class="flex items-center gap-3">
+                                        <i id="health-score-icon" class="fas fa-heart text-2xl text-gray-400"></i>
+                                        <div class="w-full">
+                                            <input type="range" id="health-score" min="1" max="5" value="3" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700">
+                                            <div id="health-score-label" class="text-xs text-gray-500 dark:text-gray-400 mt-1 text-center"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label for="cs-status-select" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Status no Kanban</label>
+                                    <select id="cs-status-select" class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 text-gray-800 dark:text-white">
+                                        <!-- Options will be populated by JS -->
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- Log de Interações -->
+                            <div class="md:col-span-2">
+                                <label for="cs-log-input" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Registrar Nova Interação</label>
+                                <div class="flex gap-2">
+                                    <textarea id="cs-log-input" rows="2" placeholder="Descreva a interação (reunião, ligação, etc.)" class="flex-grow bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 text-gray-800 dark:text-white"></textarea>
+                                    <button id="add-cs-log-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg">Salvar</button>
+                                </div>
+                                <div id="cs-log-container" class="mt-4 space-y-3 max-h-60 overflow-y-auto custom-scrollbar bg-gray-100 dark:bg-gray-900/50 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
+                                    <p class="text-gray-500 dark:text-gray-400 text-sm">Nenhuma interação registrada.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>

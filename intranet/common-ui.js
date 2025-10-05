@@ -403,10 +403,9 @@ async function loadComponents(pageSpecificSetup) {
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
 
     try {
-        const [headerRes, sidebarRes, modalRes, notificationRes] = await Promise.all([
+        const [headerRes, sidebarRes, notificationRes] = await Promise.all([
             fetch(`header.html?v=${new Date().getTime()}`),
             fetch(`sidebar.html?v=${new Date().getTime()}`),
-            fetch(`confirm-modal.html?v=${new Date().getTime()}`),
             fetch(`notification-container.html?v=${new Date().getTime()}`)
         ]);
 
@@ -416,16 +415,6 @@ async function loadComponents(pageSpecificSetup) {
 
         headerContainer.innerHTML = await headerRes.text();
         sidebarContainer.innerHTML = await sidebarRes.text();
-
-        if (modalRes.ok) {
-            const modalHtml = await modalRes.text();
-            const tempContainer = document.createElement('div');
-            tempContainer.innerHTML = modalHtml;
-            // Append all children from the temporary container to the body
-            while (tempContainer.firstChild) {
-                document.body.appendChild(tempContainer.firstChild);
-            }
-        }
 
         if (notificationRes.ok) {
             const notificationHtml = await notificationRes.text();
@@ -496,6 +485,7 @@ async function loadComponents(pageSpecificSetup) {
                 'links-internos-link': ['BDR', 'BDR Líder', 'bdr_supervisor', 'Closer', 'CS', 'Admin'],
                 'perfil-link': ['BDR', 'BDR Líder', 'bdr_supervisor', 'Closer', 'Produção', 'CS', 'Admin'],
                 'formularios-link': ['Admin'],
+                'cs-link': ['CS', 'Admin'],
                 'admin-link': ['Admin']
             };
 
@@ -503,17 +493,19 @@ async function loadComponents(pageSpecificSetup) {
                 const linkElement = document.getElementById(linkId);
                 if (linkElement) {
                     const normalizedAllowedRoles = allowedRoles.map(normalizeString);
-                    if (!normalizedAllowedRoles.includes(normalizedUserRole)) {
-                        linkElement.style.display = 'none';
-                    } else if (linkId === 'admin-link') {
-                        // The admin-link logic was to remove the 'hidden' class
+                    if (normalizedAllowedRoles.includes(normalizedUserRole)) {
+                        // If user has permission, make sure the link is visible
                         linkElement.classList.remove('hidden');
+                        linkElement.style.display = ''; // Reset display style in case it was set to 'none'
+                    } else {
+                        // If user does not have permission, hide the link
+                        linkElement.style.display = 'none';
                     }
                 }
             }
         } else {
             // Hide all managed links if no role is found, for a secure default state.
-            const allManagedLinks = ['prospeccao-link', 'whatsapp-link', 'closed-clients-link', 'producao-link', 'arquivo-link', 'analysis-link', 'marketing-link', 'log-link', 'tarefas-link', 'calendario-link', 'chat-link', 'mapas-mentais-link', 'links-internos-link', 'perfil-link', 'formularios-link', 'admin-link'];
+            const allManagedLinks = ['prospeccao-link', 'whatsapp-link', 'closed-clients-link', 'producao-link', 'arquivo-link', 'analysis-link', 'marketing-link', 'log-link', 'tarefas-link', 'calendario-link', 'chat-link', 'mapas-mentais-link', 'links-internos-link', 'perfil-link', 'formularios-link', 'cs-link', 'admin-link'];
             allManagedLinks.forEach(linkId => {
                 const linkElement = document.getElementById(linkId);
                 if (linkElement) {
@@ -861,10 +853,11 @@ function stopFloatingStopwatch() {
 
 document.addEventListener('DOMContentLoaded', createFloatingStopwatch);
 
-// --- INPUT MODAL ---
-async function showInputModal({ title, label, placeholder = '', initialValue = '', confirmText = 'Confirmar', cancelText = 'Cancelar' }) {
+// --- INPUT MODAL (Advanced) ---
+async function showInputModal(options) {
+    const { title, inputs, confirmText = 'Confirmar', cancelText = 'Cancelar' } = options;
+
     return new Promise(async (resolve, reject) => {
-        // Check if modal HTML is already loaded
         if (!document.getElementById('inputModal')) {
             try {
                 const response = await fetch(`input-modal.html?v=${new Date().getTime()}`);
@@ -873,84 +866,133 @@ async function showInputModal({ title, label, placeholder = '', initialValue = '
                 document.body.insertAdjacentHTML('beforeend', modalHtml);
             } catch (error) {
                 console.error(error);
-                reject(error); // Reject promise if modal can't be loaded
+                reject(error);
                 return;
             }
         }
 
         const modal = document.getElementById('inputModal');
         const titleEl = document.getElementById('inputModalTitle');
-        const labelEl = document.getElementById('inputModalLabel');
-        const inputEl = document.getElementById('inputModalField');
+        const formContainer = document.getElementById('inputModalFormContainer');
         const errorEl = document.getElementById('inputModalError');
         const confirmBtn = document.getElementById('confirmInputModalBtn');
         const cancelBtn = document.getElementById('cancelInputModalBtn');
         const closeBtn = document.getElementById('closeInputModalBtn');
 
-        // --- Configure Modal ---
         titleEl.textContent = title;
-        labelEl.textContent = label;
-        inputEl.placeholder = placeholder;
-        inputEl.value = initialValue;
         confirmBtn.textContent = confirmText;
         cancelBtn.textContent = cancelText;
         errorEl.classList.add('hidden');
+        formContainer.innerHTML = ''; // Clear previous form
 
-        // --- Show Modal ---
+        // --- Build Form Dynamically ---
+        const inputElements = [];
+        const inputsConfig = options.inputs || [{
+            id: 'inputModalField',
+            label: options.label,
+            type: options.inputType || 'text',
+            placeholder: options.placeholder || '',
+            initialValue: options.initialValue || '',
+            options: options.options || []
+        }];
+
+        inputsConfig.forEach(config => {
+            const formGroup = document.createElement('div');
+            formGroup.className = 'mb-4';
+
+            const label = document.createElement('label');
+            label.htmlFor = config.id;
+            label.className = 'block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1';
+            label.textContent = config.label;
+            formGroup.appendChild(label);
+
+            let input;
+            const baseClasses = 'w-full px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500';
+            
+            if (config.type === 'textarea') {
+                input = document.createElement('textarea');
+                input.rows = 4;
+            } else if (config.type === 'select') {
+                input = document.createElement('select');
+                config.options.forEach(opt => {
+                    const option = document.createElement('option');
+                    option.value = opt.value;
+                    option.textContent = opt.text;
+                    if (opt.value == config.initialValue) {
+                        option.selected = true;
+                    }
+                    input.appendChild(option);
+                });
+            } else {
+                input = document.createElement('input');
+                input.type = config.type || 'text';
+                input.placeholder = config.placeholder || '';
+            }
+
+            input.id = config.id;
+            input.name = config.id;
+            input.className = baseClasses;
+            input.value = config.initialValue || '';
+            formGroup.appendChild(input);
+            formContainer.appendChild(formGroup);
+            inputElements.push(input);
+        });
+
         modal.classList.remove('hidden');
         modal.classList.add('flex');
-        inputEl.focus();
-        inputEl.select();
+        if (inputElements.length > 0) {
+            inputElements[0].focus();
+            if (inputElements[0].select) inputElements[0].select();
+        }
 
-        // --- Event Handlers ---
         const handleConfirm = () => {
-            const value = inputEl.value.trim();
-            if (!value) {
-                errorEl.textContent = 'O nome não pode estar vazio.';
+            const results = {};
+            let isValid = true;
+            inputElements.forEach(input => {
+                if (input.required && !input.value.trim()) {
+                    isValid = false;
+                }
+                results[input.id] = input.value;
+            });
+
+            if (!isValid) {
+                errorEl.textContent = 'Por favor, preencha todos os campos obrigatórios.';
                 errorEl.classList.remove('hidden');
                 return;
             }
             cleanup();
-            resolve(value);
+            resolve(results);
         };
 
         const handleCancel = () => {
             cleanup();
-            resolve(null); // Resolve with null when cancelled
+            reject('Modal cancelled by user.'); // Reject on cancel
         };
-        
+
         const handleKeydown = (event) => {
-            if (event.key === 'Enter') {
-                handleConfirm();
-            } else if (event.key === 'Escape') {
+            if (event.key === 'Escape') {
                 handleCancel();
             }
         };
 
-        // Use cloning to ensure no old listeners are attached
         const newConfirmBtn = confirmBtn.cloneNode(true);
         confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
-        
         const newCancelBtn = cancelBtn.cloneNode(true);
         cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
-
         const newCloseBtn = closeBtn.cloneNode(true);
         closeBtn.parentNode.replaceChild(newCloseBtn, closeBtn);
 
-        // --- Add Event Listeners ---
         newConfirmBtn.addEventListener('click', handleConfirm);
         newCancelBtn.addEventListener('click', handleCancel);
         newCloseBtn.addEventListener('click', handleCancel);
         modal.addEventListener('click', (event) => {
             if (event.target === modal) handleCancel();
         });
-        inputEl.addEventListener('keydown', handleKeydown);
+        modal.addEventListener('keydown', handleKeydown);
 
-        // --- Cleanup ---
         function cleanup() {
             modal.classList.add('hidden');
             modal.classList.remove('flex');
-            // No need to remove listeners from cloned nodes
         }
     });
 }

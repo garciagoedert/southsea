@@ -45,6 +45,15 @@ const subroleSelect = document.getElementById('subrole-select');
 const cancelProductionAssociationBtn = document.getElementById('cancel-production-association-btn');
 const confirmProductionAssociationBtn = document.getElementById('confirm-production-association-btn');
 
+// CS Tracking Elements
+const csTrackingSection = document.getElementById('cs-tracking-section');
+const healthScoreSlider = document.getElementById('health-score');
+const healthScoreIcon = document.getElementById('health-score-icon');
+const healthScoreLabel = document.getElementById('health-score-label'); // Add this
+const csStatusSelect = document.getElementById('cs-status-select');
+const csLogInput = document.getElementById('cs-log-input');
+const addCsLogBtn = document.getElementById('add-cs-log-btn');
+const csLogContainer = document.getElementById('cs-log-container');
 
 // --- INITIALIZATION ---
 async function setupPage() {
@@ -103,6 +112,7 @@ async function loadClientData(clientId) {
             renderResponsibleTeam();
             renderContractedServices(); // Renderiza os serviços contratados
             setupServicesManagementListeners(); // Configura os listeners para o modal de serviços
+            setupCsTracking(); // Configura a nova seção de CS
         } else {
             handleClientError("Cliente não encontrado.");
         }
@@ -1373,4 +1383,148 @@ async function removeProductionMember(userId) {
         console.error("Erro ao remover membro da produção:", error);
         showNotification('Erro ao remover membro.', 'error');
     }
+}
+
+// --- CS TRACKING FUNCTIONS ---
+
+function setupCsTracking() {
+    const userRole = sessionStorage.getItem('userRole');
+    if (userRole !== 'admin' && userRole !== 'cs') {
+        return;
+    }
+
+    csTrackingSection.classList.remove('hidden');
+
+    // Populate status dropdown
+    const KANBAN_COLUMNS = {
+        'onboarding': 'Onboarding',
+        'acompanhamento': 'Em Acompanhamento',
+        'atencao': 'Atenção Necessária',
+        'aguardando': 'Aguardando Ação',
+        'sucesso': 'Sucesso/Estável',
+        'concluido': 'Concluído'
+    };
+    csStatusSelect.innerHTML = '';
+    for (const [key, title] of Object.entries(KANBAN_COLUMNS)) {
+        const option = document.createElement('option');
+        option.value = key;
+        option.textContent = title;
+        csStatusSelect.appendChild(option);
+    }
+
+    // Set initial values
+    const currentStatus = currentClientData.csStatus || 'acompanhamento';
+    csStatusSelect.value = currentStatus;
+
+    const currentHealthScore = currentClientData.healthScore || 3;
+    healthScoreSlider.value = currentHealthScore;
+    updateHealthScoreDisplay(currentHealthScore);
+
+    // Render CS Log
+    renderCsLog();
+
+    // Add Event Listeners
+    healthScoreSlider.addEventListener('input', () => {
+        updateHealthScoreDisplay(healthScoreSlider.value);
+    });
+
+    healthScoreSlider.addEventListener('change', async () => {
+        const newScore = parseInt(healthScoreSlider.value, 10);
+        try {
+            const clientRef = doc(db, 'artifacts', appId, 'public', 'data', 'prospects', currentClientId);
+            await updateDoc(clientRef, { healthScore: newScore });
+            currentClientData.healthScore = newScore; // Update local state
+            showNotification('Health score atualizado!', 'success');
+        } catch (error) {
+            console.error("Erro ao atualizar health score:", error);
+            showNotification('Falha ao salvar o health score.', 'error');
+        }
+    });
+
+    csStatusSelect.addEventListener('change', async () => {
+        const newStatus = csStatusSelect.value;
+        try {
+            const clientRef = doc(db, 'artifacts', appId, 'public', 'data', 'prospects', currentClientId);
+            await updateDoc(clientRef, { csStatus: newStatus });
+            currentClientData.csStatus = newStatus; // Update local state
+            showNotification('Status do cliente atualizado!', 'success');
+        } catch (error) {
+            console.error("Erro ao atualizar status:", error);
+            showNotification('Falha ao salvar o status.', 'error');
+        }
+    });
+
+    addCsLogBtn.addEventListener('click', async () => {
+        const logText = csLogInput.value.trim();
+        if (!logText) {
+            showNotification('O registro de interação não pode estar vazio.', 'info');
+            return;
+        }
+
+        const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+        const newLog = {
+            text: logText,
+            author: currentUser.name,
+            authorId: currentUser.uid,
+            timestamp: Timestamp.now()
+        };
+
+        const updatedLogs = [newLog, ...(currentClientData.csLog || [])];
+
+        try {
+            addCsLogBtn.disabled = true;
+            addCsLogBtn.textContent = 'Salvando...';
+            const clientRef = doc(db, 'artifacts', appId, 'public', 'data', 'prospects', currentClientId);
+            await updateDoc(clientRef, { csLog: updatedLogs });
+            
+            currentClientData.csLog = updatedLogs;
+            csLogInput.value = '';
+            renderCsLog();
+            showNotification('Interação registrada com sucesso!', 'success');
+        } catch (error) {
+            console.error("Erro ao salvar log de CS:", error);
+            showNotification('Falha ao registrar interação.', 'error');
+        } finally {
+            addCsLogBtn.disabled = false;
+            addCsLogBtn.textContent = 'Salvar';
+        }
+    });
+}
+
+const healthScoreMap = {
+    1: { label: 'Crítico', percentage: 0, color: 'text-red-500' },
+    2: { label: 'Risco', percentage: 25, color: 'text-orange-500' },
+    3: { label: 'Neutro', percentage: 50, color: 'text-yellow-500' },
+    4: { label: 'Bom', percentage: 75, color: 'text-green-400' },
+    5: { label: 'Excelente', percentage: 100, color: 'text-green-500' }
+};
+
+function updateHealthScoreDisplay(score) {
+    const scoreData = healthScoreMap[score] || { label: 'N/A', percentage: 0, color: 'text-gray-400' };
+    
+    if (healthScoreIcon) {
+        healthScoreIcon.className = `fas fa-heart text-2xl ${scoreData.color}`;
+    }
+    if (healthScoreLabel) {
+        healthScoreLabel.textContent = `${scoreData.label} (${scoreData.percentage}%)`;
+    }
+}
+
+function renderCsLog() {
+    const logs = currentClientData.csLog || [];
+    if (logs.length === 0) {
+        csLogContainer.innerHTML = '<p class="text-gray-500 dark:text-gray-400 text-sm">Nenhuma interação registrada.</p>';
+        return;
+    }
+
+    csLogContainer.innerHTML = logs
+        .map(log => {
+            const date = log.timestamp ? log.timestamp.toDate().toLocaleString('pt-BR') : 'Data pendente';
+            return `
+                <div class="bg-gray-200 dark:bg-gray-700/50 p-2 rounded-md">
+                    <p class="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap">${log.text}</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 text-right mt-1">${log.author} - ${date}</p>
+                </div>
+            `;
+        }).join('');
 }

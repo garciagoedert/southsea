@@ -424,7 +424,7 @@
             renderBoard(); // Initial render
             
             // Setup modal listeners after the first render
-            setupEditKanbanModalListeners(configKey, COLUMN_NAMES, async () => {
+            setupEditKanbanModalListeners(configKey, config, async () => {
                 await initializeKanban(); // Re-initialize to get the latest config and re-render
             });
         }
