@@ -130,7 +130,7 @@ function renderDashboard(user, year, month) {
             renderProducaoDashboard(user);
             break;
         case 'admin':
-            renderAdminDashboard(user);
+            renderAdminDashboard(user, year, month);
             break;
         case 'bdr_supervisor':
             renderSupervisorDashboard(user, year, month);
@@ -146,9 +146,10 @@ function renderDashboard(user, year, month) {
  * @param {object} user - The BDR user profile.
  * @param {number} year - The selected year.
  * @param {number} month - The selected month (0-11).
+ * @param {HTMLElement} [container=null] - The container to render the dashboard in.
  */
-async function renderBdrDashboard(user, year, month) {
-    const mainContent = document.getElementById('dashboard-content');
+async function renderBdrDashboard(user, year, month, container = null) {
+    const mainContent = container || document.getElementById('dashboard-content');
     mainContent.innerHTML = `
         <div class="text-center p-8">
             <h2 class="text-2xl font-bold">Carregando dados do BDR...</h2>
@@ -421,9 +422,10 @@ async function renderBdrDashboard(user, year, month) {
  * @param {object} user - The Closer user profile.
  * @param {number} year - The selected year.
  * @param {number} month - The selected month (0-11).
+ * @param {HTMLElement} [container=null] - The container to render the dashboard in.
  */
-async function renderCloserDashboard(user, year, month) {
-    const mainContent = document.getElementById('dashboard-content');
+async function renderCloserDashboard(user, year, month, container = null) {
+    const mainContent = container || document.getElementById('dashboard-content');
     mainContent.innerHTML = `
         <div class="text-center p-8">
             <h2 class="text-2xl font-bold">Carregando dados do Closer...</h2>
@@ -628,9 +630,10 @@ async function renderCloserDashboard(user, year, month) {
  * @param {object} user - The CS user profile.
  * @param {number} year - The selected year.
  * @param {number} month - The selected month.
+ * @param {HTMLElement} [container=null] - The container to render the dashboard in.
  */
-async function renderCsDashboard(user, year, month) {
-    const mainContent = document.getElementById('dashboard-content');
+async function renderCsDashboard(user, year, month, container = null) {
+    const mainContent = container || document.getElementById('dashboard-content');
     mainContent.innerHTML = `<div class="text-center p-8"><h2 class="text-2xl font-bold">Carregando dados de Customer Success...</h2></div>`;
     const monthName = new Date(year, month).toLocaleString('pt-BR', { month: 'long' });
 
@@ -649,6 +652,22 @@ async function renderCsDashboard(user, year, month) {
         const valorTotalCarteira = clientPortfolio.reduce((sum, client) => sum + (client.ticketEstimado || 0), 0);
         const ticketMedioCarteira = totalContasAtivas > 0 ? valorTotalCarteira / totalContasAtivas : 0;
 
+        // --- Health Score Metrics ---
+        const healthScores = clientPortfolio.map(c => c.healthScore || 3); // Default to 3 if not set
+        const averageHealthScore = healthScores.reduce((sum, score) => sum + score, 0) / (healthScores.length || 1);
+        const healthScoreDistribution = healthScores.reduce((acc, score) => {
+            acc[score] = (acc[score] || 0) + 1;
+            return acc;
+        }, {});
+        const clientsNeedingAttention = clientPortfolio.filter(c => (c.healthScore || 3) <= 2);
+        const mrrByHealthScore = clientPortfolio.reduce((acc, client) => {
+            const score = client.healthScore || 3;
+            const mrr = client.ticketEstimado || 0;
+            acc[score] = (acc[score] || 0) + mrr;
+            return acc;
+        }, {});
+
+
         // --- Sales Metrics (for the selected month) ---
         const monthlyProspects = closerProspects.filter(p => {
             const relevantDate = p.updatedAt?.toDate() || p.createdAt?.toDate();
@@ -661,55 +680,56 @@ async function renderCsDashboard(user, year, month) {
         const totalReunioesMes = monthlyMeetings.length;
         const taxaDeConversaoMes = totalReunioesMes > 0 ? (totalVendasMes / totalReunioesMes) * 100 : 0;
         const valorVendidoMes = monthlyClosed.reduce((sum, client) => sum + (client.ticketEstimado || 0), 0);
-
-        // --- Chart Data ---
-        const portfolioBySector = clientPortfolio.reduce((acc, c) => {
-            const sector = c.setor || 'Não especificado';
-            acc[sector] = (acc[sector] || 0) + 1;
-            return acc;
-        }, {});
-
-        const servicesCount = clientPortfolio
+        
+        const sortedServices = Object.entries(clientPortfolio
             .flatMap(c => c.contractedServices || [])
             .reduce((acc, service) => {
                 const serviceName = service.serviceName || 'Não especificado';
                 acc[serviceName] = (acc[serviceName] || 0) + 1;
                 return acc;
-            }, {});
-        
-        const sortedServices = Object.entries(servicesCount).sort(([,a],[,b]) => b-a);
+            }, {})).sort(([,a],[,b]) => b-a);
 
         // --- Render HTML ---
         mainContent.innerHTML = `
             <h1 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Dashboard de Customer Success: ${user.name || user.email}</h1>
             
             <!-- KPIs -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                 <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md"><div class="text-2xl font-bold">${totalContasAtivas}</div><div class="text-sm text-gray-500 dark:text-gray-400">Contas Ativas</div></div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md"><div class="text-2xl font-bold">${averageHealthScore.toFixed(2)}</div><div class="text-sm text-gray-500 dark:text-gray-400">Health Score Médio</div></div>
                 <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md"><div class="text-2xl font-bold">R$ ${ticketMedioCarteira.toLocaleString('pt-BR')}</div><div class="text-sm text-gray-500 dark:text-gray-400">Ticket Médio Carteira</div></div>
-                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md"><div class="text-2xl font-bold">${totalVendasMes}</div><div class="text-sm text-gray-500 dark:text-gray-400">Vendas em ${monthName}</div></div>
-                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md"><div class="text-2xl font-bold">${taxaDeConversaoMes.toFixed(1)}%</div><div class="text-sm text-gray-500 dark:text-gray-400">Conversão em ${monthName}</div></div>
-                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md"><div class="text-2xl font-bold">R$ ${valorVendidoMes.toLocaleString('pt-BR')}</div><div class="text-sm text-gray-500 dark:text-gray-400">Valor Vendido em ${monthName}</div></div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md"><div class="text-2xl font-bold">R$ ${valorTotalCarteira.toLocaleString('pt-BR')}</div><div class="text-sm text-gray-500 dark:text-gray-400">MRR Total da Carteira</div></div>
             </div>
 
+             <!-- Sales KPIs for the month -->
+            <h2 class="text-xl font-bold mt-8 mb-4 text-gray-900 dark:text-white">Desempenho de Vendas em ${monthName}</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md"><div class="text-2xl font-bold">${totalVendasMes}</div><div class="text-sm text-gray-500 dark:text-gray-400">Vendas Realizadas</div></div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md"><div class="text-2xl font-bold">${taxaDeConversaoMes.toFixed(1)}%</div><div class="text-sm text-gray-500 dark:text-gray-400">Taxa de Conversão</div></div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md"><div class="text-2xl font-bold">R$ ${valorVendidoMes.toLocaleString('pt-BR')}</div><div class="text-sm text-gray-500 dark:text-gray-400">Valor Vendido no Mês</div></div>
+            </div>
+
+
             <!-- Charts & Tables -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
-                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md lg:col-span-1"><h2 class="text-xl font-bold mb-4">Contas por Setor</h2><canvas id="sectorChart"></canvas></div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md"><h2 class="text-xl font-bold mb-4">Distribuição de Health Score</h2><canvas id="healthScoreChart"></canvas></div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md"><h2 class="text-xl font-bold mb-4">Receita (MRR) por Health Score</h2><canvas id="mrrByHealthChart"></canvas></div>
                 <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md lg:col-span-2"><h2 class="text-xl font-bold mb-4">Serviços Contratados (Top 10)</h2><canvas id="servicesChart"></canvas></div>
-                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md lg:col-span-3">
-                    <h2 class="text-xl font-bold mb-4">Lista de Clientes Ativos</h2>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md lg:col-span-2">
+                    <h2 class="text-xl font-bold mb-4">Clientes Precisando de Atenção (Health Score ≤ 2)</h2>
                     <div class="overflow-auto max-h-96">
                         <table class="w-full text-left">
                             <thead class="bg-gray-50 dark:bg-gray-700 sticky top-0">
-                                <tr><th class="p-3">Empresa</th><th class="p-3">Setor</th><th class="p-3">Ticket</th></tr>
+                                <tr><th class="p-3">Empresa</th><th class="p-3">Setor</th><th class="p-3">Health Score</th><th class="p-3">Ticket</th></tr>
                             </thead>
                             <tbody>
-                                ${clientPortfolio.map(c => `
+                                ${clientsNeedingAttention.map(c => `
                                     <tr class="border-b border-gray-200 dark:border-gray-700">
                                         <td class="p-3 font-medium">${c.empresa}</td>
                                         <td class="p-3">${c.setor || 'N/A'}</td>
+                                        <td class="p-3 font-bold ${c.healthScore === 1 ? 'text-red-500' : 'text-orange-500'}">${c.healthScore || 'N/A'}</td>
                                         <td class="p-3">R$ ${c.ticketEstimado?.toLocaleString('pt-BR') || '0,00'}</td>
-                                    </tr>`).join('') || '<tr><td colspan="3" class="text-center p-4 text-gray-500">Nenhum cliente na carteira.</td></tr>'}
+                                    </tr>`).join('') || '<tr><td colspan="4" class="text-center p-4 text-gray-500">Nenhum cliente precisando de atenção. Parabéns!</td></tr>'}
                             </tbody>
                         </table>
                     </div>
@@ -720,16 +740,60 @@ async function renderCsDashboard(user, year, month) {
         // --- Initialize Charts ---
         Object.values(charts).forEach(chart => chart.destroy());
 
-        // Sector Chart (Pie)
-        const sectorCtx = document.getElementById('sectorChart').getContext('2d');
-        charts.sectorChart = new Chart(sectorCtx, {
-            type: 'pie',
+        // Health Score Chart (Doughnut)
+        const healthScoreCtx = document.getElementById('healthScoreChart').getContext('2d');
+        charts.healthScoreChart = new Chart(healthScoreCtx, {
+            type: 'doughnut',
             data: {
-                labels: Object.keys(portfolioBySector),
-                datasets: [{ data: Object.values(portfolioBySector), backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#6366F1', '#8B5CF6'] }]
+                labels: ['Crítico (1)', 'Risco (2)', 'Neutro (3)', 'Bom (4)', 'Excelente (5)'],
+                datasets: [{
+                    data: [
+                        healthScoreDistribution[1] || 0,
+                        healthScoreDistribution[2] || 0,
+                        healthScoreDistribution[3] || 0,
+                        healthScoreDistribution[4] || 0,
+                        healthScoreDistribution[5] || 0,
+                    ],
+                    backgroundColor: ['#EF4444', '#F59E0B', '#FBBF24', '#84CC16', '#22C55E']
+                }]
             },
             options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
         });
+
+        // MRR by Health Score Chart (Bar)
+        const mrrByHealthCtx = document.getElementById('mrrByHealthChart').getContext('2d');
+        charts.mrrByHealthChart = new Chart(mrrByHealthCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Crítico (1)', 'Risco (2)', 'Neutro (3)', 'Bom (4)', 'Excelente (5)'],
+                datasets: [{
+                    label: 'MRR Total',
+                    data: [
+                        mrrByHealthScore[1] || 0,
+                        mrrByHealthScore[2] || 0,
+                        mrrByHealthScore[3] || 0,
+                        mrrByHealthScore[4] || 0,
+                        mrrByHealthScore[5] || 0,
+                    ],
+                    backgroundColor: ['#EF4444', '#F59E0B', '#FBBF24', '#84CC16', '#22C55E']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: { 
+                    y: { 
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return 'R$ ' + value.toLocaleString('pt-BR');
+                            }
+                        }
+                    } 
+                }
+            }
+        });
+
 
         // Services Chart (Bar)
         const servicesCtx = document.getElementById('servicesChart').getContext('2d');
@@ -760,223 +824,463 @@ async function renderCsDashboard(user, year, month) {
 /**
  * Renders the dashboard for Producao users.
  * @param {object} user - The Producao user profile.
+ * @param {HTMLElement} [container=null] - The container to render the dashboard in.
  */
-async function renderProducaoDashboard(user) {
-    const mainContent = document.getElementById('dashboard-content');
-    // Placeholder content
-    mainContent.innerHTML = `
-        <h1 class="text-2xl font-bold mb-6">Dashboard de Produção: ${user.name || user.email}</h1>
-        <p>Em construção...</p>
-    `;
-    // TODO: Fetch and process data for Producao
-}
-
-/**
- * Renders the dashboard for Admin users, showing a global view by default.
- * @param {object} user - The Admin user profile.
- */
-async function renderAdminDashboard(user) {
-    const mainContent = document.getElementById('dashboard-content');
-    mainContent.innerHTML = `
-        <div class="flex flex-wrap justify-between items-center gap-4 mb-6">
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Dashboard de Administrador</h1>
-            <div class="flex items-center gap-4">
-                <div class="flex-grow md:flex-grow-0">
-                    <label for="user-select" class="sr-only">Ver dashboard como:</label>
-                    <select id="user-select" class="bg-gray-200 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                        <!-- Options will be populated by JS -->
-                    </select>
-                </div>
-                <button id="adjust-goals-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                    Ajustar Metas
-                </button>
-            </div>
-        </div>
-        <hr class="border-gray-200 dark:border-gray-700 my-4">
-        <div id="admin-dashboard-view">
-            <!-- Global or selected user dashboard will be loaded here -->
-            <p class="text-center p-8 text-gray-500 dark:text-gray-400">Carregando dados...</p>
-        </div>
-    `;
-
-    // Fetch all users for the dropdown
-    if (allUsers.length === 0) {
-        const usersCollection = collection(db, 'users');
-        const usersSnapshot = await getDocs(usersCollection);
-        allUsers = usersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    }
-
-    const userSelect = document.getElementById('user-select');
-    
-    // Add "Global View" option
-    const globalOption = document.createElement('option');
-    globalOption.value = 'global';
-    globalOption.textContent = 'Visão Geral do Sistema';
-    globalOption.selected = true;
-    userSelect.appendChild(globalOption);
-
-    // Add current admin's personal dashboard option
-    const myDashboardOption = document.createElement('option');
-    myDashboardOption.value = user.id;
-    myDashboardOption.textContent = `Meu Dashboard (${user.role})`;
-    userSelect.appendChild(myDashboardOption);
-    
-    // Add other users
-    allUsers.forEach(u => {
-        if (u.id !== user.id) {
-            const option = document.createElement('option');
-            option.value = u.id;
-            option.textContent = `${u.name} (${u.role})`;
-            userSelect.appendChild(option);
-        }
-    });
-
-    // Event listener for the dropdown
-    userSelect.addEventListener('change', (e) => {
-        const selectedValue = e.target.value;
-        const year = parseInt(document.getElementById('year-select').value);
-        const month = parseInt(document.getElementById('month-select').value);
-
-        if (selectedValue === 'global') {
-            renderGlobalAdminView(user); // Pass current admin user
-        } else {
-            const selectedUser = allUsers.find(u => u.id === selectedValue);
-            if (selectedUser) {
-                const dashboardContainer = document.getElementById('admin-dashboard-view');
-                const originalMainContent = document.getElementById('dashboard-content');
-                
-                // Swap IDs for rendering compatibility
-                originalMainContent.id = 'dashboard-content-temp'; 
-                dashboardContainer.id = 'dashboard-content';
-                
-                renderDashboard(selectedUser, year, month); // Render the specific user's dashboard
-
-                // Restore IDs
-                dashboardContainer.id = 'admin-dashboard-view';
-                originalMainContent.id = 'dashboard-content';
-            }
-        }
-    });
-
-    document.getElementById('adjust-goals-btn').addEventListener('click', showGoalsModal);
-
-    // Initial render
-    renderGlobalAdminView(user);
-}
-
-
-/**
- * Renders the global admin view with aggregated system metrics.
- * @param {object} adminUser - The currently logged-in admin user.
- */
-async function renderGlobalAdminView(adminUser) {
-    const viewContainer = document.getElementById('admin-dashboard-view');
-    if (!viewContainer) {
-        console.error("Admin view container not found!");
-        return;
-    }
-    viewContainer.innerHTML = `<p class="text-center p-8">Analisando dados do sistema...</p>`;
+async function renderProducaoDashboard(user, container = null) {
+    const mainContent = container || document.getElementById('dashboard-content');
+    mainContent.innerHTML = `<div class="text-center p-8"><h2 class="text-2xl font-bold">Carregando dados de Produção...</h2></div>`;
 
     try {
-        // Fetch all prospects and goals
-        const [prospectsSnapshot, goals] = await Promise.all([
-            getDocs(collection(db, 'artifacts', appId, 'public', 'data', 'prospects')),
-            fetchGoals()
-        ]);
+        // 1. Fetch all clients
+        const prospectsRef = collection(db, 'artifacts', appId, 'public', 'data', 'prospects');
+        const snapshot = await getDocs(prospectsRef);
 
-        const allProspects = prospectsSnapshot.docs.map(doc => doc.data());
+        // 2. Filter clients associated with the current production user
+        const userClients = snapshot.docs
+            .map(doc => ({ id: doc.id, ...doc.data() }))
+            .filter(client => 
+                client.productionTeam && client.productionTeam.some(member => member.userId === user.id)
+            );
 
-        // --- GLOBAL METRICS ---
-        const totalLeads = allProspects.length;
-        const totalReunioesMarcadas = allProspects.filter(p => p.status === 'Reunião').length;
-        const totalReunioesCompareceram = allProspects.filter(p => p.status === 'Reunião' && p.reuniaoCompareceu === true).length;
-        const conversaoGeral = totalReunioesMarcadas > 0 ? (totalReunioesCompareceram / totalReunioesMarcadas * 100).toFixed(1) : 0;
+        if (userClients.length === 0) {
+            mainContent.innerHTML = `
+                <h1 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Dashboard de Produção: ${user.name || user.email}</h1>
+                <p class="text-gray-500 dark:text-gray-400">Você ainda não está associado a nenhum cliente ativo.</p>
+            `;
+            return;
+        }
 
-        // --- ADMIN'S PERSONAL METRICS ---
-        const adminProspects = allProspects.filter(p => p.userId === adminUser.id);
-        const adminLeads = adminProspects.length;
-        const adminReunioes = adminProspects.filter(p => p.status === 'Reunião').length;
-        const adminCompareceram = adminProspects.filter(p => p.status === 'Reunião' && p.reuniaoCompareceu === true).length;
+        // 3. Calculate Metrics (KPIs)
+        const totalContasAtivas = userClients.length;
+        const valorTotalCarteira = userClients.reduce((sum, client) => sum + (client.ticketEstimado || 0), 0);
+        const ticketMedioCarteira = totalContasAtivas > 0 ? valorTotalCarteira / totalContasAtivas : 0;
+        const allServices = userClients.flatMap(c => c.contractedServices || []);
+        const totalServicos = allServices.length;
 
-        // --- BDR Performance ---
-        const bdrPerformance = {};
-        allProspects.forEach(p => {
-            const userId = p.userId;
-            if (!userId) return;
-            if (!bdrPerformance[userId]) {
-                bdrPerformance[userId] = { leads: 0, reunioes: 0, compareceram: 0 };
-            }
-            bdrPerformance[userId].leads++;
-            if (p.status === 'Reunião') {
-                bdrPerformance[userId].reunioes++;
-                if (p.reuniaoCompareceu) {
-                    bdrPerformance[userId].compareceram++;
-                }
-            }
-        });
+        // 4. Aggregate data for charts
+        const clientsBySector = userClients.reduce((acc, client) => {
+            const sector = client.setor || 'Não especificado';
+            acc[sector] = (acc[sector] || 0) + 1;
+            return acc;
+        }, {});
 
-        // Sort BDRs by meetings attended
-        const sortedBdrs = Object.entries(bdrPerformance)
-            .sort(([, a], [, b]) => b.compareceram - a.compareceram)
-            .map(([userId, data]) => {
-                const user = allUsers.find(u => u.id === userId);
-                return {
-                    name: user ? user.name : 'Desconhecido',
-                    ...data
-                };
-            });
+        const servicesCount = allServices.reduce((acc, service) => {
+            const serviceName = service.serviceName || 'Não especificado';
+            acc[serviceName] = (acc[serviceName] || 0) + 1;
+            return acc;
+        }, {});
+        
+        const sortedServices = Object.entries(servicesCount).sort(([,a],[,b]) => b-a);
 
 
-        // --- RENDER HTML ---
-        viewContainer.innerHTML = `
-            <!-- Global Metrics -->
-            <h2 class="text-xl font-bold mb-4 text-gray-900 dark:text-white">Métricas Gerais do Sistema</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md"><div class="text-2xl font-bold text-gray-900 dark:text-white">${totalLeads}</div><div class="text-sm text-gray-500 dark:text-gray-400">Total de Leads</div></div>
-                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md"><div class="text-2xl font-bold text-gray-900 dark:text-white">${totalReunioesMarcadas}</div><div class="text-sm text-gray-500 dark:text-gray-400">Reuniões Marcadas</div></div>
-                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md"><div class="text-2xl font-bold text-gray-900 dark:text-white">${totalReunioesCompareceram}</div><div class="text-sm text-gray-500 dark:text-gray-400">Reuniões Realizadas</div></div>
-                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md"><div class="text-2xl font-bold text-gray-900 dark:text-white">${conversaoGeral}%</div><div class="text-sm text-gray-500 dark:text-gray-400">Conversão (Realizadas/Marcadas)</div></div>
+        // 5. Render the dashboard HTML
+        mainContent.innerHTML = `
+            <h1 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Dashboard de Produção: ${user.name || user.email}</h1>
+            
+            <!-- KPIs -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md"><div class="text-2xl font-bold">${totalContasAtivas}</div><div class="text-sm text-gray-500 dark:text-gray-400">Contas Ativas</div></div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md"><div class="text-2xl font-bold">${totalServicos}</div><div class="text-sm text-gray-500 dark:text-gray-400">Serviços Sob Gestão</div></div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md"><div class="text-2xl font-bold">R$ ${valorTotalCarteira.toLocaleString('pt-BR')}</div><div class="text-sm text-gray-500 dark:text-gray-400">Valor da Carteira (MRR)</div></div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md"><div class="text-2xl font-bold">R$ ${ticketMedioCarteira.toLocaleString('pt-BR')}</div><div class="text-sm text-gray-500 dark:text-gray-400">Ticket Médio</div></div>
             </div>
 
-            <!-- Admin's Personal Metrics -->
-            <h2 class="text-xl font-bold mb-4 text-gray-900 dark:text-white">Minhas Métricas (${adminUser.name})</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md"><div class="text-2xl font-bold text-gray-900 dark:text-white">${adminLeads}</div><div class="text-sm text-gray-500 dark:text-gray-400">Meus Leads Prospectados</div></div>
-                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md"><div class="text-2xl font-bold text-gray-900 dark:text-white">${adminReunioes}</div><div class="text-sm text-gray-500 dark:text-gray-400">Minhas Reuniões Marcadas</div></div>
-                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md"><div class="text-2xl font-bold text-gray-900 dark:text-white">${adminCompareceram}</div><div class="text-sm text-gray-500 dark:text-gray-400">Minhas Reuniões Realizadas</div></div>
+            <!-- Charts -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8 mb-8">
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md"><h2 class="text-xl font-bold mb-4">Contas por Setor</h2><canvas id="sectorChart"></canvas></div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md"><h2 class="text-xl font-bold mb-4">Serviços Mais Frequentes (Top 5)</h2><canvas id="servicesChart"></canvas></div>
             </div>
 
-            <!-- BDR Performance Ranking -->
+            <!-- Detailed Client Table -->
             <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
-                <h2 class="text-xl font-bold mb-4 text-gray-900 dark:text-white">Ranking de Performance (BDRs)</h2>
-                <div class="overflow-x-auto">
+                <h2 class="text-xl font-bold mb-4">Meus Clientes</h2>
+                <div class="overflow-auto max-h-96">
                     <table class="w-full text-left">
-                        <thead class="bg-gray-50 dark:bg-gray-700">
+                        <thead class="bg-gray-50 dark:bg-gray-700 sticky top-0">
                             <tr>
-                                <th class="p-3 text-gray-600 dark:text-gray-300">BDR</th>
-                                <th class="p-3 text-gray-600 dark:text-gray-300">Leads</th>
-                                <th class="p-3 text-gray-600 dark:text-gray-300">Reuniões Marcadas</th>
-                                <th class="p-3 text-gray-600 dark:text-gray-300">Reuniões Realizadas</th>
+                                <th class="p-3">Empresa</th>
+                                <th class="p-3">Minha Função</th>
+                                <th class="p-3">Setor</th>
+                                <th class="p-3">Serviços Contratados</th>
+                                <th class="p-3">Ticket Mensal</th>
+                                <th class="p-3">Ações</th>
                             </tr>
                         </thead>
                         <tbody>
-                            ${sortedBdrs.map(bdr => `
+                            ${userClients.map(client => {
+                                const myRole = client.productionTeam.find(m => m.userId === user.id)?.subRole || 'N/A';
+                                const servicesList = (client.contractedServices || []).map(s => `<span class="inline-block bg-gray-200 dark:bg-gray-600 text-xs font-semibold mr-1 px-2 py-1 rounded-full">${s.serviceName}</span>`).join(' ');
+                                return `
                                 <tr class="border-b border-gray-200 dark:border-gray-700">
-                                    <td class="p-3 text-gray-800 dark:text-gray-200">${bdr.name}</td>
-                                    <td class="p-3 text-gray-800 dark:text-gray-200">${bdr.leads}</td>
-                                    <td class="p-3 text-gray-800 dark:text-gray-200">${bdr.reunioes}</td>
-                                    <td class="p-3 text-gray-800 dark:text-gray-200">${bdr.compareceram}</td>
+                                    <td class="p-3 font-medium">${client.empresa}</td>
+                                    <td class="p-3"><span class="font-bold capitalize">${myRole}</span></td>
+                                    <td class="p-3">${client.setor || 'N/A'}</td>
+                                    <td class="p-3">${servicesList || 'Nenhum'}</td>
+                                    <td class="p-3">R$ ${client.ticketEstimado?.toLocaleString('pt-BR') || '0,00'}</td>
+                                    <td class="p-3">
+                                        <a href="perfil.html?id=${client.id}" target="_blank" class="text-blue-500 hover:underline">Ver Perfil</a>
+                                    </td>
                                 </tr>
-                            `).join('')}
+                            `}).join('')}
                         </tbody>
                     </table>
                 </div>
             </div>
         `;
 
+        // 6. Initialize Charts
+        Object.values(charts).forEach(chart => chart.destroy());
+
+        const sectorCtx = document.getElementById('sectorChart').getContext('2d');
+        charts.sectorChart = new Chart(sectorCtx, {
+            type: 'pie',
+            data: {
+                labels: Object.keys(clientsBySector),
+                datasets: [{
+                    data: Object.values(clientsBySector),
+                    backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#6366F1', '#8B5CF6'],
+                }]
+            },
+            options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+        });
+
+        const servicesCtx = document.getElementById('servicesChart').getContext('2d');
+        charts.servicesChart = new Chart(servicesCtx, {
+            type: 'bar',
+            data: {
+                labels: sortedServices.slice(0, 5).map(s => s[0]),
+                datasets: [{
+                    label: 'Nº de Clientes',
+                    data: sortedServices.slice(0, 5).map(s => s[1]),
+                    backgroundColor: '#14B8A6'
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: { x: { beginAtZero: true, ticks: { stepSize: 1 } } }
+            }
+        });
+
     } catch (error) {
-        console.error("Error rendering global admin view:", error);
-        viewContainer.innerHTML = `<p class="text-red-500 text-center p-8">Erro ao carregar a visão geral do administrador.</p>`;
+        console.error("Error rendering Producao dashboard:", error);
+        mainContent.innerHTML = `<p class="text-red-500 col-span-full">Erro ao carregar dados de Produção.</p>`;
+    }
+}
+
+async function renderAdminCompanyOverview(user, year, month, container) {
+    container.innerHTML = `<div class="text-center p-8"><h2 class="text-2xl font-bold">Carregando Visão Geral da Empresa...</h2></div>`;
+    const monthName = new Date(year, month).toLocaleString('pt-BR', { month: 'long' });
+
+    try {
+        const [prospectsSnapshot, usersSnapshot] = await Promise.all([
+            getDocs(collection(db, 'artifacts', appId, 'public', 'data', 'prospects')),
+            getDocs(collection(db, 'users'))
+        ]);
+
+        const allProspects = prospectsSnapshot.docs.map(doc => doc.data());
+        const allUsers = usersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+        const monthlyProspects = allProspects.filter(p => {
+            const relevantDate = p.updatedAt?.toDate() || p.createdAt?.toDate();
+            return relevantDate && relevantDate.getFullYear() === year && relevantDate.getMonth() === month;
+        });
+
+        // --- COMPANY WIDE METRICS ---
+        const monthlySales = monthlyProspects.filter(p => p.status === 'Concluído');
+        const totalVendas = monthlySales.length;
+        const valorTotalVendido = monthlySales.reduce((sum, client) => sum + (client.ticketEstimado || 0), 0);
+        const ticketMedio = totalVendas > 0 ? valorTotalVendido / totalVendas : 0;
+        const reunioesMarcadas = monthlyProspects.filter(p => p.status === 'Reunião' || p.status === 'Concluído').length;
+        const reunioesRealizadas = monthlyProspects.filter(p => (p.status === 'Reunião' || p.status === 'Concluído') && p.reuniaoCompareceu === true).length;
+        const showUpRate = reunioesMarcadas > 0 ? (reunioesRealizadas / reunioesMarcadas) * 100 : 0;
+
+        // --- ADMIN PERSONAL METRICS ---
+        const adminProspects = monthlyProspects.filter(p => p.userId === user.id);
+        const adminLeads = adminProspects.length;
+        const adminReunioes = adminProspects.filter(p => p.status === 'Reunião' || p.status === 'Concluído').length;
+        const adminCompareceram = adminProspects.filter(p => p.reuniaoCompareceu === true).length;
+
+        // --- CHART & RANKING DATA ---
+        const clientsBySector = monthlySales.reduce((acc, client) => {
+            const sector = client.setor || 'Não Especificado';
+            acc[sector] = (acc[sector] || 0) + 1;
+            return acc;
+        }, {});
+        const servicesCount = monthlySales.flatMap(c => c.contractedServices || []).reduce((acc, service) => {
+            const name = service.serviceName || 'Não Especificado';
+            acc[name] = (acc[name] || 0) + 1;
+            return acc;
+        }, {});
+        const sortedServices = Object.entries(servicesCount).sort(([, a], [, b]) => b - a);
+        const bdrPerformance = allUsers.filter(u => u.role === 'bdr').map(bdr => ({
+            name: bdr.name,
+            count: monthlyProspects.filter(p => p.userId === bdr.id && p.reuniaoCompareceu === true).length
+        })).sort((a, b) => b.count - a.count);
+        const closerPerformance = allUsers.filter(u => u.role === 'closer' || u.role === 'cs').map(closer => ({
+            name: closer.name,
+            count: monthlySales.filter(p => p.closerId === closer.id).length
+        })).sort((a, b) => b.count - a.count);
+
+        // --- RENDER HTML ---
+        container.innerHTML = `
+            <section id="company-overview">
+                <h2 class="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Visão Geral da Empresa - ${monthName}</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md flex items-center gap-4"><div class="bg-green-100 dark:bg-green-900 p-3 rounded-full"><i class="fas fa-handshake fa-lg text-green-500"></i></div><div><div class="text-2xl font-bold">${totalVendas}</div><div class="text-sm text-gray-500 dark:text-gray-400">Vendas Realizadas</div></div></div>
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md flex items-center gap-4"><div class="bg-blue-100 dark:bg-blue-900 p-3 rounded-full"><i class="fas fa-wallet fa-lg text-blue-500"></i></div><div><div class="text-2xl font-bold">R$ ${valorTotalVendido.toLocaleString('pt-BR')}</div><div class="text-sm text-gray-500 dark:text-gray-400">Valor Total Vendido</div></div></div>
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md flex items-center gap-4"><div class="bg-yellow-100 dark:bg-yellow-900 p-3 rounded-full"><i class="fas fa-calendar-check fa-lg text-yellow-500"></i></div><div><div class="text-2xl font-bold">${reunioesRealizadas}</div><div class="text-sm text-gray-500 dark:text-gray-400">Reuniões Realizadas</div></div></div>
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md flex items-center gap-4"><div class="bg-indigo-100 dark:bg-indigo-900 p-3 rounded-full"><i class="fas fa-chart-pie fa-lg text-indigo-500"></i></div><div><div class="text-2xl font-bold">${showUpRate.toFixed(1)}%</div><div class="text-sm text-gray-500 dark:text-gray-400">Taxa de Comparecimento</div></div></div>
+                </div>
+            </section>
+
+            <section id="admin-personal-performance" class="mt-8">
+                <h2 class="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Meu Desempenho Pessoal</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md flex items-center gap-4"><div class="bg-blue-100 dark:bg-blue-900 p-3 rounded-full"><i class="fas fa-bullseye fa-lg text-blue-500"></i></div><div><div class="text-2xl font-bold">${adminLeads}</div><div class="text-sm text-gray-500 dark:text-gray-400">Meus Leads Prospectados</div></div></div>
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md flex items-center gap-4"><div class="bg-yellow-100 dark:bg-yellow-900 p-3 rounded-full"><i class="fas fa-calendar-check fa-lg text-yellow-500"></i></div><div><div class="text-2xl font-bold">${adminReunioes}</div><div class="text-sm text-gray-500 dark:text-gray-400">Minhas Reuniões Marcadas</div></div></div>
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md flex items-center gap-4"><div class="bg-green-100 dark:bg-green-900 p-3 rounded-full"><i class="fas fa-handshake fa-lg text-green-500"></i></div><div><div class="text-2xl font-bold">${adminCompareceram}</div><div class="text-sm text-gray-500 dark:text-gray-400">Minhas Reuniões Realizadas</div></div></div>
+                </div>
+            </section>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md"><h3 class="font-bold text-lg mb-4">Clientes por Setor</h3><canvas id="adminSectorChart"></canvas></div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md"><h3 class="font-bold text-lg mb-4">Top 5 Serviços Contratados</h3><canvas id="adminServicesChart"></canvas></div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md"><h3 class="font-bold text-lg mb-4">Ranking de BDRs (Reuniões Realizadas)</h3><ul class="space-y-2">${bdrPerformance.map(b => `<li>${b.name}: <strong>${b.count}</strong></li>`).join('') || '<li class="text-gray-500">Nenhum dado este mês.</li>'}</ul></div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md"><h3 class="font-bold text-lg mb-4">Ranking de Closers (Vendas)</h3><ul class="space-y-2">${closerPerformance.map(c => `<li>${c.name}: <strong>${c.count}</strong></li>`).join('') || '<li class="text-gray-500">Nenhum dado este mês.</li>'}</ul></div>
+            </div>
+        `;
+
+        Object.values(charts).forEach(chart => chart.destroy());
+
+        const sectorCtx = document.getElementById('adminSectorChart').getContext('2d');
+        if (Object.keys(clientsBySector).length > 0) {
+            charts.adminSectorChart = new Chart(sectorCtx, {
+                type: 'doughnut',
+                data: { labels: Object.keys(clientsBySector), datasets: [{ data: Object.values(clientsBySector), backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#6366F1', '#8B5CF6'] }] },
+                options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+            });
+        }
+
+        const servicesCtx = document.getElementById('adminServicesChart').getContext('2d');
+        if (sortedServices.length > 0) {
+            charts.adminServicesChart = new Chart(servicesCtx, {
+                type: 'bar',
+                data: { labels: sortedServices.slice(0, 5).map(s => s[0]), datasets: [{ label: 'Nº de Contratos', data: sortedServices.slice(0, 5).map(s => s[1]), backgroundColor: '#14B8A6' }] },
+                options: { indexAxis: 'y', responsive: true, plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+            });
+        }
+    } catch (error) {
+        console.error("Error rendering Admin Company Overview:", error);
+        container.innerHTML = `<p class="text-red-500 text-center p-8">Ocorreu um erro ao carregar a visão geral da empresa.</p>`;
+    }
+}
+
+
+async function renderAdminDashboard(user, year, month) {
+    const mainContent = document.getElementById('dashboard-content');
+    mainContent.innerHTML = `
+        <div class="flex flex-wrap justify-between items-center gap-4 mb-6">
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Dashboard de Administrador</h1>
+            <button id="adjust-goals-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-auto">
+                Ajustar Metas
+            </button>
+        </div>
+        
+        <!-- Tab Navigation -->
+        <div class="border-b border-gray-200 dark:border-gray-700 mb-4">
+            <nav id="admin-nav-tabs" class="flex flex-wrap -mb-px text-sm font-medium text-center" aria-label="Tabs">
+                <button data-view="overview" class="admin-nav-tab inline-block p-4 border-b-2 rounded-t-lg">Visão Geral</button>
+                <button data-view="bdr" class="admin-nav-tab inline-block p-4 border-b-2 rounded-t-lg">BDRs</button>
+                <button data-view="closer" class="admin-nav-tab inline-block p-4 border-b-2 rounded-t-lg">Closers</button>
+                <button data-view="cs" class="admin-nav-tab inline-block p-4 border-b-2 rounded-t-lg">CS</button>
+                <button data-view="producao" class="admin-nav-tab inline-block p-4 border-b-2 rounded-t-lg">Produção</button>
+            </nav>
+        </div>
+
+        <div id="admin-dashboard-view">
+            <p class="text-center p-8 text-gray-500 dark:text-gray-400">Carregando dados...</p>
+        </div>
+    `;
+
+    document.getElementById('adjust-goals-btn').addEventListener('click', showGoalsModal);
+    const viewContainer = document.getElementById('admin-dashboard-view');
+    const navTabs = document.getElementById('admin-nav-tabs');
+
+    const setActiveTab = (view) => {
+        navTabs.querySelectorAll('.admin-nav-tab').forEach(tab => {
+            if (tab.dataset.view === view) {
+                tab.classList.add('text-blue-600', 'border-blue-600', 'active');
+                tab.classList.remove('border-transparent', 'hover:text-gray-600', 'hover:border-gray-300');
+            } else {
+                tab.classList.remove('text-blue-600', 'border-blue-600', 'active');
+                tab.classList.add('border-transparent', 'hover:text-gray-600', 'hover:border-gray-300');
+            }
+        });
+    };
+
+    const switchView = async (view) => {
+        setActiveTab(view);
+        const currentYear = parseInt(document.getElementById('year-select').value);
+        const currentMonth = parseInt(document.getElementById('month-select').value);
+
+        if (view === 'overview') {
+            await renderAdminCompanyOverview(user, currentYear, currentMonth, viewContainer);
+        } else {
+            await renderTeamRankingView(view, currentYear, currentMonth, viewContainer);
+        }
+    };
+
+    navTabs.addEventListener('click', (e) => {
+        if (e.target.matches('.admin-nav-tab')) {
+            const view = e.target.dataset.view;
+            switchView(view);
+        }
+    });
+
+    // Initial render
+    switchView('overview');
+}
+
+async function renderTeamRankingView(role, year, month, container) {
+    container.innerHTML = `<div class="text-center p-8"><h2 class="text-2xl font-bold">Carregando Dados da Equipe...</h2></div>`;
+
+    try {
+        if (allUsers.length === 0) {
+            const usersSnapshot = await getDocs(collection(db, 'users'));
+            allUsers = usersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        }
+
+        if (role === 'producao') {
+            const teamMembers = allUsers.filter(u => u.role === 'producao');
+            container.innerHTML = `
+                <h2 class="text-xl font-bold mb-4">Equipe de Produção</h2>
+                <div class="overflow-x-auto bg-white dark:bg-gray-800 rounded-lg shadow-md">
+                    <table class="w-full text-left">
+                        <thead class="bg-gray-50 dark:bg-gray-700">
+                            <tr>
+                                <th class="p-3">Nome</th>
+                                <th class="p-3">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${teamMembers.map(member => `
+                                <tr class="border-b border-gray-200 dark:border-gray-700">
+                                    <td class="p-3">${member.name}</td>
+                                    <td class="p-3">
+                                        <button class="view-user-dashboard-btn text-blue-500 hover:underline" data-user-id="${member.id}">Ver Detalhes</button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        } else {
+            const prospectsSnapshot = await getDocs(collection(db, 'artifacts', appId, 'public', 'data', 'prospects'));
+            const allProspects = prospectsSnapshot.docs.map(doc => doc.data());
+            
+            const monthlyProspects = allProspects.filter(p => {
+                const relevantDate = p.updatedAt?.toDate() || p.createdAt?.toDate();
+                return relevantDate && relevantDate.getFullYear() === year && relevantDate.getMonth() === month;
+            });
+
+            const teamMembers = allUsers.filter(u => u.role === role || (role === 'closer' && u.role === 'cs'));
+            
+            let performanceData = [];
+            let metricLabel = '';
+
+            if (role === 'bdr') {
+                metricLabel = 'Reuniões Realizadas';
+                performanceData = teamMembers.map(member => ({
+                    user: member,
+                    metric: monthlyProspects.filter(p => p.userId === member.id && p.reuniaoCompareceu === true).length
+                }));
+            } else if (role === 'closer' || role === 'cs') {
+                metricLabel = 'Vendas Realizadas';
+                performanceData = teamMembers.map(member => ({
+                    user: member,
+                    metric: monthlyProspects.filter(p => p.closerId === member.id && p.status === 'Concluído').length
+                }));
+            } else {
+                container.innerHTML = `<p class="text-center p-4">Visualização para "${role}" ainda não implementada.</p>`;
+                return;
+            }
+
+            performanceData.sort((a, b) => b.metric - a.metric);
+
+            container.innerHTML = `
+                <h2 class="text-xl font-bold mb-4">Ranking de ${role.charAt(0).toUpperCase() + role.slice(1)}s</h2>
+                <div class="overflow-x-auto bg-white dark:bg-gray-800 rounded-lg shadow-md">
+                    <table class="w-full text-left">
+                        <thead class="bg-gray-50 dark:bg-gray-700">
+                            <tr>
+                                <th class="p-3">Nome</th>
+                                <th class="p-3">${metricLabel}</th>
+                                <th class="p-3">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${performanceData.map(item => `
+                                <tr class="border-b border-gray-200 dark:border-gray-700">
+                                    <td class="p-3">${item.user.name}</td>
+                                    <td class="p-3 font-bold">${item.metric}</td>
+                                    <td class="p-3">
+                                        <button class="view-user-dashboard-btn text-blue-500 hover:underline" data-user-id="${item.user.id}">Ver Detalhes</button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        container.querySelectorAll('.view-user-dashboard-btn').forEach(button => {
+            button.addEventListener('click', async (e) => {
+                const userId = e.target.dataset.userId;
+                const selectedUser = allUsers.find(u => u.id === userId);
+                if (selectedUser) {
+                    const currentYear = parseInt(document.getElementById('year-select').value);
+                    const currentMonth = parseInt(document.getElementById('month-select').value);
+
+                    container.innerHTML = '';
+                    const backButton = document.createElement('button');
+                    backButton.innerHTML = '<i class="fas fa-arrow-left mr-2"></i> Voltar para a Lista';
+                    backButton.className = 'bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-700 text-gray-800 dark:text-white font-bold py-2 px-4 rounded mb-4';
+                    backButton.addEventListener('click', () => renderTeamRankingView(role, currentYear, currentMonth, container));
+                    container.appendChild(backButton);
+
+                    const dashboardContainer = document.createElement('div');
+                    container.appendChild(dashboardContainer);
+
+                    switch (selectedUser.role) {
+                        case 'bdr': case 'bdr_supervisor': case 'admin':
+                            await renderBdrDashboard(selectedUser, currentYear, currentMonth, dashboardContainer);
+                            break;
+                        case 'closer':
+                            await renderCloserDashboard(selectedUser, currentYear, currentMonth, dashboardContainer);
+                            break;
+                        case 'cs':
+                            await renderCsDashboard(selectedUser, currentYear, currentMonth, dashboardContainer);
+                            break;
+                        case 'producao':
+                            await renderProducaoDashboard(selectedUser, dashboardContainer);
+                            break;
+                        default:
+                            dashboardContainer.innerHTML = `<p>Dashboard para a função '${selectedUser.role}' não encontrado.</p>`;
+                    }
+                }
+            });
+        });
+
+    } catch (error) {
+        console.error(`Error rendering team view for ${role}:`, error);
+        container.innerHTML = `<p class="text-red-500">Erro ao carregar dados da equipe.</p>`;
     }
 }
 
