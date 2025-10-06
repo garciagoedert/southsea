@@ -339,38 +339,51 @@ function createProspectCard(prospect, isMobile = false) {
         ${actionButtonHTML}
     `;
     
-    card.addEventListener('click', async (e) => {
+    card.addEventListener('click', (e) => {
+        // IMPORTANT: This listener handles multiple buttons inside the card.
+        // It stops propagation to prevent the card's main click action (openFormModal) from firing.
+
         if (e.target.closest('.convert-to-client-btn')) {
             e.stopPropagation();
             const prospectId = e.target.closest('.convert-to-client-btn').dataset.prospectId;
-            const prospect = prospects.find(p => p.id === prospectId);
-            const confirmed = await showConfirmationModal(`Deseja converter "${prospect.empresa}" em cliente e mover o card para Proposta?`);
-            if (confirmed) {
-                await convertToClosedClientAndMove(prospect);
+            const prospectToConvert = prospects.find(p => p.id === prospectId);
+            if (prospectToConvert) {
+                showConfirmationModal(
+                    `Deseja converter "${prospectToConvert.empresa}" em cliente e mover o card para Proposta?`,
+                    () => convertToClosedClientAndMove(prospectToConvert)
+                );
             }
-            return;
+            return; // Stop further execution
         }
+
         if (e.target.closest('.move-to-closed-btn')) {
             e.stopPropagation();
             const prospectId = e.target.closest('.move-to-closed-btn').dataset.prospectId;
-            const confirmed = await showConfirmationModal(`Deseja mover "${prospect.empresa}" para Clientes Fechados? Esta ação não pode ser desfeita.`);
-            if (confirmed) {
-                await moveProspectToClosed(prospectId);
+            const prospectToMove = prospects.find(p => p.id === prospectId);
+            if (prospectToMove) {
+                showConfirmationModal(
+                    `Deseja mover "${prospectToMove.empresa}" para Clientes Fechados? Esta ação não pode ser desfeita.`,
+                    () => moveProspectToClosed(prospectId)
+                );
             }
-            return;
+            return; // Stop further execution
         }
+
         if (e.target.closest('.schedule-meeting-btn')) {
             e.stopPropagation();
             const prospectId = e.target.closest('.schedule-meeting-btn').dataset.prospectId;
             window.location.href = `calendario.html?prospectId=${prospectId}`;
-            return;
+            return; // Stop further execution
         }
+
         if (e.target.closest('.view-meeting-btn')) {
             e.stopPropagation();
             const reuniaoId = e.target.closest('.view-meeting-btn').dataset.reuniaoId;
             window.location.href = `calendario.html?reuniaoId=${reuniaoId}`;
-            return;
+            return; // Stop further execution
         }
+
+        // If no button was clicked, run the default action for clicking the card itself
         openFormModal(prospect);
     });
 
@@ -503,8 +516,9 @@ async function convertToClosedClientAndMove(prospect) {
     // 1. Create a copy for the "closed-clients" page
     const newClientData = { ...prospect };
     delete newClientData.id; // Firestore will generate a new ID
-    newClientData.status = 'Concluído'; // This is the key for the closed-clients page
-    newClientData.pagina = 'Clientes Fechados'; // Also set page for clarity
+    newClientData.status = 'Concluído'; // This is the key for the closed-clients page query
+    newClientData.productionStatus = 'Novo'; // This sets the column on the closed-clients page
+    newClientData.pagina = 'Clientes Fechados'; // This moves it to the correct page
     newClientData.updatedAt = serverTimestamp();
     newClientData.closedAt = serverTimestamp(); // Add a specific closing timestamp
 
@@ -519,7 +533,7 @@ async function convertToClosedClientAndMove(prospect) {
             updatedAt: serverTimestamp()
         });
 
-        generalLog.add(user, 'Convert to Client', `Card "${prospect.empresa}" converted to client and moved to Fechado`);
+        generalLog.add(user, 'Convert to Client', `Card "${prospect.empresa}" converted to client and moved to Proposta`);
 
     } catch (error) {
         console.error("Error converting prospect to client:", error);

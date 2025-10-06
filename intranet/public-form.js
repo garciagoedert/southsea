@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     let formInstanceRef = null;
     let formDefinition = null;
     let currentSectionIndex = 0;
+    let allAnswers = {};
 
     const params = new URLSearchParams(window.location.search);
     const instanceId = params.get('instanceId');
@@ -184,7 +185,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         let sectionHtml = '';
         section.fields.forEach(field => {
-            const fieldName = (field.tag ? field.tag.replace(/##/g, '') : field.questionText);
+            const fieldName = (field.tag ? field.tag.trim().replace(/##/g, '') : field.questionText);
             const commonInputClass = "mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm";
 
             sectionHtml += `<div class="mb-6">`;
@@ -288,34 +289,33 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     };
 
+    const collectCurrentSectionData = () => {
+        const formData = new FormData(publicForm);
+        const currentData = Object.fromEntries(Array.from(formData.keys()).map(key => {
+            const values = formData.getAll(key);
+            return [key, values.length > 1 ? values : values[0]];
+        }));
+        Object.assign(allAnswers, currentData);
+    };
+
     const handleFormSubmit = async () => {
         submitBtn.disabled = true;
         submitBtn.textContent = 'Enviando...';
 
-        const formData = new FormData(publicForm);
-        const answers = {};
-        for (const [key, value] of formData.entries()) {
-            if (key.endsWith('[]')) {
-                const cleanKey = key.slice(0, -2);
-                if (!answers[cleanKey]) {
-                    answers[cleanKey] = [];
+        const finalAnswers = { ...allAnswers };
+        for (const key in finalAnswers) {
+            if (Array.isArray(finalAnswers[key])) {
+                const cleanKey = key.replace('[]', '');
+                finalAnswers[cleanKey] = finalAnswers[key].join(', ');
+                if (key !== cleanKey) {
+                    delete finalAnswers[key];
                 }
-                if (Array.isArray(answers[cleanKey])) {
-                    answers[cleanKey].push(value);
-                }
-            } else {
-                answers[key] = value;
-            }
-        }
-        for(const key in answers) {
-            if(Array.isArray(answers[key])) {
-                answers[key] = answers[key].join(', ');
             }
         }
 
         try {
             await updateDoc(formInstanceRef, {
-                formData: answers,
+                formData: finalAnswers,
                 status: 'Preenchido',
                 submittedAt: serverTimestamp()
             });
@@ -411,6 +411,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     nextBtn.addEventListener('click', () => {
         if (validateSection()) {
+            collectCurrentSectionData();
             if (currentSectionIndex < formDefinition.sections.length - 1) {
                 currentSectionIndex++;
                 renderCurrentSection();
@@ -425,6 +426,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     publicForm.addEventListener('submit', (e) => {
         e.preventDefault();
         if (validateSection()) {
+            collectCurrentSectionData();
             handleFormSubmit();
         }
     });

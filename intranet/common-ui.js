@@ -403,10 +403,11 @@ async function loadComponents(pageSpecificSetup) {
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
 
     try {
-        const [headerRes, sidebarRes, notificationRes] = await Promise.all([
+        const [headerRes, sidebarRes, notificationRes, confirmModalRes] = await Promise.all([
             fetch(`header.html?v=${new Date().getTime()}`),
             fetch(`sidebar.html?v=${new Date().getTime()}`),
-            fetch(`notification-container.html?v=${new Date().getTime()}`)
+            fetch(`notification-container.html?v=${new Date().getTime()}`),
+            fetch(`confirm-modal.html?v=${new Date().getTime()}`)
         ]);
 
         if (!headerRes.ok || !sidebarRes.ok) {
@@ -421,6 +422,15 @@ async function loadComponents(pageSpecificSetup) {
             const tempContainer = document.createElement('div');
             tempContainer.innerHTML = notificationHtml;
             // Append all children from the temporary container to the body
+            while (tempContainer.firstChild) {
+                document.body.appendChild(tempContainer.firstChild);
+            }
+        }
+
+        if (confirmModalRes.ok) {
+            const confirmModalHtml = await confirmModalRes.text();
+            const tempContainer = document.createElement('div');
+            tempContainer.innerHTML = confirmModalHtml;
             while (tempContainer.firstChild) {
                 document.body.appendChild(tempContainer.firstChild);
             }
@@ -590,57 +600,70 @@ async function loadComponents(pageSpecificSetup) {
     }
 }
 
-function showConfirmationModal(message, onConfirmCallback, confirmText = 'Confirmar', cancelText = 'Cancelar') {
-    const modal = document.getElementById('confirmModal');
-    const messageEl = document.getElementById('confirmMessage');
-    const confirmBtn = document.getElementById('confirmActionBtn');
-    const cancelBtn = document.getElementById('cancelConfirmBtn');
+function showConfirmationModal(message, confirmText = 'Confirmar', cancelText = 'Cancelar') {
+    return new Promise((resolve) => {
+        const modal = document.getElementById('confirmModal');
+        const messageEl = document.getElementById('confirmMessage');
+        const confirmBtn = document.getElementById('confirmActionBtn');
+        const cancelBtn = document.getElementById('cancelConfirmBtn');
 
-    if (!modal || !messageEl || !confirmBtn || !cancelBtn) {
-        console.error('Confirmation modal elements not found!');
-        return;
-    }
-
-    messageEl.textContent = message;
-    confirmBtn.textContent = confirmText;
-    cancelBtn.textContent = cancelText;
-
-    modal.classList.remove('hidden');
-    modal.classList.add('flex');
-
-    // Clone and replace buttons to remove old event listeners
-    const newConfirmBtn = confirmBtn.cloneNode(true);
-    confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
-    
-    const newCancelBtn = cancelBtn.cloneNode(true);
-    cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
-
-    const cleanup = () => {
-        modal.classList.add('hidden');
-        modal.classList.remove('flex');
-        // No need to remove listeners from cloned nodes if they are replaced
-    };
-
-    const onConfirm = () => {
-        cleanup();
-        if (typeof onConfirmCallback === 'function') {
-            onConfirmCallback();
+        if (!modal || !messageEl || !confirmBtn || !cancelBtn) {
+            console.error('Confirmation modal elements not found!');
+            resolve(false); // Resolve with false if modal is broken
+            return;
         }
-    };
 
-    const onCancel = () => {
-        cleanup();
-    };
-    
-    const onBackdropClick = (event) => {
-        if (event.target === modal) {
-            onCancel();
-        }
-    };
+        messageEl.textContent = message;
+        confirmBtn.textContent = confirmText;
+        cancelBtn.textContent = cancelText;
 
-    newConfirmBtn.addEventListener('click', onConfirm);
-    newCancelBtn.addEventListener('click', onCancel);
-    modal.addEventListener('click', onBackdropClick);
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+
+        // Clone and replace buttons to remove old event listeners
+        const newConfirmBtn = confirmBtn.cloneNode(true);
+        confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+        
+        const newCancelBtn = cancelBtn.cloneNode(true);
+        cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
+
+        const cleanup = () => {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            // Remove the specific listeners we added
+            newConfirmBtn.removeEventListener('click', onConfirm);
+            newCancelBtn.removeEventListener('click', onCancel);
+            modal.removeEventListener('click', onBackdropClick);
+            document.removeEventListener('keydown', onKeydown);
+        };
+
+        const onConfirm = () => {
+            cleanup();
+            resolve(true);
+        };
+
+        const onCancel = () => {
+            cleanup();
+            resolve(false);
+        };
+        
+        const onBackdropClick = (event) => {
+            if (event.target === modal) {
+                onCancel();
+            }
+        };
+
+        const onKeydown = (event) => {
+            if (event.key === 'Escape') {
+                onCancel();
+            }
+        };
+
+        newConfirmBtn.addEventListener('click', onConfirm);
+        newCancelBtn.addEventListener('click', onCancel);
+        modal.addEventListener('click', onBackdropClick);
+        document.addEventListener('keydown', onKeydown);
+    });
 }
 
 function updateUserProfilePicture() {
