@@ -350,8 +350,13 @@ function createProspectCard(prospect, isMobile = false) {
             if (prospectToConvert) {
                 showConfirmationModal(
                     `Deseja converter "${prospectToConvert.empresa}" em cliente e mover o card para Proposta?`,
-                    () => convertToClosedClientAndMove(prospectToConvert)
-                );
+                    'Converter',
+                    'Cancelar'
+                ).then(confirmed => {
+                    if (confirmed) {
+                        convertToClosedClientAndMove(prospectToConvert);
+                    }
+                });
             }
             return; // Stop further execution
         }
