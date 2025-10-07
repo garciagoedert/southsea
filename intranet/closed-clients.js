@@ -596,27 +596,28 @@ function setupPageSpecificListeners() {
 
 async function handleDeleteRequest(clientId, clientName) {
     const confirmDelete = async () => {
-        const confirmationName = prompt(`Para confirmar a exclusão, por favor, digite o nome da empresa: "${clientName}"`);
-
-        if (confirmationName === clientName) {
-            try {
-                const clientDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'prospects', clientId);
-                await deleteDoc(clientDocRef);
-                showNotification('Cliente excluído com sucesso!', 'success');
-            } catch (error) {
-                console.error("Erro ao excluir cliente:", error);
-                showNotification('Falha ao excluir o cliente. Verifique o console para mais detalhes.', 'error');
-            }
-        } else if (confirmationName !== null && confirmationName !== "") {
-            showNotification('O nome da empresa não corresponde. A exclusão foi cancelada.', 'warning');
-        } else {
-            showNotification('Exclusão cancelada.', 'info');
+        try {
+            const clientDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'prospects', clientId);
+            await deleteDoc(clientDocRef);
+            showNotification('Cliente excluído com sucesso!', 'success');
+        } catch (error)            {
+            console.error("Erro ao excluir cliente:", error);
+            showNotification('Falha ao excluir o cliente. Verifique o console para mais detalhes.', 'error');
         }
     };
 
     showConfirmationModal(
-        'Você tem certeza que deseja excluir este cliente? Esta ação é irreversível.',
-        confirmDelete,
+        `Você tem certeza que deseja excluir o cliente <strong>${clientName}</strong>? Esta ação é irreversível.`,
+        () => {
+            const confirmationName = prompt(`Para confirmar a exclusão, por favor, digite o nome da empresa: "${clientName}"`);
+            if (confirmationName === clientName) {
+                confirmDelete();
+            } else if (confirmationName !== null && confirmationName !== "") {
+                showNotification('O nome da empresa não corresponde. A exclusão foi cancelada.', 'warning');
+            } else {
+                showNotification('Exclusão cancelada.', 'info');
+            }
+        },
         'Excluir',
         'Cancelar'
     );
