@@ -1,7 +1,7 @@
 import { db, app } from './firebase-config.js';
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import { collection, query, where, onSnapshot, addDoc, serverTimestamp, orderBy, doc, getDoc, setDoc, getDocs, Timestamp, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-import { loadComponents, setupUIListeners } from './common-ui.js';
+import { loadComponents, setupUIListeners, listenForChatNotifications } from './common-ui.js';
 
 const auth = getAuth(app);
 
@@ -693,9 +693,8 @@ function startViewingAs(user) {
     // Desabilita o input
     enableChatInput();
 
-    // Carrega as conversas do usuário selecionado
-    // Esta chamada agora apenas ativa o listener, que fará o trabalho
-    // populateConversationsList(user);
+    // Carrega as conversas do usuário selecionado, reiniciando o listener
+    listenForChatNotifications(user);
 
     // Fecha o modal
     viewAsModal.classList.add('hidden');
@@ -718,9 +717,11 @@ function exitViewingAs() {
     chatMessages.innerHTML = '';
     chatTitle.textContent = 'Selecione uma conversa';
 
-    // Recarrega o chat com o usuário original (admin)
+    // Recarrega o chat com o usuário original (admin), reiniciando o listener
     const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
-    // A UI será atualizada automaticamente pelo evento 'chat-data-updated'
+    if (currentUser) {
+        listenForChatNotifications(currentUser);
+    }
     
     // Habilita o input
     enableChatInput();
@@ -747,7 +748,7 @@ emojiButton.addEventListener('click', (event) => {
     emojiPickerContainer.style.display = isHidden ? 'block' : 'none';
 });
 
-document.querySelector('emoji-picker').addEventListener('emoji-click', event => {
+emojiPickerContainer.querySelector('emoji-picker').addEventListener('emoji-click', event => {
     messageInput.value += event.detail.unicode;
     messageInput.focus();
 });

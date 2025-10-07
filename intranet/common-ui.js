@@ -191,17 +191,30 @@ function updateNotificationIndicator(element, count) {
 }
 
 
-// Listener global para notificações de novas mensagens
-function listenForChatNotifications() {
-    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
-    if (!currentUser || !currentUser.id) return;
+// Variável para manter a função de anulação da inscrição do listener do Firestore
+let unsubscribeFromChatNotifications = null;
+
+// Listener global para notificações de novas mensagens, agora pode ser reiniciado para um usuário específico
+function listenForChatNotifications(user = null) {
+    // Se já houver um listener ativo, desative-o antes de criar um novo
+    if (unsubscribeFromChatNotifications) {
+        unsubscribeFromChatNotifications();
+        unsubscribeFromChatNotifications = null; // Limpa a referência
+    }
+
+    const currentUser = user || JSON.parse(sessionStorage.getItem('currentUser'));
+    if (!currentUser || !currentUser.id) {
+        console.log("Nenhum usuário fornecido ou na sessão para o listener de chat.");
+        return;
+    }
 
     const chatsCollection = collection(db, 'chats');
     const q = query(chatsCollection, where('members', 'array-contains', currentUser.id));
     
     let isInitialLoad = true;
 
-    onSnapshot(q, (snapshot) => {
+    // Armazena a função de anulação da inscrição retornada pelo onSnapshot
+    unsubscribeFromChatNotifications = onSnapshot(q, (snapshot) => {
         let totalUnreadCount = 0;
         const safeCurrentUserKey = currentUser.id.replace(/\./g, '_');
         const groups = [];
@@ -1015,4 +1028,4 @@ async function showInputModal(options) {
 }
 
 
-export { setupUIListeners, loadComponents, showConfirmationModal, showNotification, startFloatingStopwatch, stopFloatingStopwatch, checkAdminRole, applyTheme, showInputModal };
+export { setupUIListeners, loadComponents, showConfirmationModal, showNotification, startFloatingStopwatch, stopFloatingStopwatch, checkAdminRole, applyTheme, showInputModal, listenForChatNotifications };
