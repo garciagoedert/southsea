@@ -539,7 +539,8 @@ async function editForm(formId) {
 }
 
 async function deleteForm(formId, formName) {
-    if (await showConfirmationModal(`Tem certeza que deseja excluir o formulário "${formName}"?`, 'Excluir')) {
+    const confirmed = await showConfirmationModal(`Tem certeza que deseja excluir o formulário "${formName}"?`, 'Excluir');
+    if (confirmed) {
         try {
             const formRef = doc(db, 'artifacts', appId, 'public', 'data', 'forms', formId);
             await deleteDoc(formRef);
