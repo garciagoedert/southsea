@@ -73,6 +73,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         return tel.length >= 10; // Basic validation for (XX) XXXX-XXXX or (XX) XXXXX-XXXX
     };
 
+    const validateRG = (rg) => {
+        // Basic validation: checks for at least 7 digits and some text after.
+        const numbers = (rg.match(/\d/g) || []).join('');
+        const textPart = rg.replace(/[\d.-]/g, '').trim();
+        return numbers.length >= 7 && textPart.length > 1;
+    };
+
     const validateEmail = (email) => {
         const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return re.test(String(email).toLowerCase());
@@ -98,6 +105,24 @@ document.addEventListener('DOMContentLoaded', async () => {
         value = value.replace(/^(\d{2})(\d)/g, "($1) $2");
         value = value.replace(/(\d)(\d{4})$/, "$1-$2");
         return value;
+    };
+
+    const maskRG = (value) => {
+        let numericPart = value.replace(/\D/g, '');
+        if (numericPart.length > 9) {
+            numericPart = numericPart.slice(0, 9);
+        }
+
+        let masked = numericPart.replace(/(\d{2})(\d)/, '$1.$2');
+        masked = masked.replace(/(\d{3})(\d)/, '$1.$2');
+        masked = masked.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+        
+        // Allow typing the text part after the numbers
+        let textPart = value.replace(/[\d.-]/g, '').toUpperCase();
+        if (textPart) {
+            return `${masked} ${textPart}`;
+        }
+        return masked;
     };
 
     const maskCEP = (value) => {
@@ -144,6 +169,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             input.addEventListener('change', applyMask);
             input.addEventListener('blur', applyMask);
         });
+        document.querySelectorAll('input[data-mask="rg"]').forEach(input => {
+            const applyMask = (e) => e.target.value = maskRG(e.target.value);
+            input.addEventListener('input', applyMask);
+        });
         document.querySelectorAll('input[data-mask="cep"]').forEach(input => {
             input.addEventListener('input', (e) => e.target.value = maskCEP(e.target.value));
             input.addEventListener('blur', (e) => fetchAddressFromCEP(e.target.value, e.target.dataset.fieldName));
@@ -164,6 +193,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 } else if (mask === 'tel' && !validateTel(input.value)) {
                     fieldIsValid = false;
                 } else if (mask === 'cpf_cnpj' && !(validateCPF(input.value) || validateCNPJ(input.value))) {
+                    fieldIsValid = false;
+                } else if (mask === 'rg' && !validateRG(input.value)) {
                     fieldIsValid = false;
                 }
             }
@@ -246,6 +277,18 @@ document.addEventListener('DOMContentLoaded', async () => {
                         break;
                     case 'cpf_cnpj':
                         sectionHtml += `<input type="text" name="${fieldName}" class="${commonInputClass}" data-mask="cpf_cnpj" maxlength="18" required>`;
+                        break;
+                    case 'rg':
+                        sectionHtml += `<input type="text" name="${fieldName}" class="${commonInputClass}" data-mask="rg" placeholder="12.345.678-9 SSP/SC" required>`;
+                        break;
+                    case 'select':
+                        sectionHtml += `<select name="${fieldName}" class="${commonInputClass}" required>`;
+                        sectionHtml += `<option value="">Selecione uma opção</option>`;
+                        (field.options || []).forEach(opt => {
+                            const optionValue = opt.value || opt.display;
+                            sectionHtml += `<option value="${optionValue}">${opt.display}</option>`;
+                        });
+                        sectionHtml += `</select>`;
                         break;
                     case 'radio':
                         sectionHtml += '<div class="mt-2 space-y-2">';

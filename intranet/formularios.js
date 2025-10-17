@@ -195,10 +195,12 @@ const renderBuilderField = (field, sectionId) => {
                         <option value="cpf_cnpj" ${field.inputType === 'cpf_cnpj' ? 'selected' : ''}>CPF/CNPJ</option>
                         <option value="radio" ${field.inputType === 'radio' ? 'selected' : ''}>Múltipla Escolha</option>
                         <option value="checkbox" ${field.inputType === 'checkbox' ? 'selected' : ''}>Seleção</option>
+                        <option value="rg" ${field.inputType === 'rg' ? 'selected' : ''}>RG</option>
+                        <option value="select" ${field.inputType === 'select' ? 'selected' : ''}>Caixa de Seleção</option>
                     </select>
                     <input type="text" value="${field.tag}" class="${commonClasses} field-tag-input" placeholder="Tag Contrato (ex: ##nome##)">
                 </div>
-                <div class="options-container mt-2 pl-2 border-l-2" style="display: ${['radio', 'checkbox'].includes(field.inputType) ? 'block' : 'none'}">
+                <div class="options-container mt-2 pl-2 border-l-2" style="display: ${['radio', 'checkbox', 'select'].includes(field.inputType) ? 'block' : 'none'}">
                     ${(field.options || []).map((opt, index) => `
                         <div class="flex items-center mb-2 option-item p-2 border rounded">
                             <div class="flex-grow">
@@ -292,6 +294,17 @@ const renderPreview = () => {
                         });
                         content += '</div>';
                         break;
+                    case 'select':
+                        content += `<select class="${commonInputClass}" disabled>`;
+                        content += `<option>Selecione uma opção</option>`;
+                        (field.options || []).forEach(opt => {
+                            content += `<option>${opt.display}</option>`;
+                        });
+                        content += `</select>`;
+                        break;
+                    case 'rg':
+                        content += `<input type="text" class="${commonInputClass}" placeholder="ex: 12.345.678-9 SSP/SC" disabled>`;
+                        break;
                     default:
                         content += `<input type="${field.inputType || 'text'}" class="${commonInputClass}" disabled>`;
                 }
@@ -380,10 +393,10 @@ const setupEventListeners = () => {
         if (target.matches('.field-explanation-text')) field.explanationText = target.value;
         if (target.matches('.field-type-select')) {
             field.inputType = target.value;
-            if (!['radio', 'checkbox'].includes(target.value)) {
+            if (!['radio', 'checkbox', 'select'].includes(target.value)) {
                 delete field.options;
             } else {
-                if (!field.options) field.options = ['Nova Opção'];
+                if (!field.options) field.options = [];
             }
             renderBuilder();
         }
