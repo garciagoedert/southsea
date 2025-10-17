@@ -250,10 +250,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                     case 'radio':
                         sectionHtml += '<div class="mt-2 space-y-2">';
                         (field.options || []).forEach((opt, index) => {
+                            const optionValue = opt.value || opt.display;
                             sectionHtml += `
                                 <div class="flex items-center">
-                                    <input type="radio" id="${fieldName}-${index}" name="${fieldName}" value="${opt}" class="h-4 w-4 text-indigo-600 border-gray-300" required>
-                                    <label for="${fieldName}-${index}" class="ml-3 block text-sm font-medium text-gray-700">${opt}</label>
+                                    <input type="radio" id="${fieldName}-${index}" name="${fieldName}" value="${optionValue}" class="h-4 w-4 text-indigo-600 border-gray-300" required>
+                                    <label for="${fieldName}-${index}" class="ml-3 block text-sm font-medium text-gray-700">${opt.display}</label>
                                 </div>`;
                         });
                         sectionHtml += '</div>';
@@ -261,10 +262,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                     case 'checkbox':
                         sectionHtml += '<div class="mt-2 space-y-2">';
                         (field.options || []).forEach((opt, index) => {
+                            const optionValue = opt.value || opt.display;
                             sectionHtml += `
                                 <div class="flex items-center">
-                                    <input type="checkbox" id="${fieldName}-${index}" name="${fieldName}[]" value="${opt}" class="h-4 w-4 text-indigo-600 border-gray-300 rounded">
-                                    <label for="${fieldName}-${index}" class="ml-3 block text-sm font-medium text-gray-700">${opt}</label>
+                                    <input type="checkbox" id="${fieldName}-${index}" name="${fieldName}[]" value="${optionValue}" class="h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                    <label for="${fieldName}-${index}" class="ml-3 block text-sm font-medium text-gray-700">${opt.display}</label>
                                 </div>`;
                         });
                         sectionHtml += '</div>';

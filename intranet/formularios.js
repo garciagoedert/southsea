@@ -120,7 +120,7 @@ const addOption = (sectionId, fieldId) => {
     const field = formState.sections.find(s => s.id === sectionId)?.fields.find(f => f.id === fieldId);
     if (field) {
         if (!field.options) field.options = [];
-        field.options.push('Nova Opção');
+        field.options.push({ display: 'Nova Opção', value: '' });
         renderBuilder();
     }
 };
@@ -200,8 +200,11 @@ const renderBuilderField = (field, sectionId) => {
                 </div>
                 <div class="options-container mt-2 pl-2 border-l-2" style="display: ${['radio', 'checkbox'].includes(field.inputType) ? 'block' : 'none'}">
                     ${(field.options || []).map((opt, index) => `
-                        <div class="flex items-center mb-1 option-item">
-                            <input type="text" value="${opt}" class="${commonClasses} option-input" data-index="${index}" placeholder="Texto da Opção">
+                        <div class="flex items-center mb-2 option-item p-2 border rounded">
+                            <div class="flex-grow">
+                                <input type="text" value="${opt.display}" class="${commonClasses} option-input" data-index="${index}" placeholder="Texto de Exibição">
+                                <input type="text" value="${opt.value || ''}" class="${commonClasses} option-value-input mt-1" data-index="${index}" placeholder="Valor para Contrato (opcional)">
+                            </div>
                             <button class="text-red-500 hover:text-red-700 ml-2 remove-option-btn" data-index="${index}"><i class="fas fa-times"></i></button>
                         </div>
                     `).join('')}
@@ -278,14 +281,14 @@ const renderPreview = () => {
                     case 'radio':
                         content += '<div class="mt-2 space-y-2">';
                         (field.options || []).forEach((opt, index) => {
-                            content += `<div class="flex items-center"><input type="radio" id="preview-${field.id}-${index}" name="preview-${field.id}" class="h-4 w-4 text-indigo-600 border-gray-300" disabled><label for="preview-${field.id}-${index}" class="ml-3 block text-sm font-medium text-gray-700">${opt}</label></div>`;
+                            content += `<div class="flex items-center"><input type="radio" id="preview-${field.id}-${index}" name="preview-${field.id}" class="h-4 w-4 text-indigo-600 border-gray-300" disabled><label for="preview-${field.id}-${index}" class="ml-3 block text-sm font-medium text-gray-700">${opt.display}</label></div>`;
                         });
                         content += '</div>';
                         break;
                     case 'checkbox':
                         content += '<div class="mt-2 space-y-2">';
                         (field.options || []).forEach((opt, index) => {
-                            content += `<div class="flex items-center"><input type="checkbox" id="preview-${field.id}-${index}" name="preview-${field.id}" class="h-4 w-4 text-indigo-600 border-gray-300 rounded" disabled><label for="preview-${field.id}-${index}" class="ml-3 block text-sm font-medium text-gray-700">${opt}</label></div>`;
+                            content += `<div class="flex items-center"><input type="checkbox" id="preview-${field.id}-${index}" name="preview-${field.id}" class="h-4 w-4 text-indigo-600 border-gray-300 rounded" disabled><label for="preview-${field.id}-${index}" class="ml-3 block text-sm font-medium text-gray-700">${opt.display}</label></div>`;
                         });
                         content += '</div>';
                         break;
@@ -387,7 +390,11 @@ const setupEventListeners = () => {
         if (target.matches('.field-tag-input')) field.tag = target.value;
         if (target.matches('.option-input')) {
             const index = parseInt(target.dataset.index);
-            field.options[index] = target.value;
+            field.options[index].display = target.value;
+        }
+        if (target.matches('.option-value-input')) {
+            const index = parseInt(target.dataset.index);
+            field.options[index].value = target.value;
         }
 
         clearTimeout(window.renderTimeout);

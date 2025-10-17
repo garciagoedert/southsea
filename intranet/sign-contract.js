@@ -111,6 +111,32 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const value = formData[baseName] || '';
                 const regex = new RegExp(escapeRegex(cleanTag), 'g');
                 populatedContract = populatedContract.replace(regex, value);
+
+                // NEW: Handle conditional blocks for radio/checkbox options
+                if (field.options && field.options.length > 0) {
+                    field.options.forEach(option => {
+                        // The text for the conditional block in the contract (e.g., ##tag:OptionText##) uses the display text.
+                        const optionTextForTag = option.display;
+                        const startTag = `##${baseName}:${optionTextForTag}##`;
+                        const endTag = `##/${baseName}:${optionTextForTag}##`;
+                        const conditionalRegex = new RegExp(`${escapeRegex(startTag)}([\\s\\S]*?)${escapeRegex(endTag)}`, 'g');
+
+                        const userAnswer = String(formData[baseName] || '');
+                        // The user's answer from the form will be the `value` if it exists, otherwise the `display` text.
+                        const userAnswers = userAnswer.split(',').map(ans => ans.trim().toLowerCase());
+                        
+                        // The value to check against the user's answer is the option's `value` or `display` text.
+                        const optionValueForComparison = (option.value || option.display).trim().toLowerCase();
+
+                        if (userAnswers.includes(optionValueForComparison)) {
+                            // If the option's value is in the list of user's answers, keep the content.
+                            populatedContract = populatedContract.replace(conditionalRegex, '$1');
+                        } else {
+                            // Otherwise, remove the entire block.
+                            populatedContract = populatedContract.replace(conditionalRegex, '');
+                        }
+                    });
+                }
             } else if (field.type === 'address') {
                 const addressParts = ['cep', 'rua', 'numero', 'complemento', 'bairro', 'cidade', 'estado'];
                 addressParts.forEach(part => {
