@@ -74,10 +74,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     const validateRG = (rg) => {
-        // Basic validation: checks for at least 7 digits and some text after.
+        // Improved validation: checks for 7-9 digits and at least 2 characters for the issuer.
         const numbers = (rg.match(/\d/g) || []).join('');
-        const textPart = rg.replace(/[\d.-]/g, '').trim();
-        return numbers.length >= 7 && textPart.length > 1;
+        const textPart = rg.replace(/[\d.\- ]/g, '').trim(); // Also remove spaces from text part check
+        return numbers.length >= 7 && numbers.length <= 9 && textPart.length >= 2;
     };
 
     const validateEmail = (email) => {
@@ -108,21 +108,27 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     const maskRG = (value) => {
-        let numericPart = value.replace(/\D/g, '');
+        // Separate numbers and text. The text part is anything that is not a digit.
+        const fullTextPart = value.replace(/[\d.-]/g, '').trim();
+        let numericPart = value.replace(/[^\d]/g, '');
+        
+        // Limit to 9 digits for the numeric part
         if (numericPart.length > 9) {
-            numericPart = numericPart.slice(0, 9);
+            numericPart = numericPart.substring(0, 9);
         }
 
-        let masked = numericPart.replace(/(\d{2})(\d)/, '$1.$2');
-        masked = masked.replace(/(\d{3})(\d)/, '$1.$2');
-        masked = masked.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-        
-        // Allow typing the text part after the numbers
-        let textPart = value.replace(/[\d.-]/g, '').toUpperCase();
-        if (textPart) {
-            return `${masked} ${textPart}`;
+        // Apply mask to the numeric part
+        let maskedNumeric = numericPart
+            .replace(/(\d{2})(\d)/, '$1.$2')
+            .replace(/(\d{3})(\d)/, '$1.$2')
+            .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+
+        // Combine masked numeric part with the text part
+        if (fullTextPart) {
+            return `${maskedNumeric} ${fullTextPart.toUpperCase()}`;
         }
-        return masked;
+        
+        return maskedNumeric;
     };
 
     const maskCEP = (value) => {
