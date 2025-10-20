@@ -437,22 +437,36 @@ window.viewSignedContract = async (instanceId) => {
 
         // Popula o contrato com as respostas
         let populatedContract = formTemplate.contractTemplate || '<p>Template de contrato não definido.</p>';
-        const allTags = formTemplate.sections
-            .flatMap(s => s.fields)
-            .filter(f => f.type === 'question' && f.tag)
-            .map(f => f.tag.trim());
+        
+        const escapeRegex = (string) => {
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        };
 
-        allTags.forEach(tag => {
-            const key = tag.replace(/##/g, '').replace(/[()]/g, '');
-            if (formData[key]) {
-                const regex = new RegExp(tag.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
-                populatedContract = populatedContract.replace(regex, formData[key]);
+        formTemplate.sections.flatMap(s => s.fields).forEach(field => {
+            if (!field.tag) return;
+
+            const cleanTag = field.tag.trim();
+            const baseName = cleanTag.replace(/##/g, '');
+
+            if (field.type === 'question') {
+                const value = formData[baseName] || '';
+                const regex = new RegExp(escapeRegex(cleanTag), 'g');
+                populatedContract = populatedContract.replace(regex, value);
+            } else if (field.type === 'address') {
+                const addressParts = ['cep', 'rua', 'numero', 'complemento', 'bairro', 'cidade', 'estado'];
+                addressParts.forEach(part => {
+                    const partKey = `${baseName}-${part}`;
+                    const partTag = `##${partKey}##`;
+                    const value = formData[partKey] || '';
+                    const regex = new RegExp(escapeRegex(partTag), 'g');
+                    populatedContract = populatedContract.replace(regex, value);
+                });
             }
         });
 
         // Adiciona o bloco de assinaturas
         const signatureDate = signatureData.signedDate?.toDate().toLocaleDateString('pt-BR') || 'Data não registrada';
-        const signaturesContainer = `
+        const signaturesContainerHtml = `
             <div style="margin-top: 80px; padding-top: 40px; font-family: 'Inter', sans-serif;">
                 <div style="display: flex; justify-content: space-around; align-items: flex-start;">
                     <div style="width: 45%; text-align: center;">
@@ -473,25 +487,89 @@ window.viewSignedContract = async (instanceId) => {
             </div>
         `;
 
-        modalContent.innerHTML = populatedContract + signaturesContainer;
+        modalContent.innerHTML = populatedContract + signaturesContainerHtml;
 
         // Funcionalidade do botão de download
         downloadBtn.onclick = async () => {
             downloadBtn.disabled = true;
             downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Gerando...';
             const { jsPDF } = window.jspdf;
+
+            const pdfContainer = document.createElement('div');
+            pdfContainer.style.position = 'absolute';
+            pdfContainer.style.left = '-9999px';
+            pdfContainer.style.width = '800px';
+            pdfContainer.style.background = 'white';
+            pdfContainer.style.padding = '40px';
+            pdfContainer.style.fontFamily = 'Inter, sans-serif';
+            pdfContainer.style.color = 'black';
+
+            const headerImg = new Image();
+            headerImg.src = '../newimag/Sss.png'; // Caminho relativo à raiz do site
+
+            const contentToPrint = document.createElement('div');
+            contentToPrint.innerHTML = populatedContract + signaturesContainerHtml;
+            
+            const headerContainer = document.createElement('div');
+            headerContainer.style.textAlign = 'center';
+            headerContainer.style.marginBottom = '40px';
+            
+            headerImg.style.width = '180px';
+            headerImg.style.height = 'auto';
+            
+            headerContainer.appendChild(headerImg);
+            
+            pdfContainer.appendChild(headerContainer);
+            pdfContainer.appendChild(contentToPrint);
+            document.body.appendChild(pdfContainer);
+
             try {
-                const canvas = await html2canvas(modalContent, { scale: 2, useCORS: true });
+                const canvas = await html2canvas(pdfContainer, {
+                    scale: 2,
+                    useCORS: true,
+                    scrollY: -window.scrollY,
+                    windowWidth: pdfContainer.scrollWidth,
+                    windowHeight: pdfContainer.scrollHeight
+                });
                 const imgData = canvas.toDataURL('image/png');
-                const pdf = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
-                const pdfWidth = pdf.internal.pageSize.getWidth();
-                const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-                pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-                pdf.save(`contrato_${formTemplate.name.replace(/\s+/g, '_')}.pdf`);
-            } catch (err) {
-                console.error("Erro ao gerar PDF:", err);
-                showNotification("Não foi possível gerar o PDF. Tente novamente.", 'error');
+                const pdf = new jsPDF({
+                    orientation: 'p',
+                    unit: 'px',
+                    format: [canvas.width, canvas.height]
+                });
+                pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+
+                const watermarkImg = new Image();
+                watermarkImg.src = '../newimag/capalogo SS.png'; // Caminho relativo
+                
+                const addWatermarkAndSave = () => {
+                    const imgWidth = 500;
+                    const imgHeight = 500;
+                    const pageWidth = pdf.internal.pageSize.getWidth();
+                    const pageHeight = pdf.internal.pageSize.getHeight();
+                    const x = (pageWidth - imgWidth) / 2;
+                    const y = (pageHeight - imgHeight) / 2;
+                    pdf.setGState(new pdf.GState({opacity: 0.1}));
+                    pdf.addImage(watermarkImg, 'PNG', x, y, imgWidth, imgHeight);
+                    pdf.setGState(new pdf.GState({opacity: 1}));
+                    pdf.save(`contrato_${formTemplate.name.replace(/\s+/g, '_')}_assinado.pdf`);
+                };
+
+                if (watermarkImg.complete) {
+                    addWatermarkAndSave();
+                } else {
+                    watermarkImg.onload = addWatermarkAndSave;
+                    watermarkImg.onerror = () => {
+                        console.warn("Marca d'água não pôde ser carregada. Salvando PDF sem ela.");
+                        pdf.save(`contrato_${formTemplate.name.replace(/\s+/g, '_')}_assinado.pdf`);
+                    };
+                }
+
+            } catch (error) {
+                console.error("Erro ao gerar PDF:", error);
+                showNotification("Ocorreu um erro ao gerar o PDF. Tente novamente.", 'error');
             } finally {
+                document.body.removeChild(pdfContainer);
                 downloadBtn.disabled = false;
                 downloadBtn.innerHTML = '<i class="fas fa-download mr-2"></i>Baixar PDF';
             }
