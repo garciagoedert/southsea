@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <p class="font-tangerine" style="font-size: 2rem; margin-bottom: 0.5rem;">Alefy Mikael dos Santos</p>
                     <hr style="border-top: 1px solid black; margin: 0 auto; width: 80%;">
                     <p style="margin-top: 0.5rem;">Alefy Mikael dos Santos</p>
-                    <p style="font-size: 0.875rem;">52.783.717/0001-50</p>
+                    <p style="font-size: 0.875rem;">63.234.221/0001-44</p>
                     <p style="font-size: 0.875rem;">Assinado em: ${signatureDateString}</p>
                 </div>
             </div>

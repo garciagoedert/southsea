@@ -480,7 +480,7 @@ window.viewSignedContract = async (instanceId) => {
                         <p style="font-family: 'Tangerine', cursive; font-size: 2rem; margin-bottom: 0.5rem; color: black;">Alefy Mikael dos Santos</p>
                         <hr style="border-top: 1px solid black; margin: 0 auto; width: 80%;">
                         <p style="margin-top: 0.5rem; color: black;">Alefy Mikael dos Santos</p>
-                        <p style="font-size: 0.875rem; color: black;">52.783.717/0001-50</p>
+                        <p style="font-size: 0.875rem; color: black;">63.234.221/0001-44</p>
                         <p style="font-size: 0.875rem; color: black;">Assinado em: ${signatureDate}</p>
                     </div>
                 </div>
