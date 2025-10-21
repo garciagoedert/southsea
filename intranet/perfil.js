@@ -720,14 +720,71 @@ function addLinkInput(name = '', url = '') {
     div.querySelector('.remove-link-btn').addEventListener('click', () => div.remove());
 }
 
+const normalizeText = (text) => {
+    if (!text) return '';
+    return text.toString().normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+};
+
 function setupClientEventListeners() {
     const associateFormBtn = document.getElementById('associate-form-btn');
     const associateFormModal = document.getElementById('associateFormModal');
     const closeAssociateModalBtn = document.getElementById('closeAssociateModalBtn');
     const generateBtn = document.getElementById('generate-form-instance-btn');
-    const formSelection = document.getElementById('form-selection');
+    const formSelection = document.getElementById('form-selection'); // Hidden select
     const paymentLinkInput = document.getElementById('payment-link-input');
     const noPaymentLinkCheckbox = document.getElementById('no-payment-link-checkbox');
+    const formSearchInput = document.getElementById('form-search-input');
+    const formSearchResults = document.getElementById('form-search-results');
+    
+    let allForms = []; // Cache for form search
+
+    const renderSearchResults = (forms) => {
+        formSearchResults.innerHTML = '';
+        if (forms.length === 0) {
+            formSearchResults.innerHTML = '<div class="p-2 text-gray-500 dark:text-gray-400">Nenhum formulário encontrado</div>';
+        } else {
+            forms.forEach(form => {
+                const resultDiv = document.createElement('div');
+                resultDiv.className = 'p-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-gray-800 dark:text-white';
+                resultDiv.textContent = form.name;
+                resultDiv.dataset.id = form.id;
+                resultDiv.dataset.name = form.name;
+                formSearchResults.appendChild(resultDiv);
+            });
+        }
+        formSearchResults.classList.remove('hidden');
+    };
+
+    formSearchInput.addEventListener('keyup', () => {
+        const searchTerm = normalizeText(formSearchInput.value);
+        const filteredForms = allForms.filter(form => normalizeText(form.name).includes(searchTerm));
+        renderSearchResults(filteredForms);
+    });
+
+    formSearchInput.addEventListener('focus', () => {
+        const searchTerm = normalizeText(formSearchInput.value);
+        const filteredForms = allForms.filter(form => normalizeText(form.name).includes(searchTerm));
+        renderSearchResults(filteredForms);
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!formSearchInput.contains(e.target) && !formSearchResults.contains(e.target)) {
+            formSearchResults.classList.add('hidden');
+        }
+    });
+
+    formSearchResults.addEventListener('click', (e) => {
+        const target = e.target.closest('div[data-id]');
+        if (target) {
+            const formId = target.dataset.id;
+            const formName = target.dataset.name;
+            
+            formSearchInput.value = formName;
+            formSelection.value = formId;
+            
+            formSearchResults.classList.add('hidden');
+        }
+    });
 
     noPaymentLinkCheckbox.addEventListener('change', () => {
         if (noPaymentLinkCheckbox.checked) {
@@ -745,30 +802,37 @@ function setupClientEventListeners() {
         paymentLinkInput.disabled = false;
         paymentLinkInput.required = true;
         noPaymentLinkCheckbox.checked = false;
-        formSelection.innerHTML = '<option>Carregando...</option>';
+        formSearchInput.value = '';
+        formSearchResults.classList.add('hidden');
+        formSelection.innerHTML = '<option value="">Selecione um modelo</option>';
         associateFormModal.classList.remove('hidden');
         
         try {
-            const formsRef = collection(db, 'artifacts', appId, 'public', 'data', 'forms');
-            const q = query(formsRef, orderBy('name'));
-            const formsSnapshot = await getDocs(q);
-
-            if (formsSnapshot.empty) {
-                formSelection.innerHTML = '<option value="">Nenhum formulário encontrado</option>';
-                return;
+            if (allForms.length === 0) { // Fetch only if not already cached
+                const formsRef = collection(db, 'artifacts', appId, 'public', 'data', 'forms');
+                const q = query(formsRef, orderBy('name'));
+                const formsSnapshot = await getDocs(q);
+                allForms = formsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             }
-            formSelection.innerHTML = '<option value="">Selecione um modelo</option>';
-            formsSnapshot.forEach(doc => {
-                const form = doc.data();
-                formSelection.innerHTML += `<option value="${doc.id}">${form.name}</option>`;
+            
+            // Populate the hidden select with all options
+            allForms.forEach(form => {
+                const option = document.createElement('option');
+                option.value = form.id;
+                option.textContent = form.name;
+                formSelection.appendChild(option);
             });
+
         } catch (error) {
             console.error("Erro ao carregar formulários:", error);
-            formSelection.innerHTML = '<option value="">Erro ao carregar</option>';
+            formSearchInput.placeholder = 'Erro ao carregar';
         }
     };
 
-    const closeAssociateModal = () => associateFormModal.classList.add('hidden');
+    const closeAssociateModal = () => {
+        formSearchResults.classList.add('hidden');
+        associateFormModal.classList.add('hidden');
+    };
 
     associateFormBtn.addEventListener('click', openAssociateModal);
     closeAssociateModalBtn.addEventListener('click', closeAssociateModal);
@@ -819,7 +883,7 @@ function setupClientEventListeners() {
             showNotification('Ocorreu um erro ao gerar o link. Tente novamente.', 'error');
         } finally {
             generateBtn.disabled = false;
-            generateBtn.textContent = 'Gerar Link';
+            generateBtn.textContent = 'Adicionar Formulário';
         }
     });
 

@@ -262,9 +262,13 @@
                 <h3 class="text-xl font-semibold text-gray-800 dark:text-white">Associar Formulário ao Cliente</h3>
                 <button id="closeAssociateModalBtn" class="text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white">&times;</button>
             </div>
-            <div>
-                <label for="form-selection" class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">Selecione um formulário:</label>
-                <select id="form-selection" class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 text-gray-800 dark:text-white">
+            <div class="relative">
+                <label for="form-search-input" class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">Pesquisar e selecionar formulário:</label>
+                <input type="text" id="form-search-input" placeholder="Digite para buscar..." class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-2 text-gray-800 dark:text-white" autocomplete="off">
+                <div id="form-search-results" class="absolute z-10 w-full bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded-b-lg mt-1 max-h-48 overflow-y-auto custom-scrollbar hidden">
+                    <!-- Search results will be populated here -->
+                </div>
+                <select id="form-selection" class="hidden">
                     <option>Carregando...</option>
                 </select>
             </div>
