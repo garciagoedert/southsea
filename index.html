@@ -200,22 +200,21 @@
             </div>
         </section>
         <!-- ABOUT US SECTION -->
-        <section id="about" class="bg-white text-black py-32 px-10 border-t border-gray-100">
-            <div class="max-w-7xl mx-auto flex flex-col md:flex-row gap-16 items-center">
-                <div class="w-full md:w-1/2 gsap-fade-up">
-                    <p class="text-sm font-bold uppercase tracking-widest text-gray-500 mb-4">
-                        <span x-text="translations[lang].about.tag"></span> — <span
-                            x-text="translations[lang].about.title"></span>
-                    </p>
-                    <div class="text-xl md:text-2xl text-gray-800 leading-relaxed font-medium space-y-6">
+        <section id="about" class="bg-grey-section overflow-hidden">
+            <div class="section-image-content reverse">
+                <div class="flex justify-center order-2 md:order-1 parallax-container w-full max-w-xl mx-auto">
+                    <img src="/newimag/mockup_about_us.png" loading="lazy" alt="South Sea Brand Identity"
+                        class="parallax-bg object-cover w-full">
+                </div>
+                <div class="order-1 md:order-2 gsap-fade-up">
+                    <span class="service-tag"
+                        x-text="translations[lang].about.tag + ' — ' + translations[lang].about.title"></span>
+                    <div class="section-accent"></div>
+                    <div class="text-lg text-gray-700 leading-relaxed space-y-5">
                         <p x-text="translations[lang].about.p1"></p>
                         <p x-text="translations[lang].about.p2"></p>
-                        <p x-text="translations[lang].about.p3"></p>
+                        <p class="font-semibold text-black" x-text="translations[lang].about.p3"></p>
                     </div>
-                </div>
-                <div class="w-full md:w-1/2 flex justify-center parallax-container">
-                    <img src="/newimag/mockup_about_us.png" loading="lazy" alt="South Sea Brand Identity"
-                        class="parallax-bg object-cover rounded-2xl w-full h-[500px] shadow-2xl">
                 </div>
             </div>
         </section>
@@ -234,14 +233,14 @@
         </section>
 
         <!-- PROJECTS GALLERY SECTION -->
-        <section id="projects" class="py-20 md:py-32 bg-gray-50 px-6 md:px-10">
+        <section id="projects" class="py-20 md:py-32 bg-white px-6 md:px-10 border-t border-gray-100">
             <div class="max-w-7xl mx-auto">
-                <div class="text-left gsap-fade-up mb-16">
-                    <p class="text-sm font-bold uppercase tracking-widest text-gray-500 mb-2">
-                        <span x-text="translations[lang].projects.tag"></span> — <span
-                            x-text="translations[lang].projects.title"></span>
-                    </p>
-                    <p class="text-xl text-gray-600 max-w-2xl" x-text="translations[lang].projects.text"></p>
+                <div class="gsap-fade-up mb-16">
+                    <span class="service-tag"
+                        x-text="translations[lang].projects.tag + ' — ' + translations[lang].projects.title"></span>
+                    <div class="section-accent"></div>
+                    <h2 class="text-heading" x-text="translations[lang].projects.title"></h2>
+                    <p class="text-xl text-gray-500 max-w-2xl -mt-4" x-text="translations[lang].projects.text"></p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -649,108 +648,139 @@
     </script>
 
     <!-- Gallery Modal -->
-    <div id="gallery-modal" class="fixed inset-0 bg-black/95 z-[200] overflow-y-auto hidden">
+    <div id="gallery-modal" class="fixed inset-0 bg-white z-[200] overflow-y-auto hidden">
         <!-- Sticky Header -->
-        <div class="sticky top-0 z-20 bg-black/80 backdrop-blur-md border-b border-gray-800">
+        <div class="sticky top-0 z-20 bg-white/90 backdrop-blur-md border-b border-gray-100">
             <div class="container mx-auto max-w-7xl px-6">
                 <div class="flex justify-between items-center py-5">
-                    <h2 class="text-2xl md:text-3xl font-black text-white tracking-tight"
-                        x-text="translations[lang].projects.title"></h2>
+                    <div>
+                        <span class="service-tag" x-text="translations[lang].projects.tag"></span>
+                        <h2 class="text-2xl md:text-3xl font-black text-black tracking-tight mt-1"
+                            x-text="translations[lang].projects.title"></h2>
+                    </div>
                     <button onclick="closeGalleryModal()"
-                        class="text-gray-400 text-4xl md:text-5xl font-light hover:text-white transition-colors leading-none">&times;</button>
+                        class="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 hover:bg-black hover:text-white hover:border-black transition-all text-xl leading-none">
+                        &times;
+                    </button>
                 </div>
             </div>
         </div>
 
         <!-- Scrollable Content -->
-        <div class="relative z-10">
-            <div class="container mx-auto max-w-7xl p-6 pt-8">
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <!-- Gallery Item 1 -->
-                    <a href="https://liferrary.vercel.app/" target="_blank" rel="noopener noreferrer"
-                        class="group block rounded-2xl overflow-hidden bg-gray-900 border border-gray-800 p-4 transition-colors hover:bg-gray-800">
-                        <div class="overflow-hidden rounded-xl mb-4"><img src="/newimag/lianaferray.png"
-                                alt="Consultora de aromaterapia"
-                                class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110">
+        <div class="container mx-auto max-w-7xl p-6 pt-8">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Gallery Item 1 -->
+                <a href="https://liferrary.vercel.app/" target="_blank" rel="noopener noreferrer"
+                    class="group block relative overflow-hidden rounded-2xl shadow-md">
+                    <img src="/newimag/lianaferray.png" alt="Liana Ferrary"
+                        class="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent flex items-end p-6">
+                        <div>
+                            <p class="text-white/70 text-xs font-bold tracking-widest uppercase mb-1">Institutional
+                                Website</p>
+                            <h3 class="text-xl font-black text-white">Liana Ferrary</h3>
                         </div>
-                        <h3 class="text-xl font-bold text-white mb-2">Liana Ferrary</h3>
-                        <p class="text-sm text-gray-400">Site institucional estratégico para especialista do setor de
-                            estética.</p>
-                    </a>
-                    <!-- Gallery Item 2 -->
-                    <a href="https://www.shapeschool.com.br/" target="_blank" rel="noopener noreferrer"
-                        class="group block rounded-2xl overflow-hidden bg-gray-900 border border-gray-800 p-4 transition-colors hover:bg-gray-800">
-                        <div class="overflow-hidden rounded-xl mb-4"><img src="/newimag/shapes 2.png"
-                                alt="E-commerce de Moda"
-                                class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110">
+                    </div>
+                </a>
+                <!-- Gallery Item 2 -->
+                <a href="https://www.shapeschool.com.br/" target="_blank" rel="noopener noreferrer"
+                    class="group block relative overflow-hidden rounded-2xl shadow-md">
+                    <img src="/newimag/shapes 2.png" alt="Shapes School"
+                        class="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent flex items-end p-6">
+                        <div>
+                            <p class="text-white/70 text-xs font-bold tracking-widest uppercase mb-1">Rebranding &
+                                Website</p>
+                            <h3 class="text-xl font-black text-white">Shapes School</h3>
                         </div>
-                        <h3 class="text-xl font-bold text-white mb-2">Shapes School</h3>
-                        <p class="text-sm text-gray-400">Portal digital para escola de inglês com foco no aprendizado
-                            infantil.</p>
-                    </a>
-                    <!-- Gallery Item 3 -->
-                    <a href="https://nataliafreirenutricionista.vercel.app" target="_blank" rel="noopener noreferrer"
-                        class="group block rounded-2xl overflow-hidden bg-gray-900 border border-gray-800 p-4 transition-colors hover:bg-gray-800">
-                        <div class="overflow-hidden rounded-xl mb-4"><img src="/newimag/Nat (1).png"
-                                alt="Nutricionista esportiva"
-                                class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110">
+                    </div>
+                </a>
+                <!-- Gallery Item 3 -->
+                <a href="https://nataliafreirenutricionista.vercel.app" target="_blank" rel="noopener noreferrer"
+                    class="group block relative overflow-hidden rounded-2xl shadow-md">
+                    <img src="/newimag/Nat (1).png" alt="Natália Freire"
+                        class="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent flex items-end p-6">
+                        <div>
+                            <p class="text-white/70 text-xs font-bold tracking-widest uppercase mb-1">Branding & Website
+                            </p>
+                            <h3 class="text-xl font-black text-white">Natália Freire</h3>
                         </div>
-                        <h3 class="text-xl font-bold text-white mb-2">Natália Freire</h3>
-                        <p class="text-sm text-gray-400">Site completo para nutricionista esportiva com foco em
-                            performance e saúde.</p>
-                    </a>
-                    <!-- Gallery Item 4 -->
-                    <a href="https://voxxx.vercel.app/" target="_blank" rel="noopener noreferrer"
-                        class="group block rounded-2xl overflow-hidden bg-gray-900 border border-gray-800 p-4 transition-colors hover:bg-gray-800">
-                        <div class="overflow-hidden rounded-xl mb-4"><img src="/newimag/voxxx.png"
-                                alt="Startup de Tecnologia"
-                                class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110">
+                    </div>
+                </a>
+                <!-- Gallery Item 4 -->
+                <a href="https://voxxx.vercel.app/" target="_blank" rel="noopener noreferrer"
+                    class="group block relative overflow-hidden rounded-2xl shadow-md">
+                    <img src="/newimag/voxxx.png" alt="Dj VOXXX"
+                        class="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent flex items-end p-6">
+                        <div>
+                            <p class="text-white/70 text-xs font-bold tracking-widest uppercase mb-1">Branding & Website
+                            </p>
+                            <h3 class="text-xl font-black text-white">Dj VOXXX</h3>
                         </div>
-                        <h3 class="text-xl font-bold text-white mb-2">Dj VOXXX</h3>
-                        <p class="text-sm text-gray-400">Plataforma imersiva para promover a música e conectar o artista
-                            com o público.</p>
-                    </a>
-                    <!-- Gallery Item 5 -->
-                    <a href="https://efyia.vercel.app/" target="_blank" rel="noopener noreferrer"
-                        class="group block rounded-2xl overflow-hidden bg-gray-900 border border-gray-800 p-4 transition-colors hover:bg-gray-800">
-                        <div class="overflow-hidden rounded-xl mb-4"><img src="/newimag/efyia.png" alt="Clínica Médica"
-                                class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110">
+                    </div>
+                </a>
+                <!-- Gallery Item 5 -->
+                <a href="https://efyia.vercel.app/" target="_blank" rel="noopener noreferrer"
+                    class="group block relative overflow-hidden rounded-2xl shadow-md">
+                    <img src="/newimag/efyia.png" alt="Efyía"
+                        class="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent flex items-end p-6">
+                        <div>
+                            <p class="text-white/70 text-xs font-bold tracking-widest uppercase mb-1">Corporate Website
+                            </p>
+                            <h3 class="text-xl font-black text-white">Efyía</h3>
                         </div>
-                        <h3 class="text-xl font-bold text-white mb-2">Efyía</h3>
-                        <p class="text-sm text-gray-400">Site corporativo para escritório de contabilidade e consultoria
-                            tributária.</p>
-                    </a>
-                    <!-- Gallery Item 6 -->
-                    <a href="https://gaia-sage.vercel.app/" target="_blank" rel="noopener noreferrer"
-                        class="group block rounded-2xl overflow-hidden bg-gray-900 border border-gray-800 p-4 transition-colors hover:bg-gray-800">
-                        <div class="overflow-hidden rounded-xl mb-4"><img src="/newimag/gaia.png"
-                                alt="Clínica Integrativa"
-                                class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110">
+                    </div>
+                </a>
+                <!-- Gallery Item 6 -->
+                <a href="https://gaia-sage.vercel.app/" target="_blank" rel="noopener noreferrer"
+                    class="group block relative overflow-hidden rounded-2xl shadow-md">
+                    <img src="/newimag/gaia.png" alt="Clínica Gaia"
+                        class="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent flex items-end p-6">
+                        <div>
+                            <p class="text-white/70 text-xs font-bold tracking-widest uppercase mb-1">Institutional
+                                Website</p>
+                            <h3 class="text-xl font-black text-white">Clínica Gaia</h3>
                         </div>
-                        <h3 class="text-xl font-bold text-white mb-2">Clínica Gaia</h3>
-                        <p class="text-sm text-gray-400">Site institucional para clínica integrativa médica.</p>
-                    </a>
-                    <!-- Gallery Item 7 -->
-                    <a href="https://www.formafitness.net.br/lagoa.html" target="_blank" rel="noopener noreferrer"
-                        class="group block rounded-2xl overflow-hidden bg-gray-900 border border-gray-800 p-4 transition-colors hover:bg-gray-800">
-                        <div class="overflow-hidden rounded-xl mb-4"><img src="/newimag/Forma.png" alt="Academia"
-                                class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110">
+                    </div>
+                </a>
+                <!-- Gallery Item 7 -->
+                <a href="https://www.formafitness.net.br/lagoa.html" target="_blank" rel="noopener noreferrer"
+                    class="group block relative overflow-hidden rounded-2xl shadow-md">
+                    <img src="/newimag/Forma.png" alt="Forma"
+                        class="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent flex items-end p-6">
+                        <div>
+                            <p class="text-white/70 text-xs font-bold tracking-widest uppercase mb-1">Website &
+                                Marketing</p>
+                            <h3 class="text-xl font-black text-white">Forma</h3>
                         </div>
-                        <h3 class="text-xl font-bold text-white mb-2">Forma</h3>
-                        <p class="text-sm text-gray-400">Site de alta performance para captação de novos membros e
-                            divulgação de planos.</p>
-                    </a>
-                    <!-- Gallery Item 8 -->
-                    <a href="https://www.lilianealvespsi.com.br" target="_blank" rel="noopener noreferrer"
-                        class="group block rounded-2xl overflow-hidden bg-gray-900 border border-gray-800 p-4 transition-colors hover:bg-gray-800">
-                        <div class="overflow-hidden rounded-xl mb-4"><img src="/newimag/liliane.png"
-                                alt="Psicoterapeuta"
-                                class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110">
+                    </div>
+                </a>
+                <!-- Gallery Item 8 -->
+                <a href="https://www.lilianealvespsi.com.br" target="_blank" rel="noopener noreferrer"
+                    class="group block relative overflow-hidden rounded-2xl shadow-md">
+                    <img src="/newimag/liliane.png" alt="Liliana Alves"
+                        class="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent flex items-end p-6">
+                        <div>
+                            <p class="text-white/70 text-xs font-bold tracking-widest uppercase mb-1">Institutional
+                                Website</p>
+                            <h3 class="text-xl font-black text-white">Liliana Alves</h3>
                         </div>
-                        <h3 class="text-xl font-bold text-white mb-2">Liliana Alves</h3>
-                        <p class="text-sm text-gray-400">Site institucional para Psicoterapeuta Sistêmica.</p>
-                    </a>
-                </div>
+                    </div>
+                </a>
             </div>
         </div>
     </div>
