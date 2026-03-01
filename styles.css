@@ -1,36 +1,326 @@
 /* Estilos do Botão Flutuante do WhatsApp */
 .whatsapp-button {
-    position: fixed; /* Posição fixa em relação à tela */
-    bottom: 30px;    /* 30 pixels da parte inferior */
-    right: 30px;     /* 30 pixels da parte direita */
-    z-index: 1000;   /* Garante que o botão fique acima de outros elementos */
-    
+    position: fixed;
+    /* Posição fixa em relação à tela */
+    bottom: 30px;
+    /* 30 pixels da parte inferior */
+    right: 30px;
+    /* 30 pixels da parte direita */
+    z-index: 1000;
+    /* Garante que o botão fique acima de outros elementos */
+
     /* Aparência do botão */
-    background-color: #25D366; /* Cor verde do WhatsApp */
+    background-color: #25D366;
+    /* Cor verde do WhatsApp */
     color: white;
     width: 60px;
     height: 60px;
-    border-radius: 50%; /* Deixa o botão circular */
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2); /* Sombra suave */
-    
+    border-radius: 50%;
+    /* Deixa o botão circular */
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+    /* Sombra suave */
+
     /* Centraliza o ícone dentro do botão */
     display: flex;
     align-items: center;
     justify-content: center;
-    
+
     /* Animação suave */
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    text-decoration: none; /* Remove o sublinhado do link */
+    text-decoration: none;
+    /* Remove o sublinhado do link */
 }
 
 /* Efeito ao passar o mouse por cima (para desktops) */
 .whatsapp-button:hover {
-    transform: scale(1.1); /* Aumenta um pouco o tamanho */
-    box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.3); /* Sombra mais forte */
+    transform: scale(1.1);
+    /* Aumenta um pouco o tamanho */
+    box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.3);
+    /* Sombra mais forte */
 }
 
 /* Estilo do ícone Font Awesome */
 .whatsapp-button .fa-whatsapp {
-    font-size: 36px; /* Ajusta o tamanho do ícone */
+    font-size: 36px;
+    /* Ajusta o tamanho do ícone */
     color: white;
+}
+
+/* New Design Styles */
+body {
+    background-color: #f7f7f7;
+    color: #1a1a1a;
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.hero-split {
+    display: flex;
+    min-height: 100vh;
+    background-color: white;
+}
+
+.hero-left {
+    background-color: white;
+    color: black;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 2rem 5rem;
+    position: relative;
+    flex: 1;
+}
+
+@media (max-width: 1024px) {
+    .hero-left {
+        padding: 2rem 3rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-left {
+        padding: 4rem 2rem;
+        min-height: 100vh;
+    }
+}
+
+.section-image-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 4rem;
+    padding: 5rem 10%;
+    min-height: 80vh;
+}
+
+.bg-black-section {
+    background-color: black;
+    color: white;
+}
+
+.bg-grey-section {
+    background-color: #f0f0f0;
+    color: black;
+}
+
+@media (max-width: 768px) {
+    .section-image-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        padding: 3rem 5%;
+    }
+
+    .section-image-content.reverse {
+        display: flex;
+        flex-direction: column-reverse;
+    }
+}
+
+.flag-btn {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    transition: transform 0.3s;
+    background: none;
+    border: none;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.flag-btn:hover {
+    transform: scale(1.1);
+}
+
+.flag-icon {
+    width: 24px;
+    height: auto;
+    border-radius: 2px;
+}
+
+.btn-black {
+    background-color: #1a1a1a;
+    color: white;
+    padding: 0.8rem 2.5rem;
+    border-radius: 50px;
+    font-weight: bold;
+    display: inline-block;
+    transition: all 0.3s;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-black:hover {
+    background-color: #333;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.btn-white {
+    background-color: white;
+    color: black;
+    padding: 0.8rem 2.5rem;
+    border-radius: 50px;
+    font-weight: bold;
+    display: inline-block;
+    transition: all 0.3s;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-white:hover {
+    background-color: #eee;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+}
+
+.text-heading {
+    font-size: 4rem;
+    line-height: 1.05;
+    font-weight: 900;
+    margin-bottom: 2rem;
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: -0.02em;
+}
+
+@media (max-width: 1024px) {
+    .text-heading {
+        font-size: 2.8rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .text-heading {
+        font-size: 2.2rem;
+    }
+}
+
+/* GSAP Animation Classes */
+
+.scrub-text .word {
+    display: inline-block;
+    opacity: 0.2;
+    transition: opacity 0.1s;
+}
+
+/* Image Parallax Container */
+.parallax-container {
+    overflow: hidden;
+    position: relative;
+    border-radius: 1rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.parallax-bg {
+    height: 120%;
+    width: 100%;
+    object-fit: cover;
+    transform: translateY(-10%);
+}
+
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 5%;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    transition: all 0.3s ease;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.nav-logo {
+    height: 40px;
+}
+
+.nav-item {
+    font-weight: 600;
+    text-decoration: none;
+    color: inherit;
+}
+
+.hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.hamburger span {
+    width: 25px;
+    height: 3px;
+    background-color: currentColor;
+    border-radius: 3px;
+}
+
+@media (max-width: 768px) {
+    .nav-links {
+        display: none;
+    }
+
+    .hamburger {
+        display: flex;
+    }
+}
+
+/* Floating waving hand animation */
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+
+    25% {
+        transform: translateY(-8px) rotate(8deg);
+    }
+
+    75% {
+        transform: translateY(-4px) rotate(-4deg);
+    }
+}
+
+.hero-wave {
+    animation: float 2.5s ease-in-out infinite;
+    display: inline-block;
+    transform-origin: 70% 80%;
+}
+
+/* Service section number tag */
+.service-tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 1rem;
+    border: 1px solid #ddd;
+    padding: 0.25rem 0.75rem;
+    border-radius: 100px;
+}
+
+/* Section divider accent line */
+.section-accent {
+    width: 40px;
+    height: 3px;
+    background: #1a1a1a;
+    border-radius: 2px;
+    margin-bottom: 1.5rem;
 }
