@@ -1,0 +1,19 @@
+{
+  "name": "intranet",
+  "version": "1.0.0",
+  "description": "Um sistema de quadro Kanban para gerenciamento de prospects de vendas, projetado para otimizar o fluxo de trabalho e a visualização do funil de vendas.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "mercadopago": "^2.12.0"
+  }
+}
