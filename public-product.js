@@ -1,4 +1,4 @@
-import { db, appId } from './firebase-config.js';
+import { db, appId } from './intranet/firebase-config.js';
 import { doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
 document.addEventListener('DOMContentLoaded', async () => {
