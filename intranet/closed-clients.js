@@ -606,21 +606,21 @@ async function handleDeleteRequest(clientId, clientName) {
         }
     };
 
-    showConfirmationModal(
+    const confirmed = await showConfirmationModal(
         `Você tem certeza que deseja excluir o cliente <strong>${clientName}</strong>? Esta ação é irreversível.`,
-        () => {
-            const confirmationName = prompt(`Para confirmar a exclusão, por favor, digite o nome da empresa: "${clientName}"`);
-            if (confirmationName === clientName) {
-                confirmDelete();
-            } else if (confirmationName !== null && confirmationName !== "") {
-                showNotification('O nome da empresa não corresponde. A exclusão foi cancelada.', 'warning');
-            } else {
-                showNotification('Exclusão cancelada.', 'info');
-            }
-        },
         'Excluir',
         'Cancelar'
     );
+    if (confirmed) {
+        const confirmationName = prompt(`Para confirmar a exclusão, por favor, digite o nome da empresa: "${clientName}"`);
+        if (confirmationName === clientName) {
+            await confirmDelete();
+        } else if (confirmationName !== null && confirmationName !== "") {
+            showNotification('O nome da empresa não corresponde. A exclusão foi cancelada.', 'warning');
+        } else {
+            showNotification('Exclusão cancelada.', 'info');
+        }
+    }
 }
 
 // --- UTILITY ---

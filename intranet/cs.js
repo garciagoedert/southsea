@@ -1223,11 +1223,12 @@ async function renameColumn(columnId) {
     }
 }
 
-function deleteColumn(columnId) {
-    showConfirmationModal('Tem certeza que deseja excluir esta coluna?', () => {
+async function deleteColumn(columnId) {
+    const confirmed = await showConfirmationModal('Tem certeza que deseja excluir esta coluna?', 'Excluir', 'Cancelar');
+    if (confirmed) {
         viewConfig.columns = viewConfig.columns.filter(c => c.id !== columnId);
         openConfigModal();
-    }, 'Excluir', 'Cancelar');
+    }
 }
 
 // --- GROUP MANAGEMENT FUNCTIONS ---
@@ -1273,13 +1274,14 @@ async function renameGroup(groupId) {
     }
 }
 
-function deleteGroup(groupId) {
+async function deleteGroup(groupId) {
     if (viewConfig.groups.length <= 1) {
         showNotification("Você deve ter pelo menos um grupo.", "error");
         return;
     }
 
-    showConfirmationModal('Tem certeza que deseja excluir este grupo?', async () => {
+    const confirmed = await showConfirmationModal('Tem certeza que deseja excluir este grupo?', 'Excluir', 'Cancelar');
+    if (confirmed) {
         const groupToDelete = viewConfig.groups.find(g => g.id === groupId);
         viewConfig.groups = viewConfig.groups.filter(g => g.id !== groupId);
         const fallbackGroupId = viewConfig.groups[0].id; // Move clients to the first remaining group
@@ -1303,7 +1305,7 @@ function deleteGroup(groupId) {
             // Revert the deletion if moving clients fails
             viewConfig.groups.push(groupToDelete);
         }
-    }, 'Excluir', 'Cancelar');
+    }
 }
 
 // --- COMMENTS MODAL ---

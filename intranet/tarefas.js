@@ -445,7 +445,7 @@ async function initializeTasksPage() {
 
         if (task.linked_card_id) {
             const linkedCard = prospects.find(p => p.id === task.linked_card_id);
-            document.getElementById('detail-task-link').innerHTML = linkedCard ? `<a href="index.html?cardId=${task.linked_card_id}" class="text-primary hover:underline" onclick="event.stopPropagation()">${linkedCard.empresa}</a>` : 'N/A';
+            document.getElementById('detail-task-link').innerHTML = linkedCard ? `<a href="prospeccao.html?cardId=${task.linked_card_id}" class="text-primary hover:underline" onclick="event.stopPropagation()">${linkedCard.empresa}</a>` : 'N/A';
         } else if (task.parent_entity) {
             document.getElementById('detail-task-link').textContent = task.parent_entity;
         } else {
@@ -658,7 +658,7 @@ async function initializeTasksPage() {
             const priorityText = task.priority.charAt(0).toUpperCase() + task.priority.slice(1);
             
             const clientLinkHTML = linkedCard 
-                ? `<a href="index.html?cardId=${linkedCard.id}" class="text-primary hover:underline" onclick="event.stopPropagation()">${linkedCard.empresa}</a>`
+                ? `<a href="prospeccao.html?cardId=${linkedCard.id}" class="text-primary hover:underline" onclick="event.stopPropagation()">${linkedCard.empresa}</a>`
                 : (task.parent_entity || 'N/A');
 
             // Classes de texto responsivas ao tema

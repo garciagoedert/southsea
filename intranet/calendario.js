@@ -269,7 +269,7 @@ async function initializeCalendarPage(tasksCollectionRef, meetingsCollectionRef,
             meetingStatusControls.classList.remove('hidden');
             
             viewLeadClickHandler = () => {
-                window.location.href = `index.html?cardId=${linkedCard.id}`;
+                window.location.href = `prospeccao.html?cardId=${linkedCard.id}`;
             };
             
             viewLeadBtn.addEventListener('click', viewLeadClickHandler);

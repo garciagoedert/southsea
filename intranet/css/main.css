@@ -18,10 +18,183 @@
     background: #6b7280; /* bg-gray-500 */
 }
 
+/* Brands & Typography */
+:root {
+    --brand-black: #000000;
+    --brand-dark-gray: #0d1117;
+    --brand-white: #ffffff;
+    --brand-gray-light: #f9fafb;
+    --font-heading: 'Montserrat', sans-serif;
+    --font-body: 'Inter', sans-serif;
+}
+
+.font-montserrat { font-family: var(--font-heading); }
+.font-inter { font-family: var(--font-body); }
+
+/* Premium UI Elements */
+.glass-morphism {
+    background: rgba(13, 17, 23, 0.8) !important;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.premium-card {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 1.5rem;
+    padding: 1.5rem;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.02), 0 4px 6px -2px rgba(0, 0, 0, 0.01);
+}
+
+.dark .premium-card {
+    background: var(--brand-dark-gray);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.premium-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.04), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+.dark .premium-card:hover {
+    border-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+}
+
+.btn-branded-black {
+    background: #000000;
+    color: #ffffff;
+    padding: 0.6rem 1.5rem;
+    border-radius: 100px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.8rem;
+}
+
+.btn-branded-black:hover {
+    background: #333333;
+    transform: scale(1.05);
+}
+
+.btn-branded-white {
+    background: #ffffff;
+    color: #000000;
+    padding: 0.6rem 1.5rem;
+    border-radius: 100px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.8rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.btn-branded-white:hover {
+    background: #f3f4f6;
+    transform: scale(1.05);
+}
+
 /* Disable text selection */
 .no-select {
     user-select: none;
-    -webkit-user-select: none; /* Safari */
-    -moz-user-select: none; /* Firefox */
-    -ms-user-select: none; /* IE10+/Edge */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+/* Sidebar Refinements */
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    color: #cbd5e1; /* Always light since sidebar is always dark glass */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 0.75rem;
+    text-decoration: none;
+    width: 100%;
+}
+
+.sidebar-link:hover {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.category-title {
+    color: #94a3b8 !important; /* Always slate-400 */
+    font-weight: 800;
+}
+
+.sidebar-link.active {
+    color: #ffffff !important;
+    background-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    font-weight: 900;
+    position: relative;
+}
+
+.dark .sidebar-link.active {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-link.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 25%;
+    bottom: 25%;
+    width: 4px;
+    background: currentColor;
+    border-radius: 0 4px 4px 0;
+}
+
+/* Date Filter Modal Styles */
+.date-modal-content {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.dark .date-modal-content {
+    background: rgba(13, 17, 23, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.date-select-item {
+    width: 100%;
+    background-color: rgba(249, 250, 251, 1);
+    border: 1px solid rgba(243, 244, 246, 1);
+    border-radius: 0.75rem;
+    padding: 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    font-family: 'Montserrat', sans-serif;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.dark .date-select-item {
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+}
+
+.date-select-item:focus {
+    box-shadow: 0 0 0 2px #000000;
+}
+
+.dark .date-select-item:focus {
+    box-shadow: 0 0 0 2px #ffffff;
 }

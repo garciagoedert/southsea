@@ -465,11 +465,13 @@ async function loadComponents(pageSpecificSetup) {
         const sidebarLinks = sidebarContainer.querySelectorAll('nav a');
         sidebarLinks.forEach(link => {
             const linkPage = link.getAttribute('href').split('/').pop();
+            // Remove active class from all first (defensive)
+            link.classList.remove('active');
+            
             if (linkPage === currentPage) {
-                link.classList.add('bg-primary', 'text-white');
-                link.classList.remove('bg-gray-700', 'hover:bg-gray-600', 'text-gray-300');
+                link.classList.add('active');
 
-                if (linkPage === 'index.html') {
+                if (linkPage === 'prospeccao.html') {
                     const prospectActions = document.getElementById('prospect-actions');
                     if(prospectActions) {
                         prospectActions.classList.remove('hidden');
@@ -540,7 +542,7 @@ async function loadComponents(pageSpecificSetup) {
         // Apenas mostra o botão de prospecção na página de prospecção
         const mainHeaderBtn = document.getElementById('addProspectBtnHeader');
         if (mainHeaderBtn) {
-            if (currentPage === 'index.html') {
+            if (currentPage === 'prospeccao.html') {
                 mainHeaderBtn.classList.remove('hidden');
             } else if (currentPage === 'formularios.html') {
                 mainHeaderBtn.innerHTML = `<i class="fas fa-plus mr-2"></i><span class="hidden md:inline">Criar Novo Formulário</span>`;
@@ -552,7 +554,7 @@ async function loadComponents(pageSpecificSetup) {
 
         // Mostra o botão de editar Kanban para admins nas páginas de prospecção e produção
         const editKanbanBtn = document.getElementById('editKanbanBtn');
-        if (editKanbanBtn && (currentPage === 'index.html' || currentPage === 'producao.html') && userRole && userRole.toLowerCase() === 'admin') {
+        if (editKanbanBtn && (currentPage === 'prospeccao.html' || currentPage === 'producao.html') && userRole && userRole.toLowerCase() === 'admin') {
             editKanbanBtn.classList.remove('hidden');
         }
 

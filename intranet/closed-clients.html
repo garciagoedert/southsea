@@ -15,12 +15,10 @@
             darkMode: 'class',
         }
     </script>
-    <!-- Google Fonts: Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/main.css">
     <style>
         /* Custom Styles */
         body {
@@ -28,13 +26,21 @@
             overflow-y: hidden; /* Prevent body scroll */
         }
         .user-filter-tags {
-            @apply flex flex-wrap gap-1;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.25rem;
         }
         .user-filter-tag {
             display: inline-flex;
             align-items: center;
             vertical-align: middle;
-            @apply bg-blue-600 text-white text-xs font-semibold px-2 py-1 rounded-full gap-2;
+            background-color: #2563eb;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            gap: 0.5rem;
         }
         .user-tag-avatar {
             width: 1rem; /* 16px */
@@ -42,10 +48,15 @@
             border-radius: 9999px; /* full */
         }
         .user-filter-tag .remove-tag-btn {
-            @apply ml-3 text-red-400 hover:text-red-300;
+            margin-left: 0.75rem;
+            color: #f87171;
+        }
+        .user-filter-tag .remove-tag-btn:hover {
+            color: #fca5a5;
         }
         .user-filter-placeholder {
-            @apply text-gray-400 ml-1;
+            color: #9ca3af;
+            margin-left: 0.25rem;
         }
     </style>
 </head>
@@ -282,7 +293,7 @@
     </div>
 
     <!-- Firebase SDK -->
-    <script type="module" src="closed-clients.js?v=1.1"></script>
+    <script type="module" src="closed-clients.js?v=1.2"></script>
 
     <!-- User Select Modals -->
     <div id="csSelectModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 hidden">

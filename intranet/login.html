@@ -9,22 +9,29 @@
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
     <style>
         body {
             font-family: 'Inter', sans-serif;
+        }
+        h1, h2, h3, h4 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+        }
+        .login-card {
+            background: #0d1117;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
         }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-200">
 
     <!-- Login Page -->
-    <div id="login-page" class="flex items-center justify-center h-screen">
-        <div class="w-full max-w-md p-8 space-y-8 bg-gray-800 rounded-lg shadow-lg">
+    <div id="login-page" class="flex items-center justify-center h-screen bg-black">
+        <div class="w-full max-w-md p-10 space-y-8 login-card rounded-3xl">
             <div class="flex flex-col items-center">
                 <img src="https://www.southsea.com.br/newimag/Vector.svg" alt="South Sea Logo" class="h-12 mb-4">
                 <p class="text-center text-gray-400">Acesso à plataforma</p>
