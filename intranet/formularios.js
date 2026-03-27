@@ -639,6 +639,7 @@ function pageInit() {
     // Initialize Quill editor
     quill = new Quill('#quill-editor', {
         theme: 'snow',
+        placeholder: 'Insira o contrato aqui...',
         modules: {
             toolbar: [
                 [{ 'header': [1, 2, 3, false] }],

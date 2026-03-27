@@ -95,9 +95,18 @@
     border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.btn-branded-white:hover {
-    background: #f3f4f6;
-    transform: scale(1.05);
+.contract-editor-container .ql-editor {
+    min-height: 300px;
+    background-color: #ffffff;
+    color: #000000;
+    padding: 0.5rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+}
+.dark .contract-editor-container .ql-editor {
+    background-color: #111827;
+    color: #ffffff;
+    border-color: #374151;
 }
 
 /* Disable text selection */
