@@ -10,18 +10,19 @@
     <!-- Favicon -->
     <link rel="icon" href="/newimag/Ellipse 9.svg" type="image/svg+xml" onerror="this.onerror=null;this.src='https://placehold.co/32x32';">
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         /* Paleta de Cores Otimizada para Saúde & Bem-Estar */
         :root {
-            --color-primary: #2563eb;  /* Azul Confiável (Blue-600) */
-            --color-primary-dark: #1e40af; /* Azul Escuro para Destaque */
-            --color-text-primary: #1e293b;   /* Cinza Escuro (Slate-800) para Texto Principal */
-            --color-text-secondary: #475569; /* Cinza Médio (Slate-600) para Texto de Apoio */
-            --color-light-bg: #f8fafc;   /* Fundo Claro (Slate-50) */
+            --color-primary: #2563eb;       /* Azul Confiável (Blue-600) */
+            --color-primary-dark: #1e3a8a;  /* Azul Escuro Médico (Blue-900) */
+            --color-primary-accent: #0284c7;/* Azul Oceano (Sky-600) */
+            --color-text-primary: #0f172a;    /* Slate-900 */
+            --color-text-secondary: #475569;  /* Slate-600 */
+            --color-light-bg: #f8fafc;        /* Slate-50 */
             --color-white: #ffffff;
-            --color-shadow: rgba(45, 55, 72, 0.1);
-            --color-border: #e2e8f0; /* Slate-200 */
+            --color-shadow: rgba(15, 23, 42, 0.08);
+            --color-border: #e2e8f0;          /* Slate-200 */
         }
 
         html {
@@ -32,34 +33,38 @@
             font-family: 'Inter', sans-serif;
             background-color: var(--color-light-bg);
             color: var(--color-text-primary);
-            overflow-x: hidden; /* Prevenir scroll horizontal */
+            overflow-x: hidden;
         }
+
         .slide {
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 5rem 2rem;
+            padding: 4.5rem 1.5rem;
             position: relative;
             width: 100%;
         }
+
         /* Animação de Fade-in */
         .fade-in-section {
             opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            transform: translateY(22px);
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .fade-in-section.is-visible {
             opacity: 1;
             transform: translateY(0);
         }
+
         .slide-content {
             max-width: 1200px;
             width: 100%;
         }
+
         h1, h2, h3, h4, p {
-             font-family: 'Inter', sans-serif;
+            font-family: 'Inter', sans-serif;
         }
         h2 { font-weight: 700; }
         h3 { font-weight: 700; }
@@ -73,15 +78,16 @@
             z-index: 100;
         }
         .nav-btn {
-            background-color: rgba(37, 99, 235, 0.25);
+            background-color: rgba(37, 99, 235, 0.15);
+            backdrop-filter: blur(8px);
             color: var(--color-primary-dark);
-            border: none;
+            border: 1px solid rgba(37, 99, 235, 0.3);
             border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            font-size: 24px;
+            width: 48px;
+            height: 48px;
+            font-size: 20px;
             cursor: pointer;
-            transition: background-color 0.3s, color 0.3s;
+            transition: all 0.25s ease;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -89,6 +95,8 @@
         .nav-btn:hover {
             background-color: var(--color-primary);
             color: white;
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
         }
         .fullscreen-btn {
             position: fixed;
@@ -96,6 +104,7 @@
             left: 20px;
             z-index: 100;
         }
+
         .bg-hero-health {
             background-image: url('https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=1920&auto=format&fit=crop');
             background-position: center center;
@@ -111,12 +120,12 @@
         }
         .bg-card {
             background-color: var(--color-white);
-            box-shadow: 0 4px 6px -1px var(--color-shadow), 0 2px 4px -1px var(--color-shadow);
+            box-shadow: 0 4px 14px 0 var(--color-shadow);
             border: 1px solid var(--color-border);
         }
         .icon-check {
             color: var(--color-primary);
-            margin-right: 0.5rem;
+            margin-right: 0.6rem;
             flex-shrink: 0;
         }
         .text-primary { color: var(--color-primary); }
@@ -126,6 +135,18 @@
         .text-main { color: var(--color-text-primary); }
         .text-secondary { color: var(--color-text-secondary); }
 
+        /* Estilo da IDV Metrifiquese (Dark & Green) */
+        .metrifique-dark {
+            background-color: #0b110e;
+            color: #f1f5f9;
+        }
+        .metrifique-green {
+            color: #10b981;
+        }
+        .metrifique-card {
+            background-color: #121a15;
+            border: 1px solid #1e3124;
+        }
     </style>
 </head>
 <body>
@@ -134,392 +155,655 @@
 
         <!-- Slide 1: Capa -->
         <section id="slide1" class="slide bg-hero-health text-white text-center">
-            <div class="absolute inset-0 bg-black opacity-75"></div>
+            <div class="absolute inset-0 bg-slate-950/80 backdrop-blur-[2px]"></div>
             <div class="z-10 slide-content fade-in-section">
                 <div class="w-auto h-auto mx-auto mb-10 max-w-[240px]">
                     <img src="/newimag/Vector.svg" 
                          alt="Logo South Sea" 
-                         class="w-full h-full object-cover"
+                         class="w-full h-full object-contain filter drop-shadow-md"
                          onerror="this.onerror=null;this.src='https://placehold.co/240x100/ffffff/1e293b?text=South+Sea';">
                 </div>
-                <p class="text-xl md:text-2xl lg:text-3xl font-light">Sua Autoridade Profissional,<br>Transformada em <span class="font-semibold text-blue-300">Confiança Digital</span>.</p>
+                <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light tracking-tight max-w-4xl mx-auto leading-tight">
+                    Sua Autoridade Profissional,<br>
+                    Transformada em <span class="font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-sky-200 to-blue-400">Confiança Digital</span>.
+                </h1>
+                <p class="text-base sm:text-lg md:text-xl text-slate-300 font-normal max-w-2xl mx-auto mt-5">
+                    Presença digital de alto padrão, tráfego qualificado e tecnologia de conversão para clínicas e consultórios.
+                </p>
             </div>
         </section>
 
-        <!-- Slide 2: Quem Somos -->
+        <!-- Slide 2: Posicionamento & Quem Somos -->
         <section id="slide2" class="slide bg-light">
             <div class="slide-content grid md:grid-cols-2 gap-12 md:gap-16 items-center fade-in-section">
                 <div class="text-center md:text-left">
-                    <h2 class="text-4xl md:text-5xl mb-6 text-main">Arquitetos da Confiança Digital na Saúde.</h2>
-                    <p class="text-lg leading-relaxed text-secondary">A South Sea é especialista em traduzir o cuidado e o profissionalismo do seu consultório para o ambiente digital. Entendemos os desafios únicos da área da saúde e criamos a presença online que reflete sua autoridade, atrai os pacientes certos e respeita integralmente as diretrizes do seu conselho profissional.</p>
+                    <h2 class="text-3xl sm:text-4xl md:text-5xl mb-6 text-main leading-[1.3] md:leading-[1.25]">
+                        Posicionamento Estratégico & Captação para a Área da Saúde.
+                    </h2>
+                    <p class="text-base sm:text-lg leading-relaxed text-secondary mb-5">
+                        A <strong>South Sea</strong> é uma assessoria especializada em construir a presença digital de profissionais e clínicas de saúde — incluindo médicos, dentistas, psicólogos, fisioterapeutas, nutricionistas e centros multidisciplinares que tratam seu nome e sua reputação como seu maior ativo.
+                    </p>
+                    <p class="text-base sm:text-lg leading-relaxed text-secondary">
+                        Nossa missão é posicionar sua autoridade diante dos pacientes certos, gerando uma esteira previsível de agendamentos com <strong>respeito absoluto às diretrizes éticas</strong> dos conselhos profissionais.
+                    </p>
                 </div>
-                <div class="flex justify-center items-center gap-4 md:gap-8">
-                    <div class="text-center p-4 md:p-6 bg-card rounded-lg">
-                        <svg class="w-12 h-12 md:w-16 md:h-16 mx-auto mb-4 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-                        </svg>
-                        <h3 class="text-lg md:text-xl text-main">Confiança</h3>
+                <div class="grid grid-cols-1 gap-4">
+                    <div class="p-5 bg-card rounded-xl flex items-start gap-4 hover:border-blue-300 transition-colors">
+                        <div class="p-3 bg-blue-50 text-primary rounded-lg flex-shrink-0">
+                            <svg class="w-7 h-7" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.286zm0 13.036h.008v.008h-.008v-.008z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-main mb-1">Rigor Ético Inegociável</h3>
+                            <p class="text-sm text-secondary">Projetos alinhados às diretrizes dos conselhos de classe (CFM, CFO, CFP, CREFITO, CRN e outros), blindando sua reputação jurídica e profissional.</p>
+                        </div>
                     </div>
-                     <div class="text-center p-4 md:p-6 bg-card rounded-lg">
-                        <svg class="w-12 h-12 md:w-16 md:h-16 mx-auto mb-4 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                           <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.286zm0 13.036h.008v.008h-.008v-.008z" />
-                        </svg>
-                        <h3 class="text-lg md:text-xl text-main">Ética</h3>
+                    
+                    <div class="p-5 bg-card rounded-xl flex items-start gap-4 hover:border-blue-300 transition-colors">
+                        <div class="p-3 bg-blue-50 text-primary rounded-lg flex-shrink-0">
+                            <svg class="w-7 h-7" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-main mb-1">Tráfego de Intenção Real</h3>
+                            <p class="text-sm text-secondary">Não atraímos curiosos: conectamos sua clínica aos pacientes que já buscam ativamente pelos seus procedimentos e tratamentos na sua região.</p>
+                        </div>
                     </div>
-                     <div class="text-center p-4 md:p-6 bg-card rounded-lg">
-                        <svg class="w-12 h-12 md:w-16 md:h-16 mx-auto mb-4 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
-                        </svg>
-                        <h3 class="text-lg md:text-xl text-main">Resultados</h3>
+
+                    <div class="p-5 bg-card rounded-xl flex items-start gap-4 hover:border-blue-300 transition-colors">
+                        <div class="p-3 bg-blue-50 text-primary rounded-lg flex-shrink-0">
+                            <svg class="w-7 h-7" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-main mb-1">Controle Comercial & CRM</h3>
+                            <p class="text-sm text-secondary">Organização da recepção, visualização de funil e acompanhamento de oportunidades de agendamento com tecnologia de ponta.</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Slide 3: O Problema -->
+        <!-- Slide 3: O Diagnóstico -->
         <section id="slide3" class="slide bg-white">
             <div class="slide-content text-center fade-in-section">
-                 <h2 class="text-4xl md:text-5xl mb-6 text-main">Sua prática merece uma presença digital à sua altura.</h2>
-                 <p class="text-lg max-w-4xl mx-auto mb-12 md:mb-16 text-secondary">Entendemos os desafios que você enfrenta: as regras de publicidade do seu conselho, a falta de tempo e a frustração com estratégias que não geram resultados. Uma presença digital mal construída pode atrair o público errado e comprometer sua reputação.</p>
-                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+                <h2 class="text-3xl sm:text-4xl md:text-5xl mb-6 text-main max-w-4xl mx-auto leading-tight">
+                    Sua prática merece uma presença digital à sua altura.
+                </h2>
+                <p class="text-base sm:text-lg max-w-3xl mx-auto mb-12 text-secondary">
+                    Entendemos os desafios que profissionais da saúde enfrentam diariamente: o tempo escasso, as exigências de cada conselho e a frustração com promessas de marketing que não geram resultados.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
                     <!-- Item 1 -->
-                    <div class="bg-light p-6 rounded-lg shadow-sm text-left flex flex-col items-center text-center">
-                        <svg class="w-10 h-10 text-primary mb-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                        <p>Preocupado com as <strong>regras de publicidade</strong> do seu conselho?</p>
+                    <div class="bg-light p-6 rounded-xl border border-slate-200 text-left hover:shadow-md transition-shadow">
+                        <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center mb-4">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                        </div>
+                        <h4 class="font-bold text-main mb-2">Medo de Sanções Éticas</h4>
+                        <p class="text-sm text-secondary">Receio legítimo de infrações ao conselho por promessas inadequadas ou formatos amadores.</p>
                     </div>
                     <!-- Item 2 -->
-                    <div class="bg-light p-6 rounded-lg shadow-sm text-left flex flex-col items-center text-center">
-                        <svg class="w-10 h-10 text-primary mb-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                        <p><strong>Sem tempo</strong> para se dedicar a ferramentas digitais complicadas?</p>
+                    <div class="bg-light p-6 rounded-xl border border-slate-200 text-left hover:shadow-md transition-shadow">
+                        <div class="w-10 h-10 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center mb-4">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        </div>
+                        <h4 class="font-bold text-main mb-2">Falta de Tempo da Rotina</h4>
+                        <p class="text-sm text-secondary">Você não deve perder horas com ferramentas complexas ou gerenciando equipes fragmentadas.</p>
                     </div>
                     <!-- Item 3 -->
-                    <div class="bg-light p-6 rounded-lg shadow-sm text-left flex flex-col items-center text-center">
-                        <svg class="w-10 h-10 text-primary mb-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                        <p>Frustrado com promessas de marketing que <strong>não entregam</strong>?</p>
+                    <div class="bg-light p-6 rounded-xl border border-slate-200 text-left hover:shadow-md transition-shadow">
+                        <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center mb-4">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                        </div>
+                        <h4 class="font-bold text-main mb-2">Dependência de Convênios</h4>
+                        <p class="text-sm text-secondary">Repasses defasados e glosas que limitam o crescimento e a valorização do seu trabalho.</p>
                     </div>
                     <!-- Item 4 -->
-                    <div class="bg-light p-6 rounded-lg shadow-sm text-left flex flex-col items-center text-center">
-                        <svg class="w-10 h-10 text-primary mb-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" /></svg>
-                        <p>Receoso de que uma presença online atraia o <strong>público errado</strong>?</p>
+                    <div class="bg-light p-6 rounded-xl border border-slate-200 text-left hover:shadow-md transition-shadow">
+                        <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center mb-4">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" /></svg>
+                        </div>
+                        <h4 class="font-bold text-main mb-2">Leads Desqualificados</h4>
+                        <p class="text-sm text-secondary">Gastar recursos para receber mensagens de curiosos sem real interesse em agendar tratamentos.</p>
                     </div>
                 </div>
             </div>
         </section>
         
-        <!-- Slide 4: A Solução -->
+        <!-- Slide 4: A Estrutura Integrada -->
         <section id="slide4" class="slide bg-light">
             <div class="slide-content text-center fade-in-section">
-                <h2 class="text-4xl md:text-5xl mb-6 text-main">Por que ter um Site Profissional?</h2>
-                <p class="text-lg md:text-xl leading-relaxed max-w-4xl mx-auto mb-12 text-secondary">Seu site é a extensão do seu consultório no mundo digital. É o pilar da sua credibilidade, seu canal de comunicação 24/7 e a ferramenta que transforma sua autoridade em pacientes agendados.</p>
-                <div class="w-full max-w-4xl mx-auto">
-                    <div class="bg-card rounded-lg p-8 grid md:grid-cols-2 gap-8 items-center">
-                        <div class="text-left">
-                            <h3 class="text-2xl mb-4 text-primary">Benefícios de uma Presença Digital Estratégica:</h3>
-                            <ul class="space-y-3">
-                                <li class="flex items-center text-secondary"><svg class="w-6 h-6 icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span><strong>Credibilidade e Confiança</strong> para o paciente</span></li>
-                                <li class="flex items-center text-secondary"><svg class="w-6 h-6 icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span><strong>Captação de Pacientes</strong> qualificados</span></li>
-                                <li class="flex items-center text-secondary"><svg class="w-6 h-6 icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span><strong>Visibilidade e Posicionamento</strong> no Google</span></li>
-                                <li class="flex items-center text-secondary"><svg class="w-6 h-6 icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span><strong>Autoridade de Mercado</strong> na sua especialidade</span></li>
-                                <li class="flex items-center text-secondary"><svg class="w-6 h-6 icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span><strong>Conformidade Ética</strong> garantida</span></li>
-                            </ul>
+                <h2 class="text-3xl sm:text-4xl md:text-5xl mb-6 text-main leading-tight">
+                    Presença, Atração e Gestão Integradas em um Único Ecossistema.
+                </h2>
+                <p class="text-base sm:text-lg leading-relaxed max-w-4xl mx-auto mb-10 text-secondary">
+                    Uma estratégia digital sólida para a área da saúde precisa unir autoridade profissional, captação qualificada e agilidade no atendimento da recepção.
+                </p>
+                <div class="w-full max-w-5xl mx-auto">
+                    <div class="bg-card rounded-2xl p-8 md:p-10 grid md:grid-cols-2 gap-10 items-center">
+                        <div class="text-left space-y-4">
+                            <h3 class="text-2xl font-bold text-primary mb-2">O que a South Sea implementa:</h3>
+                            <div class="flex items-start gap-3">
+                                <svg class="w-6 h-6 icon-check mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <div>
+                                    <strong class="text-main">Presença Premium & Landing Pages:</strong>
+                                    <p class="text-sm text-secondary">Design profissional que reflete sua formação, especialidade e o ambiente acolhedor da clínica.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <svg class="w-6 h-6 icon-check mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <div>
+                                    <strong class="text-main">Tráfego de Alta Intenção (Google & Meta):</strong>
+                                    <p class="text-sm text-secondary">Posicionamento no momento em que o paciente busca por sintomas, especialidades ou tratamentos na sua região.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <svg class="w-6 h-6 icon-check mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <div>
+                                    <strong class="text-main">Gestão Comercial & CRM Integrado:</strong>
+                                    <p class="text-sm text-secondary">Recepção organizada com funil visual para responder rapidamente e não perder oportunidades de agendamento.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <svg class="w-6 h-6 icon-check mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <div>
+                                    <strong class="text-main">Conformidade Ética Garantida:</strong>
+                                    <p class="text-sm text-secondary">Conteúdo educativo e seguro, respeitando as normas regulatórias de publicidade em saúde.</p>
+                                </div>
+                            </div>
                         </div>
-                       <div class="flex justify-center">
-                           <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=1932&auto=format&fit=crop" 
-                                alt="Profissionais analisando um projeto digital" 
-                                class="rounded-lg shadow-lg object-cover w-full h-full max-h-80"
-                                onerror="this.onerror=null;this.src='https://placehold.co/600x400/e2e8f0/475569?text=Imagem+Indispon%C3%ADvel';">
+                        <div class="flex flex-col justify-center">
+                            <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=1932&auto=format&fit=crop" 
+                                 alt="Profissionais analisando um projeto digital" 
+                                 class="rounded-xl shadow-lg object-cover w-full h-full max-h-80"
+                                 onerror="this.onerror=null;this.src='https://placehold.co/600x400/e2e8f0/475569?text=Estrat%C3%A9gia+M%C3%A9dica';">
+                            <p class="text-xs text-secondary text-center mt-3 italic">Estratégia sob medida alinhada à sua especialidade e região de atuação.</p>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
         
-        <!-- Slide 5: Nossas Soluções -->
-         <section id="slide5" class="slide bg-white">
+        <!-- Slide 5: Apresentação do CRM Metrifiquese (Com a IDV Dark & Green da Plataforma) -->
+        <section id="slide5" class="slide metrifique-dark">
             <div class="slide-content text-center fade-in-section">
-                <h2 class="text-4xl md:text-5xl mb-12 text-main">A Presença Digital Ideal para Cada Etapa da sua Carreira</h2>
-                <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                    <div class="bg-light p-8 rounded-lg transform hover:scale-105 transition-transform duration-300">
-                        <h3 class="text-2xl md:text-3xl mb-4 text-main">Presença Profissional</h3>
-                        <p class="text-base md:text-lg text-secondary">Uma <strong>Landing Page de alto impacto</strong>, ideal para profissionais que buscam um posicionamento digital rápido, captação de contatos e agendamentos diretos.</p>
+
+                <h2 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white mb-6 leading-tight">
+                    Acelere suas Vendas com o CRM <br>
+                    <span class="metrifique-green font-extrabold">Metrifiquese</span>
+                </h2>
+
+                <p class="text-base sm:text-lg text-slate-300 leading-relaxed max-w-3xl mx-auto mb-10 font-light">
+                    Gerencie contatos, funil Kanban comercial, automações de qualificação e métricas com a plataforma mais potente do mercado. Controle comercial absoluto para a sua equipe.
+                </p>
+
+                <!-- UI Mockup Kanban de Pipeline (Demonstração fiel interna do Metrifiquese) -->
+                <div class="max-w-5xl mx-auto metrifique-card rounded-2xl p-6 sm:p-7 shadow-2xl text-left mb-10">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-4 border-b border-[#1f2d24] gap-3">
+                        <div class="flex items-center gap-3">
+                            <span class="font-bold text-2xl tracking-tight text-emerald-400 font-['Ubuntu']">Metrifiquese</span>
+                            <span class="text-xs text-slate-400 border-l border-slate-700 pl-3">Pipeline de Atendimento Clínico</span>
+                        </div>
+                        <div class="bg-[#183323] text-emerald-400 border border-[#235336] text-xs font-semibold px-3 py-1 rounded-full">
+                            Demonstração ao Vivo
+                        </div>
                     </div>
-                    <div class="bg-primary-dark text-white p-8 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300">
-                        <h3 class="text-2xl md:text-3xl mb-4">Clínica Digital</h3>
-                        <p class="text-base md:text-lg">Um <strong>Site Institucional completo</strong>, para profissionais e clínicas que buscam autoridade, um canal robusto de comunicação e uma plataforma para educar seus pacientes.</p>
+
+                    <!-- Colunas do Funil Kanban -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 mt-5">
+                        
+                        <!-- Coluna 1: Novos Leads -->
+                        <div class="bg-[#152019] border border-[#21382b] rounded-xl p-3.5 flex flex-col">
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="text-xs font-bold text-slate-300 uppercase tracking-wider">1. Novos Contatos</span>
+                                <span class="text-[11px] bg-slate-800 text-slate-300 font-bold px-1.5 py-0.5 rounded">2</span>
+                            </div>
+                            <div class="space-y-2.5 flex-grow">
+                                <div class="bg-[#1b2a21] border border-slate-700/60 p-3 rounded-lg text-left shadow-sm">
+                                    <div class="flex justify-between items-start">
+                                        <h5 class="text-xs font-bold text-white">Mariana Souza</h5>
+                                        <span class="text-[10px] text-emerald-400 font-semibold bg-emerald-950 px-1 rounded">Google Ads</span>
+                                    </div>
+                                    <p class="text-[11px] text-slate-400 mt-1">Consulta Especialista</p>
+                                    <p class="text-xs font-bold text-emerald-400 mt-2">R$ 450,00</p>
+                                </div>
+                                <div class="bg-[#1b2a21] border border-slate-700/60 p-3 rounded-lg text-left shadow-sm">
+                                    <div class="flex justify-between items-start">
+                                        <h5 class="text-xs font-bold text-white">Lucas Oliveira</h5>
+                                        <span class="text-[10px] text-sky-400 font-semibold bg-sky-950 px-1 rounded">Instagram</span>
+                                    </div>
+                                    <p class="text-[11px] text-slate-400 mt-1">Avaliação Inicial</p>
+                                    <p class="text-xs font-bold text-emerald-400 mt-2">R$ 380,00</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Coluna 2: Em Qualificação -->
+                        <div class="bg-[#152019] border border-[#21382b] rounded-xl p-3.5 flex flex-col">
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="text-xs font-bold text-slate-300 uppercase tracking-wider">2. Em Triagem</span>
+                                <span class="text-[11px] bg-slate-800 text-slate-300 font-bold px-1.5 py-0.5 rounded">1</span>
+                            </div>
+                            <div class="space-y-2.5 flex-grow">
+                                <div class="bg-[#1b2a21] border border-slate-700/60 p-3 rounded-lg text-left shadow-sm">
+                                    <div class="flex justify-between items-start">
+                                        <h5 class="text-xs font-bold text-white">Beatriz Ramos</h5>
+                                        <span class="text-[10px] text-emerald-400 font-semibold bg-emerald-950 px-1 rounded">Google Ads</span>
+                                    </div>
+                                    <p class="text-[11px] text-slate-400 mt-1">Procedimento Clínico</p>
+                                    <p class="text-xs font-bold text-emerald-400 mt-2">R$ 2.400,00</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Coluna 3: Agendados (Destaque) -->
+                        <div class="bg-[#152019] border-2 border-emerald-500/80 rounded-xl p-3.5 flex flex-col shadow-lg">
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">3. Agendados</span>
+                                <span class="text-[11px] bg-emerald-500 text-slate-950 font-bold px-1.5 py-0.5 rounded">1</span>
+                            </div>
+                            <div class="space-y-2.5 flex-grow">
+                                <div class="bg-[#1f3328] border border-emerald-400/60 p-3 rounded-lg text-left shadow-sm">
+                                    <div class="flex justify-between items-start">
+                                        <h5 class="text-xs font-bold text-white">Carlos Eduardo</h5>
+                                        <span class="text-[10px] text-emerald-300 font-bold bg-emerald-900/90 px-1.5 py-0.5 rounded">Confirmado</span>
+                                    </div>
+                                    <p class="text-[11px] text-slate-300 mt-1">Tratamento Integrado</p>
+                                    <p class="text-xs font-bold text-emerald-300 mt-2">R$ 6.500,00</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Coluna 4: Compareceu / Concluído -->
+                        <div class="bg-[#152019] border border-[#21382b] rounded-xl p-3.5 flex flex-col">
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="text-xs font-bold text-slate-300 uppercase tracking-wider">4. Atendidos</span>
+                                <span class="text-[11px] bg-slate-800 text-slate-300 font-bold px-1.5 py-0.5 rounded">8</span>
+                            </div>
+                            <div class="space-y-2.5 flex-grow">
+                                <div class="bg-[#1b2a21] border border-slate-700/60 p-3 rounded-lg text-left shadow-sm opacity-85">
+                                    <div class="flex justify-between items-start">
+                                        <h5 class="text-xs font-bold text-white">Fernanda Lima</h5>
+                                        <span class="text-[10px] text-slate-300 font-semibold bg-slate-800 px-1 rounded">Presencial</span>
+                                    </div>
+                                    <p class="text-[11px] text-slate-400 mt-1">Plano Realizado</p>
+                                    <p class="text-xs font-bold text-emerald-400 mt-2">R$ 1.200,00</p>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
+                </div>
+
+                <!-- Lista de Benefícios Metrifiquese -->
+                <div class="flex flex-wrap justify-center items-center gap-4 sm:gap-8 text-xs sm:text-sm text-slate-300 font-medium max-w-4xl mx-auto">
+                    <span class="flex items-center gap-1.5"><span class="text-emerald-400">✔</span> Sem Trava de Recursos por Plano</span>
+                    <span class="flex items-center gap-1.5"><span class="text-emerald-400">✔</span> Funis por Segmento</span>
+                    <span class="flex items-center gap-1.5"><span class="text-emerald-400">✔</span> Lead Scoring Automático</span>
+                    <span class="flex items-center gap-1.5"><span class="text-emerald-400">✔</span> Insights Automáticos</span>
                 </div>
             </div>
         </section>
 
-        <!-- Slide 6: Entregas Detalhadas -->
+        <!-- Slide 6: Processo de Trabalho Sem Roubar Seu Tempo -->
         <section id="slide6" class="slide bg-light">
-            <div class="slide-content fade-in-section">
-                <h2 class="text-4xl md:text-5xl mb-12 text-center text-main">Nossas Soluções em Detalhe</h2>
-                <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-                    <!-- Presença Profissional -->
-                    <div class="bg-card p-6 rounded-lg flex flex-col transform hover:-translate-y-2 transition-transform duration-300 h-full">
-                        <h3 class="text-2xl mb-4 text-center text-main">Presença Profissional (Landing Page)</h3>
-                        <div class="mb-6 space-y-2 text-center text-sm text-secondary flex-grow"><p>Ideal para profissionais liberais, lançamento de novos tratamentos ou campanhas focadas em agendamento.</p></div>
-                        <div class="border-t pt-4 mt-auto">
-                            <h4 class="font-bold mb-3 text-center text-primary">Principais Entregas:</h4>
-                            <ul class="text-sm space-y-2 text-secondary">
-                                <li class="flex"><svg class="w-5 h-5 icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Página única com design profissional e responsivo</span></li>
-                                <li class="flex"><svg class="w-5 h-5 icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Até 4 seções estratégicas (ex: Sobre, Tratamentos, Depoimentos)</span></li>
-                                <li class="flex"><svg class="w-5 h-5 icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Formulário de contato e botão de WhatsApp para agendamento</span></li>
-                                <li class="flex"><svg class="w-5 h-5 icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Otimização SEO para ser encontrado no Google</span></li>
-                                <li class="flex"><svg class="w-5 h-5 icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Instalação de Pixel (Meta) e Tags do Google</span></li>
-                                <li class="flex"><svg class="w-5 h-5 icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Conformidade com diretrizes éticas do seu conselho</span></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <!-- Clínica Digital -->
-                    <div class="bg-card p-6 rounded-lg flex flex-col transform hover:-translate-y-2 transition-transform duration-300 border-2 border-primary h-full">
-                        <h3 class="text-2xl mb-4 text-center text-main">Clínica Digital (Site Completo)</h3>
-                        <div class="mb-6 space-y-2 text-center text-sm text-secondary flex-grow"><p>Perfeito para clínicas e profissionais que desejam construir autoridade, educar o público e se estabelecer como referência no mercado.</p></div>
-                        <div class="border-t pt-4 mt-auto">
-                            <h4 class="font-bold mb-3 text-center text-primary">Principais Entregas:</h4>
-                            <ul class="text-sm space-y-2 text-secondary">
-                                <li class="flex"><svg class="w-5 h-5 icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Site com até 5 páginas (ex: Home, Sobre, Corpo Clínico, Tratamentos, Artigos, Contato)</span></li>
-                                <li class="flex"><svg class="w-5 h-5 icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Design personalizado à identidade visual da sua clínica</span></li>
-                                <li class="flex"><svg class="w-5 h-5 icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Página "Corpo Clínico" para apresentar os profissionais</span></li>
-                                <li class="flex"><svg class="w-5 h-5 icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Design Responsivo para celulares, tablets e desktops</span></li>
-                                <li class="flex"><svg class="w-5 h-5 icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Otimização SEO avançada para maior visibilidade</span></li>
-                                <li class="flex"><svg class="w-5 h-5 icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Instalação de Pixel (Meta) e Tags do Google</span></li>
-                                <li class="flex"><svg class="w-5 h-5 icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Mapa de Localização Interativo (Google Maps)</span></li>
-                                <li class="flex"><svg class="w-5 h-5 icon-check" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Conformidade com a LGPD (Lei Geral de Proteção de Dados)</span></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 7: Processo -->
-        <section id="slide7" class="slide bg-white">
             <div class="slide-content text-center fade-in-section">
-                <h2 class="text-3xl sm:text-4xl md:text-5xl mb-6 text-main">Nossa Jornada: Da Estratégia ao Lançamento</h2>
-                <p class="text-lg max-w-4xl mx-auto mb-12 text-secondary">
-                    Nosso processo é transparente e colaborativo, garantindo que sua visão se torne realidade em cada etapa do caminho.
+                <h2 class="text-3xl sm:text-4xl md:text-5xl mb-6 text-main">Como Trabalhamos (Sem Tomar Seu Tempo)</h2>
+                <p class="text-base sm:text-lg max-w-4xl mx-auto mb-10 text-secondary">
+                    Sabemos que sua prioridade máxima é o atendimento. Nós cuidamos de toda a engenharia, design e integrações técnicas, exigindo apenas validações pontuais da sua parte.
                 </p>
                 
-                <div class="max-w-4xl mx-auto bg-card p-6 rounded-lg shadow-md mb-12">
-                    <h3 class="text-2xl font-bold text-primary mb-6 text-center">Ponto de Partida do Projeto</h3>
+                <div class="max-w-4xl mx-auto bg-card p-6 md:p-8 rounded-2xl shadow-md mb-10">
+                    <h3 class="text-xl sm:text-2xl font-bold text-primary mb-6 text-center">Ponto de Partida Rápido</h3>
                     <div class="grid sm:grid-cols-3 gap-6 text-center">
                         <div class="flex flex-col items-center">
-                            <div class="bg-primary text-white rounded-full h-16 w-16 flex items-center justify-center mb-3">
-                                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                            <div class="bg-primary text-white rounded-2xl h-14 w-14 flex items-center justify-center mb-3 shadow-md">
+                                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
                             </div>
-                            <h4 class="font-semibold text-main">1. Briefing</h4>
-                            <p class="text-sm text-secondary">Você preenche nosso formulário detalhado em até 7 dias.</p>
+                            <h4 class="font-semibold text-main">1. Briefing Estratégico</h4>
+                            <p class="text-xs sm:text-sm text-secondary mt-1">Formulário inteligente com foco na sua especialidade e público-alvo (preenchimento em até 7 dias).</p>
                         </div>
                         <div class="flex flex-col items-center">
-                            <div class="bg-primary text-white rounded-full h-16 w-16 flex items-center justify-center mb-3">
-                                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                            <div class="bg-primary text-white rounded-2xl h-14 w-14 flex items-center justify-center mb-3 shadow-md">
+                                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                             </div>
-                            <h4 class="font-semibold text-main">2. Formalização</h4>
-                            <p class="text-sm text-secondary">Enviamos contrato e link de pagamento para início em 1 dia útil.</p>
+                            <h4 class="font-semibold text-main">2. Formalização Segura</h4>
+                            <p class="text-xs sm:text-sm text-secondary mt-1">Contrato digital transparente com envio de link de pagamento em 1 dia útil.</p>
                         </div>
                         <div class="flex flex-col items-center">
-                            <div class="bg-primary text-white rounded-full h-16 w-16 flex items-center justify-center mb-3">
-                                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                            <div class="bg-primary text-white rounded-2xl h-14 w-14 flex items-center justify-center mb-3 shadow-md">
+                                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                             </div>
-                            <h4 class="font-semibold text-main">3. Início</h4>
-                            <p class="text-sm text-secondary">Com tudo certo, damos partida oficial no seu projeto.</p>
+                            <h4 class="font-semibold text-main">3. Kickoff de Produção</h4>
+                            <p class="text-xs sm:text-sm text-secondary mt-1">Equipe dedicada inicia a arquitetura e copywriting técnico imediatamente.</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-card p-6 md:p-8 rounded-lg shadow-md max-w-4xl mx-auto">
-                    <h3 class="text-2xl mb-2 text-primary text-center">Jornada do Projeto Digital</h3>
-                    <p class="font-bold text-secondary mb-6 text-center">Prazo: 30 a 60 dias</p>
-                    <div class="relative border-l-2 border-dashed border-primary pl-8 space-y-8">
-                        <div class="relative"><div class="absolute -left-[34px] top-1 h-4 w-4 rounded-full bg-primary"></div><h4 class="font-semibold text-main">Pesquisa e Design (UI/UX)</h4><p class="text-sm text-secondary">Criamos o protótipo visual do seu site, focado na experiência do usuário.</p></div>
-                        <div class="relative"><div class="absolute -left-[34px] top-1 h-4 w-4 rounded-full bg-primary"></div><h4 class="font-semibold text-main">1ª Reunião de Alinhamento</h4><p class="text-sm text-secondary">Apresentamos o design para coletar seu feedback e fazer ajustes.</p></div>
-                        <div class="relative"><div class="absolute -left-[34px] top-1 h-4 w-4 rounded-full bg-primary"></div><h4 class="font-semibold text-main">Desenvolvimento</h4><p class="text-sm text-secondary">Com o design aprovado, construímos e codificamos o seu site.</p></div>
-                        <div class="relative"><div class="absolute -left-[34px] top-1 h-4 w-4 rounded-full bg-primary"></div><h4 class="font-semibold text-main">Revisão Final e Lançamento</h4><p class="text-sm text-secondary">Fazemos os últimos testes com você e colocamos o site no ar.</p></div>
+                <div class="bg-card p-6 md:p-8 rounded-2xl shadow-md max-w-4xl mx-auto text-left">
+                    <div class="flex flex-col sm:flex-row justify-between items-center mb-6 border-b pb-4 gap-2">
+                        <h3 class="text-xl font-bold text-primary">Jornada do Projeto Digital</h3>
+                        <span class="bg-blue-50 text-primary-dark font-bold text-sm px-3 py-1 rounded-full border border-blue-200">Prazo Total: 30 a 60 dias</span>
+                    </div>
+                    <div class="relative border-l-2 border-dashed border-blue-500 pl-8 space-y-6">
+                        <div class="relative">
+                            <div class="absolute -left-[41px] top-1 h-5 w-5 rounded-full bg-blue-600 border-4 border-white shadow"></div>
+                            <h4 class="font-bold text-main">Fase 1: Setup, Copywriting & Design UI/UX</h4>
+                            <p class="text-sm text-secondary">Redação persuasiva dentro das normas de saúde, escolha de tipografia e prototipação de alto impacto visual.</p>
+                        </div>
+                        <div class="relative">
+                            <div class="absolute -left-[41px] top-1 h-5 w-5 rounded-full bg-blue-600 border-4 border-white shadow"></div>
+                            <h4 class="font-bold text-main">Fase 2: Reunião Executiva de Alinhamento</h4>
+                            <p class="text-sm text-secondary">Apresentamos a estrutura completa do site/LP e a esteira de tráfego para seu aval final antes do código.</p>
+                        </div>
+                        <div class="relative">
+                            <div class="absolute -left-[41px] top-1 h-5 w-5 rounded-full bg-blue-600 border-4 border-white shadow"></div>
+                            <h4 class="font-bold text-main">Fase 3: Desenvolvimento, Integração de CRM & Pixels</h4>
+                            <p class="text-sm text-secondary">Programação ultra veloz para mobile, configuração de tags analíticas e conexão direta com o funil Metrifique-se.</p>
+                        </div>
+                        <div class="relative">
+                            <div class="absolute -left-[41px] top-1 h-5 w-5 rounded-full bg-emerald-600 border-4 border-white shadow"></div>
+                            <h4 class="font-bold text-main">Fase 4: Go-Live & Início do Tráfego Pago</h4>
+                            <p class="text-sm text-secondary">Publicação oficial, ativação das campanhas e acompanhamento diário das primeiras oportunidades de agendamento.</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
         
-        
-
-        <!-- Slide 9: E-books Exclusivos -->
-        <section id="slide9" class="slide bg-white">
+        <!-- Slide 7: E-books Exclusivos -->
+        <section id="slide7" class="slide bg-white">
             <div class="slide-content fade-in-section">
                 <div class="text-center mb-12">
-                    <h2 class="text-4xl md:text-5xl mb-4 text-main">Conteúdo Exclusivo para Nossos Parceiros</h2>
-                    <p class="text-lg max-w-3xl mx-auto text-secondary">Ao fechar negócio, você ganha acesso à nossa biblioteca de materiais estratégicos para aprofundar seu conhecimento em branding e posicionamento.</p>
+                    <h2 class="text-3xl sm:text-4xl md:text-5xl mb-4 text-main">Bônus Exclusivo: Biblioteca de Autoridade South Sea</h2>
+                    <p class="text-base sm:text-lg max-w-3xl mx-auto text-secondary">
+                        Ao iniciar a parceria, você e sua equipe ganham acesso a materiais autorais para acelerar seu posicionamento de mercado e elevar a percepção de valor dos seus serviços.
+                    </p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
                     <!-- Ebook 1 -->
-                    <div class="bg-card p-6 rounded-lg flex flex-col sm:flex-row items-center gap-6 transform hover:scale-105 transition-transform duration-300">
+                    <div class="bg-card p-6 sm:p-8 rounded-2xl flex flex-col sm:flex-row items-center gap-6 border border-slate-200 hover:border-blue-300 hover:shadow-xl transition-all duration-300">
                         <img src="/newimag/cpc1.png" 
                              alt="Capa do Ebook Oceano Azul" 
-                             class="w-24 h-32 sm:w-28 sm:h-40 object-cover rounded-md shadow-lg flex-shrink-0"
+                             class="w-28 h-40 object-cover rounded-lg shadow-lg flex-shrink-0"
                              onerror="this.onerror=null;this.src='https://placehold.co/112x160/e2e8f0/475569?text=Ebook';">
                         <div>
-                            <h3 class="text-xl font-bold text-main mb-2">Encontrando seu Oceano Azul</h3>
-                            <p class="text-secondary text-sm">Como Posicionar sua Marca de Forma Única em um Mercado Competitivo.</p>
+                            <span class="text-xs font-bold text-primary uppercase tracking-wider">E-book Estratégico</span>
+                            <h3 class="text-xl font-bold text-main mt-1 mb-2">Encontrando seu Oceano Azul</h3>
+                            <p class="text-secondary text-sm leading-relaxed">
+                                Como diferenciar seu consultório em um mercado concorrido, saindo da guerra de preços e se consolidando como a escolha natural na mente do paciente.
+                            </p>
                         </div>
                     </div>
                     <!-- Ebook 2 -->
-                    <div class="bg-card p-6 rounded-lg flex flex-col sm:flex-row items-center gap-6 transform hover:scale-105 transition-transform duration-300">
+                    <div class="bg-card p-6 sm:p-8 rounded-2xl flex flex-col sm:flex-row items-center gap-6 border border-slate-200 hover:border-blue-300 hover:shadow-xl transition-all duration-300">
                         <img src="/newimag/cpc.png" 
                              alt="Capa do Ebook Psicologia das Cores" 
-                             class="w-24 h-32 sm:w-28 sm:h-40 object-cover rounded-md shadow-lg flex-shrink-0"
+                             class="w-28 h-40 object-cover rounded-lg shadow-lg flex-shrink-0"
                              onerror="this.onerror=null;this.src='https://placehold.co/112x160/e2e8f0/475569?text=Ebook';">
                         <div>
-                            <h3 class="text-xl font-bold text-main mb-2">Cor por Cor</h3>
-                            <p class="text-secondary text-sm">A Psicologia das Cores e Como Usá-las para Influenciar Emoções e Decisões.</p>
+                            <span class="text-xs font-bold text-primary uppercase tracking-wider">Neuromarketing Visual</span>
+                            <h3 class="text-xl font-bold text-main mt-1 mb-2">Cor por Cor</h3>
+                            <p class="text-secondary text-sm leading-relaxed">
+                                A psicologia das cores aplicada à saúde: como tons, contrastes e elementos visuais constroem acolhimento, calma e autoridade clínica imediata.
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-         <!-- Slide 10: Bônus Cartão de Visita Digital -->
-        <section id="slide10" class="slide bg-light">
-            <div class="slide-content text-center fade-in-section">
-                <h2 class="text-3xl sm:text-4xl md:text-5xl mb-6 text-main">Sua Conexão Direta</h2>
-                <p class="text-lg max-w-3xl mx-auto text-secondary mb-12">Para maximizar seu alcance, incluímos uma ferramenta essencial: um <strong>Cartão de Visita Digital</strong> personalizado, perfeito para centralizar todos os seus links importantes.</p>
-                <div class="max-w-4xl mx-auto bg-card p-8 rounded-lg shadow-lg">
-                    <div class="flex flex-col md:flex-row items-center gap-8">
-                                               <div class="flex-shrink-0">
-                            <img src="/newimag/apl.png" alt="Exemplo de Cartão de Visita Digital"  onerror="this.onerror=null;this.src='https://placehold.co/280x560';">
-                        </div>
-                        <div class="text-left">
-                            <h3 class="text-2xl mb-4 text-primary">Seu Cartão de Visita Digital</h3>
-                            <ul class="space-y-3 text-secondary">
-                                <li class="flex items-start"><svg class="icon-check w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Ideal para a bio do Instagram, WhatsApp e outras redes.</span></li>
-                                <li class="flex items-start"><svg class="icon-check w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Reúna seus links mais importantes em um só lugar.</span></li>
-                                <li class="flex items-start"><svg class="icon-check w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Design alinhado com a identidade visual da sua marca.</span></li>
-                                <li class="flex items-start"><svg class="icon-check w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Seu "Linktree" próprio em seu domínio.</span></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 8: Investimento -->
+        <!-- Slide 8: Bônus Cartão de Visita Digital -->
         <section id="slide8" class="slide bg-light">
             <div class="slide-content text-center fade-in-section">
-                <h2 class="text-4xl md:text-5xl mb-12 text-main">Um Investimento na sua Carreira</h2>
-                <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto items-stretch">
-                    <!-- Opção 1: Presença Profissional -->
-                    <div class="bg-card rounded-lg p-8 flex flex-col">
-                        <h3 class="text-3xl mb-4 text-main">Presença Profissional</h3>
-                        <p class="text-secondary mb-6 flex-grow">A Landing Page de alta conversão para resultados rápidos e direcionados.</p>
-                        <p class="text-xl font-semibold text-gray-500"><del>R$ 3.280,00</del></p>
-                        <p class="text-4xl font-bold text-primary">R$ 2.585,00</p>
-                        <p class="text-sm text-secondary mt-2">(Consulte condições de parcelamento)</p>
-                    </div>
-                    <!-- Opção 2: Clínica Digital -->
-                    <div class="relative bg-primary-dark text-white rounded-lg p-8 flex flex-col shadow-lg">
-                        <div class="absolute top-0 right-4 -mt-4 bg-white text-primary-dark px-3 py-1 rounded-full text-sm font-bold shadow-md">Mais Popular</div>
-                        <h3 class="text-3xl mb-4">Clínica Digital</h3>
-                        <p class="text-gray-200 mb-6 flex-grow">A solução completa para construir autoridade e escalar sua prática profissional online.</p>
-                        <p class="text-xl font-semibold text-gray-300"><del>R$ 7.158,00</del></p>
-                        <p class="text-4xl font-bold">R$ 5.858,00</p>
-                         <p class="text-sm text-gray-300 mt-2">(Consulte condições de parcelamento)</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 11: UPSELL -->
-        <section id="slide11" class="slide bg-white">
-            <div class="slide-content text-center fade-in-section">
-                <h2 class="text-3xl sm:text-4xl md:text-5xl mb-4 text-main">Potencialize Sua Estratégia Digital</h2>
-                <p class="text-lg max-w-3xl mx-auto text-secondary mb-12">Adicione nossos serviços de performance e branding com um <span class="text-primary font-semibold">desconto exclusivo</span> ao contratar seu novo site.</p>
-                <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto items-stretch">
-                    
-                    <!-- Card Gestão de Tráfego -->
-                    <a href="/apresentações/pptTrafego.html" class="block no-underline text-current">
-                        <div class="bg-card rounded-lg p-6 md:p-8 flex flex-col border-2 border-dashed border-primary-dark transform hover:scale-105 transition-transform duration-300 h-full">
-                            <h3 class="text-2xl mb-4 text-primary-dark">Gestão de Tráfego</h3>
-                            <p class="text-secondary mb-6 flex-grow">Atraia o público certo e transforme cliques em clientes com campanhas otimizadas no Google e Meta Ads.</p>
-                            <div class="bg-light p-4 rounded-lg mb-4 text-center">
-                                <p class="font-semibold text-primary-dark">Taxa de Onboarding</p>
-                                <p class="text-sm text-secondary">Configuração inicial completa da sua conta e estratégia.</p>
-                                <p class="text-xl font-semibold text-gray-500 mt-2"><del>R$ 500 (Pagamento único)</del></p>
-                                <p class="text-primary font-bold">ISENTO NA CONTRATAÇÃO!</p>
-                            </div>
-                            <div class="space-y-4 mt-auto">
-                                <div class="bg-light p-4 rounded-lg">
-                                    <p class="text-secondary">1 Plataforma</p>
-                                    <p class="text-xl font-semibold text-secondary"><del>R$ 1.500/mês</del></p>
-                                    <p class="text-3xl font-bold text-primary-dark">R$ 1.200/mês</p>
-                                </div>
-                                <div class="bg-light p-4 rounded-lg">
-                                    <p class="text-secondary">2 Plataformas</p>
-                                    <p class="text-xl font-semibold text-secondary"><del>R$ 2.000/mês</del></p>
-                                    <p class="text-3xl font-bold text-primary-dark">R$ 1.800/mês</p>
-                                </div>
-                            </div>
+                <h2 class="text-3xl sm:text-4xl md:text-5xl mb-6 text-main">Seu Cartão de Visita Digital Próprio</h2>
+                <p class="text-base sm:text-lg max-w-3xl mx-auto text-secondary mb-10">
+                    Elimine links genéricos e páginas instáveis de terceiros. Entregamos um micro-hub ultra veloz hospedado diretamente no seu domínio oficial (ex: <em>seunome.com.br/contato</em>).
+                </p>
+                <div class="max-w-4xl mx-auto bg-card p-8 md:p-10 rounded-2xl shadow-xl border border-slate-200">
+                    <div class="flex flex-col md:flex-row items-center gap-10">
+                        <div class="flex-shrink-0 max-w-[220px]">
+                            <img src="/newimag/apl.png" 
+                                 alt="Exemplo de Cartão de Visita Digital" 
+                                 class="rounded-2xl shadow-2xl object-cover border-4 border-white"
+                                 onerror="this.onerror=null;this.src='https://placehold.co/220x440/e2e8f0/475569?text=Cartao+Digital';">
                         </div>
-                    </a>
-
-                    <!-- Card Identidade Visual -->
-                    <a href="/apresentações/pptbranding.html" class="block no-underline text-current">
-                        <div class="bg-card rounded-lg p-6 md:p-8 flex flex-col border-2 border-dashed border-primary-dark transform hover:scale-105 transition-transform duration-300 h-full">
-                            <h3 class="text-2xl mb-4 text-primary-dark">Identidade Visual</h3>
-                            <p class="text-secondary mb-6">Construa uma marca memorável que gera confiança, profissionalismo e se destaca no mercado.</p>
-                            <ul class="text-left text-sm space-y-2 text-secondary mb-6 flex-grow">
-                                <li class="flex items-center"><svg class="icon-check w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Logo Principal e Variações</span></li>
-                                <li class="flex items-center"><svg class="icon-check w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Paleta de Cores Estratégica</span></li>
-                                <li class="flex items-center"><svg class="icon-check w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Seleção e Hierarquia de Tipografia</span></li>
-                                <li class="flex items-center"><svg class="icon-check w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Definição de Elementos Gráficos de Apoio</span></li>
-                                <li class="flex items-center"><svg class="icon-check w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Design de Cartão de Visitas</span></li>
-                                <li class="flex items-center"><svg class="icon-check w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Mockups de Aplicação da Marca</span></li>
-                                <li class="flex items-center"><svg class="icon-check w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>Manual de Identidade Visual Simplificado</span></li>
+                        <div class="text-left space-y-4">
+                            <h3 class="text-2xl font-bold text-primary">Acesso Imediato aos Seus Canais</h3>
+                            <ul class="space-y-3.5 text-secondary">
+                                <li class="flex items-start">
+                                    <svg class="icon-check w-6 h-6 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                    <span><strong>Ideal para a Bio do Instagram e WhatsApp:</strong> Centralize agendamento, endereço no Waze, publicações e contatos de emergência.</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <svg class="icon-check w-6 h-6 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                    <span><strong>Identidade Visual Consistente:</strong> Tipografia, paleta e fotografia alinhadas rigorosamente com seu posicionamento profissional.</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <svg class="icon-check w-6 h-6 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                    <span><strong>Rastreamento de Origem:</strong> Saiba exatamente quantos pacientes chegam pelo Instagram versus indicações e eventos.</span>
+                                </li>
                             </ul>
-                            <div class="mt-auto bg-light p-4 rounded-lg text-center">
-                                 <p class="text-secondary">Projeto Completo</p>
-                                <p class="text-xl font-semibold text-secondary"><del>R$ 4.585,00</del></p>
-                                <p class="text-3xl font-bold text-primary-dark">R$ 4.126,50</p>
-                            </div>
                         </div>
-                    </a>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- Slide 12: Atualização de Portfólio (NOVO) -->
-        <section id="slide12" class="slide bg-light">
+        <!-- Slide 9: Valores para Contratação Avulsa vs Parceria -->
+        <section id="slide9" class="slide bg-white">
             <div class="slide-content text-center fade-in-section">
-                <h2 class="text-3xl sm:text-4xl md:text-5xl mb-6 text-main">Mantenha seu Site Sempre Atual</h2>
-                <p class="text-lg max-w-3xl mx-auto text-secondary mb-12">Seus melhores projetos e qualificações merecem ser vistos. Oferecemos um serviço contínuo para garantir que seu site esteja sempre em dia, mostrando seu trabalho mais recente.</p>
-                <div class="bg-card rounded-lg p-8 max-w-lg mx-auto transform hover:scale-105 transition-transform duration-300 w-full">
-                    <h3 class="text-3xl mb-4 text-main">Atualização de Conteúdo</h3>
-                    <p class="text-secondary mb-6">Pacote para adição de novos tratamentos, artigos, fotos e currículo.</p>
-                    <p class="text-4xl font-bold text-primary-dark">R$ 578,00</p>
-                    <p class="text-sm text-gray-500 mt-2">(Por atualização)</p>
+                <h2 class="text-3xl sm:text-4xl md:text-5xl mb-4 text-main">Valores para Contratação Avulsa</h2>
+                <p class="text-base sm:text-lg max-w-4xl mx-auto mb-10 text-secondary">
+                    Caso opte por contratar cada frente do projeto de forma avulsa e independente com a South Sea, estes são os nossos valores de implementação e gestão:
+                </p>
+                <div class="max-w-3xl mx-auto bg-card rounded-2xl overflow-hidden shadow-lg border border-slate-200">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-100 text-main border-b border-slate-200">
+                                <th class="p-4 sm:p-5 font-bold text-base sm:text-lg">Solução Avulsa South Sea</th>
+                                <th class="p-4 sm:p-5 font-bold text-base sm:text-lg text-right">Investimento</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-secondary text-sm sm:text-base divide-y divide-slate-100">
+                            <tr>
+                                <td class="p-4 sm:p-5 font-semibold text-main">Landing Page Médica Profissional</td>
+                                <td class="p-4 sm:p-5 text-right font-medium">R$ 3.500 <span class="text-xs text-slate-400 font-normal">(Setup único)</span></td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 sm:p-5 font-semibold text-main">Site Clínico Institucional</td>
+                                <td class="p-4 sm:p-5 text-right font-medium">R$ 7.500 <span class="text-xs text-slate-400 font-normal">(Setup único)</span></td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 sm:p-5 font-semibold text-main">Taxa de Onboarding & Setup de Tráfego</td>
+                                <td class="p-4 sm:p-5 text-right font-medium">R$ 990 <span class="text-xs text-slate-400 font-normal">(Implementação única)</span></td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 sm:p-5 font-semibold text-main">Gestão de Tráfego — 1 Plataforma <br><span class="text-xs text-slate-500 font-normal">(Google Ads)</span></td>
+                                <td class="p-4 sm:p-5 text-right font-medium">R$ 1.500 <span class="text-xs text-slate-400 font-normal">/mês</span></td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 sm:p-5 font-semibold text-main">Gestão de Tráfego — 2 Plataformas <br><span class="text-xs text-slate-500 font-normal">(Google Ads + Meta Ads)</span></td>
+                                <td class="p-4 sm:p-5 text-right font-medium">R$ 2.200 <span class="text-xs text-slate-400 font-normal">/mês</span></td>
+                            </tr>
+                            <tr class="bg-blue-50/60">
+                                <td class="p-4 sm:p-5 font-bold text-primary-dark">Licença CRM Metrifique-se <br><span class="text-xs text-blue-800 font-normal">(Funil Kanban + Lead Scoring)</span></td>
+                                <td class="p-4 sm:p-5 text-right font-bold text-primary-dark">A partir de R$ 297 <span class="text-xs text-primary font-normal">/mês</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Nova apresentação nítida e elegante da Parceria Recorrente -->
+                <div class="mt-8 max-w-3xl mx-auto bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 text-white shadow-xl text-center">
+                    <p class="text-lg sm:text-xl font-bold leading-snug text-white">
+                        Na South Sea, criamos o modelo de <span class="text-emerald-400">Parceria de Aceleração Recorrente</span>:
+                    </p>
+                    <p class="text-sm sm:text-base text-slate-300 mt-3 max-w-2xl mx-auto leading-relaxed">
+                        <strong class="text-white">Isentamos 100% o custo de setup das páginas e taxas de implementação</strong>, integrando desenvolvimento contínuo, tráfego e CRM em uma assinatura mensal previsível.
+                    </p>
                 </div>
             </div>
         </section>
-        
-        <!-- Slide 13: Contato (ID alterado de 12 para 13) -->
-        <section id="slide13" class="slide bg-hero-health text-white text-center">
-             <div class="absolute inset-0 bg-black opacity-75"></div>
-            <div class="z-10 slide-content fade-in-section">
-                <h2 class="text-4xl md:text-6xl mb-8 font-bold">Pronto para transformar sua presença digital em seu maior ativo profissional?</h2>
-                <div class="text-xl md:text-2xl mb-12 max-w-3xl mx-auto">
-                    <p class="mb-4">1. Com sua aprovação, iniciamos o processo.</p>
-                    <p class="mb-4">2. Enviaremos o link seguro com Contrato, Questionário Estratégico e Pagamento.</p>
-                    <p>3. Após as formalizações, sua autoridade digital começa a ser construída.</p>
+
+        <!-- Slide 10: Planos Recorrentes Integrados -->
+        <section id="slide10" class="slide bg-light">
+            <div class="slide-content text-center fade-in-section">
+                <h2 class="text-3xl sm:text-4xl md:text-5xl mb-4 text-main font-extrabold">Planos de Aceleração South Sea</h2>
+                <p class="text-base sm:text-lg max-w-3xl mx-auto text-secondary mb-12">
+                    Setup de páginas e taxa de implementação 100% isentos. Tudo o que sua clínica precisa para captar e converter pacientes em uma única assinatura mensal.
+                </p>
+                
+                <div class="grid lg:grid-cols-3 gap-6 max-w-6xl mx-auto items-stretch">
+                    
+                    <!-- PLANO 1: ESSENCIAL -->
+                    <div class="bg-card rounded-2xl p-7 flex flex-col shadow-md border border-slate-200 hover:shadow-xl transition-all">
+                        <div class="text-left mb-4">
+                            <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Validação e Início</span>
+                            <h3 class="text-2xl font-bold text-main mt-1">Essencial</h3>
+                            <p class="text-xs text-secondary mt-1">Ideal para profissionais que querem estruturar sua captação digital com baixo risco.</p>
+                        </div>
+                        <div class="mb-6 py-4 border-y border-slate-100 text-left">
+                            <span class="text-3xl sm:text-4xl font-extrabold text-main">R$ 1.800</span><span class="text-secondary text-sm">/mês</span>
+                            <p class="text-xs text-emerald-600 font-semibold mt-1">✓ Setup de LP como Bônus no Plano</p>
+                        </div>
+                        <ul class="text-left text-sm space-y-3.5 mb-8 flex-grow">
+                            <li class="flex items-start">
+                                <svg class="icon-check w-5 h-5 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <div><strong class="text-main">Landing Page (LP) de Alta Conversão</strong><br><span class="text-xs text-secondary">Focada no seu principal tratamento/especialidade.</span></div>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="icon-check w-5 h-5 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <div><strong class="text-main">Gestão de Tráfego (1 Plataforma)</strong><br><span class="text-xs text-secondary">Google Ads para capturar buscas ativas de pacientes.</span></div>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="icon-check w-5 h-5 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <div><strong class="text-main">CRM Metrifique-se Profissional</strong><br><span class="text-xs text-secondary">Até 10 acessos da equipe e funil comercial integrado.</span></div>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="icon-check w-5 h-5 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <div><strong class="text-main">Bônus Inclusos</strong><br><span class="text-xs text-secondary">Cartão de Visita Digital + E-books de Posicionamento.</span></div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- PLANO 2: ACELERAÇÃO (DESTAQUE) -->
+                    <div class="bg-white rounded-2xl p-7 flex flex-col shadow-2xl border-2 border-primary relative transform lg:-translate-y-4">
+                        <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-blue-600 text-white border-2 border-white px-5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider shadow-md w-max">
+                            Mais Escolhido • Escala Acelerada
+                        </div>
+                        <div class="text-left mb-4 mt-2">
+                            <span class="text-xs font-bold uppercase tracking-wider text-primary">Crescimento Contínuo</span>
+                            <h3 class="text-2xl font-bold text-primary-dark mt-1">Aceleração</h3>
+                            <p class="text-xs text-secondary mt-1">Para consultórios prontos para dominar as buscas locais e atrair fluxo diário de agendamentos.</p>
+                        </div>
+                        <div class="mb-6 py-4 border-y border-slate-100 text-left">
+                            <span class="text-3xl sm:text-4xl font-extrabold text-primary-dark">R$ 2.500</span><span class="text-secondary text-sm">/mês</span>
+                            <p class="text-xs text-emerald-600 font-semibold mt-1">✓ Setup de LP como Bônus no Plano</p>
+                        </div>
+                        <ul class="text-left text-sm space-y-3.5 mb-8 flex-grow">
+                            <li class="flex items-start">
+                                <svg class="icon-check w-5 h-5 mt-0.5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <div><strong class="text-main">Landing Page de Alta Performance</strong><br><span class="text-xs text-secondary">Design profissional responsivo com testes de conversão.</span></div>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="icon-check w-5 h-5 mt-0.5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <div><strong class="text-primary-dark">Gestão de Tráfego em 2 Plataformas</strong><br><span class="text-xs text-secondary">Google Ads (busca ativa) + Meta Ads (Instagram autoridade).</span></div>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="icon-check w-5 h-5 mt-0.5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <div><strong class="text-main">CRM Metrifique-se com Lead Scoring</strong><br><span class="text-xs text-secondary">Classificação automática de contatos quentes para a recepção.</span></div>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="icon-check w-5 h-5 mt-0.5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <div><strong class="text-main">Reuniões Mensais de Otimização</strong><br><span class="text-xs text-secondary">Análise de custo por oportunidade e melhorias de conversão.</span></div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- PLANO 3: AUTORIDADE MÁXIMA -->
+                    <div class="bg-gradient-to-b from-slate-900 to-blue-950 rounded-2xl p-7 flex flex-col shadow-2xl text-white">
+                        <div class="text-left mb-4">
+                            <span class="text-xs font-bold uppercase tracking-wider text-sky-400">Estrutura Institucional Definitiva</span>
+                            <h3 class="text-2xl font-bold text-white mt-1">Autoridade Máxima</h3>
+                            <p class="text-xs text-blue-200 mt-1">Para clínicas consolidadas, múltiplos profissionais e tratamentos de alto ticket.</p>
+                        </div>
+                        <div class="mb-6 py-4 border-y border-blue-900 text-left">
+                            <span class="text-3xl sm:text-4xl font-extrabold text-white">R$ 3.000</span><span class="text-blue-200 text-sm">/mês</span>
+                            <p class="text-xs text-sky-300 font-semibold mt-1">✓ Setup de Site (R$ 7.500) como Bônus no Plano</p>
+                        </div>
+                        <ul class="text-left text-sm space-y-3.5 mb-8 flex-grow text-slate-200">
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 mt-0.5 mr-2.5 text-sky-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <div><strong class="text-white">Site Clínico Institucional Completo</strong><br><span class="text-xs text-blue-200">Até 5 páginas (Corpo Clínico, Tratamentos, Artigos).</span></div>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 mt-0.5 mr-2.5 text-sky-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <div><span class="bg-blue-600 text-white text-[10px] uppercase font-bold px-1.5 py-0.5 rounded mr-1">Bônus</span><strong class="text-white">+ 1 Landing Page Extra</strong><br><span class="text-xs text-blue-200">Para procedimento específico ou campanha prioritária.</span></div>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 mt-0.5 mr-2.5 text-sky-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <div><strong class="text-white">Gestão Avançada de Tráfego (Google + Meta)</strong><br><span class="text-xs text-blue-200">Estratégias de Search, Performance Max e Remarketing.</span></div>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 mt-0.5 mr-2.5 text-sky-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <div><strong class="text-white">CRM Metrifique-se Enterprise</strong><br><span class="text-xs text-blue-200">Usuários ilimitados, múltiplos funis e suporte prioritário.</span></div>
+                            </li>
+                        </ul>
+                    </div>
+
                 </div>
-                <hr class="my-10 border-gray-400 max-w-md mx-auto"/>
-               <div class="w-auto h-auto mx-auto mb-10 max-w-[240px]">
-                   <img src="/newimag/Vector.svg" 
-                        alt="Logo South Sea" 
-                        class="w-full h-full object-cover"
-                        onerror="this.onerror=null;this.src='https://placehold.co/240x100/ffffff/1e293b?text=South+Sea';">
-               </div>
-                <div class="mt-4 text-lg">
-                    <p>contato@southsea.com.br | (48) 99901-3968</p>
-                    <p>www.southsea.com.br</p>
+                <div class="mt-8 text-xs text-secondary max-w-3xl mx-auto bg-card p-5 rounded-xl border border-slate-200 shadow-sm text-left sm:text-center space-y-1.5">
+                    <p class="font-bold text-main uppercase tracking-wider text-[11px]">
+                        Cláusula de Bonificação de Setup & Propriedade
+                    </p>
+                    <p class="text-secondary leading-relaxed">
+                        O desenvolvimento completo do Site Clínico e das Landing Pages é entregue como <strong>bônus nos planos recorrentes</strong> (com fidelidade contratual mínima de 6 meses). A <strong>transferência integral da propriedade dos arquivos, código e estrutura do site e das páginas é concedida ao contratante a partir de 12 meses completos de plano</strong>.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 11: Fechamento e Próximos Passos -->
+        <section id="slide11" class="slide bg-hero-health text-white text-center">
+            <div class="absolute inset-0 bg-slate-950/85 backdrop-blur-[2px]"></div>
+            <div class="z-10 slide-content fade-in-section max-w-4xl mx-auto">
+                <h2 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-8 font-bold leading-tight">
+                    Pronto para transformar sua presença digital em seu <span class="text-blue-400">maior canal de pacientes</span>?
+                </h2>
+                
+                <div class="grid sm:grid-cols-3 gap-6 text-left mb-10">
+                    <div class="bg-white/10 backdrop-blur-md p-5 rounded-xl border border-white/10">
+                        <div class="text-2xl font-black text-blue-400 mb-2">01</div>
+                        <h4 class="font-bold text-white mb-1">Escolha do Plano</h4>
+                        <p class="text-xs text-slate-300">Definimos o modelo mais alinhado à sua capacidade de atendimento e metas.</p>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur-md p-5 rounded-xl border border-white/10">
+                        <div class="text-2xl font-black text-blue-400 mb-2">02</div>
+                        <h4 class="font-bold text-white mb-1">Formalização Segura</h4>
+                        <p class="text-xs text-slate-300">Enviamos o contrato digital transparente e o link oficial de onboarding.</p>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur-md p-5 rounded-xl border border-white/10">
+                        <div class="text-2xl font-black text-blue-400 mb-2">03</div>
+                        <h4 class="font-bold text-white mb-1">Início da Operação</h4>
+                        <p class="text-xs text-slate-300">Nossa equipe assume todo o desenvolvimento para colocar sua estrutura no ar.</p>
+                    </div>
+                </div>
+
+                <div class="w-auto h-auto mx-auto mb-6 max-w-[200px]">
+                    <img src="/newimag/Vector.svg" 
+                         alt="Logo South Sea" 
+                         class="w-full h-full object-contain"
+                         onerror="this.onerror=null;this.src='https://placehold.co/200x80/ffffff/1e293b?text=South+Sea';">
+                </div>
+
+                <div class="space-y-1 text-sm md:text-base text-slate-300">
+                    <p class="font-medium text-white">contato@southsea.com.br • (48) 99105-7005</p>
+                    <p class="text-blue-300 font-semibold">www.southsea.com.br</p>
                 </div>
             </div>
         </section>
@@ -527,11 +811,10 @@
 
     <!-- Navegação e Fullscreen -->
     <div class="navigation">
-        <button id="prevBtn" class="nav-btn">▲</button>
-        <button id="nextBtn" class="nav-btn">▼</button>
+        <button id="prevBtn" class="nav-btn" title="Slide Anterior">▲</button>
+        <button id="nextBtn" class="nav-btn" title="Próximo Slide">▼</button>
     </div>
-    <button id="fullscreenBtn" class="nav-btn fullscreen-btn">⛶</button>
-
+    <button id="fullscreenBtn" class="nav-btn fullscreen-btn" title="Tela Cheia">⛶</button>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -563,10 +846,9 @@
                     isScrolling = true;
                     slides[index].scrollIntoView({ behavior: 'smooth' });
                     currentSlide = index;
-                    // Prevenir scrolls múltiplos
                     setTimeout(() => {
                         isScrolling = false;
-                    }, 1000); // Duração do scroll suave
+                    }, 800);
                 }
             }
             
@@ -607,7 +889,7 @@
                 if (scrollTimeout) {
                     clearTimeout(scrollTimeout);
                 }
-                scrollTimeout = setTimeout(updateCurrentSlideOnScroll, 100);
+                scrollTimeout = setTimeout(updateCurrentSlideOnScroll, 80);
             }, { passive: true });
 
             // Funcionalidade de Tela Cheia
@@ -616,13 +898,13 @@
                     const elem = document.documentElement;
                     if (!document.fullscreenElement) {
                         if (elem.requestFullscreen) { elem.requestFullscreen(); } 
-                        else if (elem.webkitRequestFullscreen) { elem.webkitRequestFullscreen(); } // Safari
+                        else if (elem.webkitRequestFullscreen) { elem.webkitRequestFullscreen(); }
                     } else {
                         if (document.exitFullscreen) { document.exitFullscreen(); }
-                        else if (document.webkitExitFullscreen) { document.webkitExitFullscreen(); } // Safari
+                        else if (document.webkitExitFullscreen) { document.webkitExitFullscreen(); }
                     }
                 } catch (e) {
-                    console.error("Fullscreen API não é suportada ou está bloqueada.", e);
+                    console.error("Fullscreen API não suportada ou bloqueada.", e);
                 }
             });
         });
